@@ -47,77 +47,77 @@ def create_hisat2_config_file(experiment_id='exp001', reference_dataset_id='Atha
     error_list = []
 
     # create the HISAT2 config file and write the default options
-    if True:
-    #try:
+    try:
         if not os.path.exists(os.path.dirname(get_hisat2_config_file())):
             os.makedirs(os.path.dirname(get_hisat2_config_file()))
         with open(get_hisat2_config_file(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
-            file_id.write( '{0}\n'.format('# You must review the information of this file and update the values with the corresponding ones to the current run.'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('# The reference file has to be located in the cluster directory {0}/experiment_id/reference_dataset_id'.format(xlib.get_cluster_reference_dir())))
-            file_id.write( '{0}\n'.format('# The assembly files have to be located in the cluster directory {0}/experiment_id/assembly_dataset_id'.format(xlib.get_cluster_result_dir())))
-            file_id.write( '{0}\n'.format('# The read files have to be located in the cluster directory {0}/experiment_id/read_dataset_id'.format(xlib.get_cluster_read_dir())))
-            file_id.write( '{0}\n'.format('# The experiment_id, reference_dataset_id, reference_file, assembly_dataset_id and read_dataset_id are fixed in the identification section.'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('# You can consult the parameters of HISAT2 and their meaning in https://ccb.jhu.edu/software/hisat2/.'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('# In section "HISAT2 parameters", the key "other_parameters" allows you to input additional parameters in the format:'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('#    other_parameters = --parameter-1[=value-1][; --parameter-2[=value-2][; ...; --parameter-n[=value-n]]]'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('# parameter-i is a parameter name of HISAT2 and value-i a valid value of parameter-i, e.g.'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('#    other_parameters = --new-summary; --score-min=L,0,-0.2'))
+            file_id.write( '# You must review the information of this file and update the values with the corresponding ones to the current run.\n')
+            file_id.write( '#\n')
+            file_id.write(f'# The reference file has to be located in the cluster directory {xlib.get_cluster_reference_dir()}/experiment_id/reference_dataset_id\n')
+            file_id.write(f'# The assembly files have to be located in the cluster directory {xlib.get_cluster_result_dir()}/experiment_id/assembly_dataset_id\n')
+            file_id.write(f'# The read files have to be located in the cluster directory {xlib.get_cluster_read_dir()}/experiment_id/read_dataset_id\n'.format(''.format()))
+            file_id.write( '# The experiment_id, reference_dataset_id, reference_file, assembly_dataset_id and read_dataset_id are fixed in the identification section.\n')
+            file_id.write( '#\n')
+            file_id.write( '# You can consult the parameters of HISAT2 and their meaning in "https://ccb.jhu.edu/software/hisat2/".\n')
+            file_id.write( '#\n')
+            file_id.write( '# In section "HISAT2 parameters", the key "other_parameters" allows you to input additional parameters in the format:\n')
+            file_id.write( '#\n')
+            file_id.write( '#    other_parameters = --parameter-1[=value-1][; --parameter-2[=value-2][; ...; --parameter-n[=value-n]]]\n')
+            file_id.write( '#\n')
+            file_id.write( '# parameter-i is a parameter name of HISAT2 and value-i a valid value of parameter-i, e.g.\n')
+            file_id.write( '#\n')
+            file_id.write( '#    other_parameters = --new-summary; --score-min=L,0,-0.2\n')
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information identifies the experiment.'))
-            file_id.write( '{0}\n'.format('[identification]'))
-            file_id.write( '{0:<50} {1}\n'.format('experiment_id = {0}'.format(experiment_id), '# experiment identification'))
-            file_id.write( '{0:<50} {1}\n'.format('reference_dataset_id = {0}'.format(reference_dataset_id), '# reference dataset identification'))
-            file_id.write( '{0:<50} {1}\n'.format('reference_file = {0}'.format(reference_file), '# reference file name'))
-            file_id.write( '{0:<50} {1}\n'.format('splice_site_file = {0}'.format(splice_site_file), '# splice site file name'))
-            file_id.write( '{0:<50} {1}\n'.format('exon_file = {0}'.format(exon_file), '# exon file name'))
-            file_id.write( '{0:<50} {1}\n'.format('read_dataset_id = {0}'.format(read_dataset_id), '# read dataset identification'))
+            file_id.write( '# This section has the information identifies the experiment.\n')
+            file_id.write( '[identification]\n')
+            file_id.write( '{0:<50} {1}\n'.format(f'experiment_id = {experiment_id}', '# experiment identification'))
+            file_id.write( '{0:<50} {1}\n'.format(f'reference_dataset_id = {reference_dataset_id}', '# reference dataset identification'))
+            file_id.write( '{0:<50} {1}\n'.format(f'reference_file = {reference_file}', '# reference file name'))
+            file_id.write( '{0:<50} {1}\n'.format(f'splice_site_file = {splice_site_file}', '# splice site file name'))
+            file_id.write( '{0:<50} {1}\n'.format(f'exon_file = {exon_file}', '# exon file name'))
+            file_id.write( '{0:<50} {1}\n'.format(f'read_dataset_id = {read_dataset_id}', '# read dataset identification'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information to set the HISAT2 parameters'))
-            file_id.write( '{0}\n'.format('[HISAT2 parameters]'))
-            file_id.write( '{0:<50} {1}\n'.format('index_building = YES', '# index building when a reference is used: {0}'.format(get_index_building_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('large_index = NO', '# a large index is force, even if the reference is less than ~ 4 billion nucleotides long: {0}'.format(get_large_index_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('threads = 4', '# number of threads for use'))
-            file_id.write( '{0:<50} {1}\n'.format('min_mp = 2', '# minimum mismatch penalty'))
-            file_id.write( '{0:<50} {1}\n'.format('max_mp = 6', '# maximum mismatch penalty'))
-            file_id.write( '{0:<50} {1}\n'.format('no_softclip = NO', '# disallow soft-clipping: {0}'.format(get_no_softclip_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('min_sp = 1', '# minimum penalty for soft-clipping per base'))
-            file_id.write( '{0:<50} {1}\n'.format('max_sp = 2', '# maximum penalty for soft-clipping per base'))
-            file_id.write( '{0:<50} {1}\n'.format('np = 1', '# penalty for positions where the read, reference, or both, contain an ambiguous character such as N'))
-            file_id.write( '{0:<50} {1}\n'.format('open_rdg = 5', '# read gap open penalty'))
-            file_id.write( '{0:<50} {1}\n'.format('extend_rdg = 3', '# read gap extend penalty'))
-            file_id.write( '{0:<50} {1}\n'.format('open_rfg = 5', '# reference gap open penalty'))
-            file_id.write( '{0:<50} {1}\n'.format('extend_rfg = 3', '# reference gap extend penalty'))
-            file_id.write( '{0:<50} {1}\n'.format('orientation = FR', '# orientation of paired-end reads: {0}'.format(get_orientation_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('quality-score = 33', '# FASTQ quality score: {}'.format(get_quality_score_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('other_parameters = NONE', '# additional parameters to the previous ones or NONE'))
+            file_id.write( '# This section has the information to set the HISAT2 parameters\n')
+            file_id.write( '[HISAT2 parameters]\n')
+            file_id.write( '{0:<50} {1}\n'.format( 'index_building = YES', f'# index building when a reference is used: {get_index_building_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format( 'large_index = NO', f'# a large index is force, even if the reference is less than ~ 4 billion nucleotides long: {get_large_index_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format( 'threads = 4', '# number of threads for use'))
+            file_id.write( '{0:<50} {1}\n'.format( 'min_mp = 2', '# minimum mismatch penalty'))
+            file_id.write( '{0:<50} {1}\n'.format( 'max_mp = 6', '# maximum mismatch penalty'))
+            file_id.write( '{0:<50} {1}\n'.format( 'no_softclip = NO', f'# disallow soft-clipping: {get_no_softclip_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format( 'min_sp = 1', '# minimum penalty for soft-clipping per base'))
+            file_id.write( '{0:<50} {1}\n'.format( 'max_sp = 2', '# maximum penalty for soft-clipping per base'))
+            file_id.write( '{0:<50} {1}\n'.format( 'np = 1', '# penalty for positions where the read, reference, or both, contain an ambiguous character such as N'))
+            file_id.write( '{0:<50} {1}\n'.format( 'open_rdg = 5', '# read gap open penalty'))
+            file_id.write( '{0:<50} {1}\n'.format( 'extend_rdg = 3', '# read gap extend penalty'))
+            file_id.write( '{0:<50} {1}\n'.format( 'open_rfg = 5', '# reference gap open penalty'))
+            file_id.write( '{0:<50} {1}\n'.format( 'extend_rfg = 3', '# reference gap extend penalty'))
+            file_id.write( '{0:<50} {1}\n'.format( 'orientation = FR', f'# orientation of paired-end reads: {get_orientation_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format( 'quality-score = 33', f'# FASTQ quality score: {get_quality_score_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format( 'other_parameters = NONE', '# additional parameters to the previous ones or NONE'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the global information of all libraries.'))
-            file_id.write( '{0}\n'.format('[library]'))
-            file_id.write( '{0:<50} {1}\n'.format('format = FASTQ', '# format: {0}'.format(get_format_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('read_type = {0}'.format(read_type), '# read type: {0}'.format(get_read_type_code_list_text())))
+            file_id.write( '# This section has the global information of all libraries.\n')
+            file_id.write( '[library]\n')
+            file_id.write( '{0:<50} {1}\n'.format( 'format = FASTQ', f'# format: {get_format_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format(f'read_type = {read_type}', f'# read type: {get_read_type_code_list_text()}'))
             for i in range(len(file_1_list)):
                 file_id.write( '\n')
                 if i == 0:
-                    file_id.write( '{0}\n'.format('# This section has the information of the first library.'))
-                file_id.write( '{0}\n'.format('[library-{0}]'.format(i + 1)))
-                file_id.write( '{0:<50} {1}\n'.format('read_file_1 = {0}'.format(os.path.basename(file_1_list[i])), '# name of the read file in SE read type or the + strand read file in PE case'))
+                    file_id.write( '# This section has the information of the first library.\n')
+                file_id.write(f'[library-{i + 1}]\n')
+                file_id.write( '{0:<50} {1}\n'.format(f'read_file_1 = {os.path.basename(file_1_list[i])}', '# name of the read file in SE read type or the + strand read file in PE case'))
                 if read_type == 'SE':
-                    file_id.write( '{0:<50} {1}\n'.format('read_file_2 = NONE', '# name of the - strand reads file in PE read type or NONE in SE case'))
+                    file_id.write( '{0:<50} {1}\n'.format( 'read_file_2 = NONE', '# name of the - strand reads file in PE read type or NONE in SE case'))
                 elif read_type == 'PE':
-                    file_id.write( '{0:<50} {1}\n'.format('read_file_2 = {0}'.format(os.path.basename(file_2_list[i])), '# name of the - strand reads file in PE read type or NONE in SE case'))
+                    file_id.write( '{0:<50} {1}\n'.format(f'read_file_2 = {os.path.basename(file_2_list[i])}', '# name of the - strand reads file in PE read type or NONE in SE case'))
                 if i == 0:
                     file_id.write( '\n')
-                    file_id.write( '{0}\n'.format('# If there are more libraries, you have to repeat the section library-1 with the data of each file.'))
-                    file_id.write( '{0}\n'.format('# The section identification has to be library-n (n is an integer not repeated)'))
-    #except Exception as e:
-    #    error_list.append('*** ERROR: The file {0} can not be recreated'.format(get_hisat2_config_file()))
-    #    OK = False
+                    file_id.write( '# If there are more libraries, you have to repeat the section library-1 with the data of each file.\n')
+                    file_id.write( '# The section identification has to be library-n (n is an integer not repeated)\n')
+    except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append(f'*** ERROR: The file {get_hisat2_config_file()} can not be recreated')
+        OK = False
 
     # return the control variable and the error list
     return (OK, error_list)
@@ -144,7 +144,7 @@ def run_hisat2_process(cluster_name, log, function=None):
 
     # check the HISAT2 config file
     log.write(f'{xlib.get_separator()}\n')
-    log.write('Checking the {0} config file ...\n'.format(xlib.get_hisat2_name()))
+    log.write(f'Checking the {xlib.get_hisat2_name()} config file ...\n')
     (OK, error_list) = check_hisat2_config_file(strict=True)
     if OK:
         log.write('The file is OK.\n')
@@ -190,18 +190,18 @@ def run_hisat2_process(cluster_name, log, function=None):
     if OK:
         (master_state_code, master_state_name) = xec2.get_node_state(cluster_name)
         if master_state_code != 16:
-            log.write('*** ERROR: The cluster {0} is not running. Its state is {1} ({2}).\n'.format(cluster_name, master_state_code, master_state_name))
+            log.write(f'*** ERROR: The cluster {cluster_name} is not running. Its state is {master_state_code} ({master_state_name}).\n')
             OK = False
 
     # check the HISAT2 is installed
     if OK:
-        (OK, error_list, is_installed) = xbioinfoapp.is_installed_bioconda_package(xlib.get_hisat2_bioconda_code(), cluster_name, True, ssh_client)
+        (OK, error_list, is_installed) = xbioinfoapp.is_installed_anaconda_package(xlib.get_hisat2_anaconda_code(), cluster_name, True, ssh_client)
         if OK:
             if not is_installed:
-                log.write('*** ERROR: {0} is not installed.\n'.format(xlib.get_hisat2_name()))
+                log.write(f'*** ERROR: {xlib.get_hisat2_name()} is not installed.\n')
                 OK = False
         else:
-            log.write('*** ERROR: The verification of {0} installation could not be performed.\n'.format(xlib.get_hisat2_name()))
+            log.write(f'*** ERROR: The verification of {xlib.get_hisat2_name()} installation could not be performed.\n')
 
     # warn that the requirements are OK 
     if OK:
@@ -215,14 +215,14 @@ def run_hisat2_process(cluster_name, log, function=None):
         command = f'mkdir --parents {current_run_dir}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
-            log.write('The directory path is {0}.\n'.format(current_run_dir))
+            log.write(f'The directory path is {current_run_dir}.\n')
         else:
             log.write(f'*** ERROR: Wrong command ---> {command}\n')
 
     # build the HISAT2 process script
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process script {0} ...\n'.format(get_hisat2_process_script()))
+        log.write(f'Building the process script {get_hisat2_process_script()} ...\n')
         (OK, error_list) = build_hisat2_process_script(cluster_name, current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -232,8 +232,8 @@ def run_hisat2_process(cluster_name, log, function=None):
     # upload the HISAT2 process script in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process script {0} in the directory {1} of the master ...\n'.format(get_hisat2_process_script(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_hisat2_process_script()))
+        log.write(f'Uploading the process script {get_hisat2_process_script()} in the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_hisat2_process_script())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_hisat2_process_script(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -244,8 +244,8 @@ def run_hisat2_process(cluster_name, log, function=None):
     # set run permision to the HISAT2 process script in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_hisat2_process_script())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_hisat2_process_script()))
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_hisat2_process_script())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_hisat2_process_script())}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
@@ -255,7 +255,7 @@ def run_hisat2_process(cluster_name, log, function=None):
     # build the HISAT2 process starter
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process starter {0} ...\n'.format(get_hisat2_process_starter()))
+        log.write(f'Building the process starter {get_hisat2_process_starter()} ...\n')
         (OK, error_list) = build_hisat2_process_starter(current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -265,8 +265,8 @@ def run_hisat2_process(cluster_name, log, function=None):
     # upload the HISAT2 process starter in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process starter {0} in the directory {1} of the master ...\n'.format(get_hisat2_process_starter(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_hisat2_process_starter()))
+        log.write(f'Uploading the process starter {get_hisat2_process_starter()} in the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_hisat2_process_starter())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_hisat2_process_starter(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -277,8 +277,8 @@ def run_hisat2_process(cluster_name, log, function=None):
     # set run permision to the HISAT2 process starter in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_hisat2_process_starter())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_hisat2_process_starter()))
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_hisat2_process_starter())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_hisat2_process_starter())}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
@@ -288,7 +288,7 @@ def run_hisat2_process(cluster_name, log, function=None):
     # submit the HISAT2 process
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Submitting the process script {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_hisat2_process_starter())))
+        log.write(f'Submitting the process script {current_run_dir}/{os.path.basename(get_hisat2_process_starter())} ...\n')
         OK = xssh.submit_script(cluster_name, ssh_client, current_run_dir, os.path.basename(get_hisat2_process_starter()), log)
 
     # close the SSH transport connection
@@ -335,7 +335,8 @@ def check_hisat2_config_file(strict):
     try:
         hisat2_option_dict = xlib.get_option_dict(get_hisat2_config_file())
     except Exception as e:
-        error_list.append('*** ERROR: The syntax is WRONG.')
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append('*** ERROR: The option dictionary could not be built from the config file')
         OK = False
     else:
 
@@ -387,7 +388,7 @@ def check_hisat2_config_file(strict):
                 error_list.append('*** ERROR: the key "index_building" is not found in the section "HISAT2 parameters".')
                 OK = False
             elif not xlib.check_code(index_building, get_index_building_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "index_building" has to be {0}.'.format(get_index_building_code_list_text()))
+                error_list.append(f'*** ERROR: the key "index_building" has to be {get_index_building_code_list_text()}.')
                 OK = False
 
             # check section "HISAT2 parameters" - key "large_index"
@@ -396,7 +397,7 @@ def check_hisat2_config_file(strict):
                 error_list.append('*** ERROR: the key "large_index" is not found in the section "HISAT2 parameters".')
                 OK = False
             elif not xlib.check_code(large_index, get_large_index_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "large_index" has to be {0}.'.format(get_large_index_code_list_text()))
+                error_list.append(f'*** ERROR: the key "large_index" has to be {get_large_index_code_list_text()}.')
                 OK = False
 
             # check section "HISAT2 parameters" - key "threads"
@@ -435,7 +436,7 @@ def check_hisat2_config_file(strict):
 
             # check if max_mp value is greater than or equal than min_mp value
             if is_ok_min_mp and is_ok_max_mp and int(max_mp) < int(min_mp):
-                error_list.append('*** ERROR: The value max_mp value ({0}) is less than the min_mp value ({1}).'.format(max_mp, min_mp))
+                error_list.append(f'*** ERROR: The value max_mp value ({max_mp}) is less than the min_mp value ({min_mp}).')
                 OK = False
 
             # check section "HISAT2 parameters" - key "no_softclip"
@@ -444,7 +445,7 @@ def check_hisat2_config_file(strict):
                 error_list.append('*** ERROR: the key "no_softclip" is not found in the section "HISAT2 parameters".')
                 OK = False
             elif not xlib.check_code(no_softclip, get_no_softclip_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "no_softclip" has to be {0}.'.format(get_no_softclip_code_list_text()))
+                error_list.append(f'*** ERROR: the key "no_softclip" has to be {get_no_softclip_code_list_text()}.')
                 OK = False
 
             # check section "HISAT2 parameters" - key "min_sp"
@@ -474,7 +475,7 @@ def check_hisat2_config_file(strict):
 
             # check if max_sp value is greater than or equal than min_sp value
             if is_ok_min_sp and is_ok_max_sp and int(max_sp) < int(min_sp):
-                error_list.append('*** ERROR: The value max_sp value ({0}) is less than the min_sp value ({1}).'.format(max_sp, min_sp))
+                error_list.append(f'*** ERROR: The value max_sp value ({max_sp}) is less than the min_sp value ({min_sp}).')
                 OK = False
 
             # check section "HISAT2 parameters" - key "np"
@@ -528,7 +529,7 @@ def check_hisat2_config_file(strict):
                 error_list.append('*** ERROR: the key "orientation" is not found in the section "HISAT2 parameters".')
                 OK = False
             elif not xlib.check_code(orientation, get_orientation_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "orientation" has to be {0}.'.format(get_orientation_code_list_text()))
+                error_list.append(f'*** ERROR: the key "orientation" has to be {get_orientation_code_list_text()}.')
                 OK = False
 
             # check section "HISAT2 parameters" - key "quality-zero-score"
@@ -541,7 +542,7 @@ def check_hisat2_config_file(strict):
                 OK = False
 
             # check section "HISAT2 parameters" - key "other_parameters"
-            not_allowed_parameters_list = ['nthreads', 'qseq', 'phred33', 'phred64', 'mp', 'sp', 'no-softclip', 'np', 'rdg', 'rfg', 'known-splicesite-infile', 'time', 'un', 'un-gz', 'un-bz2', 'al', 'al-gz', 'al-bz2', 'un-conc', 'un-conc-gz', 'un-conc-bz2', 'al-conc', 'al-conc-gz', 'al-conc-bz2', 'quiet', 'summary-file']
+            not_allowed_parameters_list = ['threads', 'qseq', 'phred33', 'phred64', 'mp', 'sp', 'no-softclip', 'np', 'rdg', 'rfg', 'known-splicesite-infile', 'time', 'un', 'un-gz', 'un-bz2', 'al', 'al-gz', 'al-bz2', 'un-conc', 'un-conc-gz', 'un-conc-bz2', 'al-conc', 'al-conc-gz', 'al-conc-bz2', 'quiet', 'summary-file']
             other_parameters = hisat2_option_dict.get('HISAT2 parameters', {}).get('other_parameters', not_found)
             if other_parameters == not_found:
                 error_list.append('*** ERROR: the key "other_parameters" is not found in the section "HISAT2 parameters".')
@@ -562,7 +563,7 @@ def check_hisat2_config_file(strict):
                 error_list.append('*** ERROR: the key "format" is not found in the section "library".')
                 OK = False
             elif not xlib.check_code(format, get_format_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "format" has to be {0}.'.format(get_format_code_list_text()))
+                error_list.append(f'*** ERROR: the key "format" has to be {get_format_code_list_text()}.')
                 OK = False
 
             # check section "library" - key "read_type"
@@ -571,7 +572,7 @@ def check_hisat2_config_file(strict):
                 error_list.append('*** ERROR: the key "read_type" is not found in the section "library".')
                 OK = False
             elif not xlib.check_code(read_type, get_read_type_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "read_type" has to be {0}.'.format(get_read_type_code_list_text()))
+                error_list.append(f'*** ERROR: the key "read_type" has to be {get_read_type_code_list_text()}.')
                 OK = False
 
         # check section "library-1"
@@ -586,7 +587,7 @@ def check_hisat2_config_file(strict):
 
                 # check than the section identification is like library-n 
                 if not re.match('^library-[0-9]+$', section):
-                    error_list.append('*** ERROR: the section "{0}" has a wrong identification.'.format(section))
+                    error_list.append(f'*** ERROR: the section "{section}" has a wrong identification.')
                     OK = False
 
                 else:
@@ -594,18 +595,18 @@ def check_hisat2_config_file(strict):
                     # check section "library-n" - key "read_file_1"
                     read_file_1 = hisat2_option_dict.get(section, {}).get('read_file_1', not_found)
                     if read_file_1 == not_found:
-                        error_list.append('*** ERROR: the key "read_file_1" is not found in the section "{0}"'.format(section))
+                        error_list.append(f'*** ERROR: the key "read_file_1" is not found in the section "{section}"')
                         OK = False
 
                     # check section "library-n" - key "read_file_2"
                     read_file_2 = hisat2_option_dict.get(section, {}).get('read_file_2', not_found)
                     if read_file_2 == not_found:
-                        error_list.append('*** ERROR: the key "read_file_2" is not found in the section "{0}"'.format(section))
+                        error_list.append(f'*** ERROR: the key "read_file_2" is not found in the section "{section}"')
                         OK = False
 
     # warn that the results config file is not valid if there are any errors
     if not OK:
-        error_list.append('\nThe {0} config file is not valid. Please, correct this file or recreate it.'.format(xlib.get_hisat2_name()))
+        error_list.append(f'\nThe {xlib.get_hisat2_name()} config file is not valid. Please, correct this file or recreate it.')
 
     # return the control variable and the error list
     return (OK, error_list)
@@ -686,7 +687,7 @@ def build_hisat2_process_script(cluster_name, current_run_dir):
 
     # set the directory and basename of the index HISAT2
     reference_file_name, reference_file_extension = os.path.splitext(reference_file)
-    hisat2_index_dir = '{0}/{1}-hisat2_indexes'.format(cluster_reference_dataset_dir, reference_file_name)
+    hisat2_index_dir = f'{cluster_reference_dataset_dir}/{reference_file_name}-hisat2_indexes'
     hisat2_index_basename = 'hisat2_indexes'
 
     # set the alignment file
@@ -717,17 +718,18 @@ def build_hisat2_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'SEP="#########################################"\n')
             script_file_id.write( 'export HOST_IP=`curl --silent checkip.amazonaws.com`\n')
             script_file_id.write( 'export HOST_ADDRESS="ec2-${HOST_IP//./-}-compute-1.amazonaws.com"\n')
-            script_file_id.write( '{0}\n'.format('HISAT2_PATH={0}/{1}/envs/{2}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name(), xlib.get_hisat2_bioconda_code())))
-            script_file_id.write( '{0}\n'.format('PATH=$HISAT2_PATH:$PATH'))
-            script_file_id.write( '{0}\n'.format('cd {0}/{1}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name())))
-            script_file_id.write( '{0}\n'.format('source activate {0}'.format(xlib.get_hisat2_bioconda_code())))
+            script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
+            script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('STATUS_DIR={0}'.format(xlib.get_status_dir(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('SCRIPT_STATUS_OK={0}'.format(xlib.get_status_ok(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('SCRIPT_STATUS_WRONG={0}'.format(xlib.get_status_wrong(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('mkdir --parents $STATUS_DIR'))
-            script_file_id.write( '{0}\n'.format('if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi'))
-            script_file_id.write( '{0}\n'.format('if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi'))
+            script_file_id.write(f'MINICONDA3_BIN_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
+            script_file_id.write(f'export PATH=$MINICONDA3_BIN_PATH:$PATH\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
+            script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
+            script_file_id.write(f'SCRIPT_STATUS_WRONG={xlib.get_status_wrong(current_run_dir)}\n')
+            script_file_id.write( 'mkdir --parents $STATUS_DIR\n')
+            script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
+            script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function init\n')
             script_file_id.write( '{\n')
@@ -737,56 +739,61 @@ def build_hisat2_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "Script started at $FORMATTED_INIT_DATETIME+00:00."\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write(f'    echo "CLUSTER: {cluster_name}"\n')
-            script_file_id.write(f'    echo "HOST_IP: $HOST_IP - HOST_ADDRESS: $HOST_ADDRESS"\n')
+            script_file_id.write( '    echo "HOST NAME: $HOSTNAME"\n')
+            script_file_id.write( '    echo "HOST IP: $HOST_IP"\n')
+            script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
             if reference_dataset_id.upper() != 'NONE' and index_building.upper() == 'YES':
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function build_hisat2_index'))
+                script_file_id.write( 'function build_hisat2_index\n')
                 script_file_id.write( '{\n')
-                script_file_id.write( '{0}\n'.format('    cd {0}'.format(current_run_dir)))
+                script_file_id.write(f'    source activate {xlib.get_hisat2_anaconda_code()}\n')
+                script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    /usr/bin/time \\'))
-                script_file_id.write( '{0}\n'.format('        --format="$SEP\\nElapsed real time (s): %e\\nCPU time in kernel mode (s): %S\\nCPU time in user mode (s): %U\\nPercentage of CPU: %P\\nMaximum resident set size(Kb): %M\\nAverage total memory use (Kb):%K" \\'))
-                script_file_id.write( '{0}\n'.format('        hisat2-build \\'))
-                script_file_id.write( '{0}\n'.format('            -p {0} \\'.format(threads)))
-                script_file_id.write( '{0}\n'.format('            -f \\'))
+                script_file_id.write( '    /usr/bin/time \\\n')
+                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
+                script_file_id.write( '        hisat2-build \\\n')
+                script_file_id.write(f'            -p {threads} \\\n')
+                script_file_id.write( '            -f \\\n')
                 if large_index.upper() == 'YES':
-                    script_file_id.write( '{0}\n'.format('            --large-index \\'))
+                    script_file_id.write( '            --large-index \\\n')
                 if splice_site_file.upper() != 'NONE':
-                    script_file_id.write( '{0}\n'.format('            --ss {0} \\'.format(cluster_splice_site_file)))
+                    script_file_id.write(f'            --ss {cluster_splice_site_file} \\\n')
                 if exon_file.upper() != 'NONE':
-                    script_file_id.write( '{0}\n'.format('            --exon {0} \\'.format(cluster_exon_file)))
-                script_file_id.write( '{0}\n'.format('            {0} \\'.format(cluster_reference_file)))
-                script_file_id.write( '{0}\n'.format('            {0}'.format(hisat2_index_basename)))
-                script_file_id.write( '{0}\n'.format('    RC=$?'))
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error hisat2-build $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    mkdir --parents {0}'.format(hisat2_index_dir)))
-                script_file_id.write( '{0}\n'.format('    RC=$?'))
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error mkdir $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    mv -f {0}.* {1}'.format(hisat2_index_basename, hisat2_index_dir)))
-                script_file_id.write( '{0}\n'.format('    RC=$?'))
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error mv $RC; fi'))
+                    script_file_id.write(f'            --exon {cluster_exon_file} \\\n')
+                script_file_id.write(f'            {cluster_reference_file} \\\n')
+                script_file_id.write(f'            {hisat2_index_basename}\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error hisat2-build $RC; fi\n')
+                script_file_id.write(f'    mkdir --parents {hisat2_index_dir}\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error mkdir $RC; fi\n')
+                script_file_id.write(f'    mv -f {hisat2_index_basename}.* {hisat2_index_dir}\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error mv $RC; fi\n')
+                script_file_id.write( '    conda deactivate\n')
                 script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function run_hisat2_process'))
+            script_file_id.write( 'function run_hisat2_process\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    cd {0}'.format(current_run_dir)))
+            script_file_id.write(f'    source activate {xlib.get_hisat2_anaconda_code()}\n')
+            script_file_id.write(f'    cd {current_run_dir}\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    hisat2 --version'))
+            script_file_id.write( '    hisat2 --version\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    /usr/bin/time \\'))
-            script_file_id.write( '{0}\n'.format('        --format="$SEP\\nElapsed real time (s): %e\\nCPU time in kernel mode (s): %S\\nCPU time in user mode (s): %U\\nPercentage of CPU: %P\\nMaximum resident set size(Kb): %M\\nAverage total memory use (Kb):%K" \\'))
-            script_file_id.write( '{0}\n'.format('        hisat2 \\'))
-            script_file_id.write( '{0}\n'.format('            --threads {0} \\'.format(threads)))
-            script_file_id.write( '{0}\n'.format('            --mp {0},{1} \\'.format(max_mp, min_mp)))
+            script_file_id.write( '    /usr/bin/time \\\n')
+            script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
+            script_file_id.write( '        hisat2 \\\n')
+            script_file_id.write(f'            --threads {threads} \\\n')
+            script_file_id.write(f'            --mp {max_mp},{min_mp} \\\n')
             if no_softclip.upper() != 'YES':
-                script_file_id.write( '{0}\n'.format('            --no-softclip \\'))
+                script_file_id.write( '            --no-softclip \\\n')
             else:
-                script_file_id.write( '{0}\n'.format('            --sp {0},{1} \\'.format(max_sp, min_sp)))
-            script_file_id.write( '{0}\n'.format('            --np {0} \\'.format(np)))
-            script_file_id.write( '{0}\n'.format('            --rdg {0},{1} \\'.format(open_rdg, extend_rdg)))
-            script_file_id.write( '{0}\n'.format('            --rfg {0},{1} \\'.format(open_rfg, extend_rfg)))
-            script_file_id.write( '{0}\n'.format('            --{0} \\'.format(orientation.lower())))
+                script_file_id.write(f'            --sp {max_sp},{min_sp} \\\n')
+            script_file_id.write(f'            --np {np} \\\n')
+            script_file_id.write(f'            --rdg {open_rdg},{extend_rdg} \\\n')
+            script_file_id.write(f'            --rfg {open_rfg},{extend_rfg} \\\n')
+            script_file_id.write(f'            --{orientation.lower()} \\\n')
             if other_parameters.upper() != 'NONE':
                 parameter_list = [x.strip() for x in other_parameters.split(';')]
                 for i in range(len(parameter_list)):
@@ -795,66 +802,96 @@ def build_hisat2_process_script(cluster_name, current_run_dir):
                         mo = re.search(pattern, parameter_list[i])
                         parameter_name = mo.group(1).strip()
                         parameter_value = mo.group(2).strip()
-                        script_file_id.write( '{0}\n'.format('            --{0} {1} \\'.format(parameter_name, parameter_value)))
+                        script_file_id.write(f'            --{parameter_name} {parameter_value} \\\n')
                     else:
                         pattern = r'^--(.+)$'
                         mo = re.search(pattern, parameter_list[i])
                         parameter_name = mo.group(1).strip()
-                        script_file_id.write( '{0}\n'.format('            --{0} \\'.format(parameter_name)))
+                        script_file_id.write(f'            --{parameter_name} \\\n')
             if splice_site_file.upper() != 'NONE':
-                script_file_id.write( '{0}\n'.format('            --known-splicesite-infile {0} \\'.format(cluster_splice_site_file)))
-            script_file_id.write( '{0}\n'.format('            -x {0}/{1} \\'.format(hisat2_index_dir, hisat2_index_basename)))
+                script_file_id.write(f'            --known-splicesite-infile {cluster_splice_site_file} \\\n')
+            script_file_id.write(f'            -x {hisat2_index_dir}/{hisat2_index_basename} \\\n')
             if format.upper() == 'FASTQ':
-                script_file_id.write( '{0}\n'.format('            -q \\'))
+                script_file_id.write( '            -q \\\n')
             elif format.upper() == 'FASTA':
-                script_file_id.write( '{0}\n'.format('            -f \\'))
+                script_file_id.write( '            -f \\\n')
             if read_type.upper() == 'SE':
-                script_file_id.write( '{0}\n'.format('            -U {0}'.format(','.join(read_file_1_list))))
+                script_file_id.write(f'            -U {",".join(read_file_1_list)}\n')
             elif read_type.upper() == 'PE':
-                script_file_id.write( '{0}\n'.format('            -1 {0} \\'.format(','.join(read_file_1_list))))
-                script_file_id.write( '{0}\n'.format('            -2 {0} \\'.format(','.join(read_file_2_list))))
-            script_file_id.write( '{0}\n'.format('            -S {0} \\'.format(alignment_file)))
-            script_file_id.write( '{0}\n'.format('            --un-gz {0} \\'.format(un_gz)))
-            script_file_id.write( '{0}\n'.format('            --al-gz {0} \\'.format(al_gz)))
-            script_file_id.write( '{0}\n'.format('            --un-conc-gz {0} \\'.format(un_conc_gz)))
-            script_file_id.write( '{0}\n'.format('            --al-conc-gz {0} \\'.format(al_conc_gz)))
-            script_file_id.write( '{0}\n'.format('            --summary-file {0} \\'.format(summary_file)))
-            script_file_id.write( '{0}\n'.format('            --time'))
-            script_file_id.write( '{0}\n'.format('    RC=$?'))
-            script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error hisat2 $RC; fi'))
+                script_file_id.write(f'            -1 {",".join(read_file_1_list)} \\\n')
+                script_file_id.write(f'            -2 {",".join(read_file_2_list)} \\\n')
+            script_file_id.write(f'            -S {alignment_file} \\\n')
+            script_file_id.write(f'            --un-gz {un_gz} \\\n')
+            script_file_id.write(f'            --al-gz {al_gz} \\\n')
+            script_file_id.write(f'            --un-conc-gz {un_conc_gz} \\\n')
+            script_file_id.write(f'            --al-conc-gz {al_conc_gz} \\\n')
+            script_file_id.write(f'            --summary-file {summary_file} \\\n')
+            script_file_id.write( '            --time\n')
+            script_file_id.write( '    RC=$?\n')
+            script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error hisat2 $RC; fi\n')
+            script_file_id.write( '    conda deactivate\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function end'))
+            script_file_id.write( 'function end\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    END_DATETIME=`date --utc +%s`'))
-            script_file_id.write( '{0}\n'.format('    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`'))
-            script_file_id.write( '{0}\n'.format('    calculate_duration'))
+            script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
+            script_file_id.write( '    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
+            script_file_id.write( '    calculate_duration\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "Script ended OK at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."'))
+            script_file_id.write( '    echo "Script ended OK at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    RECIPIENT={0}'.format(xconfiguration.get_contact_data())))
-            script_file_id.write( '{0}\n'.format('    SUBJECT="{0}: {1} process"'.format(xlib.get_project_name(), xlib.get_hisat2_name())))
-            script_file_id.write( '{0}\n'.format('    MESSAGE="{0}"'.format(xlib.get_mail_message_ok(xlib.get_hisat2_name(), cluster_name))))
-            script_file_id.write( '    mail --append "Content-type: text/html;" --append "FROM:root@NGScloud2" --subject="$SUBJECT" "$RECIPIENT" <<< "$MESSAGE"\n')
-            script_file_id.write( '{0}\n'.format('    touch $SCRIPT_STATUS_OK'))
-            script_file_id.write( '{0}\n'.format('    exit 0'))
+            script_file_id.write( '    send_mail ok\n')
+            script_file_id.write( '    touch $SCRIPT_STATUS_OK\n')
+            script_file_id.write( '    exit 0\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function manage_error'))
+            script_file_id.write( 'function manage_error\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    END_DATETIME=`date --utc +%s`'))
-            script_file_id.write( '{0}\n'.format('    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`'))
-            script_file_id.write( '{0}\n'.format('    calculate_duration'))
+            script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
+            script_file_id.write( '    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
+            script_file_id.write( '    calculate_duration\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "ERROR: $1 returned error $2"'))
-            script_file_id.write( '{0}\n'.format('    echo "Script ended WRONG at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."'))
+            script_file_id.write( '    echo "ERROR: $1 returned error $2"\n')
+            script_file_id.write( '    echo "Script ended WRONG at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    RECIPIENT={0}'.format(xconfiguration.get_contact_data())))
-            script_file_id.write( '{0}\n'.format('    SUBJECT="{0}: {1} process"'.format(xlib.get_project_name(), xlib.get_hisat2_name())))
-            script_file_id.write( '{0}\n'.format('    MESSAGE="{0}"'.format(xlib.get_mail_message_wrong(xlib.get_hisat2_name(), cluster_name))))
-            script_file_id.write( '    mail --append "Content-type: text/html;" --append "FROM:root@NGScloud2" --subject="$SUBJECT" "$RECIPIENT" <<< "$MESSAGE"\n')
-            script_file_id.write( '{0}\n'.format('    touch $SCRIPT_STATUS_WRONG'))
-            script_file_id.write( '{0}\n'.format('    exit 3'))
+            script_file_id.write( '    send_mail wrong\n')
+            script_file_id.write( '    touch $SCRIPT_STATUS_WRONG\n')
+            script_file_id.write( '    exit 3\n')
+            script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            process_name = f'{xlib.get_hisat2_name()} process'
+            mail_message_ok = xlib.get_mail_message_ok(process_name, cluster_name)
+            mail_message_wrong = xlib.get_mail_message_wrong(process_name, cluster_name)
+            script_file_id.write( 'function send_mail\n')
+            script_file_id.write( '{\n')
+            script_file_id.write(f'    SUBJECT="{xlib.get_project_name()}: {process_name}"\n')
+            script_file_id.write( '    if [ "$1" == "ok" ]; then\n')
+            script_file_id.write(f'        MESSAGE="{mail_message_ok}"\n')
+            script_file_id.write( '    elif [ "$1" == "wrong" ]; then\n')
+            script_file_id.write(f'        MESSAGE="{mail_message_wrong}"\n')
+            script_file_id.write( '    else\n')
+            script_file_id.write( '         MESSAGE=""\n')
+            script_file_id.write( '    fi\n')
+            script_file_id.write( '    DESTINATION_FILE=mail-destination.json\n')
+            script_file_id.write( '    echo "{" > $DESTINATION_FILE\n')
+            script_file_id.write(f'    echo "    \\\"ToAddresses\\\":  [\\\"{xconfiguration.get_contact_data()}\\\"]," >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "    \\\"CcAddresses\\\":  []," >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "    \\\"BccAddresses\\\":  []" >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "}" >> $DESTINATION_FILE\n')
+            script_file_id.write( '    MESSAGE_FILE=mail-message.json\n')
+            script_file_id.write( '    echo "{" > $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    \\\"Subject\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Data\\\":  \\\"$SUBJECT\\\"," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    }," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    \\\"Body\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Html\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "            \\\"Data\\\":  \\\"$MESSAGE\\\"," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "            \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        }" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    }" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "}" >> $MESSAGE_FILE\n')
+            script_file_id.write(f'    aws ses send-email --from {xconfiguration.get_contact_data()} --destination file://$DESTINATION_FILE --message file://$MESSAGE_FILE\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function calculate_duration\n')
@@ -868,11 +905,12 @@ def build_hisat2_process_script(cluster_name, current_run_dir):
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
             if reference_dataset_id.upper() != 'NONE' and index_building.upper() == 'YES':
-                script_file_id.write( '{0}\n'.format('build_hisat2_index'))
-            script_file_id.write( '{0}\n'.format('run_hisat2_process'))
+                script_file_id.write( 'build_hisat2_index\n')
+            script_file_id.write( 'run_hisat2_process\n')
             script_file_id.write( 'end\n')
     except Exception as e:
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_hisat2_process_script()))
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append(f'*** ERROR: The file {get_hisat2_process_script()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -894,11 +932,12 @@ def build_hisat2_process_starter(current_run_dir):
         if not os.path.exists(os.path.dirname(get_hisat2_process_starter())):
             os.makedirs(os.path.dirname(get_hisat2_process_starter()))
         with open(get_hisat2_process_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
-            file_id.write( '{0}\n'.format('#!/bin/bash'))
-            file_id.write( '{0}\n'.format('#-------------------------------------------------------------------------------'))
-            file_id.write( '{0}\n'.format('{0}/{1} &>{0}/{2}'.format(current_run_dir, os.path.basename(get_hisat2_process_script()), xlib.get_cluster_log_file())))
+            file_id.write( '#!/bin/bash\n')
+            file_id.write( '#-------------------------------------------------------------------------------\n')
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_hisat2_process_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_hisat2_process_starter()))
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append(f'*** ERROR: The file {get_hisat2_process_starter()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -912,7 +951,7 @@ def get_hisat2_config_file():
     '''
 
     # assign the HISAT2 config file path
-    hisat2_config_file = '{0}/{1}-config.txt'.format(xlib.get_config_dir(), xlib.get_hisat2_code())
+    hisat2_config_file = f'{xlib.get_config_dir()}/{xlib.get_hisat2_code()}-config.txt'
 
     # return the HISAT2 config file path
     return hisat2_config_file
@@ -925,7 +964,7 @@ def get_hisat2_process_script():
     '''
 
     # assign the HISAT2 script path
-    hisat2_process_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_hisat2_code())
+    hisat2_process_script = f'{xlib.get_temp_dir()}/{xlib.get_hisat2_code()}-process.sh'
 
     # return the HISAT2 script path
     return hisat2_process_script
@@ -938,7 +977,7 @@ def get_hisat2_process_starter():
     '''
 
     # assign the HISAT2 process starter path
-    hisat2_process_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_hisat2_code())
+    hisat2_process_starter = f'{xlib.get_temp_dir()}/{xlib.get_hisat2_code()}-process-starter.sh'
 
     # return the HISAT2 starter path
     return hisat2_process_starter
@@ -959,7 +998,7 @@ def get_assembly_software_code_list_text():
     Get the code list of "assembly_software" as text.
     '''
 
-    return '{0} ({1}) or {2} ({3}) or {4} ({5}) or {6} ({7}) or {8} ({9}) or {10} ({11})'.format(xlib.get_soapdenovotrans_code(), xlib.get_soapdenovotrans_name(), xlib.get_transabyss_code(), xlib.get_transabyss_name(), xlib.get_trinity_code(), xlib.get_trinity_name(), xlib.get_ggtrinity_code(), xlib.get_ggtrinity_name(), xlib.get_cd_hit_est_code(), xlib.get_cd_hit_est_name(), xlib.get_transcript_filter_code(), xlib.get_transcript_filter_name())
+    return f'{xlib.get_soapdenovotrans_code()} ({xlib.get_soapdenovotrans_name()}) or {xlib.get_transabyss_code()} ({xlib.get_transabyss_name()}) or {xlib.get_trinity_code()} ({xlib.get_trinity_name()}) or {xlib.get_ggtrinity_code()} ({xlib.get_ggtrinity_name()}) or {xlib.get_cd_hit_est_code()} ({xlib.get_cd_hit_est_name()}) or {xlib.get_transcript_filter_code()} ({xlib.get_transcript_filter_name()})'
 
 #-------------------------------------------------------------------------------
 
@@ -1017,42 +1056,6 @@ def get_large_index_code_list_text():
 
 #-------------------------------------------------------------------------------
 
-def get_prunelevel_code_list():
-    '''
-    Get the code list of "prunelevel".
-    '''
-
-    return ['0', '1', '2', '3']
-
-#-------------------------------------------------------------------------------
-
-def get_prunelevel_code_list_text():
-    '''
-    Get the code list of "prunelevel" as text.
-    '''
-
-    return '0 (no pruning) or 1 (poor seqs) or 2 (repetitive seqs) or 3 (poor and repetitive)'
-
-#-------------------------------------------------------------------------------
-
-def get_gmap_output_format_code_list():
-    '''
-    Get the code list of "format".
-    '''
-
-    return ['COMPRESS', 'SUMMARY', 'ALIGN', 'PLS', 'GFF3_GENE', 'SPLICESITES', 'INTRONS', 'MAP_EXONS', 'MAP_RANGES', 'COORDS']
-
-#-------------------------------------------------------------------------------
-
-def get_gmap_output_format_code_list_text():
-    '''
-    Get the code list of "format" as text.
-    '''
-
-    return str(get_gmap_output_format_code_list()).strip('[]').replace('\'','').replace(',', ' or')
-
-#-------------------------------------------------------------------------------
-
 def get_orientation_code_list():
     '''
     Get the code list of "orientation".
@@ -1086,24 +1089,6 @@ def get_quality_score_code_list_text():
     '''
 
     return '33 (Phred+33) or 64 (Phred+64)'
-
-#-------------------------------------------------------------------------------
-
-def get_gsnap_output_format_code_list():
-    '''
-    Get the code list of "format".
-    '''
-
-    return ['SAM', 'M8']
-
-#-------------------------------------------------------------------------------
-
-def get_gsnap_output_format_code_list_text():
-    '''
-    Get the code list of "format" as text.
-    '''
-
-    return str(get_gsnap_output_format_code_list()).strip('[]').replace('\'','').replace(',', ' or')
 
 #-------------------------------------------------------------------------------
 

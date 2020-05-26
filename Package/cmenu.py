@@ -32,6 +32,8 @@ import clog
 import ctoa
 import xddradseqtools
 import xlib
+import xngshelper
+import xraddesigner
 import xtoa
 
 #-------------------------------------------------------------------------------
@@ -48,19 +50,19 @@ def build_menu_main():
         clib.print_headers_with_environment('Main')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Cloud control')
+        print( '    1. Cloud control')
         print()
-        print('    2. De novo RNA-seq')
-        print('    3. Reference-based RNA-seq')
-        print('    4. Tree-oriented annotation')
-        # -- print('    5. RAD-seq')
+        print( '    2. De novo RNA-seq')
+        print( '    3. Reference-based RNA-seq')
+        print( '    4. RAD-seq')
+        print( '    5. Tree-oriented annotation')
         print()
-        print('    5. Datasets')
-        print('    6. Logs')
+        print( '    6. Datasets')
+        print( '    7. Logs')
         print()
-        print('    X. Exit {0}'.format(xlib.get_project_name()))
+        print(f'    X. Exit {xlib.get_project_name()}')
         print()
 
         # get the selected option
@@ -74,18 +76,18 @@ def build_menu_main():
         elif option == '3':
             build_menu_reference_based_rnaseq()
         elif option == '4':
-            build_menu_toa()
-        # -- elif option == '5':
-        # --     build_menu_radseq()
+            build_menu_radseq()
         elif option == '5':
-            build_menu_datasets()
+            build_menu_toa()
         elif option == '6':
+            build_menu_datasets()
+        elif option == '7':
             build_menu_logs()
         elif option == 'X':
             sure = ''
-            print('')
+            print( '')
             while sure not in ['Y', 'N']:
-                sure = input('Are you sure to exit {0}? (y or n): '.format(xlib.get_project_name())).upper()
+                sure = input(f'Are you sure to exit {xlib.get_project_name()}? (y or n): ').upper()
             if sure == 'Y':
                 break
 
@@ -103,22 +105,22 @@ def build_menu_cloud_control():
         clib.print_headers_with_environment('Cloud control')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Set environment')
+        print( '    1. Set environment')
         print()
-        print('    2. Configuration')
-        print('    3. Security')
+        print( '    2. Configuration')
+        print( '    3. Security')
         print()
-        print('    4. Cluster operation')
-        print('    5. Node operation')
-        print('    6. Volume operation')
+        print( '    4. Cluster operation')
+        print( '    5. Node operation')
+        print( '    6. Volume operation')
         print()
-        print('    7. Bioinfo software installation')
+        print( '    7. Bioinfo software installation')
         print()
-        print('    8. Open a terminal')
+        print( '    8. Open a terminal')
         print()
-        print('    X. Return to menu Main')
+        print( '    X. Return to menu Main')
         print()
 
         # get the selected option
@@ -159,19 +161,19 @@ def build_menu_configuration():
         clib.print_headers_with_environment('Configuration')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate {0} config file'.format(xlib.get_project_name()))
-        print('    2. View {0} config file'.format(xlib.get_project_name()))
+        print(f'    1. Recreate {xlib.get_project_name()} config file')
+        print(f'    2. View {xlib.get_project_name()} config file')
         print()
-        print('    3. List instance types')
+        print( '    3. List instance types')
         print()
-        print('    4. Update connection data and contact e-mail')
-        print('    5. Update region and zone')
+        print( '    4. Update connection data and contact e-mail')
+        print( '    5. Update region and zone')
         print()
-        print('    6. Link volumes')
+        print( '    6. Link volumes')
         print()
-        print('    X. Return to menu Cloud control')
+        print( '    X. Return to menu Cloud control')
         print()
 
         # get the selected option
@@ -207,15 +209,15 @@ def build_menu_security():
         clib.print_headers_with_environment('Security')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. List key pairs')
-        print('    2. Create key pairs')
+        print( '    1. List key pairs')
+        print( '    2. Create key pairs')
         print()
-        print('    3. List cluster security groups (coming soon!)')
-        print('    4. Force removal of a cluster security group (coming soon!)')
+        print( '    3. List cluster security groups (coming soon!)')
+        print( '    4. Force removal of a cluster security group (coming soon!)')
         print()
-        print('    X. Return to menu Cloud control')
+        print( '    X. Return to menu Cloud control')
         print()
 
         # get the selected option
@@ -247,21 +249,21 @@ def build_menu_cluster_operation():
         clib.print_headers_with_environment('Cluster operation')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. List clusters')
+        print( '    1. List clusters')
         print()
-        print('    2. Create cluster')
-        print('    3. Terminate cluster')
+        print( '    2. Create cluster')
+        print( '    3. Terminate cluster')
         print()
-        print('    4. Force termination of a cluster')
+        print( '    4. Force termination of a cluster')
         print()
-        print('    5. Show cluster composition')
+        print( '    5. Show cluster composition')
         print()
-        print('    6. Show status of batch jobs')
-        print('    7. Kill batch job')
+        print( '    6. Show status of batch jobs')
+        print( '    7. Kill batch job')
         print()
-        print('    X. Return to menu Cloud Control')
+        print( '    X. Return to menu Cloud Control')
         print()
 
         # get the selected option
@@ -299,14 +301,14 @@ def build_menu_node_operation():
         clib.print_headers_with_environment('Node operation')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. List nodes')
+        print( '    1. List nodes')
         print()
-        print('    2. Add node in a cluster')
-        print('    3. Remove node in a cluster')
+        print( '    2. Add node in a cluster')
+        print( '    3. Remove node in a cluster')
         print()
-        print('    X. Return to menu Cloud Control')
+        print( '    X. Return to menu Cloud Control')
         print()
 
         # get the selected option
@@ -336,19 +338,19 @@ def build_menu_volume_operation():
         clib.print_headers_with_environment('Volume operation')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. List volumes')
+        print( '    1. List volumes')
         print()
-        print('    2. Create volume')
-        print('    3. Remove volume')
+        print( '    2. Create volume')
+        print( '    3. Remove volume')
         print()
-        print('    4. Terminate volume creator')
+        print( '    4. Terminate volume creator')
         print()
-        print('    5. Mount volume in a node')
-        print('    6. Unmount volume in a node')
+        print( '    5. Mount volume in a node')
+        print( '    6. Unmount volume in a node')
         print()
-        print('    X. Return to menu Cloud Control')
+        print( '    X. Return to menu Cloud Control')
         print()
 
         # get the selected option
@@ -384,43 +386,52 @@ def build_menu_bioinfo_software_installation():
         clib.print_headers_with_environment('Bioinfo software installation')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    0. {0} (Bioconda infrastructure)'.format(xlib.get_miniconda3_name()))
+        print(f'    0. {xlib.get_miniconda3_name()} (Bioconda infrastructure)')
         print()
-        print('    1. {0}'.format(xlib.get_blastplus_name()))
-        print('    2. {0}'.format(xlib.get_busco_name()))
-        print('    3. {0}'.format(xlib.get_cd_hit_name()))
-        print('    4. {0}'.format(xlib.get_cufflinks_name()))
-        print('    5. {0}'.format(xlib.get_cutadapt_name()))
-        print('    6. {0}'.format(xlib.get_ddradseqtools_name()))
-        print('    7. {0}'.format(xlib.get_detonate_name()))
-        print('    8. {0}'.format(xlib.get_entrez_direct_name()))
-        print('    9. {0}'.format(xlib.get_fastqc_name()))
-        print('    A. {0}'.format(xlib.get_gmap_gsnap_name()))
-        print('    B. {0}'.format(xlib.get_hisat2_name()))
-        print('    C. {0}'.format(xlib.get_htseq_name()))
-        print('    D. {0}'.format(xlib.get_ipyrad_name()))
-        print('    E. {0}'.format(xlib.get_kallisto_name()))
-        print('    F. {0}'.format(xlib.get_ngshelper_name()))
-        print('    G. {0}'.format(xlib.get_quast_name()))
-        print('    H. {0}'.format(xlib.get_rnaquast_name()))
-        print('    I. {0}'.format(xlib.get_soapdenovo2_name()))
-        print('    J. {0}'.format(xlib.get_soapdenovotrans_name()))
-        print('    K. {0}'.format(xlib.get_star_name()))
-        print('    L. {0}'.format(xlib.get_starcode_name()))
-        print('    M. {0}'.format(xlib.get_toa_name()))
-        print('    N. {0}'.format(xlib.get_tophat_name()))
-        print('    O. {0}'.format(xlib.get_transabyss_name()))
-        print('    P. {0}'.format(xlib.get_transdecoder_name()))
-        print('    Q. {0}'.format(xlib.get_transrate_name()))
-        print('    R. {0}'.format(xlib.get_trimmomatic_name()))
-        print('    S. {0}'.format(xlib.get_trinity_name()))
-        print('    T. {0}'.format(xlib.get_vsearch_name()))
+        print(f'    1. {xlib.get_bcftools_name()}')
+        print(f'    2. {xlib.get_bedtools_name()}')
+        print(f'    3. {xlib.get_blastplus_name()}')
+        print(f'    4. {xlib.get_bowtie2_name()}')
+        print(f'    5. {xlib.get_busco_name()}')
+        print(f'    6. {xlib.get_cd_hit_name()}')
+        print(f'    7. {xlib.get_cufflinks_name()}')
+        print(f'    8. {xlib.get_cutadapt_name()}')
+        print(f'    9. {xlib.get_ddradseqtools_name()}')
+        print(f'   10. {xlib.get_detonate_name()}')
+        print(f'   11. {xlib.get_entrez_direct_name()}')
+        print(f'   12. {xlib.get_express_name()}')
+        print(f'   13. {xlib.get_fastqc_name()}')
+        print(f'   14. {xlib.get_gmap_gsnap_name()}')
+        print(f'   15. {xlib.get_hisat2_name()}')
+        print(f'   16. {xlib.get_htseq_name()}')
+        print(f'   17. {xlib.get_ipyrad_name()}')
+        print(f'   18. {xlib.get_kallisto_name()}')
+        print(f'   19. {xlib.get_ngshelper_name()}')
+        print(f'   20. {xlib.get_quast_name()}')
+        print(f'   21. {xlib.get_raddesigner_name()}')
+        print(f'   22. {xlib.get_rnaquast_name()}')
+        print(f'   23. {xlib.get_rsem_name()}')
+        print(f'   24. {xlib.get_samtools_name()}')
+        print(f'   25. {xlib.get_soapdenovo2_name()}')
+        print(f'   26. {xlib.get_soapdenovotrans_name()}')
+        print(f'   27. {xlib.get_star_name()}')
+        print(f'   28. {xlib.get_starcode_name()}')
+        print(f'   29. {xlib.get_toa_name()}')
+        print(f'   30. {xlib.get_tophat_name()}')
+        print(f'   31. {xlib.get_transabyss_name()}')
+        print(f'   32. {xlib.get_transdecoder_name()}')
+        print(f'   33. {xlib.get_transrate_name()}')
+        print(f'   34. {xlib.get_trimmomatic_name()}')
+        print(f'   35. {xlib.get_trinity_name()}')
+        print(f'   36. {xlib.get_vcftools_name()}')
+        print(f'   37. {xlib.get_vcftools_perl_libraries_name()}')
+        print(f'   38. {xlib.get_vsearch_name()}')
         print()
-        print('    W. {0} & analysis packages'.format(xlib.get_r_name()))
+        print(f'   39. {xlib.get_r_name()} & analysis packages')
         print()
-        print('    X. Return to menu Cloud Control')
+        print( '    X. Return to menu Cloud Control')
         print()
 
         # get the selected option
@@ -430,64 +441,82 @@ def build_menu_bioinfo_software_installation():
         if option == '0':
             cbioinfoapp.form_installation_bioinfo_app(xlib.get_miniconda3_code())
         elif option == '1':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_blastplus_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_bcftools_code())
         elif option == '2':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_busco_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_bedtools_code())
         elif option == '3':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_cd_hit_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_blastplus_code())
         elif option == '4':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_cufflinks_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_bowtie2_code())
         elif option == '5':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_cutadapt_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_busco_code())
         elif option == '6':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_ddradseqtools_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_cd_hit_code())
         elif option == '7':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_detonate_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_cufflinks_code())
         elif option == '8':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_entrez_direct_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_cutadapt_code())
         elif option == '9':
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_ddradseqtools_code())
+        elif option == '10':
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_detonate_code())
+        elif option == '11':
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_entrez_direct_code())
+        elif option == '12':
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_express_code())
+        elif option == '13':
             cbioinfoapp.form_installation_bioinfo_app(xlib.get_fastqc_code())
-        elif option == 'A':
+        elif option == '14':
             cbioinfoapp.form_installation_bioinfo_app(xlib.get_gmap_gsnap_code())
-        elif option == 'B':
+        elif option == '15':
             cbioinfoapp.form_installation_bioinfo_app(xlib.get_hisat2_code())
-        elif option == 'C':
+        elif option == '16':
             cbioinfoapp.form_installation_bioinfo_app(xlib.get_htseq_code())
-        elif option == 'D':
+        elif option == '17':
             cbioinfoapp.form_installation_bioinfo_app(xlib.get_ipyrad_code())
-        elif option == 'E':
+        elif option == '18':
             cbioinfoapp.form_installation_bioinfo_app(xlib.get_kallisto_code())
-        elif option == 'F':
+        elif option == '19':
             cbioinfoapp.form_installation_bioinfo_app(xlib.get_ngshelper_code())
-        elif option == 'G':
+        elif option == '20':
             cbioinfoapp.form_installation_bioinfo_app(xlib.get_quast_code())
-        elif option == 'H':
+        elif option == '21':
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_raddesigner_code())
+        elif option == '22':
             cbioinfoapp.form_installation_bioinfo_app(xlib.get_rnaquast_code())
-        elif option == 'I':
+        elif option == '23':
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_rsem_code())
+        elif option == '24':
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_samtools_code())
+        elif option == '25':
             cbioinfoapp.form_installation_bioinfo_app(xlib.get_soapdenovo2_code())
-        elif option == 'J':
+        elif option == '26':
             cbioinfoapp.form_installation_bioinfo_app(xlib.get_soapdenovotrans_code())
-        elif option == 'K':
+        elif option == '27':
             cbioinfoapp.form_installation_bioinfo_app(xlib.get_star_code())
-        elif option == 'L':
+        elif option == '28':
             cbioinfoapp.form_installation_bioinfo_app(xlib.get_starcode_code())
-        elif option == 'M':
+        elif option == '29':
             cbioinfoapp.form_installation_bioinfo_app(xlib.get_toa_code())
-        elif option == 'N':
+        elif option == '30':
             cbioinfoapp.form_installation_bioinfo_app(xlib.get_tophat_code())
-        elif option == 'O':
+        elif option == '31':
             cbioinfoapp.form_installation_bioinfo_app(xlib.get_transabyss_code())
-        elif option == 'P':
+        elif option == '32':
             cbioinfoapp.form_installation_bioinfo_app(xlib.get_transdecoder_code())
-        elif option == 'Q':
+        elif option == '33':
             cbioinfoapp.form_installation_bioinfo_app(xlib.get_transrate_code())
-        elif option == 'R':
+        elif option == '34':
             cbioinfoapp.form_installation_bioinfo_app(xlib.get_trimmomatic_code())
-        elif option == 'S':
+        elif option == '35':
             cbioinfoapp.form_installation_bioinfo_app(xlib.get_trinity_code())
-        elif option == 'T':
+        elif option == '36':
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_vcftools_code())
+        elif option == '37':
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_vcftools_perl_libraries_code())
+        elif option == '38':
             cbioinfoapp.form_installation_bioinfo_app(xlib.get_vsearch_code())
-        elif option == 'W':
+        elif option == '39':
              cbioinfoapp.form_installation_bioinfo_app(xlib.get_r_code())
         elif option == 'X':
             break
@@ -506,22 +535,24 @@ def build_menu_denovo_rnaseq():
         clib.print_headers_with_environment('De novo RNA-seq')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Read quality')
-        print('    2. Trimming')
-        print('    3. Digital normalization')
+        print( '    1. Read quality')
+        print( '    2. Trimming')
+        print( '    3. Digital normalization')
         print()
-        print('    4. Assembly')
+        print( '    4. Assembly')
         print()
-        print('    5. Transcriptome quality assessment')
-        print('    6. Transcriptome filtering')
+        print( '    5. Read alignment')
         print()
-        print('    7. Quantitation')
+        print( '    6. Transcriptome quality assessment')
+        print( '    7. Transcriptome filtering')
         print()
-        print('    8. Annotation')
+        print( '    8. Quantitation')
         print()
-        print('    X. Return to menu Main')
+        print( '    9. Annotation')
+        print()
+        print( '    X. Return to menu Main')
         print()
 
         # get the selected option
@@ -537,12 +568,14 @@ def build_menu_denovo_rnaseq():
         elif option == '4':
             build_menu_denovo_rnaseq_assembly()
         elif option == '5':
-            build_menu_denovo_rnaseq_transcriptome_quality_assessment()
+            build_menu_denovo_rnaseq_read_alignment()
         elif option == '6':
-            build_menu_denovo_rnaseq_transcriptome_transcriptome_filtering()
+            build_menu_denovo_rnaseq_transcriptome_quality_assessment()
         elif option == '7':
-            build_menu_denovo_rnaseq_quantitation()
+            build_menu_denovo_rnaseq_transcriptome_transcriptome_filtering()
         elif option == '8':
+            build_menu_denovo_rnaseq_quantitation()
+        elif option == '9':
             build_menu_denovo_rnaseq_annotation()
         elif option == 'X':
             break
@@ -561,11 +594,11 @@ def build_menu_denovo_rnaseq_read_quality():
         clib.print_headers_with_environment('De novo RNA-seq - Read quality')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. {0}'.format(xlib.get_fastqc_name()))
+        print(f'    1. {xlib.get_fastqc_name()}')
         print()
-        print('    X. Return to menu De novo RNA-seq')
+        print( '    X. Return to menu De novo RNA-seq')
         print()
 
         # get the selected option
@@ -591,12 +624,12 @@ def build_menu_denovo_rnaseq_trimming():
         clib.print_headers_with_environment('De novo RNA-seq - Trimming')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. {0}'.format(xlib.get_cutadapt_name()))
-        print('    2. {0}'.format(xlib.get_trimmomatic_name()))
+        print(f'    1. {xlib.get_cutadapt_name()}')
+        print(f'    2. {xlib.get_trimmomatic_name()}')
         print()
-        print('    X. Return to menu De novo RNA-seq')
+        print( '    X. Return to menu De novo RNA-seq')
         print()
 
         # get the selected option
@@ -624,11 +657,11 @@ def build_menu_denovo_rnaseq_digital_normalization():
         clib.print_headers_with_environment('De novo RNA-seq - Digital normalization')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. {0} ({1} package)'.format(xlib.get_insilico_read_normalization_name(), xlib.get_trinity_name()))
+        print(f'    1. {xlib.get_insilico_read_normalization_name()} ({xlib.get_trinity_name()} package)')
         print()
-        print('    X. Return to menu De novo RNA-seq')
+        print( '    X. Return to menu De novo RNA-seq')
         print()
 
         # get the selected option
@@ -654,13 +687,13 @@ def build_menu_denovo_rnaseq_assembly():
         clib.print_headers_with_environment('De novo RNA-seq - Assembly')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. {0}'.format(xlib.get_soapdenovotrans_name()))
-        print('    2. {0}'.format(xlib.get_transabyss_name()))
-        print('    3. {0}'.format(xlib.get_trinity_name()))
+        print(f'    1. {xlib.get_soapdenovotrans_name()}')
+        print(f'    2. {xlib.get_transabyss_name()}')
+        print(f'    3. {xlib.get_trinity_name()}')
         print()
-        print('    X. Return to menu De novo RNA-seq')
+        print( '    X. Return to menu De novo RNA-seq')
         print()
 
         # get the selected option
@@ -678,6 +711,37 @@ def build_menu_denovo_rnaseq_assembly():
 
 #-------------------------------------------------------------------------------
 
+def build_menu_denovo_rnaseq_read_alignment():
+    '''
+    Build the menu denovo RNA-seq - Read alignment.
+    '''
+
+    while True:
+
+        # print headers
+        clib.clear_screen()
+        clib.print_headers_with_environment('De novo RNA-seq - Read alignment')
+
+        # print the menu options
+        print( 'Options:')
+        print()
+        print(f'    1. {xlib.get_bowtie2_name()}')
+        print(f'    2. {xlib.get_gsnap_name()} ({xlib.get_gmap_gsnap_name()} package)')
+        print()
+        print( '    X. Return to menu De novo RNA-seq')
+        print()
+
+        # get the selected option
+        option = input('Input the selected option: ').upper()
+
+        # process the selected option
+        if option == '1':
+            build_menu_bowtie2()
+        elif option == 'X':
+            break
+
+#-------------------------------------------------------------------------------
+
 def build_menu_denovo_rnaseq_transcriptome_quality_assessment():
     '''
     Build the menu De novo RNA-seq- Transcriptome quality assessment.
@@ -690,15 +754,15 @@ def build_menu_denovo_rnaseq_transcriptome_quality_assessment():
         clib.print_headers_with_environment('De novo RNA-seq - Transcriptome quality assessment')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. {0}'.format(xlib.get_busco_name()))
-        print('    2. {0}'.format(xlib.get_quast_name()))
-        print('    3. {0}'.format(xlib.get_rnaquast_name()))
-        print('    4. {0} ({1} package)'.format(xlib.get_rsem_eval_name(), xlib.get_detonate_name()))
-        print('    5. {0}'.format(xlib.get_transrate_name()))
+        print(f'    1. {xlib.get_busco_name()}')
+        print(f'    2. {xlib.get_quast_name()}')
+        print(f'    3. {xlib.get_rnaquast_name()}')
+        print(f'    4. {xlib.get_rsem_eval_name()} ({xlib.get_detonate_name()} package)')
+        print(f'    5. {xlib.get_transrate_name()}')
         print()
-        print('    X. Return to menu De novo RNA-seq')
+        print( '    X. Return to menu De novo RNA-seq')
         print()
 
         # get the selected option
@@ -732,12 +796,12 @@ def build_menu_denovo_rnaseq_transcriptome_transcriptome_filtering():
         clib.print_headers_with_environment('De novo RNA-seq - Transcriptome filtering')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. {0} ({1} package)'.format(xlib.get_cd_hit_est_name(), xlib.get_cd_hit_name()))
-        print('    2. {0} ({1} package)'.format(xlib.get_transcript_filter_name(), xlib.get_ngshelper_name()))
+        print(f'    1. {xlib.get_cd_hit_est_name()} ({xlib.get_cd_hit_name()} package)')
+        print(f'    2. {xlib.get_transcript_filter_name()} ({xlib.get_ngshelper_name()} package)')
         print()
-        print('    X. Return to menu De novo RNA-seq')
+        print( '    X. Return to menu De novo RNA-seq')
         print()
 
         # get the selected option
@@ -765,11 +829,12 @@ def build_menu_denovo_rnaseq_quantitation():
         clib.print_headers_with_environment('De novo RNA-seq - Quantitation')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. {0}'.format(xlib.get_kallisto_name()))
+        print(f'    1. {xlib.get_express_name()}')
+        print(f'    2. {xlib.get_kallisto_name()}')
         print()
-        print('    X. Return to menu De novo RNA-seq')
+        print( '    X. Return to menu De novo RNA-seq')
         print()
 
         # get the selected option
@@ -777,6 +842,8 @@ def build_menu_denovo_rnaseq_quantitation():
 
         # process the selected option
         if option == '1':
+            build_menu_express()
+        elif option == '':
             build_menu_kallisto()
         elif option == 'X':
             break
@@ -795,11 +862,11 @@ def build_menu_denovo_rnaseq_annotation():
         clib.print_headers_with_environment('De novo RNA-seq - Annotation')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. {0} ({1} package)'.format(xlib.get_transcriptome_blastx_name(), xlib.get_ngshelper_name()))
+        print(f'    1. {xlib.get_transcriptome_blastx_name()} ({xlib.get_ngshelper_name()} package)')
         print()
-        print('    X. Return to menu De novo RNA-seq')
+        print( '    X. Return to menu De novo RNA-seq')
         print()
 
         # get the selected option
@@ -825,20 +892,22 @@ def build_menu_reference_based_rnaseq():
         clib.print_headers_with_environment('Reference-based RNA-seq')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Read quality')
-        print('    2. Trimming')
+        print( '    1. Read quality')
+        print( '    2. Trimming')
         print()
-        print('    3. Read alignment')
-        print('    4. Assembly')
-        print('    5. Transcriptome alignment')
+        print( '    3. Assembly')
         print()
-        print('    6. Quantitation')
+        print( '    4. Read alignment')
+        print( '    5. Transcriptome alignment')
         print()
-        print('    7. Differential expression')
+        print( '    6. Quantitation')
+        print( '    7. Differential expression')
         print()
-        print('    X. Return to menu Main')
+        print( '    8. Variant calling')
+        print()
+        print( '    X. Return to menu Main')
         print()
 
         # get the selected option
@@ -850,15 +919,17 @@ def build_menu_reference_based_rnaseq():
         elif option == '2':
             build_menu_reference_based_rnaseq_trimming()
         elif option == '3':
-            build_menu_reference_based_rnaseq_read_alignment()
-        elif option == '4':
             build_menu_reference_based_rnaseq_assembly()
+        elif option == '4':
+            build_menu_reference_based_rnaseq_read_alignment()
         elif option == '5':
             build_menu_reference_based_rnaseq_transcriptome_alignment()
         elif option == '6':
             build_menu_reference_based_rnaseq_quantitation()
         elif option == '7':
             build_menu_reference_based_rnaseq_differential_expression()
+        elif option == '8':
+            build_menu_reference_based_rnaseq_variant_calling()
         elif option == 'X':
             break
 
@@ -876,11 +947,11 @@ def build_menu_reference_based_rnaseq_read_quality():
         clib.print_headers_with_environment('Reference-based RNA-seq - Read quality')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. {0}'.format(xlib.get_fastqc_name()))
+        print(f'    1. {xlib.get_fastqc_name()}')
         print()
-        print('    X. Return to menu Reference-based RNA-seq')
+        print( '    X. Return to menu Reference-based RNA-seq')
         print()
 
         # get the selected option
@@ -906,12 +977,12 @@ def build_menu_reference_based_rnaseq_trimming():
         clib.print_headers_with_environment('Reference-based RNA-seq - Trimming')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. {0}'.format(xlib.get_cutadapt_name()))
-        print('    2. {0}'.format(xlib.get_trimmomatic_name()))
+        print(f'    1. {xlib.get_cutadapt_name()}')
+        print(f'    2. {xlib.get_trimmomatic_name()}')
         print()
-        print('    X. Return to menu Reference-based RNA-seq')
+        print( '    X. Return to menu Reference-based RNA-seq')
         print()
 
         # get the selected option
@@ -922,45 +993,6 @@ def build_menu_reference_based_rnaseq_trimming():
             build_menu_cutadapt()
         elif option == '2':
             build_menu_trimmomatic()
-        elif option == 'X':
-            break
-
-#-------------------------------------------------------------------------------
-
-def build_menu_reference_based_rnaseq_read_alignment():
-    '''
-    Build the menu Reference-based RNA-seq - Read alignment.
-    '''
-
-    while True:
-
-        # print headers
-        clib.clear_screen()
-        clib.print_headers_with_environment('Reference-based RNA-seq - Read alignment')
-
-        # print the menu options
-        print('Options:')
-        print()
-        print('    1. {0} ({1} package)'.format(xlib.get_gsnap_name(), xlib.get_gmap_gsnap_name()))
-        print('    2. {0}'.format(xlib.get_hisat2_name()))
-        print('    3. {0}'.format(xlib.get_star_name()))
-        print('    4. {0}'.format(xlib.get_tophat_name()))
-        print()
-        print('    X. Return to menu Reference-based RNA-seq')
-        print()
-
-        # get the selected option
-        option = input('Input the selected option: ').upper()
-
-        # process the selected option
-        if option == '1':
-            build_menu_gsnap()
-        elif option == '2':
-            build_menu_hisat2()
-        elif option == '3':
-            build_menu_star()
-        elif option == '4':
-            build_menu_tophat()
         elif option == 'X':
             break
 
@@ -978,12 +1010,12 @@ def build_menu_reference_based_rnaseq_assembly():
         clib.print_headers_with_environment('Reference-based RNA-seq - Assembly')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. {0} ({1} package)'.format(xlib.get_cufflinks_cuffmerge_name(), xlib.get_cufflinks_name()))
-        print('    2. {0} ({1} package)'.format(xlib.get_ggtrinity_name(), xlib.get_trinity_name()))
+        print(f'    1. {xlib.get_cufflinks_cuffmerge_name()} ({xlib.get_cufflinks_name()} package)')
+        print(f'    2. {xlib.get_ggtrinity_name()} ({xlib.get_trinity_name()} package)')
         print()
-        print('    X. Return to menu Reference-based RNA-seq')
+        print( '    X. Return to menu Reference-based RNA-seq')
         print()
 
         # get the selected option
@@ -994,6 +1026,48 @@ def build_menu_reference_based_rnaseq_assembly():
             build_menu_cufflinks_cuffmerge()
         elif option == '2':
             build_menu_ggtrinity()
+        elif option == 'X':
+            break
+
+#-------------------------------------------------------------------------------
+
+def build_menu_reference_based_rnaseq_read_alignment():
+    '''
+    Build the menu Reference-based RNA-seq - Read alignment.
+    '''
+
+    while True:
+
+        # print headers
+        clib.clear_screen()
+        clib.print_headers_with_environment('Reference-based RNA-seq - Read alignment')
+
+        # print the menu options
+        print( 'Options:')
+        print()
+        print(f'    1. {xlib.get_bowtie2_name()}')
+        print(f'    2. {xlib.get_gsnap_name()} ({xlib.get_gmap_gsnap_name()} package)')
+        print(f'    3. {xlib.get_hisat2_name()}')
+        print(f'    4. {xlib.get_star_name()}')
+        print(f'    5. {xlib.get_tophat_name()}')
+        print()
+        print( '    X. Return to menu Reference-based RNA-seq')
+        print()
+
+        # get the selected option
+        option = input('Input the selected option: ').upper()
+
+        # process the selected option
+        if option == '1':
+            build_menu_bowtie2()
+        if option == '2':
+            build_menu_gsnap()
+        elif option == '3':
+            build_menu_hisat2()
+        elif option == '4':
+            build_menu_star()
+        elif option == '5':
+            build_menu_tophat()
         elif option == 'X':
             break
 
@@ -1011,11 +1085,11 @@ def build_menu_reference_based_rnaseq_transcriptome_alignment():
         clib.print_headers_with_environment('Reference-based RNA-seq - Transcriptome alignment')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. {0} ({1} package)'.format(xlib.get_gmap_name(), xlib.get_gmap_gsnap_name()))
+        print(f'    1. {xlib.get_gmap_name()} ({xlib.get_gmap_gsnap_name()} package)')
         print()
-        print('    X. Return to menu Reference-based RNA-seq')
+        print( '    X. Return to menu Reference-based RNA-seq')
         print()
 
         # get the selected option
@@ -1041,12 +1115,12 @@ def build_menu_reference_based_rnaseq_quantitation():
         clib.print_headers_with_environment('Reference-based RNA-seq - Quantitation')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. {0} ({1} package)'.format(xlib.get_cuffquant_name(), xlib.get_cufflinks_name()))
-        print('    2. {0} ({1} package)'.format(xlib.get_htseq_count_name(), xlib.get_htseq_name()))
+        print(f'    1. {xlib.get_cuffquant_name()} ({xlib.get_cufflinks_name()} package)')
+        print(f'    2. {xlib.get_htseq_count_name()} ({xlib.get_htseq_name()} package)')
         print()
-        print('    X. Return to menu Reference-based RNA-seq')
+        print( '    X. Return to menu Reference-based RNA-seq')
         print()
 
         # get the selected option
@@ -1074,11 +1148,11 @@ def build_menu_reference_based_rnaseq_differential_expression():
         clib.print_headers_with_environment('Reference-based RNA-seq - Differential expression')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. {0} ({1} package)'.format(xlib.get_cuffdiff_name(), xlib.get_cufflinks_name()))
+        print(f'    1. {xlib.get_cuffdiff_name()} ({xlib.get_cufflinks_name()} package)')
         print()
-        print('    X. Return to menu Reference-based RNA-seq')
+        print( '    X. Return to menu Reference-based RNA-seq')
         print()
 
         # get the selected option
@@ -1087,6 +1161,491 @@ def build_menu_reference_based_rnaseq_differential_expression():
         # process the selected option
         if option == '1':
             build_menu_cuffdiff()
+        elif option == 'X':
+            break
+
+#-------------------------------------------------------------------------------
+
+def build_menu_reference_based_rnaseq_variant_calling():
+    '''
+    Build the menu Reference-based RNA-seq - Variant calling.
+    '''
+
+    while True:
+
+        # print headers
+        clib.clear_screen()
+        clib.print_headers_with_environment('Reference-based RNA-seq - Variant calling')
+
+        # print the menu options
+        print( 'Options:')
+        print()
+        print(f'    1. {xlib.get_variant_calling_name()} ({xlib.get_ddradseqtools_name()} package)')
+        print()
+        print( '    X. Return to menu RAD-seq')
+        print()
+
+        # get the selected option
+        option = input('Input the selected option: ').upper()
+
+        # process the selected option
+        if option == '1':
+            build_menu_variant_calling()
+        elif option == 'X':
+            break
+
+#-------------------------------------------------------------------------------
+
+def build_menu_radseq():
+    '''
+    Build the menu RAD-seq.
+    '''
+
+    while True:
+
+        # print headers
+        clib.clear_screen()
+        clib.print_headers_with_environment('RAD-seq')
+
+        # print the menu options
+        print( 'Options:')
+        print()
+        print( '    1. Maintenance of data files')
+        print()
+        print( '    2. Enzyme analysis')
+        print( '    3. In silico simulations')
+        print( '    4. RAD design')
+        print()
+        print( '    5. Read quality')
+        print( '    6. Trimming')
+        print( '    7. Read clustering')
+        print()
+        print( '    8. Pseudo assembly')
+        print()
+        print( '    9. Read alignment')
+        print()
+        print( '    A. Variant calling')
+        print()
+        print( '    B. Pipelines')
+        print()
+        print( '    X. Return to menu Main')
+        print()
+
+        # get the selected option
+        option = input('Input the selected option: ').upper()
+
+        # process the selected option
+        if option == '1':
+            build_menu_radseq_data_files_maintenance()
+        elif option == '2':
+            build_menu_radseq_enzyme_analysis()
+        elif option == '3':
+            build_menu_radseq_in_silico_simulations()
+        elif option == '4':
+            build_menu_radseq_rad_design()
+        elif option == '5':
+            build_menu_radseq_read_quality()
+        elif option == '6':
+            build_menu_radseq_trimming()
+        elif option == '7':
+            build_menu_radseq_read_clustering()
+        elif option == '8':
+            build_menu_radseq_pseudo_assembly()
+        elif option == '9':
+            build_menu_radseq_read_alignment()
+        elif option == 'A':
+            build_menu_radseq_variant_calling()
+        elif option == 'B':
+            build_menu_radseq_pipelines()
+        elif option == 'X':
+            break
+
+#-------------------------------------------------------------------------------
+
+def build_menu_radseq_data_files_maintenance():
+    '''
+    Build the menu RAD-seq - Maintenance of data files.
+    '''
+
+    while True:
+
+        # print headers
+        clib.clear_screen()
+        clib.print_headers_with_environment('RAD-seq - Maintenance of data files')
+
+        # print the menu options
+        print( 'Options:')
+        print()
+        print( '    1. Restriction site file')
+        print( '    2. End file')
+        print( '    3. Individual file')
+        print( '    4. VCF sample file')
+        print( '    5. RADdesigner condition file')
+        print()
+        print( '    X. Return to menu RAD-seq')
+        print()
+
+        # get the selected option
+        option = input('Input the selected option: ').upper()
+
+        # process the selected option
+        if option == '1':
+            build_menu_restriction_site_file()
+        elif option == '2':
+            build_menu_end_file()
+        elif option == '3':
+            build_menu_individual_file()
+        elif option == '4':
+            build_menu_vcf_sample_file()
+        elif option == '5':
+            build_raddesinger_condition_file()
+        elif option == 'X':
+            break
+
+#-------------------------------------------------------------------------------
+
+def build_menu_radseq_enzyme_analysis():
+    '''
+    Build the menu RAD-seq - Enzyme analysis.
+    '''
+
+    while True:
+
+        # print headers
+        clib.clear_screen()
+        clib.print_headers_with_environment('RAD-seq - Enzyme analysis')
+
+        # print the menu options
+        print( 'Options:')
+        print()
+        print(f'    1. {xlib.get_rsitesearch_name()} ({xlib.get_ddradseqtools_name()} package)')
+        print()
+        print( '    X. Return to menu RAD-seq')
+        print()
+
+        # get the selected option
+        option = input('Input the selected option: ').upper()
+
+        # process the selected option
+        if option == '1':
+            build_menu_rsitesearch()
+        elif option == 'X':
+            break
+
+#-------------------------------------------------------------------------------
+
+def build_menu_radseq_in_silico_simulations():
+    '''
+    Build the menu RAD-seq - In silico simulation.
+    '''
+
+    while True:
+
+        # print headers
+        clib.clear_screen()
+        clib.print_headers_with_environment('RAD-seq - In silico simulations')
+
+        # print the menu options
+        print( 'Options:')
+        print()
+        print(f'    1. {xlib.get_ddradseq_simulation_name()} ({xlib.get_ddradseqtools_name()} package)')
+        print()
+        print( '    X. Return to menu RAD-seq')
+        print()
+
+        # get the selected option
+        option = input('Input the selected option: ').upper()
+
+        # process the selected option
+        if option == '1':
+            build_menu_ddradseq_simulation()
+        elif option == 'X':
+            break
+
+#-------------------------------------------------------------------------------
+
+def build_menu_radseq_rad_design():
+    '''
+    Build the menu RAD-seq - RAD design.
+    '''
+
+    while True:
+
+        # print headers
+        clib.clear_screen()
+        clib.print_headers_with_environment('RAD-seq - RAD design')
+
+        # print the menu options
+        print( 'Options:')
+        print()
+        print(f'    1. {xlib.get_raddesigner_name()}')
+        print()
+        print( '    X. Return to menu RAD-seq')
+        print()
+
+        # get the selected option
+        option = input('Input the selected option: ').upper()
+
+        # process the selected option
+        if option == '1':
+            build_menu_raddesigner()
+        elif option == 'X':
+            break
+
+#-------------------------------------------------------------------------------
+
+def build_menu_radseq_read_quality():
+    '''
+    Build the menu RAD-seq - Read quality.
+    '''
+
+    while True:
+
+        # print headers
+        clib.clear_screen()
+        clib.print_headers_with_environment('RAD-seq - Read quality')
+
+        # print the menu options
+        print( 'Options:')
+        print()
+        print(f'    1. {xlib.get_fastqc_name()}')
+        print()
+        print( '    X. Return to menu RAD-seq')
+        print()
+
+        # get the selected option
+        option = input('Input the selected option: ').upper()
+
+        # process the selected option
+        if option == '1':
+            build_menu_fastqc()
+        elif option == 'X':
+            break
+
+#-------------------------------------------------------------------------------
+
+def build_menu_radseq_trimming():
+    '''
+    Build the menu RAD-seq - Trimming.
+    '''
+
+    while True:
+
+        # print headers
+        clib.clear_screen()
+        clib.print_headers_with_environment('RAD-seq- Trimming')
+
+        # print the menu options
+        print( 'Options:')
+        print()
+        print(f'    1. {xlib.get_cutadapt_name()}')
+        print(f'    2. {xlib.get_trimmomatic_name()}')
+        print()
+        print( '    X. Return to menu RAD-seq')
+        print()
+
+        # get the selected option
+        option = input('Input the selected option: ').upper()
+
+        # process the selected option
+        if option == '1':
+            build_menu_cutadapt()
+        elif option == '2':
+            build_menu_trimmomatic()
+        elif option == 'X':
+            break
+
+#-------------------------------------------------------------------------------
+
+def build_menu_radseq_read_clustering():
+    '''
+    Build the menu RAD-seq - Read clustering.
+    '''
+
+    while True:
+
+        # print headers
+        clib.clear_screen()
+        clib.print_headers_with_environment('RAD-seq - Read clustering')
+
+        # print the menu options
+        print( 'Options:')
+        print()
+        print(f'    1. {xlib.get_starcode_name()}')
+        print()
+        print( '    X. Return to menu RAD-seq')
+        print()
+
+        # get the selected option
+        option = input('Input the selected option: ').upper()
+
+        # process the selected option
+        if option == '1':
+            build_menu_starcode()
+        elif option == 'X':
+            break
+
+#-------------------------------------------------------------------------------
+
+def build_menu_radseq_read_alignment():
+    '''
+    Build the menu RAD-seq - Read alignment.
+    '''
+
+    while True:
+
+        # print headers
+        clib.clear_screen()
+        clib.print_headers_with_environment('RAD-seq - Read alignment')
+
+        # print the menu options
+        print( 'Options:')
+        print()
+        print(f'    1. {xlib.get_bowtie2_name()}')
+        print(f'    2. {xlib.get_gsnap_name()} ({xlib.get_gmap_gsnap_name()} package)')
+        print(f'    3. {xlib.get_hisat2_name()}')
+        print()
+        print( '    X. Return to menu RAD-seq')
+        print()
+
+        # get the selected option
+        option = input('Input the selected option: ').upper()
+
+        # process the selected option
+        if option == '1':
+            build_menu_gsnap()
+        elif option == '2':
+            build_menu_gsnap()
+        elif option == '3':
+            build_menu_hisat2()
+        elif option == 'X':
+            break
+
+#-------------------------------------------------------------------------------
+
+def build_menu_radseq_pseudo_assembly():
+    '''
+    Build the menu RAD-seq - Pseudo assembly.
+    '''
+
+    while True:
+
+        # print headers
+        clib.clear_screen()
+        clib.print_headers_with_environment('RAD-seq - Pseudo assembly')
+
+        # print the menu options
+        print( 'Options:')
+        print()
+        print(f'    1. {xlib.get_soapdenovo2_name()}')
+        print()
+        print( '    X. Return to menu RAD-seq')
+        print()
+
+        # get the selected option
+        option = input('Input the selected option: ').upper()
+
+        # process the selected option
+        if option == '1':
+            build_menu_soapdenovo2()
+        elif option == 'X':
+            break
+
+#-------------------------------------------------------------------------------
+
+def build_menu_radseq_variant_calling():
+    '''
+    Build the menu RAD-seq - Variant calling.
+    '''
+
+    while True:
+
+        # print headers
+        clib.clear_screen()
+        clib.print_headers_with_environment('RAD-seq - Variant calling')
+
+        # print the menu options
+        print( 'Options:')
+        print()
+        print(f'    1. {xlib.get_variant_calling_name()} ({xlib.get_ddradseqtools_name()} package)')
+        print()
+        print( '    X. Return to menu RAD-seq')
+        print()
+
+        # get the selected option
+        option = input('Input the selected option: ').upper()
+
+        # process the selected option
+        if option == '1':
+            build_menu_variant_calling()
+        elif option == 'X':
+            break
+
+#-------------------------------------------------------------------------------
+
+def build_menu_radseq_pipelines():
+    '''
+    Build the menu RAD-seq - Pipelines.
+    '''
+
+    while True:
+
+        # print headers
+        clib.clear_screen()
+        clib.print_headers_with_environment('RAD-seq - Pipelines')
+
+        # print the menu options
+        print( 'Options:')
+        print()
+        print(f'    1. {xlib.get_ipyrad_name()}')
+        print()
+        print( '    X. Return to menu RAD-seq')
+        print()
+
+        # get the selected option
+        option = input('Input the selected option: ').upper()
+
+        # process the selected option
+        if option == '1':
+            build_menu_ipyrad()
+        elif option == 'X':
+            break
+
+#-------------------------------------------------------------------------------
+
+def build_menu_bowtie2():
+    '''
+    Build the menu Bowtie2.
+    '''
+
+    while True:
+
+        # print headers
+        clib.clear_screen()
+        clib.print_headers_with_environment(xlib.get_bowtie2_name())
+
+        # print the menu options
+        print( 'Options:')
+        print()
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
+        print()
+        print( '    3. Run read alignment process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
+        print()
+        print( '    X. Return to menu Read alignment')
+        print()
+
+        # get the selected option
+        option = input('Input the selected option: ').upper()
+
+        # process the selected option
+        if option == '1':
+            cbioinfoapp.form_recreate_bowtie2_config_file()
+        elif option == '2':
+            cbioinfoapp.form_edit_bioinfo_config_file(xlib.get_bowtie2_code())
+        elif option == '3':
+            cbioinfoapp.form_run_bioinfo_process(xlib.get_bowtie2_code())
         elif option == 'X':
             break
 
@@ -1104,15 +1663,15 @@ def build_menu_busco():
         clib.print_headers_with_environment(xlib.get_busco_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run assembly quality assessment process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run assembly quality assessment process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
         print()
-        print('    X. Return to menu Assembly quality assessment')
+        print( '    X. Return to menu Assembly quality assessment')
         print()
 
         # get the selected option
@@ -1139,18 +1698,18 @@ def build_menu_cd_hit_est():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0} ({1} package)'.format(xlib.get_cd_hit_est_name(), xlib.get_cd_hit_name()))
+        clib.print_headers_with_environment(f'{xlib.get_cd_hit_est_name()} ({xlib.get_cd_hit_name()} package)')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run transcriptome filtering process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run transcriptome filtering process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
         print()
-        print('    X. Return to menu Transcriptome filtering')
+        print( '    X. Return to menu Transcriptome filtering')
         print()
 
         # get the selected option
@@ -1177,18 +1736,18 @@ def build_menu_cuffdiff():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0} ({1} package)'.format(xlib.get_cuffdiff_name(), xlib.get_cufflinks_name()))
+        clib.print_headers_with_environment(f'{xlib.get_cuffdiff_name()} ({xlib.get_cufflinks_name()} package)')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run differential expression process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run differential expression process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
         print()
-        print('    X. Return to menu Differential expression')
+        print( '    X. Return to menu Differential expression')
         print()
 
         # get the selected option
@@ -1215,18 +1774,18 @@ def build_menu_cufflinks_cuffmerge():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0} ({1} package)'.format(xlib.get_cufflinks_cuffmerge_name(), xlib.get_cufflinks_name()))
+        clib.print_headers_with_environment(f'{xlib.get_cufflinks_cuffmerge_name()} ({xlib.get_cufflinks_name()} package)')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run assembly process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run assembly process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
         print()
-        print('    X. Return to menu Assembly')
+        print( '    X. Return to menu Assembly')
         print()
 
         # get the selected option
@@ -1253,18 +1812,18 @@ def build_menu_cuffquant():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0} ({1} package)'.format(xlib.get_cuffquant_name(), xlib.get_cufflinks_name()))
+        clib.print_headers_with_environment(f'{xlib.get_cuffquant_name()} ({xlib.get_cufflinks_name()} package)')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run quantitation process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run quantitation process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
         print()
-        print('    X. Return to menu Quantitation')
+        print( '    X. Return to menu Quantitation')
         print()
 
         # get the selected option
@@ -1294,15 +1853,15 @@ def build_menu_cutadapt():
         clib.print_headers_with_environment(xlib.get_cutadapt_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run trimming process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run trimming process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
         print()
-        print('    X. Return to menu Trimming')
+        print( '    X. Return to menu Trimming')
         print()
 
         # get the selected option
@@ -1320,45 +1879,6 @@ def build_menu_cutadapt():
 
 #-------------------------------------------------------------------------------
 
-def build_menu_ddradseq_pipeline():
-    '''
-    Build the menu ipyrad.
-    '''
-
-    while True:
-
-        # print headers
-        clib.clear_screen()
-        clib.print_headers_with_environment('{0} ({1} package)'.format(xlib.get_ddradseq_pipeline_name(), xlib.get_ddradseqtools_name()))
-        clib.print_headers_with_environment('ddRADseq pipeline')
-
-        # print the menu options
-        print('Options:')
-        print()
-        print('    1. Recreate config file (coming soon!)')
-        print('    2. Edit config file (coming soon!)')
-        print()
-        print('    3. Run pipeline process (coming soon!)')
-        print('       (CAUTION: before running a process, the config file should be updated)')
-        print()
-        print('    X. Return to menu Pipelines')
-        print()
-
-        # get the selected option
-        option = input('Input the selected option: ').upper()
-
-        # process the selected option
-        if option == '1':
-            pass
-        elif option == '2':
-            pass
-        elif option == '3':
-            pass
-        elif option == 'X':
-            break
-
-#-------------------------------------------------------------------------------
-
 def build_menu_ddradseq_simulation():
     '''
     Build the menu ddRADseqTools.
@@ -1368,18 +1888,19 @@ def build_menu_ddradseq_simulation():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0} ({1} package)'.format(xlib.get_ddradseq_simulation_name(), xlib.get_ddradseqtools_name()))
+        clib.print_headers_with_environment(f'{xlib.get_ddradseq_simulation_name()} ({xlib.get_ddradseqtools_name()} package)')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run simulation process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run simulation process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
+        print( '    4. Restart simulation process')
         print()
-        print('    X. Return to menu In silico simulations')
+        print( '    X. Return to menu In silico simulations')
         print()
 
         # get the selected option
@@ -1392,6 +1913,46 @@ def build_menu_ddradseq_simulation():
             cbioinfoapp.form_edit_bioinfo_config_file(xlib.get_ddradseq_simulation_code())
         elif option == '3':
             cbioinfoapp.form_run_bioinfo_process(xlib.get_ddradseq_simulation_code())
+        elif option == '4':
+             cbioinfoapp.form_restart_bioinfo_process(xlib.get_ddradseq_simulation_code())
+        elif option == 'X':
+            break
+
+#-------------------------------------------------------------------------------
+
+def build_menu_express():
+    '''
+    Build the menu eXpress.
+    '''
+
+    while True:
+
+        # print headers
+        clib.clear_screen()
+        clib.print_headers_with_environment(xlib.get_express_name())
+
+        # print the menu options
+        print( 'Options:')
+        print()
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
+        print()
+        print( '    3. Run quantitation process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
+        print()
+        print( '    X. Return to menu Quantitation')
+        print()
+
+        # get the selected option
+        option = input('Input the selected option: ').upper()
+
+        # process the selected option
+        if option == '1':
+            cbioinfoapp.form_recreate_express_config_file()
+        elif option == '2':
+            cbioinfoapp.form_edit_bioinfo_config_file(xlib.get_express_code())
+        elif option == '3':
+            cbioinfoapp.form_run_bioinfo_process(xlib.get_express_code())
         elif option == 'X':
             break
 
@@ -1409,15 +1970,15 @@ def build_menu_fastqc():
         clib.print_headers_with_environment(xlib.get_fastqc_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run read quality process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run read quality process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
         print()
-        print('    X. Return to menu Quality assessment')
+        print( '    X. Return to menu Quality assessment')
         print()
 
         # get the selected option
@@ -1444,18 +2005,19 @@ def build_menu_ggtrinity():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0} ({1} package)'.format(xlib.get_ggtrinity_name(), xlib.get_trinity_name()))
+        clib.print_headers_with_environment(f'{xlib.get_ggtrinity_name()} ({xlib.get_trinity_name()} package)')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run assembly process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run assembly process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
+        print( '    4. Restart assembly process')
         print()
-        print('    X. Return to menu Assembly')
+        print( '    X. Return to menu Assembly')
         print()
 
         # get the selected option
@@ -1468,6 +2030,8 @@ def build_menu_ggtrinity():
             cbioinfoapp.form_edit_bioinfo_config_file(xlib.get_ggtrinity_code())
         elif option == '3':
             cbioinfoapp.form_run_bioinfo_process(xlib.get_ggtrinity_code())
+        elif option == '4':
+             cbioinfoapp.form_restart_bioinfo_process(xlib.get_ggtrinity_code())
         elif option == 'X':
             break
 
@@ -1482,18 +2046,18 @@ def build_menu_gmap():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0} ({1} package)'.format(xlib.get_gmap_name(), xlib.get_gmap_gsnap_name()))
+        clib.print_headers_with_environment(f'{xlib.get_gmap_name()} ({xlib.get_gmap_gsnap_name()} package)')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run transcriptome alignment process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run transcriptome alignment process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
         print()
-        print('    X. Return to menu Transcriptome alignment')
+        print( '    X. Return to menu Transcriptome alignment')
         print()
 
         # get the selected option
@@ -1520,18 +2084,18 @@ def build_menu_gsnap():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0} ({1} package)'.format(xlib.get_gsnap_name(), xlib.get_gmap_gsnap_name()))
+        clib.print_headers_with_environment(f'{xlib.get_gsnap_name()} ({xlib.get_gmap_gsnap_name()} package)')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run read alignment process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run read alignment process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
         print()
-        print('    X. Return to menu Read alignment')
+        print( '    X. Return to menu Read alignment')
         print()
 
         # get the selected option
@@ -1561,15 +2125,15 @@ def build_menu_hisat2():
         clib.print_headers_with_environment(xlib.get_hisat2_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run read alignment process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run read alignment process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
         print()
-        print('    X. Return to menu Read alignment')
+        print( '    X. Return to menu Read alignment')
         print()
 
         # get the selected option
@@ -1596,18 +2160,18 @@ def build_menu_htseq_count():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0} ({1} package)'.format(xlib.get_htseq_count_name(), xlib.get_htseq_name()))
+        clib.print_headers_with_environment(f'{xlib.get_htseq_count_name()} ({xlib.get_htseq_name()} package)')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run quantitation process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run quantitation process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
         print()
-        print('    X. Return to menu Quantitation')
+        print( '    X. Return to menu Quantitation')
         print()
 
         # get the selected option
@@ -1634,18 +2198,19 @@ def build_menu_insilico_read_normalization():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0} ({1} package)'.format(xlib.get_insilico_read_normalization_name(), xlib.get_trinity_name()))
+        clib.print_headers_with_environment(f'{xlib.get_insilico_read_normalization_name()} ({xlib.get_trinity_name()} package)')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run digital normalization process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run digital normalization process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
+        print( '    4. Restart digital normalization process')
         print()
-        print('    X. Return to menu Digital normalization')
+        print( '    X. Return to menu Digital normalization')
         print()
 
         # get the selected option
@@ -1658,6 +2223,8 @@ def build_menu_insilico_read_normalization():
             cbioinfoapp.form_edit_bioinfo_config_file(xlib.get_insilico_read_normalization_code())
         elif option == '3':
             cbioinfoapp.form_run_bioinfo_process(xlib.get_insilico_read_normalization_code())
+        elif option == '4':
+             cbioinfoapp.form_restart_bioinfo_process(xlib.get_insilico_read_normalization_code())
         elif option == 'X':
             break
 
@@ -1675,15 +2242,15 @@ def build_menu_ipyrad():
         clib.print_headers_with_environment(xlib.get_ipyrad_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run pipeline process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run pipeline process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
         print()
-        print('    X. Return to menu Pipelines')
+        print( '    X. Return to menu Pipelines')
         print()
 
         # get the selected option
@@ -1713,15 +2280,15 @@ def build_menu_kallisto():
         clib.print_headers_with_environment(xlib.get_kallisto_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run quantitation process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run quantitation process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
         print()
-        print('    X. Return to menu Quantitation')
+        print( '    X. Return to menu Quantitation')
         print()
 
         # get the selected option
@@ -1751,15 +2318,15 @@ def build_menu_quast():
         clib.print_headers_with_environment(xlib.get_quast_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run assembly quality assessment process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run assembly quality assessment process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
         print()
-        print('    X. Return to menu Assembly quality assessment')
+        print( '    X. Return to menu Assembly quality assessment')
         print()
 
         # get the selected option
@@ -1789,15 +2356,16 @@ def build_menu_raddesigner():
         clib.print_headers_with_environment('RADdesigner')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file (coming soon!)')
-        print('    2. Edit config file (coming soon!)')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run design process (coming soon!)')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run design process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
+        print( '    4. Restart process')
         print()
-        print('    X. Return to menu RAD design')
+        print( '    X. Return to menu RAD design')
         print()
 
         # get the selected option
@@ -1805,11 +2373,13 @@ def build_menu_raddesigner():
 
         # process the selected option
         if option == '1':
-            pass
+            cbioinfoapp.form_recreate_raddesigner_config_file()
         elif option == '2':
-            pass
+            cbioinfoapp.form_edit_bioinfo_config_file(xlib.get_raddesigner_code())
         elif option == '3':
-            pass
+            cbioinfoapp.form_run_bioinfo_process(xlib.get_raddesigner_code())
+        elif option == '4':
+            cbioinfoapp.form_restart_bioinfo_process(xlib.get_raddesigner_code())
         elif option == 'X':
             break
 
@@ -1827,15 +2397,15 @@ def build_menu_rnaquast():
         clib.print_headers_with_environment(xlib.get_rnaquast_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run assembly quality assessment process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run assembly quality assessment process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
         print()
-        print('    X. Return to menu Assembly quality assessment')
+        print( '    X. Return to menu Assembly quality assessment')
         print()
 
         # get the selected option
@@ -1862,18 +2432,18 @@ def build_menu_rsem_eval():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0} ({1} package)'.format(xlib.get_rsem_eval_name(), xlib.get_detonate_name()))
+        clib.print_headers_with_environment(f'{xlib.get_rsem_eval_name()} ({xlib.get_detonate_name()} package)')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run assembly quality assessment process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run assembly quality assessment process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
         print()
-        print('    X. Return to menu Assembly quality assessment')
+        print( '    X. Return to menu Assembly quality assessment')
         print()
 
         # get the selected option
@@ -1900,18 +2470,18 @@ def build_menu_rsitesearch():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0} ({1} package)'.format(xlib.get_rsitesearch_name(), xlib.get_ddradseqtools_name()))
+        clib.print_headers_with_environment(f'{xlib.get_rsitesearch_name()} ({xlib.get_ddradseqtools_name()} package)')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run enzyme analysis process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run enzyme analysis process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
         print()
-        print('    X. Return to menu Enzyme analysis of a RAD-seq or ddRADseq experiment')
+        print( '    X. Return to menu Enzyme analysis of a RAD-seq or ddRADseq experiment')
         print()
 
         # get the selected option
@@ -1941,15 +2511,16 @@ def build_menu_soapdenovo2():
         clib.print_headers_with_environment(xlib.get_soapdenovo2_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run assembly process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run assembly process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
+        print( '    4. Restart assembly process')
         print()
-        print('    X. Return to menu Pseudo assembly')
+        print( '    X. Return to menu Pseudo assembly')
         print()
 
         # get the selected option
@@ -1962,6 +2533,8 @@ def build_menu_soapdenovo2():
             cbioinfoapp.form_edit_bioinfo_config_file(xlib.get_soapdenovo2_code())
         elif option == '3':
             cbioinfoapp.form_run_bioinfo_process(xlib.get_soapdenovo2_code())
+        elif option == '4':
+             cbioinfoapp.form_restart_bioinfo_process(xlib.get_soapdenovo2_code())
         elif option == 'X':
             break
 
@@ -1979,15 +2552,16 @@ def build_menu_soapdenovotrans():
         clib.print_headers_with_environment(xlib.get_soapdenovotrans_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run assembly process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run assembly process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
+        print( '    4. Restart assembly process')
         print()
-        print('    X. Return to menu Assembly')
+        print( '    X. Return to menu Assembly')
         print()
 
         # get the selected option
@@ -2000,6 +2574,8 @@ def build_menu_soapdenovotrans():
             cbioinfoapp.form_edit_bioinfo_config_file(xlib.get_soapdenovotrans_code())
         elif option == '3':
             cbioinfoapp.form_run_bioinfo_process(xlib.get_soapdenovotrans_code())
+        elif option == '4':
+             cbioinfoapp.form_restart_bioinfo_process(xlib.get_soapdenovotrans_code())
         elif option == 'X':
             break
 
@@ -2017,15 +2593,15 @@ def build_menu_star():
         clib.print_headers_with_environment(xlib.get_star_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run read alignment process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run read alignment process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
         print()
-        print('    X. Return to menu Read alignment')
+        print( '    X. Return to menu Read alignment')
         print()
 
         # get the selected option
@@ -2055,15 +2631,15 @@ def build_menu_starcode():
         clib.print_headers_with_environment(xlib.get_starcode_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run clustering process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run clustering process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
         print()
-        print('    X. Return to menu Read clustering')
+        print( '    X. Return to menu Read clustering')
         print()
 
         # get the selected option
@@ -2093,15 +2669,15 @@ def build_menu_tophat():
         clib.print_headers_with_environment(xlib.get_tophat_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run read alignment process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run read alignment process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
         print()
-        print('    X. Return to menu Read alignment')
+        print( '    X. Return to menu Read alignment')
         print()
 
         # get the selected option
@@ -2131,15 +2707,15 @@ def build_menu_transabyss():
         clib.print_headers_with_environment(xlib.get_transabyss_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run assembly process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run assembly process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
         print()
-        print('    X. Return to menu Assembly')
+        print( '    X. Return to menu Assembly')
         print()
 
         # get the selected option
@@ -2166,18 +2742,18 @@ def build_menu_transcript_filter():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0} ({1} package)'.format(xlib.get_transcript_filter_name(), xlib.get_ngshelper_name()))
+        clib.print_headers_with_environment(f'{xlib.get_transcript_filter_name()} ({xlib.get_ngshelper_name()} package)')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run transcriptome filtering process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run transcriptome filtering process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
         print()
-        print('    X. Return to menu Transcriptome filtering')
+        print( '    X. Return to menu Transcriptome filtering')
         print()
 
         # get the selected option
@@ -2204,18 +2780,18 @@ def build_menu_transcriptome_blastx():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0} ({1} package)'.format(xlib.get_transcriptome_blastx_name(), xlib.get_ngshelper_name()))
+        clib.print_headers_with_environment(f'{xlib.get_transcriptome_blastx_name()} ({xlib.get_ngshelper_name()} package)')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run annotation process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run annotation process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
         print()
-        print('    X. Return to menu Annotation')
+        print( '    X. Return to menu Annotation')
         print()
 
         # get the selected option
@@ -2245,15 +2821,15 @@ def build_menu_transrate():
         clib.print_headers_with_environment(xlib.get_transrate_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run assembly quality assessment process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run assembly quality assessment process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
         print()
-        print('    X. Return to menu Assembly quality assessment')
+        print( '    X. Return to menu Assembly quality assessment')
         print()
 
         # get the selected option
@@ -2283,15 +2859,15 @@ def build_menu_trimmomatic():
         clib.print_headers_with_environment(xlib.get_trimmomatic_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run trimming process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run trimming process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
         print()
-        print('    X. Return to menu Trimming')
+        print( '    X. Return to menu Trimming')
         print()
 
         # get the selected option
@@ -2321,15 +2897,16 @@ def build_menu_trinity():
         clib.print_headers_with_environment(xlib.get_trinity_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run assembly process')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run assembly process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
+        print( '    4. Restart assembly process')
         print()
-        print('    X. Return to menu De novo assembly')
+        print( '    X. Return to menu De novo assembly')
         print()
 
         # get the selected option
@@ -2342,32 +2919,35 @@ def build_menu_trinity():
             cbioinfoapp.form_edit_bioinfo_config_file(xlib.get_trinity_code())
         elif option == '3':
             cbioinfoapp.form_run_bioinfo_process(xlib.get_trinity_code())
+        elif option == '4':
+            cbioinfoapp.form_restart_bioinfo_process(xlib.get_trinity_code())
         elif option == 'X':
             break
 
 #-------------------------------------------------------------------------------
 
-def build_menu_vsearch():
+def build_menu_variant_calling():
     '''
-    Build the menu VSEARCH.
+    Build the menu Variant calling process.
     '''
 
     while True:
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment(xlib.get_vsearch_name())
+        clib.print_headers_with_environment(f'{xlib.get_variant_calling_name()} ({xlib.get_ddradseqtools_name()} package)')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file (coming soon!)')
-        print('    2. Edit config file (coming soon!)')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run clustering process (coming soon!)')
-        print('       (CAUTION: before running a process, the config file should be updated)')
+        print( '    3. Run variant calling process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
+        print( '    4. Restart process')
         print()
-        print('    X. Return to menu Read clustering')
+        print( '    X. Return to menu Variant calling')
         print()
 
         # get the selected option
@@ -2375,11 +2955,13 @@ def build_menu_vsearch():
 
         # process the selected option
         if option == '1':
-            pass
+            cbioinfoapp.form_recreate_variant_calling_config_file()
         elif option == '2':
-            pass
+            cbioinfoapp.form_edit_bioinfo_config_file(xlib.get_variant_calling_code())
         elif option == '3':
-            pass
+            cbioinfoapp.form_run_bioinfo_process(xlib.get_variant_calling_code())
+        elif option == '4':
+            cbioinfoapp.form_restart_bioinfo_process(xlib.get_variant_calling_code())
         elif option == 'X':
             break
 
@@ -2397,12 +2979,12 @@ def build_menu_end_file():
         clib.print_headers_with_environment('End file')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate data file')
-        print('    2. Edit data file')
+        print( '    1. Recreate data file')
+        print( '    2. Edit data file')
         print()
-        print('    X. Return to menu Maintenance of data files')
+        print( '    X. Return to menu Maintenance of data files')
         print()
 
         # get the selected option
@@ -2430,12 +3012,12 @@ def build_menu_individual_file():
         clib.print_headers_with_environment('Individual file')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate data file')
-        print('    2. Edit data file')
+        print( '    1. Recreate data file')
+        print( '    2. Edit data file')
         print()
-        print('    X. Return to menu Maintenance of data files')
+        print( '    X. Return to menu Maintenance of data files')
         print()
 
         # get the selected option
@@ -2446,6 +3028,39 @@ def build_menu_individual_file():
             cbioinfoapp.form_recreate_data_file(xddradseqtools.get_individual_file())
         elif option == '2':
             cbioinfoapp.form_edit_data_file(xddradseqtools.get_individual_file())
+        elif option == 'X':
+            break
+
+#-------------------------------------------------------------------------------
+
+def build_raddesinger_condition_file():
+    '''
+    Build the menu RADdesigner condition file.
+    '''
+
+    while True:
+
+        # print headers
+        clib.clear_screen()
+        clib.print_headers_with_environment('RADdesigner condition file')
+
+        # print the menu options
+        print( 'Options:')
+        print()
+        print( '    1. Recreate data file')
+        print( '    2. Edit data file')
+        print()
+        print( '    X. Return to menu Maintenance of data files')
+        print()
+
+        # get the selected option
+        option = input('Input the selected option: ').upper()
+
+        # process the selected option
+        if option == '1':
+            cbioinfoapp.form_recreate_data_file(xraddesigner.get_condition_file())
+        elif option == '2':
+            cbioinfoapp.form_edit_data_file(xraddesigner.get_condition_file())
         elif option == 'X':
             break
 
@@ -2463,12 +3078,12 @@ def build_menu_restriction_site_file():
         clib.print_headers_with_environment('Restriction site file')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate data file')
-        print('    2. Edit data file')
+        print( '    1. Recreate data file')
+        print( '    2. Edit data file')
         print()
-        print('    X. Return to menu Maintenance of data files for simulations')
+        print( '    X. Return to menu Maintenance of data files for simulations')
         print()
 
         # get the selected option
@@ -2479,6 +3094,39 @@ def build_menu_restriction_site_file():
             cbioinfoapp.form_recreate_data_file(xddradseqtools.get_restriction_site_file())
         elif option == '2':
             cbioinfoapp.form_edit_data_file(xddradseqtools.get_restriction_site_file())
+        elif option == 'X':
+            break
+
+#-------------------------------------------------------------------------------
+
+def build_menu_vcf_sample_file():
+    '''
+    Build the menu VCF sample file.
+    '''
+
+    while True:
+
+        # print headers
+        clib.clear_screen()
+        clib.print_headers_with_environment('VCF sample file')
+
+        # print the menu options
+        print( 'Options:')
+        print()
+        print( '    1. Recreate data file')
+        print( '    2. Edit data file')
+        print()
+        print( '    X. Return to menu Maintenance of data files')
+        print()
+
+        # get the selected option
+        option = input('Input the selected option: ').upper()
+
+        # process the selected option
+        if option == '1':
+            cbioinfoapp.form_recreate_data_file(xngshelper.get_vcf_sample_file())
+        elif option == '2':
+            cbioinfoapp.form_edit_data_file(xngshelper.get_vcf_sample_file())
         elif option == 'X':
             break
 
@@ -2496,16 +3144,16 @@ def build_menu_toa():
         clib.print_headers_with_environment('Tree-oriented Annotation')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. {0} configuration'.format(xlib.get_toa_name()))
+        print(f'    1. {xlib.get_toa_name()} configuration')
         print()
-        print('    2. Genomic databases')
+        print( '    2. Genomic databases')
         print()
-        print('    3. Annotation pipelines')
-        print('    4. Statistics')
+        print( '    3. Annotation pipelines')
+        print( '    4. Statistics')
         print()
-        print('    X. Return to menu Main')
+        print( '    X. Return to menu Main')
         print()
 
         # get the selected option
@@ -2535,18 +3183,18 @@ def build_menu_toa_configuration():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0} - Configuration'.format(xlib.get_toa_name()))
+        clib.print_headers_with_environment(f'{xlib.get_toa_name()} - Configuration')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate {0} config file'.format(xlib.get_toa_name()))
-        print('    2. View {0} config file'.format(xlib.get_toa_name()))
+        print(f'    1. Recreate {xlib.get_toa_name()} config file')
+        print(f'    2. View {xlib.get_toa_name()} config file')
         print()
-        print('    3. Recreate {0} database'.format(xlib.get_toa_name()))
-        #print('    4. Rebuild {0} database'.format(xlib.get_toa_name()))
+        print(f'    3. Recreate {xlib.get_toa_name()} database')
+        # -- print(f'    4. Rebuild {xlib.get_toa_name()} database')
         print()
-        print('    X. Return to menu Tree-oriented Annotation')
+        print( '    X. Return to menu Tree-oriented Annotation')
         print()
 
         # get the selected option
@@ -2575,29 +3223,29 @@ def build_menu_toa_databases():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0} - Genomic databases'.format(xlib.get_toa_name()))
+        clib.print_headers_with_environment(f'{xlib.get_toa_name()} - Genomic databases')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. {0}'.format(xlib.get_toa_data_basic_data_name()))
+        print(f'    1. {xlib.get_toa_data_basic_data_name()}')
         print()
-        print('    2. {0}'.format(xlib.get_toa_data_gymno_01_name()))
-        print('    3. {0}'.format(xlib.get_toa_data_dicots_04_name()))
-        print('    4. {0}'.format(xlib.get_toa_data_monocots_04_name()))
+        print(f'    2. {xlib.get_toa_data_gymno_01_name()}')
+        print(f'    3. {xlib.get_toa_data_dicots_04_name()}')
+        print(f'    4. {xlib.get_toa_data_monocots_04_name()}')
         print()
-        print('    5. {0}'.format(xlib.get_toa_data_refseq_plant_name()))
-        print('    6. {0}'.format(xlib.get_toa_data_nt_name()))
-        print('    7. {0}'.format(xlib.get_toa_data_viridiplantae_nucleotide_gi_name()))
-        print('    8. {0}'.format(xlib.get_toa_data_nr_name()))
-        print('    9. {0}'.format(xlib.get_toa_data_viridiplantae_protein_gi_name()))
-        print('    A. {0}'.format(xlib.get_toa_data_gene_name()))
+        print(f'    5. {xlib.get_toa_data_refseq_plant_name()}')
+        print(f'    6. {xlib.get_toa_data_nt_name()}')
+        print(f'    7. {xlib.get_toa_data_viridiplantae_nucleotide_gi_name()}')
+        print(f'    8. {xlib.get_toa_data_nr_name()}')
+        print(f'    9. {xlib.get_toa_data_viridiplantae_protein_gi_name()}')
+        print(f'    A. {xlib.get_toa_data_gene_name()}')
         print()
-        print('    B. {0}'.format(xlib.get_toa_data_interpro_name()))
+        print(f'    B. {xlib.get_toa_data_interpro_name()}')
         print()
-        print('    C. {0}'.format(xlib.get_toa_data_go_name()))
+        print(f'    C. {xlib.get_toa_data_go_name()}')
         print()
-        print('    X. Return to menu Tree-oriented Annotation')
+        print( '    X. Return to menu Tree-oriented Annotation')
         print()
 
         # get the selected option
@@ -2642,22 +3290,22 @@ def build_menu_toa_basic_data():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0}'.format(xlib.get_toa_data_basic_data_name()))
+        clib.print_headers_with_environment(xlib.get_toa_data_basic_data_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate genomic dataset file')
-        print('    2. Edit genomic file')
+        print( '    1. Recreate genomic dataset file')
+        print( '    2. Edit genomic file')
         print()
-        print('    3. Recreate species file')
-        print('    4. Edit species file')
+        print( '    3. Recreate species file')
+        print( '    4. Edit species file')
         print()
-        print('    5. Download other basic data')
+        print( '    5. Download other basic data')
         print()
-        print('    6. Load data into {0} database'.format(xlib.get_toa_name()))
+        print(f'    6. Load data into {xlib.get_toa_name()} database')
         print()
-        print('    X. Return to menu Genomic databases')
+        print( '    X. Return to menu Genomic databases')
         print()
 
         # get the selected option
@@ -2690,17 +3338,17 @@ def build_menu_toa_gymno_01():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0}'.format(xlib.get_toa_data_gymno_01_name()))
+        clib.print_headers_with_environment(xlib.get_toa_data_gymno_01_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Build proteome')
+        print( '    1. Build proteome')
         print()
-        print('    2. Download functional annotations from PLAZA server')
-        print('    3. Load data into {0} database'.format(xlib.get_toa_name()))
+        print( '    2. Download functional annotations from PLAZA server')
+        print(f'    3. Load data into {xlib.get_toa_name()} database')
         print()
-        print('    X. Return to menu Genomic databases')
+        print( '    X. Return to menu Genomic databases')
         print()
 
         # get the selected option
@@ -2727,17 +3375,17 @@ def build_menu_toa_dicots_04():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0}'.format(xlib.get_toa_data_dicots_04_name()))
+        clib.print_headers_with_environment(xlib.get_toa_data_dicots_04_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Build proteome')
+        print( '    1. Build proteome')
         print()
-        print('    2. Download functional annotations from PLAZA server')
-        print('    3. Load data into {0} database'.format(xlib.get_toa_name()))
+        print( '    2. Download functional annotations from PLAZA server')
+        print(f'    3. Load data into {xlib.get_toa_name()} database')
         print()
-        print('    X. Return to menu Genomic databases')
+        print( '    X. Return to menu Genomic databases')
         print()
 
         # get the selected option
@@ -2764,17 +3412,17 @@ def build_menu_toa_monocots_04():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0}'.format(xlib.get_toa_data_monocots_04_name()))
+        clib.print_headers_with_environment(xlib.get_toa_data_monocots_04_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Build proteome')
+        print( '    1. Build proteome')
         print()
-        print('    2. Download functional annotations from PLAZA server')
-        print('    3. Load data into {0} database'.format(xlib.get_toa_name()))
+        print( '    2. Download functional annotations from PLAZA server')
+        print(f'    3. Load data into {xlib.get_toa_name()} database')
         print()
-        print('    X. Return to menu Genomic databases')
+        print( '    X. Return to menu Genomic databases')
         print()
 
         # get the selected option
@@ -2801,14 +3449,14 @@ def build_menu_toa_refseq_plant():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0}'.format(xlib.get_toa_data_refseq_plant_name()))
+        clib.print_headers_with_environment(xlib.get_toa_data_refseq_plant_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Build proteome')
+        print( '    1. Build proteome')
         print()
-        print('    X. Return to menu Genomic databases')
+        print( '    X. Return to menu Genomic databases')
         print()
 
         # get the selected option
@@ -2831,14 +3479,14 @@ def build_menu_toa_nt():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0}'.format(xlib.get_toa_data_nt_name()))
+        clib.print_headers_with_environment(xlib.get_toa_data_nt_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Build BLAST database')
+        print( '    1. Build BLAST database')
         print()
-        print('    X. Return to menu Genomic databases')
+        print( '    X. Return to menu Genomic databases')
         print()
 
         # get the selected option
@@ -2861,14 +3509,14 @@ def build_menu_toa_nucleotide_gi():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0}'.format(xlib.get_toa_data_viridiplantae_nucleotide_gi_name()))
+        clib.print_headers_with_environment(xlib.get_toa_data_viridiplantae_nucleotide_gi_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Build identifier list using NCBI server')
+        print( '    1. Build identifier list using NCBI server')
         print()
-        print('    X. Return to menu Genomic databases')
+        print( '    X. Return to menu Genomic databases')
         print()
 
         # get the selected option
@@ -2891,14 +3539,14 @@ def build_menu_toa_nr():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0}'.format(xlib.get_toa_data_nr_name()))
+        clib.print_headers_with_environment(xlib.get_toa_data_nr_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Build BLAST database')
+        print( '    1. Build BLAST database')
         print()
-        print('    X. Return to menu Genomic databases')
+        print( '    X. Return to menu Genomic databases')
         print()
 
         # get the selected option
@@ -2921,14 +3569,14 @@ def build_menu_toa_protein_gi():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0}'.format(xlib.get_toa_data_viridiplantae_protein_gi_name()))
+        clib.print_headers_with_environment(xlib.get_toa_data_viridiplantae_protein_gi_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Build identifier list using NCBI server')
+        print( '    1. Build identifier list using NCBI server')
         print()
-        print('    X. Return to menu Genomic databases')
+        print( '    X. Return to menu Genomic databases')
         print()
 
         # get the selected option
@@ -2951,15 +3599,15 @@ def build_menu_toa_gene():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0}'.format(xlib.get_toa_data_gene_name()))
+        clib.print_headers_with_environment(xlib.get_toa_data_gene_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Download functional annotations from NCBI server')
-        print('    2. Load data into {0} database'.format(xlib.get_toa_name()))
+        print( '    1. Download functional annotations from NCBI server')
+        print(f'    2. Load data into {xlib.get_toa_name()} database')
         print()
-        print('    X. Return to menu Genomic databases')
+        print( '    X. Return to menu Genomic databases')
         print()
 
         # get the selected option
@@ -2984,15 +3632,15 @@ def build_menu_toa_interpro():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0}'.format(xlib.get_toa_data_interpro_name()))
+        clib.print_headers_with_environment(xlib.get_toa_data_interpro_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Download functional annotations from InterPro server')
-        print('    2. Load data into {0} database'.format(xlib.get_toa_name()))
+        print( '    1. Download functional annotations from InterPro server')
+        print(f'    2. Load data into {xlib.get_toa_name()} database')
         print()
-        print('    X. Return to menu Genomic databases')
+        print( '    X. Return to menu Genomic databases')
         print()
 
         # get the selected option
@@ -3017,15 +3665,15 @@ def build_menu_toa_go():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0}'.format(xlib.get_toa_data_go_name()))
+        clib.print_headers_with_environment(xlib.get_toa_data_go_name())
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Download functional annotations from Gene Ontology server')
-        print('    2. Load data into {0} database'.format(xlib.get_toa_name()))
+        print( '    1. Download functional annotations from Gene Ontology server')
+        print(f'    2. Load data into {xlib.get_toa_name()} database')
         print()
-        print('    X. Return to menu Genomic databases')
+        print( '    X. Return to menu Genomic databases')
         print()
 
         # get the selected option
@@ -3050,15 +3698,15 @@ def build_menu_toa_pipelines():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0} - Pipelines'.format(xlib.get_toa_name()))
+        clib.print_headers_with_environment(f'{xlib.get_toa_name()} - Pipelines')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. {0} {1}'.format(xlib.get_toa_name(), xlib.get_toa_process_pipeline_nucleotide_name()))
-        print('    2. {0} {1}'.format(xlib.get_toa_name(), xlib.get_toa_process_pipeline_aminoacid_name()))
+        print(f'    1. {xlib.get_toa_name()} {xlib.get_toa_process_pipeline_nucleotide_name()}')
+        print(f'    2. {xlib.get_toa_name()} {xlib.get_toa_process_pipeline_aminoacid_name()}')
         print()
-        print('    X. Return to menu Tree-oriented Annotation')
+        print( '    X. Return to menu Tree-oriented Annotation')
         print()
 
         # get the selected option
@@ -3083,18 +3731,18 @@ def build_menu_toa_nucleotide_pipeline():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0} {1}'.format(xlib.get_toa_name(), xlib.get_toa_process_pipeline_nucleotide_name()))
+        clib.print_headers_with_environment(f'{xlib.get_toa_name()} {xlib.get_toa_process_pipeline_nucleotide_name()}')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run pipeline')
-        print('    4. Restart pipeline')
+        print( '    3. Run pipeline')
+        print( '    4. Restart pipeline')
         print()
-        print('    X. Return to menu {0} pipelines'.format(xlib.get_toa_name()))
+        print(f'    X. Return to menu {xlib.get_toa_name()} pipelines')
         print()
 
         # get the selected option
@@ -3123,18 +3771,18 @@ def build_menu_toa_aminoacid_pipeline():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('{0} {1}'.format(xlib.get_toa_name(), xlib.get_toa_process_pipeline_aminoacid_name()))
+        clib.print_headers_with_environment(f'{xlib.get_toa_name()} {xlib.get_toa_process_pipeline_aminoacid_name()}')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run pipeline')
-        print('    4. Restart pipeline')
+        print( '    3. Run pipeline')
+        print( '    4. Restart pipeline')
         print()
-        print('    X. Return to menu {0} pipelines'.format(xlib.get_toa_name()))
+        print(f'    X. Return to menu {xlib.get_toa_name()} pipelines')
         print()
 
         # get the selected option
@@ -3166,24 +3814,24 @@ def build_menu_toa_stats():
         clib.print_headers_with_environment('Statistics')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Alignment')
+        print( '    1. Alignment')
         print()
-        print('    2. Annotation datasets')
+        print( '    2. Annotation datasets')
         print()
-        print('    3. Species')
-        print('    4. Family')
-        print('    5. Phylum')
+        print( '    3. Species')
+        print( '    4. Family')
+        print( '    5. Phylum')
         print()
-        print('    6. EC')
-        print('    7. Gene Ontology')
-        print('    8. InterPro')
-        print('    9. KEGG')
-        print('    A. MapMan')
-        print('    B. MetaCyc')
+        print( '    6. EC')
+        print( '    7. Gene Ontology')
+        print( '    8. InterPro')
+        print( '    9. KEGG')
+        print( '    A. MapMan')
+        print( '    B. MetaCyc')
         print()
-        print('    X. Return to menu Tree-oriented Annotation')
+        print( '    X. Return to menu Tree-oriented Annotation')
         print()
 
         # get the selected option
@@ -3229,11 +3877,11 @@ def build_menu_alignment_stats():
         clib.print_headers_with_environment('Statistics - Alignment')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. # HITs per # HSPs data')
+        print( '    1. # HITs per # HSPs data')
         print()
-        print('    X. Return to menu Statistics')
+        print( '    X. Return to menu Statistics')
         print()
 
         # get the selected option
@@ -3259,11 +3907,11 @@ def build_menu_annotation_dataset_stats():
         clib.print_headers_with_environment('Statistics - Annotation datases')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Frecuency distribution data')
+        print( '    1. Frecuency distribution data')
         print()
-        print('    X. Return to menu Statistics')
+        print( '    X. Return to menu Statistics')
         print()
 
         # get the selected option
@@ -3289,11 +3937,11 @@ def build_menu_species_stats():
         clib.print_headers_with_environment('Statistics - Species')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Frecuency distribution data')
+        print( '    1. Frecuency distribution data')
         print()
-        print('    X. Return to menu Statistics')
+        print( '    X. Return to menu Statistics')
         print()
 
         # get the selected option
@@ -3319,11 +3967,11 @@ def build_menu_family_stats():
         clib.print_headers_with_environment('Statistics - Family')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Frecuency distribution data')
+        print( '    1. Frecuency distribution data')
         print()
-        print('    X. Return to menu Statistics')
+        print( '    X. Return to menu Statistics')
         print()
 
         # get the selected option
@@ -3349,11 +3997,11 @@ def build_menu_phylum_stats():
         clib.print_headers_with_environment('Statistics - Phylum')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Frecuency distribution data')
+        print( '    1. Frecuency distribution data')
         print()
-        print('    X. Return to menu Statistics')
+        print( '    X. Return to menu Statistics')
         print()
 
         # get the selected option
@@ -3379,12 +4027,12 @@ def build_menu_ec_stats():
         clib.print_headers_with_environment('Statistics - EC')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Frecuency distribution data')
-        print('    2. # sequences per # ids data')
+        print( '    1. Frecuency distribution data')
+        print( '    2. # sequences per # ids data')
         print()
-        print('    X. Return to menu Statistics')
+        print( '    X. Return to menu Statistics')
         print()
 
         # get the selected option
@@ -3412,13 +4060,13 @@ def build_menu_go_stats():
         clib.print_headers_with_environment('Statistics - Gene Ontology')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Frecuency distribution data per term')
-        print('    2. Frecuency distribution data per namespace')
-        print('    3. # sequences per # terms data')
+        print( '    1. Frecuency distribution data per term')
+        print( '    2. Frecuency distribution data per namespace')
+        print( '    3. # sequences per # terms data')
         print()
-        print('    X. Return to menu Statistics')
+        print( '    X. Return to menu Statistics')
         print()
 
         # get the selected option
@@ -3448,12 +4096,12 @@ def build_menu_interpro_stats():
         clib.print_headers_with_environment('Statistics - InterPro')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Frecuency distribution data')
-        print('    2. # sequences per # ids data')
+        print( '    1. Frecuency distribution data')
+        print( '    2. # sequences per # ids data')
         print()
-        print('    X. Return to menu Statistics')
+        print( '    X. Return to menu Statistics')
         print()
 
         # get the selected option
@@ -3481,12 +4129,12 @@ def build_menu_kegg_stats():
         clib.print_headers_with_environment('Statistics - KEGG')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Frecuency distribution data')
-        print('    2. # sequences per # ids data')
+        print( '    1. Frecuency distribution data')
+        print( '    2. # sequences per # ids data')
         print()
-        print('    X. Return to menu Statistics')
+        print( '    X. Return to menu Statistics')
         print()
 
         # get the selected option
@@ -3514,12 +4162,12 @@ def build_menu_mapman_stats():
         clib.print_headers_with_environment('Statistics - Mapman')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Frecuency distribution data')
-        print('    2. # sequences per # ids data')
+        print( '    1. Frecuency distribution data')
+        print( '    2. # sequences per # ids data')
         print()
-        print('    X. Return to menu Statistics')
+        print( '    X. Return to menu Statistics')
         print()
 
         # get the selected option
@@ -3547,12 +4195,12 @@ def build_menu_metacyc_stats():
         clib.print_headers_with_environment('Statistics - MetaCyc')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Frecuency distribution data')
-        print('    2. # sequences per # ids data')
+        print( '    1. Frecuency distribution data')
+        print( '    2. # sequences per # ids data')
         print()
-        print('    X. Return to menu Statistics')
+        print( '    X. Return to menu Statistics')
         print()
 
         # get the selected option
@@ -3563,350 +4211,6 @@ def build_menu_metacyc_stats():
             ctoa.form_view_ontologic_data_frecuency(stats_code='metacyc')
         elif option == '2':
             ctoa.form_view_x_per_y_data(stats_code='seq_per_metacyc')
-        elif option == 'X':
-            break
-
-#-------------------------------------------------------------------------------
-
-def build_menu_radseq():
-    '''
-    Build the menu RAD-seq.
-    '''
-
-    while True:
-
-        # print headers
-        clib.clear_screen()
-        clib.print_headers_with_environment('RAD-seq')
-
-        # print the menu options
-        print('Options:')
-        print()
-        print('    1. Maintenance of data files')
-        print()
-        print('    2. Enzyme analysis')
-        print('    3. In silico simulations')
-        print()
-        print('    4. RAD design')
-        print()
-        print('    5. Read quality')
-        print('    6. Trimming')
-        print()
-        print('    7. Read clustering')
-        print('    8. Pseudo assembly')
-        print()
-        print('    9. Pipelines')
-        print()
-        print('    X. Return to menu Main')
-        print()
-
-        # get the selected option
-        option = input('Input the selected option: ').upper()
-
-        # process the selected option
-        if option == '1':
-            build_menu_radseq_data_files_maintenance()
-        elif option == '2':
-            build_menu_radseq_enzyme_analysis()
-        elif option == '3':
-            build_menu_radseq_in_silico_simulations()
-        elif option == '4':
-            build_menu_radseq_rad_design()
-        elif option == '5':
-            build_menu_radseq_read_quality()
-        elif option == '6':
-            build_menu_radseq_trimming()
-        elif option == '7':
-            build_menu_radseq_read_clustering()
-        elif option == '8':
-            build_menu_radseq_pseudo_assembly()
-        elif option == '8':
-            build_menu_radseq_pipelines()
-        elif option == 'X':
-            break
-
-#-------------------------------------------------------------------------------
-
-def build_menu_radseq_data_files_maintenance():
-    '''
-    Build the menu RAD-seq - Maintenance of data files.
-    '''
-
-    while True:
-
-        # print headers
-        clib.clear_screen()
-        clib.print_headers_with_environment('RAD-seq - Maintenance of data files')
-
-        # print the menu options
-        print('Options:')
-        print()
-        print('    1. Restriction site file')
-        print('    2. End file')
-        print('    3. Individual file')
-        print()
-        print('    X. Return to menu RAD-seq')
-        print()
-
-        # get the selected option
-        option = input('Input the selected option: ').upper()
-
-        # process the selected option
-        if option == '1':
-            build_menu_restriction_site_file()
-        elif option == '2':
-            build_menu_end_file()
-        elif option == '3':
-            build_menu_individual_file()
-        elif option == 'X':
-            break
-
-#-------------------------------------------------------------------------------
-
-def build_menu_radseq_enzyme_analysis():
-    '''
-    Build the menu RAD-seq - Enzyme analysis.
-    '''
-
-    while True:
-
-        # print headers
-        clib.clear_screen()
-        clib.print_headers_with_environment('RAD-seq - Enzyme analysis')
-
-        # print the menu options
-        print('Options:')
-        print()
-        print('    1. {0} ({1} package)'.format(xlib.get_rsitesearch_name(), xlib.get_ddradseqtools_name()))
-        print()
-        print('    X. Return to menu RAD-seq')
-        print()
-
-        # get the selected option
-        option = input('Input the selected option: ').upper()
-
-        # process the selected option
-        if option == '1':
-            build_menu_rsitesearch()
-        elif option == 'X':
-            break
-
-#-------------------------------------------------------------------------------
-
-def build_menu_radseq_in_silico_simulations():
-    '''
-    Build the menu RAD-seq - In silico simulation.
-    '''
-
-    while True:
-
-        # print headers
-        clib.clear_screen()
-        clib.print_headers_with_environment('RAD-seq - In silico simulations')
-
-        # print the menu options
-        print('Options:')
-        print()
-        print('    1. {0} ({1} package)'.format(xlib.get_ddradseq_simulation_name(), xlib.get_ddradseqtools_name()))
-        print()
-        print('    X. Return to menu RAD-seq')
-        print()
-
-        # get the selected option
-        option = input('Input the selected option: ').upper()
-
-        # process the selected option
-        if option == '1':
-            build_menu_ddradseq_simulation()
-        elif option == 'X':
-            break
-
-#-------------------------------------------------------------------------------
-
-def build_menu_radseq_rad_design():
-    '''
-    Build the menu RAD-seq - RAD design.
-    '''
-
-    while True:
-
-        # print headers
-        clib.clear_screen()
-        clib.print_headers_with_environment('RAD-seq - RAD design')
-
-        # print the menu options
-        print('Options:')
-        print()
-        print('    1. {0}'.format('RADdesigner'))
-        print()
-        print('    X. Return to menu RAD-seq')
-        print()
-
-        # get the selected option
-        option = input('Input the selected option: ').upper()
-
-        # process the selected option
-        if option == '1':
-            build_menu_raddesigner()
-        elif option == 'X':
-            break
-
-#-------------------------------------------------------------------------------
-
-def build_menu_radseq_read_quality():
-    '''
-    Build the menu RAD-seq - Read quality.
-    '''
-
-    while True:
-
-        # print headers
-        clib.clear_screen()
-        clib.print_headers_with_environment('RAD-seq- Read quality')
-
-        # print the menu options
-        print('Options:')
-        print()
-        print('    1. {0}'.format(xlib.get_fastqc_name()))
-        print()
-        print('    X. Return to menu RAD-seq')
-        print()
-
-        # get the selected option
-        option = input('Input the selected option: ').upper()
-
-        # process the selected option
-        if option == '1':
-            build_menu_fastqc()
-        elif option == 'X':
-            break
-
-#-------------------------------------------------------------------------------
-
-def build_menu_radseq_trimming():
-    '''
-    Build the menu RAD-seq - Trimming.
-    '''
-
-    while True:
-
-        # print headers
-        clib.clear_screen()
-        clib.print_headers_with_environment('RAD-seq- Trimming')
-
-        # print the menu options
-        print('Options:')
-        print()
-        print('    1. {0}'.format(xlib.get_cutadapt_name()))
-        print('    2. {0}'.format(xlib.get_trimmomatic_name()))
-        print()
-        print('    X. Return to menu RAD-seq')
-        print()
-
-        # get the selected option
-        option = input('Input the selected option: ').upper()
-
-        # process the selected option
-        if option == '1':
-            build_menu_cutadapt()
-        elif option == '2':
-            build_menu_trimmomatic()
-        elif option == 'X':
-            break
-
-#-------------------------------------------------------------------------------
-
-def build_menu_radseq_read_clustering():
-    '''
-    Build the menu RAD-seq - Read clustering.
-    '''
-
-    while True:
-
-        # print headers
-        clib.clear_screen()
-        clib.print_headers_with_environment('RAD-seq - Read clustering')
-
-        # print the menu options
-        print('Options:')
-        print()
-        print('    1. {0}'.format(xlib.get_starcode_name()))
-        print('    2. {0}'.format(xlib.get_vsearch_name()))
-        print()
-        print('    X. Return to menu RAD-seq')
-        print()
-
-        # get the selected option
-        option = input('Input the selected option: ').upper()
-
-        # process the selected option
-        if option == '1':
-            build_menu_starcode()
-        elif option == '2':
-            build_menu_vsearch()
-        elif option == 'X':
-            break
-
-#-------------------------------------------------------------------------------
-
-def build_menu_radseq_pseudo_assembly():
-    '''
-    Build the menu RAD-seq - Pseudo assembly.
-    '''
-
-    while True:
-
-        # print headers
-        clib.clear_screen()
-        clib.print_headers_with_environment('RAD-seq - Pseudo assembly')
-
-        # print the menu options
-        print('Options:')
-        print()
-        print('    1. {0}'.format(xlib.get_soapdenovo2_name()))
-        print()
-        print('    X. Return to menu RAD-seq')
-        print()
-
-        # get the selected option
-        option = input('Input the selected option: ').upper()
-
-        # process the selected option
-        if option == '1':
-            build_menu_soapdenovo2()
-        elif option == 'X':
-            break
-
-#-------------------------------------------------------------------------------
-
-def build_menu_radseq_pipelines():
-    '''
-    Build the menu RAD-seq - Pipelines.
-    '''
-
-    while True:
-
-        # print headers
-        clib.clear_screen()
-        clib.print_headers_with_environment('RAD-seq - Pipelines')
-
-        # print the menu options
-        print('Options:')
-        print()
-        print('    1. ddRADseq pipeline (ddRADseqTools package)')
-        print('    2. {0}'.format(xlib.get_ipyrad_name()))
-        print()
-        print('    X. Return to menu RAD-seq')
-        print()
-
-        # get the selected option
-        option = input('Input the selected option: ').upper()
-
-        # process the selected option
-        if option == '1':
-            build_menu_ddradseq_pipeline()
-        elif option == '2':
-            build_menu_ipyrad()
         elif option == 'X':
             break
 
@@ -3924,29 +4228,29 @@ def build_menu_datasets():
         clib.print_headers_with_environment('Datasets')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. List dataset (coming soon!)')
+        print( '    1. List dataset (coming soon!)')
         print()
-        print('    2. Reference dataset file transfer')
-        print('    3. Reference dataset file compression/decompression')
-        print('    4. Remove reference dataset')
+        print( '    2. Reference dataset file transfer')
+        print( '    3. Reference dataset file compression/decompression')
+        print( '    4. Remove reference dataset')
         print()
-        print('    5. Database file transfer')
-        print('    6. Database file compression/decompression')
-        print('    7. Remove database')
+        print( '    5. Database file transfer')
+        print( '    6. Database file compression/decompression')
+        print( '    7. Remove database')
         print()
-        print('    8. Read dataset file transfer')
-        print('    9. Read dataset file compression/decompression')
-        print('    A. Remove read dataset')
+        print( '    8. Read dataset file transfer')
+        print( '    9. Read dataset file compression/decompression')
+        print( '    A. Remove read dataset')
         print()
-        print('    B. Result dataset file transfer')
-        print('    C. Result dataset file compression/decompression')
-        print('    D. Remove result dataset')
+        print( '    B. Result dataset file transfer')
+        print( '    C. Result dataset file compression/decompression')
+        print( '    D. Remove result dataset')
         print()
-        print('    E. Remove experiment')
+        print( '    E. Remove experiment')
         print()
-        print('    X. Return to menu Main')
+        print( '    X. Return to menu Main')
         print()
 
         # get the selected option
@@ -3998,15 +4302,15 @@ def build_menu_reference_file_transfer():
         clib.print_headers_with_environment('Reference dataset file transfer')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Upload dataset to a cluster')
-        print('       (CAUTION: before running a upload process, the corresponding config file should be updated)')
+        print( '    3. Upload dataset to a cluster')
+        print( '       (CAUTION: before running a upload process, the corresponding config file should be updated)')
         print()
-        print('    X. Return to menu Datasets')
+        print( '    X. Return to menu Datasets')
         print()
 
         # get the selected option
@@ -4036,16 +4340,16 @@ def build_menu_reference_file_compression_decompression():
         clib.print_headers_with_environment('Reference dataset file compression/decompression')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run compression/decompression process')
-        print('       (CAUTION: before running a compression/decompression process,')
-        print('                 the corresponding config file should be updated)')
+        print( '    3. Run compression/decompression process')
+        print( '       (CAUTION: before running a compression/decompression process,')
+        print( '                 the corresponding config file should be updated)')
         print()
-        print('    X. Return to menu Datasets')
+        print( '    X. Return to menu Datasets')
         print()
 
         # get the selected option
@@ -4075,15 +4379,15 @@ def build_menu_database_file_transfer():
         clib.print_headers_with_environment('Database file transfer')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Upload dataset to a cluster')
-        print('       (CAUTION: before running a upload process, the corresponding config file should be updated)')
+        print( '    3. Upload dataset to a cluster')
+        print( '       (CAUTION: before running a upload process, the corresponding config file should be updated)')
         print()
-        print('    X. Return to menu Datasets')
+        print( '    X. Return to menu Datasets')
         print()
 
         # get the selected option
@@ -4113,16 +4417,16 @@ def build_menu_database_file_compression_decompression():
         clib.print_headers_with_environment('Database file compression/decompression')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run compression/decompression process')
-        print('       (CAUTION: before running a compression/decompression process,')
-        print('                 the corresponding config file should be updated)')
+        print( '    3. Run compression/decompression process')
+        print( '       (CAUTION: before running a compression/decompression process,')
+        print( '                 the corresponding config file should be updated)')
         print()
-        print('    X. Return to menu Datasets')
+        print( '    X. Return to menu Datasets')
         print()
 
         # get the selected option
@@ -4152,15 +4456,15 @@ def build_menu_read_file_transfer():
         clib.print_headers_with_environment('Read dataset file transfer')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Upload dataset to a cluster')
-        print('       (CAUTION: before running a upload process, the corresponding config file should be updated)')
+        print( '    3. Upload dataset to a cluster')
+        print( '       (CAUTION: before running a upload process, the corresponding config file should be updated)')
         print()
-        print('    X. Return to menu Datasets')
+        print( '    X. Return to menu Datasets')
         print()
 
         # get the selected option
@@ -4190,16 +4494,16 @@ def build_menu_read_file_compression_decompression():
         clib.print_headers_with_environment('Read dataset file compression/decompression')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run compression/decompression process')
-        print('       (CAUTION: before running a compression/decompression process,')
-        print('                 the corresponding config file should be updated)')
+        print( '    3. Run compression/decompression process')
+        print( '       (CAUTION: before running a compression/decompression process,')
+        print( '                 the corresponding config file should be updated)')
         print()
-        print('    X. Return to menu Datasets')
+        print( '    X. Return to menu Datasets')
         print()
 
         # get the selected option
@@ -4229,15 +4533,15 @@ def build_menu_result_file_transfer():
         clib.print_headers_with_environment('Result dataset file transfer')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Download dataset from a cluster')
-        print('       (CAUTION: before running a download process, the corresponding config file should be updated)')
+        print( '    3. Download dataset from a cluster')
+        print( '       (CAUTION: before running a download process, the corresponding config file should be updated)')
         print()
-        print('    X. Return to menu Datasets')
+        print( '    X. Return to menu Datasets')
         print()
 
         # get the selected option
@@ -4267,16 +4571,16 @@ def build_menu_result_file_compression_decompression():
         clib.print_headers_with_environment('Result dataset file compression/decompression')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. Recreate config file')
-        print('    2. Edit config file')
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
         print()
-        print('    3. Run compression/decompression process')
-        print('       (CAUTION: before running a compression/decompression process,')
-        print('                 the corresponding config file should be updated)')
+        print( '    3. Run compression/decompression process')
+        print( '       (CAUTION: before running a compression/decompression process,')
+        print( '                 the corresponding config file should be updated)')
         print()
-        print('    X. Return to menu Datasets')
+        print( '    X. Return to menu Datasets')
         print()
 
         # get the selected option
@@ -4306,15 +4610,17 @@ def build_menu_logs():
         clib.print_headers_with_environment('Cluster logs')
 
         # print the menu options
-        print('Options:')
+        print( 'Options:')
         print()
-        print('    1. List submission logs in the local computer')
-        print('    2. View a submission log in the local computer')
+        print( '    1. View the cluster start log')
         print()
-        print('    3. List result logs in the cluster')
-        print('    4. View a result log in the cluster')
+        print( '    2. List submission logs in the local computer')
+        print( '    3. View a submission log in the local computer')
         print()
-        print('    X. Return to menu Logs')
+        print( '    4. List result logs in the cluster')
+        print( '    5. View a result log in the cluster')
+        print()
+        print( '    X. Return to menu Logs')
         print()
 
         # get the selected option
@@ -4322,12 +4628,14 @@ def build_menu_logs():
 
         # process the selected option
         if option == '1':
-            clog.form_list_submission_logs()
+            clog.form_view_cluster_start_log()
         elif option == '2':
-            clog.form_view_submission_log()
+            clog.form_list_submission_logs()
         elif option == '3':
-            clog.form_list_cluster_experiment_processes()
+            clog.form_view_submission_log()
         elif option == '4':
+            clog.form_list_cluster_experiment_processes()
+        elif option == '5':
             clog.form_view_cluster_experiment_process_log()
         elif option == 'X':
             break
@@ -4335,7 +4643,7 @@ def build_menu_logs():
 #-------------------------------------------------------------------------------
 
 if __name__ == '__main__':
-    print('This file contains the functions related to menus in console mode.')
+    print( 'This file contains the functions related to menus in console mode.')
     sys.exit(0)
 
 #-------------------------------------------------------------------------------

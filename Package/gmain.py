@@ -40,6 +40,7 @@ import gdataset
 import gdialogs
 import glog
 import gtoa
+import xbowtie2
 import xbusco
 import xcdhit
 import xcluster
@@ -50,6 +51,7 @@ import xdatabase
 import xddradseqtools
 import xdetonate
 import xec2
+import xexpress
 import xfastqc
 import xgmap
 import xgzip
@@ -61,6 +63,7 @@ import xkallisto
 import xlib
 import xngshelper
 import xquast
+import xraddesigner
 import xsoapdenovo2
 import xsoapdenovotrans
 import xstar
@@ -260,8 +263,8 @@ class Main(tkinter.Tk):
 
         # create "menu_configuration" and add its menu items
         self.menu_configuration = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_configuration.add_command(label='Recreate {0} config file'.format(xlib.get_project_name()), command=self.recreate_ngscloud_config_file)
-        self.menu_configuration.add_command(label='View {0} config file'.format(xlib.get_project_name()), command=self.view_ngscloud_config_file)
+        self.menu_configuration.add_command(label=f'Recreate {xlib.get_project_name()} config file', command=self.recreate_ngscloud_config_file)
+        self.menu_configuration.add_command(label=f'View {xlib.get_project_name()} config file', command=self.view_ngscloud_config_file)
         self.menu_configuration.add_separator()
         self.menu_configuration.add_command(label='List instance types', command=self.list_instance_types)
         self.menu_configuration.add_separator()
@@ -313,42 +316,58 @@ class Main(tkinter.Tk):
         self.menu_volume_operation.add_command(label='Mount volume in a node', command=self.mount_volume)
         self.menu_volume_operation.add_command(label='Unmount volume in a node', command=self.unmount_volume)
 
+        # create "menu_bioinfo_software_installation_a_m" add add its menu items
+        self.menu_bioinfo_software_installation_a_m = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_bioinfo_software_installation_a_m.add_command(label=xlib.get_bcftools_name(), command=self.install_bcftools)
+        self.menu_bioinfo_software_installation_a_m.add_command(label=xlib.get_bedtools_name(), command=self.install_bedtools)
+        self.menu_bioinfo_software_installation_a_m.add_command(label=xlib.get_blastplus_name(), command=self.install_blastplus)
+        self.menu_bioinfo_software_installation_a_m.add_command(label=xlib.get_bowtie2_name(), command=self.install_bowtie2)
+        self.menu_bioinfo_software_installation_a_m.add_command(label=xlib.get_busco_name(), command=self.install_busco)
+        self.menu_bioinfo_software_installation_a_m.add_command(label=xlib.get_cd_hit_name(), command=self.install_cd_hit)
+        self.menu_bioinfo_software_installation_a_m.add_command(label=xlib.get_cufflinks_name(), command=self.install_cufflinks)
+        self.menu_bioinfo_software_installation_a_m.add_command(label=xlib.get_cutadapt_name(), command=self.install_cutadapt)
+        self.menu_bioinfo_software_installation_a_m.add_command(label=xlib.get_ddradseqtools_name(), command=self.install_ddradseqtools)
+        self.menu_bioinfo_software_installation_a_m.add_command(label=xlib.get_detonate_name(), command=self.install_detonate)
+        self.menu_bioinfo_software_installation_a_m.add_command(label=xlib.get_entrez_direct_name(), command=self.install_entrez_direct)
+        self.menu_bioinfo_software_installation_a_m.add_command(label=xlib.get_express_name(), command=self.install_express)
+        self.menu_bioinfo_software_installation_a_m.add_command(label=xlib.get_fastqc_name(), command=self.install_fastqc)
+        self.menu_bioinfo_software_installation_a_m.add_command(label=xlib.get_gmap_gsnap_name(), command=self.install_gmap_gsnap)
+        self.menu_bioinfo_software_installation_a_m.add_command(label=xlib.get_hisat2_name(), command=self.install_hisat2)
+        self.menu_bioinfo_software_installation_a_m.add_command(label=xlib.get_htseq_name(), command=self.install_htseq)
+        self.menu_bioinfo_software_installation_a_m.add_command(label=xlib.get_ipyrad_name(), command=self.install_ipyrad)
+        self.menu_bioinfo_software_installation_a_m.add_command(label=xlib.get_kallisto_name(), command=self.install_kallisto)
+
+        # create "menu_bioinfo_software_installation_n_z" add add its menu items
+        self.menu_bioinfo_software_installation_n_z = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_bioinfo_software_installation_n_z.add_command(label=xlib.get_ngshelper_name(), command=self.install_ngshelper)
+        self.menu_bioinfo_software_installation_n_z.add_command(label=xlib.get_quast_name(), command=self.install_quast)
+        self.menu_bioinfo_software_installation_n_z.add_command(label=xlib.get_raddesigner_name(), command=self.install_raddesigner)
+        self.menu_bioinfo_software_installation_n_z.add_command(label=xlib.get_rnaquast_name(), command=self.install_rnaquast)
+        self.menu_bioinfo_software_installation_n_z.add_command(label=xlib.get_rsem_name(), command=self.install_rsem)
+        self.menu_bioinfo_software_installation_n_z.add_command(label=xlib.get_samtools_name(), command=self.install_samtools)
+        self.menu_bioinfo_software_installation_n_z.add_command(label=xlib.get_soapdenovo2_name(), command=self.install_soapdenovo2)
+        self.menu_bioinfo_software_installation_n_z.add_command(label=xlib.get_soapdenovotrans_name(), command=self.install_soapdenovotrans)
+        self.menu_bioinfo_software_installation_n_z.add_command(label=xlib.get_star_name(), command=self.install_star)
+        self.menu_bioinfo_software_installation_n_z.add_command(label=xlib.get_starcode_name(), command=self.install_starcode)
+        self.menu_bioinfo_software_installation_n_z.add_command(label=xlib.get_toa_name(), command=self.install_toa)
+        self.menu_bioinfo_software_installation_n_z.add_command(label=xlib.get_tophat_name(), command=self.install_tophat)
+        self.menu_bioinfo_software_installation_n_z.add_command(label=xlib.get_transabyss_name(), command=self.install_transabyss)
+        self.menu_bioinfo_software_installation_n_z.add_command(label=xlib.get_transdecoder_name(), command=self.install_transdecoder)
+        self.menu_bioinfo_software_installation_n_z.add_command(label=xlib.get_transrate_name(), command=self.install_transrate)
+        self.menu_bioinfo_software_installation_n_z.add_command(label=xlib.get_trimmomatic_name(), command=self.install_trimmomatic)
+        self.menu_bioinfo_software_installation_n_z.add_command(label=xlib.get_trinity_name(), command=self.install_trinity)
+        self.menu_bioinfo_software_installation_n_z.add_command(label=xlib.get_vcftools_name(), command=self.install_vcftools)
+        self.menu_bioinfo_software_installation_n_z.add_command(label=xlib.get_vcftools_perl_libraries_name(), command=self.install_vcftools_perl_libraries)
+        self.menu_bioinfo_software_installation_n_z.add_command(label=xlib.get_vsearch_name(), command=self.install_vsearch)
+
         # create "menu_bioinfo_software_installation" add add its menu items
         self.menu_bioinfo_software_installation = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_bioinfo_software_installation.add_command(label='{0} (Bioconda infrastructure)'.format(xlib.get_miniconda3_name()), command=self.install_miniconda3)
+        self.menu_bioinfo_software_installation.add_command(label=f'{xlib.get_miniconda3_name()} (Bioconda infrastructure)', command=self.install_miniconda3)
         self.menu_bioinfo_software_installation.add_separator()
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_blastplus_name(), command=self.install_blastplus)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_busco_name(), command=self.install_busco)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_cd_hit_name(), command=self.install_cd_hit)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_cufflinks_name(), command=self.install_cufflinks)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_cutadapt_name(), command=self.install_cutadapt)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_ddradseqtools_name(), command=self.install_ddradseqtools)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_detonate_name(), command=self.install_detonate)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_entrez_direct_name(), command=self.install_entrez_direct)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_fastqc_name(), command=self.install_fastqc)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_gmap_gsnap_name(), command=self.install_gmap_gsnap)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_hisat2_name(), command=self.install_hisat2)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_htseq_name(), command=self.install_htseq)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_ipyrad_name(), command=self.install_ipyrad)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_kallisto_name(), command=self.install_kallisto)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_ngshelper_name(), command=self.install_ngshelper)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_quast_name(), command=self.install_quast)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_rnaquast_name(), command=self.install_rnaquast)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_rsem_name(), command=self.install_rsem)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_soapdenovo2_name(), command=self.install_soapdenovo2)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_soapdenovotrans_name(), command=self.install_soapdenovotrans)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_star_name(), command=self.install_star)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_starcode_name(), command=self.install_starcode)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_toa_name(), command=self.install_toa)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_tophat_name(), command=self.install_tophat)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_transabyss_name(), command=self.install_transabyss)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_transdecoder_name(), command=self.install_transdecoder)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_transrate_name(), command=self.install_transrate)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_trimmomatic_name(), command=self.install_trimmomatic)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_trinity_name(), command=self.install_trinity)
-        self.menu_bioinfo_software_installation.add_command(label=xlib.get_vsearch_name(), command=self.install_vsearch)
+        self.menu_bioinfo_software_installation.add_cascade(label='A-M bioinfo software', menu=self.menu_bioinfo_software_installation_a_m)
+        self.menu_bioinfo_software_installation.add_cascade(label='N-Z bioinfo software', menu=self.menu_bioinfo_software_installation_n_z)
         self.menu_bioinfo_software_installation.add_separator()
-        self.menu_bioinfo_software_installation.add_command(label='{0} & analysis packages'.format(xlib.get_r_name()), command=self.install_r)
+        self.menu_bioinfo_software_installation.add_command(label=f'{xlib.get_r_name()} & analysis packages', command=self.install_r)
 
         # create "menu_cloud_control" and add its menu items
         self.menu_cloud_control = tkinter.Menu(self.menu_bar, tearoff=0)
@@ -382,6 +401,23 @@ class Main(tkinter.Tk):
         self.menu_individual_file = tkinter.Menu(self.menu_bar, tearoff=0)
         self.menu_individual_file.add_command(label='Recreate data file', command=self.recreate_individual_file)
         self.menu_individual_file.add_command(label='Edit data file', command=self.edit_individual_file)
+
+        # create "menu_vcf_sample_file" and add its menu items
+        self.menu_vcf_sample_file = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_vcf_sample_file.add_command(label='Recreate data file', command=self.recreate_vcf_sample_file)
+        self.menu_vcf_sample_file.add_command(label='Edit data file', command=self.edit_vcf_sample_file)
+
+        # create "menu_raddesinger_condition_file" and add its menu items
+        self.menu_raddesinger_condition_file = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_raddesinger_condition_file.add_command(label='Recreate data file', command=self.recreate_raddesinger_condition_file)
+        self.menu_raddesinger_condition_file.add_command(label='Edit data file', command=self.edit_raddesinger_condition_file)
+
+        # create "menu_bowtie2" and add its menu items
+        self.menu_bowtie2 = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_bowtie2.add_command(label='Recreate config file', command=self.recreate_bowtie2_config_file)
+        self.menu_bowtie2.add_command(label='Edit config file', command=self.edit_bowtie2_config_file)
+        self.menu_bowtie2.add_separator()
+        self.menu_bowtie2.add_command(label='Run read alignment process', command=self.run_bowtie2_process)
 
         # create "menu_busco" and add its menu items
         self.menu_busco = tkinter.Menu(self.menu_bar, tearoff=0)
@@ -425,19 +461,20 @@ class Main(tkinter.Tk):
         self.menu_cutadapt.add_separator()
         self.menu_cutadapt.add_command(label='Run trimming process', command=self.run_cutadapt_process)
 
-        # create "menu_ddradseq_pipeline" and add its menu items
-        self.menu_ddradseq_pipeline = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_ddradseq_pipeline.add_command(label='Recreate config file', command=self.warn_unavailable_process)
-        self.menu_ddradseq_pipeline.add_command(label='Edit config file', command=self.warn_unavailable_process)
-        self.menu_ddradseq_pipeline.add_separator()
-        self.menu_ddradseq_pipeline.add_command(label='Run pipeline', command=self.warn_unavailable_process)
-
         # create "menu_ddradseq_simulation" and add its menu items
         self.menu_ddradseq_simulation = tkinter.Menu(self.menu_bar, tearoff=0)
         self.menu_ddradseq_simulation.add_command(label='Recreate config file', command=self.recreate_ddradseq_simulation_config_file)
         self.menu_ddradseq_simulation.add_command(label='Edit config file', command=self.edit_ddradseq_simulation_config_file)
         self.menu_ddradseq_simulation.add_separator()
         self.menu_ddradseq_simulation.add_command(label='Run simulation process', command=self.run_ddradseq_simulation_process)
+        self.menu_ddradseq_simulation.add_command(label='Restart simulation process', command=self.restart_ddradseq_simulation_process)
+
+        # create "menu_express" and add its menu items
+        self.menu_express = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_express.add_command(label='Recreate config file', command=self.recreate_express_config_file)
+        self.menu_express.add_command(label='Edit config file', command=self.edit_express_config_file)
+        self.menu_express.add_separator()
+        self.menu_express.add_command(label='Run quantitation process', command=self.run_express_process)
 
         # create "menu_fastqc" and add its menu items
         self.menu_fastqc = tkinter.Menu(self.menu_bar, tearoff=0)
@@ -452,6 +489,7 @@ class Main(tkinter.Tk):
         self.menu_ggtrinity.add_command(label='Edit config file', command=self.edit_ggtrinity_config_file)
         self.menu_ggtrinity.add_separator()
         self.menu_ggtrinity.add_command(label='Run assembly process', command=self.run_ggtrinity_process)
+        self.menu_ggtrinity.add_command(label='Restart assembly process', command=self.restart_ggtrinity_process)
 
         # create "menu_gmap" and add its menu items
         self.menu_gmap = tkinter.Menu(self.menu_bar, tearoff=0)
@@ -486,7 +524,8 @@ class Main(tkinter.Tk):
         self.menu_insilico_read_normalization.add_command(label='Recreate config file', command=self.recreate_insilico_read_normalization_config_file)
         self.menu_insilico_read_normalization.add_command(label='Edit config file', command=self.edit_insilico_read_normalization_config_file)
         self.menu_insilico_read_normalization.add_separator()
-        self.menu_insilico_read_normalization.add_command(label='Run normalization process', command=self.run_insilico_read_normalization_process)
+        self.menu_insilico_read_normalization.add_command(label='Run read normalization process', command=self.run_insilico_read_normalization_process)
+        self.menu_insilico_read_normalization.add_command(label='Restart read normalization process', command=self.restart_insilico_read_normalization_process)
 
         # create "menu_ipyrad" and add its menu items
         self.menu_ipyrad = tkinter.Menu(self.menu_bar, tearoff=0)
@@ -511,10 +550,11 @@ class Main(tkinter.Tk):
 
         # create "menu_rad_designer" and add its menu items
         self.menu_raddesigner = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_raddesigner.add_command(label='Recreate config file', command=self.warn_unavailable_process)
-        self.menu_raddesigner.add_command(label='Edit config file', command=self.warn_unavailable_process)
+        self.menu_raddesigner.add_command(label='Recreate config file', command=self.recreate_raddesigner_config_file)
+        self.menu_raddesigner.add_command(label='Edit config file', command=self.edit_raddesigner_config_file)
         self.menu_raddesigner.add_separator()
-        self.menu_raddesigner.add_command(label='Run read clustering process', command=self.warn_unavailable_process)
+        self.menu_raddesigner.add_command(label='Run RAD designer process', command=self.run_raddesigner_process)
+        self.menu_raddesigner.add_command(label='Restart RAD designer process', command=self.restart_raddesigner_process)
 
         # create "menu_ref_eval" and add its menu items
         # -- self.menu_ref_eval = tkinter.Menu(self.menu_bar, tearoff=0)
@@ -564,6 +604,7 @@ class Main(tkinter.Tk):
         self.menu_soapdenovo2.add_command(label='Edit config file', command=self.edit_soapdenovo2_config_file)
         self.menu_soapdenovo2.add_separator()
         self.menu_soapdenovo2.add_command(label='Run assembly process', command=self.run_soapdenovo2_process)
+        self.menu_soapdenovo2.add_command(label='Restart assembly process', command=self.restart_soapdenovo2_process)
 
         # create "menu_soapdenovotrans" and add its menu items
         self.menu_soapdenovotrans = tkinter.Menu(self.menu_bar, tearoff=0)
@@ -571,6 +612,7 @@ class Main(tkinter.Tk):
         self.menu_soapdenovotrans.add_command(label='Edit config file', command=self.edit_soapdenovotrans_config_file)
         self.menu_soapdenovotrans.add_separator()
         self.menu_soapdenovotrans.add_command(label='Run assembly process', command=self.run_soapdenovotrans_process)
+        self.menu_soapdenovotrans.add_command(label='Restart assembly process', command=self.restart_soapdenovotrans_process)
 
         # create "menu_tophat" and add its menu items
         self.menu_tophat = tkinter.Menu(self.menu_bar, tearoff=0)
@@ -620,13 +662,15 @@ class Main(tkinter.Tk):
         self.menu_trinity.add_command(label='Edit config file', command=self.edit_trinity_config_file)
         self.menu_trinity.add_separator()
         self.menu_trinity.add_command(label='Run assembly process', command=self.run_trinity_process)
+        self.menu_trinity.add_command(label='Restart assembly process', command=self.restart_trinity_process)
 
-        # create "menu_vsearch" and add its menu items
-        self.menu_vsearch = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_vsearch.add_command(label='Recreate config file', command=self.warn_unavailable_process)
-        self.menu_vsearch.add_command(label='Edit config file', command=self.warn_unavailable_process)
-        self.menu_vsearch.add_separator()
-        self.menu_vsearch.add_command(label='Run read clustering process', command=self.warn_unavailable_process)
+        # create "menu_variant_calling" and add its menu items
+        self.menu_variant_calling = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_variant_calling.add_command(label='Recreate config file', command=self.recreate_variant_calling_config_file)
+        self.menu_variant_calling.add_command(label='Edit config file', command=self.edit_variant_calling_config_file)
+        self.menu_variant_calling.add_separator()
+        self.menu_variant_calling.add_command(label='Run variant calling process', command=self.run_variant_calling_process)
+        self.menu_variant_calling.add_command(label='Restart variant calling process', command=self.restart_variant_calling_process)
 
         # create "menu_denovo_rnaseq_read_quality" and add its menu items
         self.menu_denovo_rnaseq_read_quality = tkinter.Menu(self.menu_bar, tearoff=0)
@@ -639,7 +683,7 @@ class Main(tkinter.Tk):
 
         # create "menu_denovo_rnaseq_digital_normalization" and add its menu items
         self.menu_denovo_rnaseq_digital_normalization = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_denovo_rnaseq_digital_normalization.add_cascade(label='{0} ({1} package)'.format(xlib.get_insilico_read_normalization_name(), xlib.get_trinity_name()), menu=self.menu_insilico_read_normalization)
+        self.menu_denovo_rnaseq_digital_normalization.add_cascade(label=f'{xlib.get_insilico_read_normalization_name()} ({xlib.get_trinity_name()} package)', menu=self.menu_insilico_read_normalization)
 
         # create "menu_denovo_rnaseq_assembly" and add its menu items
         self.menu_denovo_rnaseq_assembly = tkinter.Menu(self.menu_bar, tearoff=0)
@@ -647,27 +691,32 @@ class Main(tkinter.Tk):
         self.menu_denovo_rnaseq_assembly.add_cascade(label=xlib.get_transabyss_name(), menu=self.menu_transabyss)
         self.menu_denovo_rnaseq_assembly.add_cascade(label=xlib.get_trinity_name(), menu=self.menu_trinity)
 
+        # create "menu_denovo_rnaseq_read_alignment" add add its menu items
+        self.menu_denovo_rnaseq_read_alignment = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_denovo_rnaseq_read_alignment.add_cascade(label=xlib.get_bowtie2_name(), menu=self.menu_bowtie2)
+
         # create "menu_denovo_rnaseq_transcriptome_quality_assessment" and add its menu items
         self.menu_denovo_rnaseq_transcriptome_quality_assessment = tkinter.Menu(self.menu_bar, tearoff=0)
         self.menu_denovo_rnaseq_transcriptome_quality_assessment.add_cascade(label=xlib.get_busco_name(), menu=self.menu_busco)
         self.menu_denovo_rnaseq_transcriptome_quality_assessment.add_cascade(label=xlib.get_quast_name(), menu=self.menu_quast)
         self.menu_denovo_rnaseq_transcriptome_quality_assessment.add_cascade(label=xlib.get_rnaquast_name(), menu=self.menu_rnaquast)
-        self.menu_denovo_rnaseq_transcriptome_quality_assessment.add_cascade(label='{0} ({1} package)'.format(xlib.get_rsem_eval_name(), xlib.get_detonate_name()), menu=self.menu_rsem_eval)
-        # -- self.menu_denovo_rnaseq_transcriptome_quality_assessment.add_cascade(label='{0} ({1} package)'.format(xlib.get_ref_eval_name(), xlib.get_detonate_name()), menu=self.menu_ref_eval)
+        self.menu_denovo_rnaseq_transcriptome_quality_assessment.add_cascade(label=f'{xlib.get_rsem_eval_name()} ({xlib.get_detonate_name()} package)', menu=self.menu_rsem_eval)
+        # -- self.menu_denovo_rnaseq_transcriptome_quality_assessment.add_cascade(label=f'{xlib.get_ref_eval_name()} ({xlib.get_detonate_name()} package)', menu=self.menu_ref_eval)
         self.menu_denovo_rnaseq_transcriptome_quality_assessment.add_cascade(label=xlib.get_transrate_name(), menu=self.menu_transrate)
 
         # create "menu_denovo_rnaseq_transcriptome_filtering" and add its menu items
         self.menu_denovo_rnaseq_transcriptome_filtering = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_denovo_rnaseq_transcriptome_filtering.add_cascade(label='{0} ({1} package)'.format(xlib.get_cd_hit_est_name(), xlib.get_cd_hit_name()), menu=self.menu_cd_hit_est)
-        self.menu_denovo_rnaseq_transcriptome_filtering.add_cascade(label='{0} ({1} package)'.format(xlib.get_transcript_filter_name(), xlib.get_ngshelper_name()), menu=self.menu_transcript_filter)
+        self.menu_denovo_rnaseq_transcriptome_filtering.add_cascade(label=f'{xlib.get_cd_hit_est_name()} ({xlib.get_cd_hit_name()} package)', menu=self.menu_cd_hit_est)
+        self.menu_denovo_rnaseq_transcriptome_filtering.add_cascade(label=f'{xlib.get_transcript_filter_name()} ({xlib.get_ngshelper_name()} package)', menu=self.menu_transcript_filter)
 
         # create "menu_denovo_rnaseq_quantitation" and add its menu items
         self.menu_denovo_rnaseq_quantitation = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_denovo_rnaseq_quantitation.add_cascade(label=xlib.get_express_name(), menu=self.menu_express)
         self.menu_denovo_rnaseq_quantitation.add_cascade(label=xlib.get_kallisto_name(), menu=self.menu_kallisto)
 
         # create "menu_denovo_rnaseq_annotation" and add its menu items
         self.menu_denovo_rnaseq_annotation = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_denovo_rnaseq_annotation.add_cascade(label='{0} ({1} package)'.format(xlib.get_transcriptome_blastx_name(), xlib.get_ngshelper_name()), menu=self.menu_transcriptome_blastx)
+        self.menu_denovo_rnaseq_annotation.add_cascade(label=f'{xlib.get_transcriptome_blastx_name()} ({xlib.get_ngshelper_name()} package)', menu=self.menu_transcriptome_blastx)
 
         # create "menu_denovo_rnaseq" add add its menu items
         self.menu_denovo_rnaseq = tkinter.Menu(self.menu_bar, tearoff=0)
@@ -676,6 +725,8 @@ class Main(tkinter.Tk):
         self.menu_denovo_rnaseq.add_cascade(label='Digital normalization', menu=self.menu_denovo_rnaseq_digital_normalization)
         self.menu_denovo_rnaseq.add_separator()
         self.menu_denovo_rnaseq.add_cascade(label='Assembly', menu=self.menu_denovo_rnaseq_assembly)
+        self.menu_denovo_rnaseq.add_separator()
+        self.menu_denovo_rnaseq.add_cascade(label='Read alignment', menu=self.menu_denovo_rnaseq_read_alignment)
         self.menu_denovo_rnaseq.add_separator()
         self.menu_denovo_rnaseq.add_cascade(label='Transcriptome quality assessment', menu=self.menu_denovo_rnaseq_transcriptome_quality_assessment)
         self.menu_denovo_rnaseq.add_cascade(label='Transcriptome filtering', menu=self.menu_denovo_rnaseq_transcriptome_filtering)
@@ -696,54 +747,135 @@ class Main(tkinter.Tk):
         self.menu_reference_based_rnaseq_trimming.add_cascade(label=xlib.get_cutadapt_name(), menu=self.menu_cutadapt)
         self.menu_reference_based_rnaseq_trimming.add_cascade(label=xlib.get_trimmomatic_name(), menu=self.menu_trimmomatic)
 
+        # create "menu_reference_based_rnaseq_assembly" add add its menu items
+        self.menu_reference_based_rnaseq_assembly = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_reference_based_rnaseq_assembly.add_cascade(label=f'{xlib.get_cufflinks_cuffmerge_name()} ({xlib.get_cufflinks_name()} package)', menu=self.menu_cufflinks_cuffmerge)
+        self.menu_reference_based_rnaseq_assembly.add_cascade(label=f'{xlib.get_ggtrinity_name()} ({xlib.get_trinity_name()} package)', menu=self.menu_ggtrinity)
+
         # create "menu_reference_based_rnaseq_read_alignment" add add its menu items
         self.menu_reference_based_rnaseq_read_alignment = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_reference_based_rnaseq_read_alignment.add_cascade(label='{0} ({1} package)'.format(xlib.get_gsnap_name(), xlib.get_gmap_gsnap_name()), menu=self.menu_gsnap)
+        self.menu_reference_based_rnaseq_read_alignment.add_cascade(label=xlib.get_bowtie2_name(), menu=self.menu_bowtie2)
+        self.menu_reference_based_rnaseq_read_alignment.add_cascade(label=f'{xlib.get_gsnap_name()} ({xlib.get_gmap_gsnap_name()} package)', menu=self.menu_gsnap)
         self.menu_reference_based_rnaseq_read_alignment.add_cascade(label=xlib.get_hisat2_name(), menu=self.menu_hisat2)
         self.menu_reference_based_rnaseq_read_alignment.add_cascade(label=xlib.get_star_name(), menu=self.menu_star)
         self.menu_reference_based_rnaseq_read_alignment.add_cascade(label=xlib.get_tophat_name(), menu=self.menu_tophat)
 
-        # create "menu_reference_based_rnaseq_assembly" add add its menu items
-        self.menu_reference_based_rnaseq_assembly = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_reference_based_rnaseq_assembly.add_cascade(label='{0} ({1} package)'.format(xlib.get_cufflinks_cuffmerge_name(), xlib.get_cufflinks_name()), menu=self.menu_cufflinks_cuffmerge)
-        self.menu_reference_based_rnaseq_assembly.add_cascade(label='{0} ({1} package)'.format(xlib.get_ggtrinity_name(), xlib.get_trinity_name()), menu=self.menu_ggtrinity)
-
         # create "menu_reference_based_rnaseq_transcriptome_alignment" add add its menu items
         self.menu_reference_based_rnaseq_transcriptome_alignment = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_reference_based_rnaseq_transcriptome_alignment.add_cascade(label='{0} ({1} package)'.format(xlib.get_gmap_name(), xlib.get_gmap_gsnap_name()), menu=self.menu_gmap)
+        self.menu_reference_based_rnaseq_transcriptome_alignment.add_cascade(label=f'{xlib.get_gmap_name()} ({xlib.get_gmap_gsnap_name()} package)', menu=self.menu_gmap)
 
         # create "menu_reference_based_rnaseq_quantitation" and add its menu items
         self.menu_reference_based_rnaseq_quantitation = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_reference_based_rnaseq_quantitation.add_cascade(label='{0} ({1} package)'.format(xlib.get_cuffquant_name(), xlib.get_cufflinks_name()), menu=self.menu_cuffquant)
-        self.menu_reference_based_rnaseq_quantitation.add_cascade(label='{0} ({1} package)'.format(xlib.get_htseq_count_name(), xlib.get_htseq_name()), menu=self.menu_htseq_count)
+        self.menu_reference_based_rnaseq_quantitation.add_cascade(label=f'{xlib.get_cuffquant_name()} ({xlib.get_cufflinks_name()} package)', menu=self.menu_cuffquant)
+        self.menu_reference_based_rnaseq_quantitation.add_cascade(label=f'{xlib.get_htseq_count_name()} ({xlib.get_htseq_name()} package)', menu=self.menu_htseq_count)
 
         # create "menu_reference_based_rnaseq_differential_expression" and add its menu items
         self.menu_reference_based_rnaseq_differential_expression = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_reference_based_rnaseq_differential_expression.add_cascade(label='{0} ({1} package)'.format(xlib.get_cuffdiff_name(), xlib.get_cufflinks_name()), menu=self.menu_cuffdiff)
+        self.menu_reference_based_rnaseq_differential_expression.add_cascade(label=f'{xlib.get_cuffdiff_name()} ({xlib.get_cufflinks_name()} package)', menu=self.menu_cuffdiff)
+
+        # create "menu_reference_based_rnaseq_variant_calling" and add its menu items
+        self.menu_reference_based_rnaseq_variant_calling = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_reference_based_rnaseq_variant_calling.add_cascade(label=xlib.get_variant_calling_name(), menu=self.menu_variant_calling)
 
         # create "menu_reference_based_rnaseq" add add its menu items
         self.menu_reference_based_rnaseq = tkinter.Menu(self.menu_bar, tearoff=0)
         self.menu_reference_based_rnaseq.add_cascade(label='Read quality', menu=self.menu_reference_based_rnaseq_read_quality)
         self.menu_reference_based_rnaseq.add_cascade(label='Trimming', menu=self.menu_reference_based_rnaseq_trimming)
         self.menu_reference_based_rnaseq.add_separator()
-        self.menu_reference_based_rnaseq.add_cascade(label='Read alignment', menu=self.menu_reference_based_rnaseq_read_alignment)
         self.menu_reference_based_rnaseq.add_cascade(label='Assembly', menu=self.menu_reference_based_rnaseq_assembly)
+        self.menu_reference_based_rnaseq.add_separator()
+        self.menu_reference_based_rnaseq.add_cascade(label='Read alignment', menu=self.menu_reference_based_rnaseq_read_alignment)
         self.menu_reference_based_rnaseq.add_cascade(label='Transcriptome alignment', menu=self.menu_reference_based_rnaseq_transcriptome_alignment)
         self.menu_reference_based_rnaseq.add_separator()
         self.menu_reference_based_rnaseq.add_cascade(label='Quantitation', menu=self.menu_reference_based_rnaseq_quantitation)
-        self.menu_reference_based_rnaseq.add_separator()
         self.menu_reference_based_rnaseq.add_cascade(label='Differential expression', menu=self.menu_reference_based_rnaseq_differential_expression)
+        self.menu_reference_based_rnaseq.add_separator()
+        self.menu_reference_based_rnaseq.add_cascade(label='Variant calling', menu=self.menu_reference_based_rnaseq_variant_calling)
 
         # link "menu_reference_based_rnaseq" with "menu_bar"
         self.menu_bar.add_cascade(label='Reference-based RNA-seq', menu=self.menu_reference_based_rnaseq)
 
+        # create "menu_radseq_data_files_maintenance" and add its menu items
+        self.menu_radseq_data_files_maintenance = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_radseq_data_files_maintenance.add_cascade(label='Restriction site file', menu=self.menu_restriction_site_file)
+        self.menu_radseq_data_files_maintenance.add_cascade(label='End file', menu=self.menu_end_file)
+        self.menu_radseq_data_files_maintenance.add_cascade(label='Individual file', menu=self.menu_individual_file)
+        self.menu_radseq_data_files_maintenance.add_cascade(label='VCF sample file', menu=self.menu_vcf_sample_file)
+        self.menu_radseq_data_files_maintenance.add_cascade(label='RADdesigner condition file', menu=self.menu_raddesinger_condition_file)
+
+        # create "menu_radseq_enzyme_analysis" and add its menu items
+        self.menu_radseq_enzyme_analysis = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_radseq_enzyme_analysis.add_cascade(label=f'{xlib.get_rsitesearch_name()} ({xlib.get_ddradseqtools_name()} package)', menu=self.menu_rsitesearch)
+
+        # create "menu_radseq_in_silico_simulations" and add its menu items
+        self.menu_radseq_in_silico_simulations = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_radseq_in_silico_simulations.add_cascade(label=f'{xlib.get_ddradseq_simulation_name()} ({xlib.get_ddradseqtools_name()} package)', menu=self.menu_ddradseq_simulation)
+
+        # create "menu_radseq_rad_design" and add its menu items
+        self.menu_radseq_rad_design = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_radseq_rad_design.add_cascade(label='RADdesigner', menu=self.menu_raddesigner)
+
+        # create "menu_radseq_read_quality" and add its menu items
+        self.menu_radseq_read_quality = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_radseq_read_quality.add_cascade(label=xlib.get_fastqc_name(), menu=self.menu_fastqc)
+
+        # create "menu_radseq_trimming" and add its menu items
+        self.menu_radseq_trimming = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_radseq_trimming.add_cascade(label=xlib.get_cutadapt_name(), menu=self.menu_cutadapt)
+        self.menu_radseq_trimming.add_cascade(label=xlib.get_trimmomatic_name(), menu=self.menu_trimmomatic)
+
+        # create "menu_read_clustering" and add its menu items
+        self.menu_radseq_read_clustering = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_radseq_read_clustering.add_cascade(label=xlib.get_starcode_name(), menu=self.menu_starcode)
+
+        # create "menu_pseudo_assembly" and add its menu items
+        self.menu_radseq_pseudo_assembly = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_radseq_pseudo_assembly.add_cascade(label=xlib.get_soapdenovo2_name(), menu=self.menu_soapdenovo2)
+
+        # create "menu_radseq_read_alignment" add add its menu items
+        self.menu_radseq_read_alignment = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_radseq_read_alignment.add_cascade(label=xlib.get_bowtie2_name(), menu=self.menu_bowtie2)
+        self.menu_radseq_read_alignment.add_cascade(label=f'{xlib.get_gsnap_name()} ({xlib.get_gmap_gsnap_name()} package)', menu=self.menu_gsnap)
+        self.menu_radseq_read_alignment.add_cascade(label=xlib.get_hisat2_name(), menu=self.menu_hisat2)
+
+        # create "menu_radseq_variant_calling" and add its menu items
+        self.menu_radseq_variant_calling = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_radseq_variant_calling.add_cascade(label=xlib.get_variant_calling_name(), menu=self.menu_variant_calling)
+
+        # create "menu_radseq_pipelines" and add its menu items
+        self.menu_radseq_pipelines = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_radseq_pipelines.add_cascade(label=xlib.get_ipyrad_name(), menu=self.menu_ipyrad)
+
+        # create "menu_radseq" add add its menu items
+        self.menu_radseq = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_radseq.add_cascade(label='Maintenance of data files', menu=self.menu_radseq_data_files_maintenance)
+        self.menu_radseq.add_separator()
+        self.menu_radseq.add_cascade(label='Enzyme analysis', menu=self.menu_radseq_enzyme_analysis)
+        self.menu_radseq.add_cascade(label='In silico simulations', menu=self.menu_radseq_in_silico_simulations)
+        self.menu_radseq.add_cascade(label='RAD design', menu=self.menu_radseq_rad_design)
+        self.menu_radseq.add_separator()
+        self.menu_radseq.add_cascade(label='Read quality', menu=self.menu_radseq_read_quality)
+        self.menu_radseq.add_cascade(label='Trimming', menu=self.menu_radseq_trimming)
+        self.menu_radseq.add_cascade(label='Read clustering', menu=self.menu_radseq_read_clustering)
+        self.menu_radseq.add_separator()
+        self.menu_radseq.add_cascade(label='Pseudo assembly', menu=self.menu_radseq_pseudo_assembly)
+        self.menu_radseq.add_separator()
+        self.menu_radseq.add_cascade(label='Read alignment', menu=self.menu_radseq_read_alignment)
+        self.menu_radseq.add_separator()
+        self.menu_radseq.add_cascade(label='Variant calling', menu=self.menu_radseq_variant_calling)
+        self.menu_radseq.add_separator()
+        self.menu_radseq.add_cascade(label='Pipelines', menu=self.menu_radseq_pipelines)
+
+        # link "menu_radseq" with "menu_bar"
+        self.menu_bar.add_cascade(label='RAD-seq', menu=self.menu_radseq)
+
         # create "menu_toa_configuration" and add its menu items
         self.menu_toa_configuration = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_toa_configuration.add_command(label='Recreate {0} config file'.format(xlib.get_toa_name()), command=self.recreate_toa_config_file)
-        self.menu_toa_configuration.add_command(label='View {0} config file'.format(xlib.get_toa_name()), command=self.view_toa_config_file)
+        self.menu_toa_configuration.add_command(label=f'Recreate {xlib.get_toa_name()} config file', command=self.recreate_toa_config_file)
+        self.menu_toa_configuration.add_command(label=f'View {xlib.get_toa_name()} config file', command=self.view_toa_config_file)
         self.menu_toa_configuration.add_separator()
-        self.menu_toa_configuration.add_command(label='Recreate {0} database'.format(xlib.get_toa_name()), command=self.recreate_toa_database)
-        # -- self.menu_toa_configuration.add_command(label='Rebuild {0} database'.format(xlib.get_toa_name()), command=self.rebuild_toa_database)
+        self.menu_toa_configuration.add_command(label=f'Recreate {xlib.get_toa_name()} database', command=self.recreate_toa_database)
+        # -- self.menu_toa_configuration.add_command(label=f'Rebuild {xlib.get_toa_name()} database', command=self.rebuild_toa_database)
 
         # create "menu_toa_basic_data" and add its menu items
         self.menu_toa_basic_data = tkinter.Menu(self.menu_bar, tearoff=0)
@@ -755,28 +887,28 @@ class Main(tkinter.Tk):
         self.menu_toa_basic_data.add_separator()
         self.menu_toa_basic_data.add_command(label='Download other basic data', command=self.download_basic_data)
         self.menu_toa_basic_data.add_separator()
-        self.menu_toa_basic_data.add_command(label='Load data into {0} database'.format(xlib.get_toa_name()), command=self.load_basic_data)
+        self.menu_toa_basic_data.add_command(label=f'Load data into {xlib.get_toa_name()} database', command=self.load_basic_data)
 
         # create "menu_toa_gymno_01" and add its menu items
         self.menu_toa_gymno_01 = tkinter.Menu(self.menu_bar, tearoff=0)
         self.menu_toa_gymno_01.add_command(label='Build proteome', command=self.build_gymno_01_proteome)
         self.menu_toa_gymno_01.add_separator()
         self.menu_toa_gymno_01.add_command(label='Download functional annotations from PLAZA server', command=self.download_gymno_01_data)
-        self.menu_toa_gymno_01.add_command(label='Load data into {0} database'.format(xlib.get_toa_name()), command=self.load_gymno_01_data)
+        self.menu_toa_gymno_01.add_command(label=f'Load data into {xlib.get_toa_name()} database', command=self.load_gymno_01_data)
 
         # create "menu_toa_dicots_04" and add its menu items
         self.menu_toa_dicots_04 = tkinter.Menu(self.menu_bar, tearoff=0)
         self.menu_toa_dicots_04.add_command(label='Build proteome', command=self.build_dicots_04_proteome)
         self.menu_toa_dicots_04.add_separator()
         self.menu_toa_dicots_04.add_command(label='Download functional annotations from PLAZA server', command=self.download_dicots_04_data)
-        self.menu_toa_dicots_04.add_command(label='Load data into {0} database'.format(xlib.get_toa_name()), command=self.load_dicots_04_data)
+        self.menu_toa_dicots_04.add_command(label=f'Load data into {xlib.get_toa_name()} database', command=self.load_dicots_04_data)
 
         # create "menu_toa_monocots_04" and add its menu items
         self.menu_toa_monocots_04 = tkinter.Menu(self.menu_bar, tearoff=0)
         self.menu_toa_monocots_04.add_command(label='Build proteome', command=self.build_monocots_04_proteome)
         self.menu_toa_monocots_04.add_separator()
         self.menu_toa_monocots_04.add_command(label='Download functional annotations from PLAZA server', command=self.download_monocots_04_data)
-        self.menu_toa_monocots_04.add_command(label='Load data into {0} database'.format(xlib.get_toa_name()), command=self.load_monocots_04_data)
+        self.menu_toa_monocots_04.add_command(label=f'Load data into {xlib.get_toa_name()} database', command=self.load_monocots_04_data)
 
         # create "menu_toa_refseq_plant" and add its menu items
         self.menu_toa_refseq_plant = tkinter.Menu(self.menu_bar, tearoff=0)
@@ -801,17 +933,17 @@ class Main(tkinter.Tk):
         # create "menu_toa_gene" and add its menu items
         self.menu_toa_gene = tkinter.Menu(self.menu_bar, tearoff=0)
         self.menu_toa_gene.add_command(label='Download functional annotations from NCBI server', command=self.download_gene_data)
-        self.menu_toa_gene.add_command(label='Load data into {0} database'.format(xlib.get_toa_name()), command=self.load_gene_data)
+        self.menu_toa_gene.add_command(label=f'Load data into {xlib.get_toa_name()} database', command=self.load_gene_data)
 
         # create "menu_toa_interpro" and add its menu items
         self.menu_toa_interpro = tkinter.Menu(self.menu_bar, tearoff=0)
         self.menu_toa_interpro.add_command(label='Download functional annotations from InterPro server', command=self.download_interpro_data)
-        self.menu_toa_interpro.add_command(label='Load data into {0} database'.format(xlib.get_toa_name()), command=self.load_interpro_data)
+        self.menu_toa_interpro.add_command(label=f'Load data into {xlib.get_toa_name()} database', command=self.load_interpro_data)
 
         # create "menu_toa_go" and add its menu items
         self.menu_toa_go = tkinter.Menu(self.menu_bar, tearoff=0)
         self.menu_toa_go.add_command(label='Download functional annotations from Gene Ontology server', command=self.download_go_data)
-        self.menu_toa_go.add_command(label='Load data into {0} database'.format(xlib.get_toa_name()), command=self.load_go_data)
+        self.menu_toa_go.add_command(label=f'Load data into {xlib.get_toa_name()} database', command=self.load_go_data)
 
         # create "menu_toa_databases" and add its menu items
         self.menu_toa_databases = tkinter.Menu(self.menu_bar, tearoff=0)
@@ -850,8 +982,8 @@ class Main(tkinter.Tk):
 
         # create "menu_toa_pipelines" and add its menu items
         self.menu_toa_pipelines = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_toa_pipelines.add_cascade(label='{0} {1}'.format(xlib.get_toa_name(), xlib.get_toa_process_pipeline_nucleotide_name()), menu=self.menu_toa_nucleotide_pipeline)
-        self.menu_toa_pipelines.add_cascade(label='{0} {1}'.format(xlib.get_toa_name(), xlib.get_toa_process_pipeline_aminoacid_name()), menu=self.menu_toa_aminoacid_pipeline)
+        self.menu_toa_pipelines.add_cascade(label=f'{xlib.get_toa_name()} {xlib.get_toa_process_pipeline_nucleotide_name()}', menu=self.menu_toa_nucleotide_pipeline)
+        self.menu_toa_pipelines.add_cascade(label=f'{xlib.get_toa_name()} {xlib.get_toa_process_pipeline_aminoacid_name()}', menu=self.menu_toa_aminoacid_pipeline)
 
         # create "menu_toa_alignment_stats" and add its menu items
         self.menu_toa_alignment_stats = tkinter.Menu(self.menu_bar, tearoff=0)
@@ -958,67 +1090,6 @@ class Main(tkinter.Tk):
         # link "menu_toa" with "menu_bar"
         self.menu_bar.add_cascade(label='Tree-oriented annotation', menu=self.menu_toa)
 
-        # create "menu_radseq_data_files_maintenance" and add its menu items
-        self.menu_radseq_data_files_maintenance = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_radseq_data_files_maintenance.add_cascade(label='Restriction site file', menu=self.menu_restriction_site_file)
-        self.menu_radseq_data_files_maintenance.add_cascade(label='End file', menu=self.menu_end_file)
-        self.menu_radseq_data_files_maintenance.add_cascade(label='Individual file', menu=self.menu_individual_file)
-
-        # create "menu_radseq_enzyme_analysis" and add its menu items
-        self.menu_radseq_enzyme_analysis = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_radseq_enzyme_analysis.add_cascade(label='{0} ({1} package)'.format(xlib.get_rsitesearch_name(), xlib.get_ddradseqtools_name()), menu=self.menu_rsitesearch)
-
-        # create "menu_radseq_in_silico_simulations" and add its menu items
-        self.menu_radseq_in_silico_simulations = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_radseq_in_silico_simulations.add_cascade(label='{0} ({1} package)'.format(xlib.get_ddradseq_simulation_name(), xlib.get_ddradseqtools_name()), menu=self.menu_ddradseq_simulation)
-
-        # create "menu_radseq_rad_design" and add its menu items
-        self.menu_radseq_rad_design = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_radseq_rad_design.add_cascade(label='RADdesigner', menu=self.menu_raddesigner)
-
-        # create "menu_radseq_read_quality" and add its menu items
-        self.menu_radseq_read_quality = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_radseq_read_quality.add_cascade(label=xlib.get_fastqc_name(), menu=self.menu_fastqc)
-
-        # create "menu_radseq_trimming" and add its menu items
-        self.menu_radseq_trimming = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_radseq_trimming.add_cascade(label=xlib.get_cutadapt_name(), menu=self.menu_cutadapt)
-        self.menu_radseq_trimming.add_cascade(label=xlib.get_trimmomatic_name(), menu=self.menu_trimmomatic)
-
-        # create "menu_read_clustering" and add its menu items
-        self.menu_read_clustering = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_read_clustering.add_cascade(label=xlib.get_starcode_name(), menu=self.menu_starcode)
-        self.menu_read_clustering.add_cascade(label=xlib.get_vsearch_name(), menu=self.menu_vsearch)
-
-        # create "menu_pseudo_assembly" and add its menu items
-        self.menu_pseudo_assembly = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_pseudo_assembly.add_cascade(label=xlib.get_soapdenovo2_name(), menu=self.menu_soapdenovo2)
-
-        # create "menu_radseq_pipelines" and add its menu items
-        self.menu_radseq_pipelines = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_radseq_pipelines.add_cascade(label='ddRADseq pipeline (RADseqTools package)', menu=self.menu_ddradseq_pipeline)
-        self.menu_radseq_pipelines.add_cascade(label=xlib.get_ipyrad_name(), menu=self.menu_ipyrad)
-
-        # create "menu_radseq" add add its menu items
-        self.menu_radseq = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_radseq.add_cascade(label='Maintenance of data files', menu=self.menu_radseq_data_files_maintenance)
-        self.menu_radseq.add_separator()
-        self.menu_radseq.add_cascade(label='Enzyme analysis', menu=self.menu_radseq_enzyme_analysis)
-        self.menu_radseq.add_cascade(label='In silico simulations', menu=self.menu_radseq_in_silico_simulations)
-        self.menu_radseq.add_separator()
-        self.menu_radseq.add_cascade(label='RAD design', menu=self.menu_radseq_rad_design)
-        self.menu_radseq.add_separator()
-        self.menu_radseq.add_cascade(label='Read quality', menu=self.menu_radseq_read_quality)
-        self.menu_radseq.add_cascade(label='Trimming', menu=self.menu_radseq_trimming)
-        self.menu_radseq.add_separator()
-        self.menu_radseq.add_cascade(label='Read clustering', menu=self.menu_read_clustering)
-        self.menu_radseq.add_cascade(label='Pseudo assembly', menu=self.menu_pseudo_assembly)
-        self.menu_radseq.add_separator()
-        self.menu_radseq.add_cascade(label='Pipelines', menu=self.menu_radseq_pipelines)
-
-        # link "menu_radseq" with "menu_bar"
-        # -- self.menu_bar.add_cascade(label='RAD-seq', menu=self.menu_radseq)
-
         # create "menu_reference_file_transfer" add add its menu items
         self.menu_reference_file_transfer = tkinter.Menu(self.menu_bar, tearoff=0)
         self.menu_reference_file_transfer.add_command(label='Recreate config file', command=self.recreate_reference_transfer_config_file)
@@ -1102,6 +1173,8 @@ class Main(tkinter.Tk):
 
         # create "menu_logs" add add its menu items
         self.menu_logs = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_logs.add_command(label='View the cluster start log', command=self.view_cluster_start_log)
+        self.menu_logs.add_separator()
         self.menu_logs.add_command(label='View submission logs in the local computer', command=self.view_submission_logs)
         self.menu_logs.add_separator()
         self.menu_logs.add_command(label='View result logs in the cluster', command=self.view_result_logs)
@@ -1220,7 +1293,7 @@ class Main(tkinter.Tk):
         message += 'https://aws.amazon.com/ec2/instance-types/\n\n'
         message += 'and the EC2 pricing is detailed in:\n\n'
         message += 'https://aws.amazon.com/ec2/pricing/'
-        tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), head), message)
+        tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -1305,8 +1378,8 @@ class Main(tkinter.Tk):
 
         # check if there are any key pairs createdview_ngscloud_config_file
         if keypairs_dict == {}:
-            message = 'There is not any key pair created in region {0}.'.format(xconfiguration.get_current_region_name())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'There is not any key pair created in region {xconfiguration.get_current_region_name()}.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {head}', message)
             return
 
         # build the data list
@@ -1318,7 +1391,7 @@ class Main(tkinter.Tk):
         data_dict['fingerprint'] = {'text': 'Fingerprint', 'width': 590, 'alignment': 'left'}
 
         # create the dialog Table to show the volumes created
-        dialog_table = gdialogs.DialogTable(self, '{0} in region {1}'.format(head, xconfiguration.get_current_region_name()), 400, 900, data_list, data_dict, keypairs_dict, sorted(keypairs_dict.keys()))
+        dialog_table = gdialogs.DialogTable(self, f'{head} in region {xconfiguration.get_current_region_name()}', 400, 900, data_list, data_dict, keypairs_dict, sorted(keypairs_dict.keys()))
         self.wait_window(dialog_table)
 
     #---------------
@@ -1338,20 +1411,20 @@ class Main(tkinter.Tk):
         head = 'Security - Create key pairs'
 
         # confirm the creation of the key pairs
-        message = 'The key pairs of the region {0} are going to be created.\n\nAre you sure to continue?'.format(xconfiguration.get_current_region_name())
-        OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), head), message)
+        message = f'The key pairs of the region {xconfiguration.get_current_region_name()} are going to be created.\n\nAre you sure to continue?'
+        OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {head}', message)
 
         # create key pairs
         if OK:
             (OK, error_list) = xec2.create_keypairs(xconfiguration.get_current_region_name())
             if OK:
-                message = 'The key pairs and their corresponding local files of the region {0} file are created.'.format(xconfiguration.get_current_region_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'The key pairs and their corresponding local files of the region {xconfiguration.get_current_region_name()} file are created.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
             else:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -1375,7 +1448,7 @@ class Main(tkinter.Tk):
 
     def create_cluster(self):
         '''
-        Create a cluster from a template name.
+        Create a cluster.
         '''
 
         # close the current form
@@ -1385,7 +1458,7 @@ class Main(tkinter.Tk):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if len(running_cluster_list) > 0:
             message = 'There is already a cluster running in this environment.'
-            tkinter.messagebox.showwarning('{0} - Cluster operation - Create cluster'.format(xlib.get_project_name()), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - Cluster operation - Create cluster', message)
             return
 
         # create and register "form_create_cluster" in "container" with the grid geometry manager
@@ -1523,7 +1596,7 @@ class Main(tkinter.Tk):
         # check if there are any nodes running
         if node_dict == {}:
             message = 'There is not any node running.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {head}', message)
             return
 
         # build the data list
@@ -1602,7 +1675,7 @@ class Main(tkinter.Tk):
         # check if there are any volumes created
         if volume_dict == {}:
             message = 'There is not any volume created.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {head}', message)
             return
 
         # build the data list
@@ -1682,7 +1755,7 @@ class Main(tkinter.Tk):
 
         # confirm the review of volumes links
         message = 'The volume creator is going to be terminated.\n\nAre you sure to continue?'
-        OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), head), message)
+        OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {head}', message)
 
         # terminate the volume creator
         if OK:
@@ -1755,6 +1828,48 @@ class Main(tkinter.Tk):
 
     #---------------
 
+    def install_bcftools(self):
+        '''
+        Install the BCFtools in the cluster.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "form_install_bcftools" in "container" with the grid geometry manager
+        form_install_bcftools = gbioinfoapp.FormInstallBioinfoApp(self.container, self, app=xlib.get_bcftools_code())
+        form_install_bcftools.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_install_bcftools" as current form and add it in the forms dictionary
+        self.current_form = 'form_install_bcftools'
+        self.forms_dict[self.current_form] = form_install_bcftools
+
+        # raise "form_install_bcftools" to front
+        form_install_bcftools.tkraise()
+
+    #---------------
+
+    def install_bedtools(self):
+        '''
+        Install the BEDtools in the cluster.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "form_install_bedtools" in "container" with the grid geometry manager
+        form_install_bedtools = gbioinfoapp.FormInstallBioinfoApp(self.container, self, app=xlib.get_bedtools_code())
+        form_install_bedtools.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_install_bedtools" as current form and add it in the forms dictionary
+        self.current_form = 'form_install_bedtools'
+        self.forms_dict[self.current_form] = form_install_bedtools
+
+        # raise "form_install_bedtools" to front
+        form_install_bedtools.tkraise()
+
+    #---------------
+
     def install_blastplus(self):
         '''
         Install the BLAST+ in the cluster.
@@ -1773,6 +1888,27 @@ class Main(tkinter.Tk):
 
         # raise "form_install_blastplus" to front
         form_install_blastplus.tkraise()
+
+    #---------------
+
+    def install_bowtie2(self):
+        '''
+        Install the Bowtie 2 software in the cluster.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "form_install_bowtie2" in "container" with the grid geometry manager
+        form_install_bowtie2 = gbioinfoapp.FormInstallBioinfoApp(self.container, self, app=xlib.get_bowtie2_code())
+        form_install_bowtie2.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_install_bowtie2" as current form and add it in the forms dictionary
+        self.current_form = 'form_install_bowtie2'
+        self.forms_dict[self.current_form] = form_install_bowtie2
+
+        # raise "form_install_bowtie2" to front
+        form_install_bowtie2.tkraise()
 
     #---------------
 
@@ -1920,6 +2056,27 @@ class Main(tkinter.Tk):
 
         # raise "form_install_entrez_direct" to front
         form_install_entrez_direct.tkraise()
+
+    #---------------
+
+    def install_express(self):
+        '''
+        Install the eXpress software in the cluster.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "form_install_express" in "container" with the grid geometry manager
+        form_install_express = gbioinfoapp.FormInstallBioinfoApp(self.container, self, app=xlib.get_express_code())
+        form_install_express.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_install_express" as current form and add it in the forms dictionary
+        self.current_form = 'form_install_express'
+        self.forms_dict[self.current_form] = form_install_express
+
+        # raise "form_install_express" to front
+        form_install_express.tkraise()
 
     #---------------
 
@@ -2091,6 +2248,27 @@ class Main(tkinter.Tk):
 
     #---------------
 
+    def install_raddesigner(self):
+        '''
+        Install the RADdesigner in the cluster.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "form_install_raddesigner" in "container" with the grid geometry manager
+        form_install_raddesigner = gbioinfoapp.FormInstallBioinfoApp(self.container, self, app=xlib.get_raddesigner_code())
+        form_install_raddesigner.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_install_raddesigner" as current form and add it in the forms dictionary
+        self.current_form = 'form_install_raddesigner'
+        self.forms_dict[self.current_form] = form_install_raddesigner
+
+        # raise "form_install_raddesigner" to front
+        form_install_raddesigner.tkraise()
+
+    #---------------
+
     def install_rnaquast(self):
         '''
         Install the rnaQUAST in the cluster.
@@ -2130,6 +2308,27 @@ class Main(tkinter.Tk):
 
         # raise "form_install_rsem" to front
         form_install_rsem.tkraise()
+
+    #---------------
+
+    def install_samtools(self):
+        '''
+        Install the SAMtools in the cluster.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "form_install_samtools" in "container" with the grid geometry manager
+        form_install_samtools = gbioinfoapp.FormInstallBioinfoApp(self.container, self, app=xlib.get_samtools_code())
+        form_install_samtools.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_install_samtools" as current form and add it in the forms dictionary
+        self.current_form = 'form_install_samtools'
+        self.forms_dict[self.current_form] = form_install_samtools
+
+        # raise "form_install_samtools" to front
+        form_install_samtools.tkraise()
 
     #---------------
 
@@ -2364,6 +2563,48 @@ class Main(tkinter.Tk):
 
     #---------------
 
+    def install_vcftools(self):
+        '''
+        Install the VCFtools in the cluster.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "form_install_vcftools" in "container" with the grid geometry manager
+        form_install_vcftools = gbioinfoapp.FormInstallBioinfoApp(self.container, self, app=xlib.get_vcftools_code())
+        form_install_vcftools.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_install_vcftools" as current form and add it in the forms dictionary
+        self.current_form = 'form_install_vcftools'
+        self.forms_dict[self.current_form] = form_install_vcftools
+
+        # raise "form_install_vcftools" to front
+        form_install_vcftools.tkraise()
+
+    #---------------
+
+    def install_vcftools_perl_libraries(self):
+        '''
+        Install the VCFtools Perl libraries in the cluster.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "form_install_vcftools_perl_libraries" in "container" with the grid geometry manager
+        form_install_vcftools_perl_libraries = gbioinfoapp.FormInstallBioinfoApp(self.container, self, app=xlib.get_vcftools_perl_libraries_code())
+        form_install_vcftools_perl_libraries.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_install_vcftools_perl_libraries" as current form and add it in the forms dictionary
+        self.current_form = 'form_install_vcftools_perl_libraries'
+        self.forms_dict[self.current_form] = form_install_vcftools_perl_libraries
+
+        # raise "form_install_vcftools_perl_libraries" to front
+        form_install_vcftools_perl_libraries.tkraise()
+
+    #---------------
+
     def install_vsearch(self):
         '''
         Install the VSEARCH in the cluster.
@@ -2426,6 +2667,82 @@ class Main(tkinter.Tk):
         form_open_terminal.tkraise()
 
     #---------------
+    # Bowtie2
+    #---------------
+
+    def recreate_bowtie2_config_file(self):
+        '''
+        Recreate the Bowtie2 config file with the default options. It is necessary
+        update the options in each process run.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "form_recreate_bowtie2_config_file" in "container" with the grid geometry manager
+        form_recreate_bowtie2_config_file = gbioinfoapp.FormRecreateBowtie2ConfigFile(self.container, self)
+        form_recreate_bowtie2_config_file.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_recreate_bowtie2_config_file" as current form and add it in the forms dictionary
+        self.current_form = 'form_recreate_bowtie2_config_file'
+        self.forms_dict[self.current_form] = form_recreate_bowtie2_config_file
+
+        # raise "form_recreate_bowtie2_config_file" to front
+        form_recreate_bowtie2_config_file.tkraise()
+
+    #---------------
+
+    def edit_bowtie2_config_file(self):
+        '''
+        Edit the Bowtie2 config file to change the parameters of each process run.
+        '''
+
+        # initialize the control variable
+        OK = True
+
+        # close the current form
+        self.close_current_form()
+
+        # set the head
+        head = f'{xlib.get_bowtie2_name()} - Edit config file'
+
+        # edit the Bowtie2 config file using "DialogEditor" 
+        dialog_editor = gdialogs.DialogEditor(self, xbowtie2.get_bowtie2_config_file())
+        self.wait_window(dialog_editor)
+
+        # check the Bowtie2 config file
+        (OK, error_list) = xbowtie2.check_bowtie2_config_file(strict=False)
+        if OK:
+            message = f'The {xlib.get_bowtie2_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
+        else:
+            message = 'Detected errors:\n\n'
+            for error in error_list:
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
+
+    #---------------
+
+    def run_bowtie2_process(self):
+        '''
+        Run a Bowtie2 process corresponding to the options in Bowtie2 config file.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "form_run_bowtie2_process" in "container" with the grid geometry manager
+        form_run_bowtie2_process = gbioinfoapp.FormRunBioinfoProcess(self.container, self, app=xlib.get_bowtie2_code())
+        form_run_bowtie2_process.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_run_bowtie2_process" as current form and add it in the forms dictionary
+        self.current_form = 'form_run_bowtie2_process'
+        self.forms_dict[self.current_form] = form_run_bowtie2_process
+
+        # raise "form_run_bowtie2_process" to front
+        form_run_bowtie2_process.tkraise()
+
+    #---------------
     # BUSCO
     #---------------
 
@@ -2463,7 +2780,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_busco_name())
+        head = f'{xlib.get_busco_name()} - Edit config file'
 
         # edit the BUSCO config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xbusco.get_busco_config_file())
@@ -2472,13 +2789,13 @@ class Main(tkinter.Tk):
         # check the BUSCO config file
         (OK, error_list) = xbusco.check_busco_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_busco_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_busco_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -2539,7 +2856,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_cd_hit_est_name())
+        head = f'{xlib.get_cd_hit_est_name()} - Edit config file'
 
         # edit the CD-HIT-EST config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xcdhit.get_cd_hit_est_config_file())
@@ -2548,13 +2865,13 @@ class Main(tkinter.Tk):
         # check the CD-HIT-EST config file
         (OK, error_list) = xcdhit.check_cd_hit_est_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_cd_hit_est_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_cd_hit_est_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -2615,7 +2932,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_cuffdiff_name())
+        head = f'{xlib.get_cuffdiff_name()} - Edit config file'
 
         # edit the Cuffdiff config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xcufflinks.get_cuffdiff_config_file())
@@ -2624,13 +2941,13 @@ class Main(tkinter.Tk):
         # check the Cuffdiff config file
         (OK, error_list) = xcufflinks.check_cuffdiff_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_cuffdiff_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_cuffdiff_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -2691,7 +3008,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_cufflinks_cuffmerge_name())
+        head = f'{xlib.get_cufflinks_cuffmerge_name()} - Edit config file'
 
         # edit the Cufflinks-Cuffmerge config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xcufflinks.get_cufflinks_cuffmerge_config_file())
@@ -2700,13 +3017,13 @@ class Main(tkinter.Tk):
         # check the Cufflinks-Cuffmerge config file
         (OK, error_list) = xcufflinks.check_cufflinks_cuffmerge_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_cufflinks_cuffmerge_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_cufflinks_cuffmerge_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -2767,7 +3084,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_cuffquant_name())
+        head = f'{xlib.get_cuffquant_name()} - Edit config file'
 
         # edit the Cuffquant config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xcufflinks.get_cuffquant_config_file())
@@ -2776,13 +3093,13 @@ class Main(tkinter.Tk):
         # check the Cuffquant config file
         (OK, error_list) = xcufflinks.check_cuffquant_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_cuffquant_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_cuffquant_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -2843,7 +3160,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_cutadapt_name())
+        head = f'{xlib.get_cutadapt_name()} - Edit config file'
 
         # edit the cutadapt config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xcutadapt.get_cutadapt_config_file())
@@ -2852,13 +3169,13 @@ class Main(tkinter.Tk):
         # check the cutadapt config file
         (OK, error_list) = xcutadapt.check_cutadapt_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_cutadapt_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_cutadapt_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -2919,7 +3236,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_ddradseq_simulation_name())
+        head = f'{xlib.get_ddradseq_simulation_name()} - Edit config file'
 
         # edit the ddRADseq simulation config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xddradseqtools.get_ddradseq_simulation_config_file())
@@ -2928,13 +3245,13 @@ class Main(tkinter.Tk):
         # check the ddRADseq simulation config file
         (OK, error_list) = xddradseqtools.check_ddradseq_simulation_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_ddradseq_simulation_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_ddradseq_simulation_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -2956,6 +3273,103 @@ class Main(tkinter.Tk):
 
         # raise "form_run_ddradseq_simulation_process" to front
         form_run_ddradseq_simulation_process.tkraise()
+
+    #---------------
+
+    def restart_ddradseq_simulation_process(self):
+        '''
+        Restart a ddRADseq simulation process from the last step ended OK.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "form_restart_ddradseq_simulation_process" in "container" with the grid geometry manager
+        form_restart_ddradseq_simulation_process = gbioinfoapp.FormRestartBioinfoProcess(self.container, self, app=xlib.get_ddradseq_simulation_code())
+        form_restart_ddradseq_simulation_process.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_restart_ddradseq_simulation_process" as current form and add it in the forms dictionary
+        self.current_form = 'form_restart_ddradseq_simulation_process'
+        self.forms_dict[self.current_form] = form_restart_ddradseq_simulation_process
+
+        # raise "form_restart_ddradseq_simulation_process" to front
+        form_restart_ddradseq_simulation_process.tkraise()
+
+    #---------------
+    # eXpress
+    #---------------
+
+    def recreate_express_config_file(self):
+        '''
+        Recreate the eXpress config file with the default options. It is necessary
+        update the options in each process run.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "form_recreate_express_config_file" in "container" with the grid geometry manager
+        form_recreate_express_config_file = gbioinfoapp.FormRecreateExpressConfigFile(self.container, self)
+        form_recreate_express_config_file.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_recreate_express_config_file" as current form and add it in the forms dictionary
+        self.current_form = 'form_recreate_express_config_file'
+        self.forms_dict[self.current_form] = form_recreate_express_config_file
+
+        # raise "form_recreate_express_config_file" to front
+        form_recreate_express_config_file.tkraise()
+
+    #---------------
+
+    def edit_express_config_file(self):
+        '''
+        Edit the eXpress config file to change the parameters of each process run.
+        '''
+
+        # initialize the control variable
+        OK = True
+
+        # close the current form
+        self.close_current_form()
+
+        # set the head
+        head = f'{xlib.get_express_name()} - Edit config file'
+
+        # edit the eXpress config file using "DialogEditor" 
+        dialog_editor = gdialogs.DialogEditor(self, xexpress.get_express_config_file())
+        self.wait_window(dialog_editor)
+
+        # check the eXpress config file
+        (OK, error_list) = xexpress.check_express_config_file(strict=False)
+        if OK:
+            message = f'The {xlib.get_express_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
+        else:
+            message = 'Detected errors:\n\n'
+            for error in error_list:
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
+
+    #---------------
+
+    def run_express_process(self):
+        '''
+        Run a eXpress process corresponding to the options in eXpress config file.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "form_run_express_process" in "container" with the grid geometry manager
+        form_run_express_process = gbioinfoapp.FormRunBioinfoProcess(self.container, self, app=xlib.get_express_code())
+        form_run_express_process.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_run_express_process" as current form and add it in the forms dictionary
+        self.current_form = 'form_run_express_process'
+        self.forms_dict[self.current_form] = form_run_express_process
+
+        # raise "form_run_express_process" to front
+        form_run_express_process.tkraise()
 
     #---------------
     # FastQC
@@ -2995,7 +3409,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_fastqc_name())
+        head = f'{xlib.get_fastqc_name()} - Edit config file'
 
         # edit the FastQC config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xfastqc.get_fastqc_config_file())
@@ -3004,13 +3418,13 @@ class Main(tkinter.Tk):
         # check the FastQC config file
         (OK, error_list) = xfastqc.check_fastqc_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_fastqc_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_fastqc_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -3071,7 +3485,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_ggtrinity_name())
+        head = f'{xlib.get_ggtrinity_name()} - Edit config file'
 
         # edit the Genome-guided Trinity config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xtrinity.get_ggtrinity_config_file())
@@ -3080,13 +3494,13 @@ class Main(tkinter.Tk):
         # check the Genome-guided Trinity config file
         (OK, error_list) = xtrinity.check_ggtrinity_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_ggtrinity_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_ggtrinity_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -3108,6 +3522,27 @@ class Main(tkinter.Tk):
 
         # raise "form_run_ggtrinity_process" to front
         form_run_ggtrinity_process.tkraise()
+
+    #---------------
+
+    def restart_ggtrinity_process(self):
+        '''
+        Restart a Genome-guided Trinity process from the last step ended OK.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "form_restart_ggtrinity_process" in "container" with the grid geometry manager
+        form_restart_ggtrinity_process = gbioinfoapp.FormRestartBioinfoProcess(self.container, self, app=xlib.get_ggtrinity_code())
+        form_restart_ggtrinity_process.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_restart_ggtrinity_process" as current form and add it in the forms dictionary
+        self.current_form = 'form_restart_ggtrinity_process'
+        self.forms_dict[self.current_form] = form_restart_ggtrinity_process
+
+        # raise "form_restart_ggtrinity_process" to front
+        form_restart_ggtrinity_process.tkraise()
 
     #---------------
     # GMAP
@@ -3147,7 +3582,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_gmap_name())
+        head = f'{xlib.get_gmap_name()} - Edit config file'
 
         # edit the GMAP config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xgmap.get_gmap_config_file())
@@ -3156,13 +3591,13 @@ class Main(tkinter.Tk):
         # check the GMAP config file
         (OK, error_list) = xgmap.check_gmap_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_gmap_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_gmap_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -3223,7 +3658,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_gsnap_name())
+        head = f'{xlib.get_gsnap_name()} - Edit config file'
 
         # edit the GSNAP config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xgmap.get_gsnap_config_file())
@@ -3232,13 +3667,13 @@ class Main(tkinter.Tk):
         # check the GSNAP config file
         (OK, error_list) = xgmap.check_gsnap_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_gsnap_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_gsnap_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -3299,7 +3734,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_hisat2_name())
+        head = f'{xlib.get_hisat2_name()} - Edit config file'
 
         # edit the HISAT2 config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xhisat2.get_hisat2_config_file())
@@ -3308,13 +3743,13 @@ class Main(tkinter.Tk):
         # check the HISAT2 config file
         (OK, error_list) = xhisat2.check_hisat2_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_hisat2_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_hisat2_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -3375,7 +3810,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_htseq_count_name())
+        head = f'{xlib.get_htseq_count_name()} - Edit config file'
 
         # edit the htseq-count config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xhtseq.get_htseq_count_config_file())
@@ -3384,13 +3819,13 @@ class Main(tkinter.Tk):
         # check the htseq-count config file
         (OK, error_list) = xhtseq.check_htseq_count_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_htseq_count_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_htseq_count_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -3451,7 +3886,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_insilico_read_normalization_name())
+        head = f'{xlib.get_insilico_read_normalization_name()} - Edit config file'
 
         # edit the insilico_read_normalization config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xtrinity.get_insilico_read_normalization_config_file())
@@ -3460,13 +3895,13 @@ class Main(tkinter.Tk):
         # check the insilico_read_normalization config file
         (OK, error_list) = xtrinity.check_insilico_read_normalization_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_insilico_read_normalization_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_insilico_read_normalization_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -3488,6 +3923,27 @@ class Main(tkinter.Tk):
 
         # raise "form_run_insilico_read_normalization_process" to front
         form_run_insilico_read_normalization_process.tkraise()
+
+    #---------------
+
+    def restart_insilico_read_normalization_process(self):
+        '''
+        Restart a insilico_read_normalization process from the last step ended OK.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "form_restart_insilico_read_normalization_process" in "container" with the grid geometry manager
+        form_restart_insilico_read_normalization_process = gbioinfoapp.FormRestartBioinfoProcess(self.container, self, app=xlib.get_insilico_read_normalization_code())
+        form_restart_insilico_read_normalization_process.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_restart_insilico_read_normalization_process" as current form and add it in the forms dictionary
+        self.current_form = 'form_restart_insilico_read_normalization_process'
+        self.forms_dict[self.current_form] = form_restart_insilico_read_normalization_process
+
+        # raise "form_restart_insilico_read_normalization_process" to front
+        form_restart_insilico_read_normalization_process.tkraise()
 
     #---------------
     # ipyrad
@@ -3527,7 +3983,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_ipyrad_name())
+        head = f'{xlib.get_ipyrad_name()} - Edit config file'
 
         # edit the ipyrad config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xipyrad.get_ipyrad_config_file())
@@ -3536,13 +3992,13 @@ class Main(tkinter.Tk):
         # check the ipyrad config file
         (OK, error_list) = xipyrad.check_ipyrad_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_ipyrad_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_ipyrad_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -3603,7 +4059,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_kallisto_name())
+        head = f'{xlib.get_kallisto_name()} - Edit config file'
 
         # edit the kallisto config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xkallisto.get_kallisto_config_file())
@@ -3612,13 +4068,13 @@ class Main(tkinter.Tk):
         # check the kallisto config file
         (OK, error_list) = xkallisto.check_kallisto_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_kallisto_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_kallisto_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -3679,7 +4135,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_quast_name())
+        head = f'{xlib.get_quast_name()} - Edit config file'
 
         # edit the QUAST config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xquast.get_quast_config_file())
@@ -3688,13 +4144,13 @@ class Main(tkinter.Tk):
         # check the QUAST config file
         (OK, error_list) = xquast.check_quast_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_quast_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_quast_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -3716,6 +4172,103 @@ class Main(tkinter.Tk):
 
         # raise "form_run_quast_process" to front
         form_run_quast_process.tkraise()
+
+    #---------------
+    # RADdesigner
+    #---------------
+
+    def recreate_raddesigner_config_file(self):
+        '''
+        Recreate the raddesigner config file with the default options. It is necessary
+        update the options in each process run.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "form_recreate_raddesigner_config_file" in "container" with the grid geometry manager
+        form_recreate_raddesigner_config_file = gbioinfoapp.FormRecreateRADdesignerConfigFile(self.container, self)
+        form_recreate_raddesigner_config_file.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_recreate_raddesigner_config_file" as current form and add it in the forms dictionary
+        self.current_form = 'form_recreate_raddesigner_config_file'
+        self.forms_dict[self.current_form] = form_recreate_raddesigner_config_file
+
+        # raise "form_recreate_raddesigner_config_file" to front
+        form_recreate_raddesigner_config_file.tkraise()
+
+    #---------------
+
+    def edit_raddesigner_config_file(self):
+        '''
+        Edit the RADdesigner config file to change the parameters of each process run.
+        '''
+
+        # initialize the control variable
+        OK = True
+
+        # close the current form
+        self.close_current_form()
+
+        # set the head
+        head = f'{xlib.get_raddesigner_name()} - Edit config file'
+
+        # edit the RADdesigner config file using "DialogEditor" 
+        dialog_editor = gdialogs.DialogEditor(self, xraddesigner.get_raddesigner_config_file())
+        self.wait_window(dialog_editor)
+
+        # check the RADdesigner config file
+        (OK, error_list) = xraddesigner.check_raddesigner_config_file(strict=False)
+        if OK:
+            message = f'The {xlib.get_raddesigner_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
+        else:
+            message = 'Detected errors:\n\n'
+            for error in error_list:
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
+
+    #---------------
+
+    def run_raddesigner_process(self):
+        '''
+        Run a RADdesigner process corresponding to the options in RADdesigner config file.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "form_run_raddesigner_process" in "container" with the grid geometry manager
+        form_run_raddesigner_process = gbioinfoapp.FormRunBioinfoProcess(self.container, self, app=xlib.get_raddesigner_code())
+        form_run_raddesigner_process.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_run_raddesigner_process" as current form and add it in the forms dictionary
+        self.current_form = 'form_run_raddesigner_process'
+        self.forms_dict[self.current_form] = form_run_raddesigner_process
+
+        # raise "form_run_raddesigner_process" to front
+        form_run_raddesigner_process.tkraise()
+
+    #---------------
+
+    def restart_raddesigner_process(self):
+        '''
+        Restart a RADdesigner process from the last step ended OK.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "form_restart_raddesigner_process" in "container" with the grid geometry manager
+        form_restart_raddesigner_process = gbioinfoapp.FormRestartBioinfoProcess(self.container, self, app=xlib.get_raddesigner_code())
+        form_restart_raddesigner_process.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_restart_raddesigner_process" as current form and add it in the forms dictionary
+        self.current_form = 'form_restart_raddesigner_process'
+        self.forms_dict[self.current_form] = form_restart_raddesigner_process
+
+        # raise "form_restart_raddesigner_process" to front
+        form_restart_raddesigner_process.tkraise()
 
     #---------------
     # REF-EVAL
@@ -3755,7 +4308,7 @@ class Main(tkinter.Tk):
     #    self.close_current_form()
 
     #    # set the head
-    #    head = '{0} - Edit config file'.format(xlib.get_ref_eval_name())
+    #    head = f'{xlib.get_ref_eval_name()} - Edit config file'
 
     #    # edit the RSEM-EVAL config file using "DialogEditor" 
     #    dialog_editor = gdialogs.DialogEditor(self, xdetonate.get_ref_eval_config_file())
@@ -3764,13 +4317,13 @@ class Main(tkinter.Tk):
     #    # check the RSEM-EVAL config file
     #    (OK, error_list) = xdetonate.check_ref_eval_config_file(strict=False)
     #    if OK:
-    #        message = 'The {0} config file is OK.'.format(xlib.get_ref_eval_name())
-    #        tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+    #        message = f'The {xlib.get_ref_eval_name()} config file is OK.'
+    #        tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
     #    else:
     #        message = 'Detected errors:\n\n'
     #        for error in error_list:
-    #            message = '{0}{1}\n'.format(message, error) 
-    #        tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+    #            message = f'{message}{error}\n'
+    #        tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -3831,7 +4384,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_rnaquast_name())
+        head = f'{xlib.get_rnaquast_name()} - Edit config file'
 
         # edit the rnaQUAST config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xrnaquast.get_rnaquast_config_file())
@@ -3840,13 +4393,13 @@ class Main(tkinter.Tk):
         # check the rnaQUAST config file
         (OK, error_list) = xrnaquast.check_rnaquast_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_rnaquast_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_rnaquast_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -3907,7 +4460,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_rsem_eval_name())
+        head = f'{xlib.get_rsem_eval_name()} - Edit config file'
 
         # edit the RSEM-EVAL config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xdetonate.get_rsem_eval_config_file())
@@ -3916,13 +4469,13 @@ class Main(tkinter.Tk):
         # check the RSEM-EVAL config file
         (OK, error_list) = xdetonate.check_rsem_eval_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_rsem_eval_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_rsem_eval_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -3983,7 +4536,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_rsitesearch_name())
+        head = f'{xlib.get_rsitesearch_name()} - Edit config file'
 
         # edit the rsitesearch config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xddradseqtools.get_rsitesearch_config_file())
@@ -3992,13 +4545,13 @@ class Main(tkinter.Tk):
         # check the rsitesearch config file
         (OK, error_list) = xddradseqtools.check_rsitesearch_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_rsitesearch_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_rsitesearch_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -4059,7 +4612,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_soapdenovo2_name())
+        head = f'{xlib.get_soapdenovo2_name()} - Edit config file'
 
         # edit the SOAPdenovo2 config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xsoapdenovo2.get_soapdenovo2_config_file())
@@ -4068,13 +4621,13 @@ class Main(tkinter.Tk):
         # check the SOAPdenovo2 config file
         (OK, error_list) = xsoapdenovo2.check_soapdenovo2_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_soapdenovo2_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_soapdenovo2_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -4096,6 +4649,27 @@ class Main(tkinter.Tk):
 
         # raise "form_run_soapdenovo2_process" to front
         form_run_soapdenovo2_process.tkraise()
+
+    #---------------
+
+    def restart_soapdenovo2_process(self):
+        '''
+        Restart a SOAPdenovo2 process from the last step ended OK.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "form_restart_soapdenovo2_process" in "container" with the grid geometry manager
+        form_restart_soapdenovo2_process = gbioinfoapp.FormRestartBioinfoProcess(self.container, self, app=xlib.get_soapdenovo2_code())
+        form_restart_soapdenovo2_process.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_restart_soapdenovo2_process" as current form and add it in the forms dictionary
+        self.current_form = 'form_restart_soapdenovo2_process'
+        self.forms_dict[self.current_form] = form_restart_soapdenovo2_process
+
+        # raise "form_restart_soapdenovo2_process" to front
+        form_restart_soapdenovo2_process.tkraise()
 
     #---------------
     # SOAPdenovo-Trans
@@ -4135,7 +4709,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_soapdenovotrans_name())
+        head = f'{xlib.get_soapdenovotrans_name()} - Edit config file'
 
         # edit the SOAPdenovo-Trans config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xsoapdenovotrans.get_soapdenovotrans_config_file())
@@ -4144,13 +4718,13 @@ class Main(tkinter.Tk):
         # check the SOAPdenovo-Trans config file
         (OK, error_list) = xsoapdenovotrans.check_soapdenovotrans_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_soapdenovotrans_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_soapdenovotrans_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -4172,6 +4746,27 @@ class Main(tkinter.Tk):
 
         # raise "form_run_soapdenovotrans_process" to front
         form_run_soapdenovotrans_process.tkraise()
+
+    #---------------
+
+    def restart_soapdenovotrans_process(self):
+        '''
+        Restart a SOAPdenovo-Trans process from the last step ended OK.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "form_restart_soapdenovotrans_process" in "container" with the grid geometry manager
+        form_restart_soapdenovotrans_process = gbioinfoapp.FormRestartBioinfoProcess(self.container, self, app=xlib.get_soapdenovotrans_code())
+        form_restart_soapdenovotrans_process.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_restart_soapdenovotrans_process" as current form and add it in the forms dictionary
+        self.current_form = 'form_restart_soapdenovotrans_process'
+        self.forms_dict[self.current_form] = form_restart_soapdenovotrans_process
+
+        # raise "form_restart_soapdenovotrans_process" to front
+        form_restart_soapdenovotrans_process.tkraise()
 
     #---------------
     # STAR
@@ -4211,7 +4806,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_star_name())
+        head = f'{xlib.get_star_name()} - Edit config file'
 
         # edit the STAR config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xstar.get_star_config_file())
@@ -4220,13 +4815,13 @@ class Main(tkinter.Tk):
         # check the STAR config file
         (OK, error_list) = xstar.check_star_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_star_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_star_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -4287,7 +4882,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_starcode_name())
+        head = f'{xlib.get_starcode_name()} - Edit config file'
 
         # edit the starcode config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xstarcode.get_starcode_config_file())
@@ -4296,13 +4891,13 @@ class Main(tkinter.Tk):
         # check the starcode config file
         (OK, error_list) = xstarcode.check_starcode_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_starcode_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_starcode_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -4363,7 +4958,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_tophat_name())
+        head = f'{xlib.get_tophat_name()} - Edit config file'
 
         # edit the TopHat config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xtophat.get_tophat_config_file())
@@ -4372,13 +4967,13 @@ class Main(tkinter.Tk):
         # check the TopHat config file
         (OK, error_list) = xtophat.check_tophat_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_tophat_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_tophat_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -4439,7 +5034,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_transrate_name())
+        head = f'{xlib.get_transrate_name()} - Edit config file'
 
         # edit the Transrate config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xtransrate.get_transrate_config_file())
@@ -4448,13 +5043,13 @@ class Main(tkinter.Tk):
         # check the Transrate config file
         (OK, error_list) = xtransrate.check_transrate_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_transrate_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_transrate_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -4515,7 +5110,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_transabyss_name())
+        head = f'{xlib.get_transabyss_name()} - Edit config file'
 
         # edit the Trans-ABySS config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xtransabyss.get_transabyss_config_file())
@@ -4524,13 +5119,13 @@ class Main(tkinter.Tk):
         # check the Trans-ABySS config file
         (OK, error_list) = xtransabyss.check_transabyss_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_transabyss_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_transabyss_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -4591,7 +5186,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_transcript_filter_name())
+        head = f'{xlib.get_transcript_filter_name()} - Edit config file'
 
         # edit the transcripts-filter config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xngshelper.get_transcript_filter_config_file())
@@ -4600,13 +5195,13 @@ class Main(tkinter.Tk):
         # check the transcripts-filter config file
         (OK, error_list) = xngshelper.check_transcript_filter_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_transcript_filter_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_transcript_filter_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -4667,7 +5262,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_transcriptome_blastx_name())
+        head = f'{xlib.get_transcriptome_blastx_name()} - Edit config file'
 
         # edit the transcripts-filter config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xngshelper.get_transcriptome_blastx_config_file())
@@ -4676,13 +5271,13 @@ class Main(tkinter.Tk):
         # check the transcripts-filter config file
         (OK, error_list) = xngshelper.check_transcriptome_blastx_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_transcriptome_blastx_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_transcriptome_blastx_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -4743,7 +5338,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_trimmomatic_name())
+        head = f'{xlib.get_trimmomatic_name()} - Edit config file'
 
         # edit the Trimmomatic config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xtrimmomatic.get_trimmomatic_config_file())
@@ -4752,13 +5347,13 @@ class Main(tkinter.Tk):
         # check the Trimmomatic config file
         (OK, error_list) = xtrimmomatic.check_trimmomatic_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_trimmomatic_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_trimmomatic_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -4819,7 +5414,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_trinity_name())
+        head = f'{xlib.get_trinity_name()} - Edit config file'
 
         # edit the Trinity config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xtrinity.get_trinity_config_file())
@@ -4828,13 +5423,13 @@ class Main(tkinter.Tk):
         # check the Trinity config file
         (OK, error_list) = xtrinity.check_trinity_config_file(strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_trinity_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_trinity_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -4856,6 +5451,516 @@ class Main(tkinter.Tk):
 
         # raise "form_run_trinity_process" to front
         form_run_trinity_process.tkraise()
+
+    #---------------
+
+    def restart_trinity_process(self):
+        '''
+        Restart a Trinity process from the last step ended OK.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "form_restart_trinity_process" in "container" with the grid geometry manager
+        form_restart_trinity_process = gbioinfoapp.FormRestartBioinfoProcess(self.container, self, app=xlib.get_trinity_code())
+        form_restart_trinity_process.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_restart_trinity_process" as current form and add it in the forms dictionary
+        self.current_form = 'form_restart_trinity_process'
+        self.forms_dict[self.current_form] = form_restart_trinity_process
+
+        # raise "form_restart_trinity_process" to front
+        form_restart_trinity_process.tkraise()
+
+    #---------------
+    # variant_calling
+    #---------------
+
+    def recreate_variant_calling_config_file(self):
+        '''
+        Recreate the Variant calling config file with the default options. It is necessary
+        update the options in each process run.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "form_recreate_variant_calling_config_file" in "container" with the grid geometry manager
+        form_recreate_variant_calling_config_file = gbioinfoapp.FormRecreateVariantCallingConfigFile(self.container, self)
+        form_recreate_variant_calling_config_file.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_recreate_variant_calling_config_file" as current form and add it in the forms dictionary
+        self.current_form = 'form_recreate_variant_calling_config_file'
+        self.forms_dict[self.current_form] = form_recreate_variant_calling_config_file
+
+        # raise "form_recreate_variant_calling_config_file" to front
+        form_recreate_variant_calling_config_file.tkraise()
+
+    #---------------
+
+    def edit_variant_calling_config_file(self):
+        '''
+        Edit the Variant calling config file to change the parameters of each process run.
+        '''
+
+        # initialize the control variable
+        OK = True
+
+        # close the current form
+        self.close_current_form()
+
+        # set the head
+        head = f'{xlib.get_variant_calling_name()} - Edit config file'
+
+        # edit the Variant calling config file using "DialogEditor" 
+        dialog_editor = gdialogs.DialogEditor(self, xddradseqtools.get_variant_calling_config_file())
+        self.wait_window(dialog_editor)
+
+        # check the Variant calling config file
+        (OK, error_list) = xddradseqtools.check_variant_calling_config_file(strict=False)
+        if OK:
+            message = f'The {xlib.get_variant_calling_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
+        else:
+            message = 'Detected errors:\n\n'
+            for error in error_list:
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
+
+    #---------------
+
+    def run_variant_calling_process(self):
+        '''
+        Run a Variant calling process corresponding to the options in Variant calling config file.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "form_run_variant_calling_process" in "container" with the grid geometry manager
+        form_run_variant_calling_process = gbioinfoapp.FormRunBioinfoProcess(self.container, self, app=xlib.get_variant_calling_code())
+        form_run_variant_calling_process.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_run_variant_calling_process" as current form and add it in the forms dictionary
+        self.current_form = 'form_run_variant_calling_process'
+        self.forms_dict[self.current_form] = form_run_variant_calling_process
+
+        # raise "form_run_variant_calling_process" to front
+        form_run_variant_calling_process.tkraise()
+
+    #---------------
+
+    def restart_variant_calling_process(self):
+        '''
+        Restart a Variant calling process from the last step ended OK.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "form_restart_variant_calling_process" in "container" with the grid geometry manager
+        form_restart_variant_calling_process = gbioinfoapp.FormRestartBioinfoProcess(self.container, self, app=xlib.get_variant_calling_code())
+        form_restart_variant_calling_process.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_restart_variant_calling_process" as current form and add it in the forms dictionary
+        self.current_form = 'form_restart_variant_calling_process'
+        self.forms_dict[self.current_form] = form_restart_variant_calling_process
+
+        # raise "form_restart_variant_calling_process" to front
+        form_restart_variant_calling_process.tkraise()
+
+    #---------------
+    # RAD-seq data files
+    #---------------
+
+    def recreate_end_file(self):
+        '''
+        Recreate the file of ends.
+        '''
+
+        # initialize the control variable
+        OK = True
+
+        # close the current form
+        self.close_current_form()
+
+        # set the head
+        head = f'{xlib.get_ddradseqtools_name()} - Recreate file of ends'
+
+        # confirm the creation of the file of ends
+        message = f'The file {xddradseqtools.get_end_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+        OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {head}', message)
+
+        # recreate the file of ends
+        if OK:
+            (OK, error_list) = xddradseqtools.create_end_file()
+            if not OK:
+                message = ''
+                for error in error_list:
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
+
+        # edit the file of ends
+        if OK:
+
+            # edit the data file using "DialogEditor" 
+            dialog_editor = gdialogs.DialogEditor(self, xddradseqtools.get_end_file())
+            self.wait_window(dialog_editor)
+
+            # check the data file
+            (OK, error_list) = xddradseqtools.check_end_file(strict=False)
+            if OK:
+                message = f'The file {xddradseqtools.get_end_file()} is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
+            else:
+                message = 'Detected errors:\n\n'
+                for error in error_list:
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
+
+    #---------------
+
+    def edit_end_file(self):
+        '''
+        Edit the file of ends.
+        '''
+
+        # initialize the control variable
+        OK = True
+
+        # close the current form
+        self.close_current_form()
+
+        # set the head
+        head = f'{xlib.get_ddradseqtools_name()} - Edit file of ends'
+
+        # edit the file of ends using "DialogEditor" 
+        dialog_editor = gdialogs.DialogEditor(self, xddradseqtools.get_end_file())
+        self.wait_window(dialog_editor)
+
+        # check the file of ends
+        (OK, error_list) = xddradseqtools.check_end_file(strict=False)
+        if OK:
+            message = f'The file {xddradseqtools.get_end_file()} is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
+        else:
+            message = 'Detected errors:\n\n'
+            for error in error_list:
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
+
+    #---------------
+
+    def recreate_individual_file(self):
+        '''
+        Recreate the file of individuals.
+        '''
+
+        # initialize the control variable
+        OK = True
+
+        # close the current form
+        self.close_current_form()
+
+        # set the head
+        head = f'{xlib.get_ddradseqtools_name()} - Recreate file of individuals'
+
+        # confirm the creation of the file of individuals
+        message = f'The file {xddradseqtools.get_individual_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+        OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {head}', message)
+
+        # recreate the file of individuals
+        if OK:
+            (OK, error_list) = xddradseqtools.create_individual_file()
+            if not OK:
+                message = ''
+                for error in error_list:
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
+
+        # edit the file of individuals
+        if OK:
+
+            # edit the data file using "DialogEditor" 
+            dialog_editor = gdialogs.DialogEditor(self, xddradseqtools.get_individual_file())
+            self.wait_window(dialog_editor)
+
+            # check the data file
+            (OK, error_list) = xddradseqtools.check_individual_file(strict=False)
+            if OK:
+                message = f'The file {xddradseqtools.get_individual_file()} is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
+            else:
+                message = 'Detected errors:\n\n'
+                for error in error_list:
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
+
+    #---------------
+
+    def edit_individual_file(self):
+        '''
+        Edit the file of individuals.
+        '''
+
+        # initialize the control variable
+        OK = True
+
+        # close the current form
+        self.close_current_form()
+
+        # set the head
+        head = f'{xlib.get_ddradseqtools_name()} - Edit file of individuals'
+
+        # edit the file of ends using "DialogEditor" 
+        dialog_editor = gdialogs.DialogEditor(self, xddradseqtools.get_individual_file())
+        self.wait_window(dialog_editor)
+
+        # check the file of individuals
+        (OK, error_list) = xddradseqtools.check_individual_file(strict=False)
+        if OK:
+            message = f'The file {xddradseqtools.get_individual_file()} is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
+        else:
+            message = 'Detected errors:\n\n'
+            for error in error_list:
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
+
+    #---------------
+
+    def recreate_raddesinger_condition_file(self):
+        '''
+        Recreate the file of RADdesigner conditions.
+        '''
+
+        # initialize the control variable
+        OK = True
+
+        # close the current form
+        self.close_current_form()
+
+        # set the head
+        head = f'{xlib.get_ddradseqtools_name()} - Recreate file of RADdesigner conditions'
+
+        # confirm the creation of the file of RADdesigner conditions
+        message = f'The file {xraddesigner.get_condition_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+        OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {head}', message)
+
+        # recreate the file of RADdesigner conditions
+        if OK:
+            (OK, error_list) = xraddesigner.create_condition_file()
+            if not OK:
+                message = ''
+                for error in error_list:
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
+
+        # edit the file of RADdesigner conditions
+        if OK:
+
+            # edit the data file using "DialogEditor" 
+            dialog_editor = gdialogs.DialogEditor(self, xraddesigner.get_condition_file())
+            self.wait_window(dialog_editor)
+
+            # check the data file
+            (OK, error_list) = xraddesigner.check_condition_file(strict=False)
+            if OK:
+                message = f'The file {xraddesigner.get_condition_file()} is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
+            else:
+                message = 'Detected errors:\n\n'
+                for error in error_list:
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
+
+    #---------------
+
+    def edit_raddesinger_condition_file(self):
+        '''
+        Edit the file of RADdesigner conditions.
+        '''
+
+        # initialize the control variable
+        OK = True
+
+        # close the current form
+        self.close_current_form()
+
+        # set the head
+        head = f'{xlib.get_ddradseqtools_name()} - Edit file of RADdesigner conditions'
+
+        # edit the file of ends using "DialogEditor" 
+        dialog_editor = gdialogs.DialogEditor(self, xraddesigner.get_condition_file())
+        self.wait_window(dialog_editor)
+
+        # check the file of RADdesigner conditions
+        (OK, error_list) = xraddesigner.check_condition_file(strict=False)
+        if OK:
+            message = f'The file {xraddesigner.get_condition_file()} is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
+        else:
+            message = 'Detected errors:\n\n'
+            for error in error_list:
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
+
+    #---------------
+
+    def recreate_restriction_site_file(self):
+        '''
+        Recreate the file of restriction sites.
+        '''
+
+        # initialize the control variable
+        OK = True
+
+        # close the current form
+        self.close_current_form()
+
+        # set the head
+        head = f'{xlib.get_ddradseqtools_name()} - Recreate file of restriction sites'
+
+        # confirm the creation of the file of restriction sites
+        message = f'The file {xddradseqtools.get_restriction_site_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+        OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {head}', message)
+
+        # recreate the file of restriction sites
+        if OK:
+            (OK, error_list) = xddradseqtools.create_restriction_site_file()
+            if not OK:
+                message = ''
+                for error in error_list:
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
+
+        # edit the file of restriction sites
+        if OK:
+
+            # edit the data file using "DialogEditor" 
+            dialog_editor = gdialogs.DialogEditor(self, xddradseqtools.get_restriction_site_file())
+            self.wait_window(dialog_editor)
+
+            # check the data file
+            (OK, error_list) = xddradseqtools.check_restriction_site_file(strict=False)
+            if OK:
+                message = f'The file {xddradseqtools.get_restriction_site_file()} is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
+            else:
+                message = 'Detected errors:\n\n'
+                for error in error_list:
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
+
+    #---------------
+
+    def edit_restriction_site_file(self):
+        '''
+        Edit the file of restriction sites.
+        '''
+
+        # initialize the control variable
+        OK = True
+
+        # close the current form
+        self.close_current_form()
+
+        # set the head
+        head = f'{xlib.get_ddradseqtools_name()} - Edit file of restriction sites'
+
+        # edit the file of restriction sites using "DialogEditor" 
+        dialog_editor = gdialogs.DialogEditor(self, xddradseqtools.get_restriction_site_file())
+        self.wait_window(dialog_editor)
+
+        # check the file of restriction sites
+        (OK, error_list) = xddradseqtools.check_restriction_site_file(strict=False)
+        if OK:
+            message = f'The file {xddradseqtools.get_restriction_site_file()} is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
+        else:
+            message = 'Detected errors:\n\n'
+            for error in error_list:
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
+
+    #---------------
+
+    def recreate_vcf_sample_file(self):
+        '''
+        Recreate the file of VCF samples.
+        '''
+
+        # initialize the control variable
+        OK = True
+
+        # close the current form
+        self.close_current_form()
+
+        # set the head
+        head = f'{xlib.get_ddradseqtools_name()} - Recreate file of VCF samples'
+
+        # confirm the creation of the file of VCF samples
+        message = f'The file {xngshelper.get_vcf_sample_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+        OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {head}', message)
+
+        # recreate the file of VCF samples
+        if OK:
+            (OK, error_list) = xngshelper.create_vcf_sample_file()
+            if not OK:
+                message = ''
+                for error in error_list:
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
+
+        # edit the file of VCF samples
+        if OK:
+
+            # edit the data file using "DialogEditor" 
+            dialog_editor = gdialogs.DialogEditor(self, xngshelper.get_vcf_sample_file())
+            self.wait_window(dialog_editor)
+
+            # check the data file
+            (OK, error_list) = xngshelper.check_vcf_sample_file(strict=False)
+            if OK:
+                message = f'The file {xngshelper.get_vcf_sample_file()} is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
+            else:
+                message = 'Detected errors:\n\n'
+                for error in error_list:
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
+
+    #---------------
+
+    def edit_vcf_sample_file(self):
+        '''
+        Edit the file of VCF samples.
+        '''
+
+        # initialize the control variable
+        OK = True
+
+        # close the current form
+        self.close_current_form()
+
+        # set the head
+        head = f'{xlib.get_ddradseqtools_name()} - Edit file of VCF samples'
+
+        # edit the file of ends using "DialogEditor" 
+        dialog_editor = gdialogs.DialogEditor(self, xngshelper.get_vcf_sample_file())
+        self.wait_window(dialog_editor)
+
+        # check the file of VCF samples
+        (OK, error_list) = xngshelper.check_vcf_sample_file(strict=False)
+        if OK:
+            message = f'The file {xngshelper.get_vcf_sample_file()} is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
+        else:
+            message = 'Detected errors:\n\n'
+            for error in error_list:
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
     # TOA
@@ -4953,11 +6058,11 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Recreate file of datasets'.format(xlib.get_toa_name())
+        head = f'{xlib.get_toa_name()} - Recreate file of datasets'
 
         # confirm the creation of the file of datasets
-        message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xtoa.get_dataset_file())
-        OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), head), message)
+        message = f'The file {xtoa.get_dataset_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+        OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {head}', message)
 
         # recreate the file of datasets
         if OK:
@@ -4965,8 +6070,8 @@ class Main(tkinter.Tk):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
         # edit the file of datasets
         if OK:
@@ -4978,13 +6083,13 @@ class Main(tkinter.Tk):
             # check the data file
             (OK, error_list) = xtoa.check_dataset_file(strict=False)
             if OK:
-                message = 'The file {0} is OK.'.format(xtoa.get_dataset_file())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'The file {xtoa.get_dataset_file()} is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -5000,7 +6105,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit file of datasets'.format(xlib.get_toa_name())
+        head = f'{xlib.get_toa_name()} - Edit file of datasets'
 
         # edit the file of datasets using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xtoa.get_dataset_file())
@@ -5009,13 +6114,13 @@ class Main(tkinter.Tk):
         # check the file of datasets
         (OK, error_list) = xtoa.check_dataset_file(strict=False)
         if OK:
-            message = 'The file {0} is OK.'.format(xtoa.get_dataset_file())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The file {xtoa.get_dataset_file()} is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -5031,11 +6136,11 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Recreate file of species'.format(xlib.get_toa_name())
+        head = f'{xlib.get_toa_name()} - Recreate file of species'
 
         # confirm the creation of the file of species
-        message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xtoa.get_species_file())
-        OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), head), message)
+        message = f'The file {xtoa.get_species_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+        OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {head}', message)
 
         # recreate the file of species
         if OK:
@@ -5043,8 +6148,8 @@ class Main(tkinter.Tk):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
         # edit the file of species
         if OK:
@@ -5056,13 +6161,13 @@ class Main(tkinter.Tk):
             # check the data file
             (OK, error_list) = xtoa.check_species_file(strict=False)
             if OK:
-                message = 'The file {0} is OK.'.format(xtoa.get_species_file())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'The file {xtoa.get_species_file()} is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -5078,7 +6183,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit file of species'.format(xlib.get_toa_name())
+        head = f'{xlib.get_toa_name()} - Edit file of species'
 
         # edit the file of species using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xtoa.get_species_file())
@@ -5087,13 +6192,13 @@ class Main(tkinter.Tk):
         # check the file of species
         (OK, error_list) = xtoa.check_species_file(strict=False)
         if OK:
-            message = 'The file {0} is OK.'.format(xtoa.get_species_file())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The file {xtoa.get_species_file()} is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -5593,7 +6698,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_toa_process_pipeline_nucleotide_name())
+        head = f'{xlib.get_toa_process_pipeline_nucleotide_name()} - Edit config file'
 
         # edit the nucleotide pipeline config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xtoa.get_nucleotide_pipeline_config_file())
@@ -5602,13 +6707,13 @@ class Main(tkinter.Tk):
         # check the nucleotide pipeline config file
         (OK, error_list) = xtoa.check_pipeline_config_file(pipeline_type=xlib.get_toa_process_pipeline_nucleotide_code(), strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_toa_process_pipeline_nucleotide_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_toa_process_pipeline_nucleotide_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -5688,7 +6793,7 @@ class Main(tkinter.Tk):
         self.close_current_form()
 
         # set the head
-        head = '{0} - Edit config file'.format(xlib.get_toa_process_pipeline_aminoacid_name())
+        head = f'{xlib.get_toa_process_pipeline_aminoacid_name()} - Edit config file'
 
         # edit the amino acid pipeline config file using "DialogEditor" 
         dialog_editor = gdialogs.DialogEditor(self, xtoa.get_aminoacid_pipeline_config_file())
@@ -5697,13 +6802,13 @@ class Main(tkinter.Tk):
         # check the amino acid pipeline config file
         (OK, error_list) = xtoa.check_pipeline_config_file(pipeline_type=xlib.get_toa_process_pipeline_aminoacid_code(), strict=False)
         if OK:
-            message = 'The {0} config file is OK.'.format(xlib.get_toa_process_pipeline_aminoacid_name())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            message = f'The {xlib.get_toa_process_pipeline_aminoacid_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -6504,242 +7609,6 @@ class Main(tkinter.Tk):
         form_plot_seq_per_metacyc_data.tkraise()
 
     #---------------
-    # ddRADseqTools
-    #---------------
-
-    def recreate_end_file(self):
-        '''
-        Recreate the file of ends.
-        '''
-
-        # initialize the control variable
-        OK = True
-
-        # close the current form
-        self.close_current_form()
-
-        # set the head
-        head = '{0} - Recreate file of ends'.format(xlib.get_ddradseqtools_name())
-
-        # confirm the creation of the file of ends
-        message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xddradseqtools.get_end_file())
-        OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), head), message)
-
-        # recreate the file of ends
-        if OK:
-            (OK, error_list) = xddradseqtools.create_end_file()
-            if not OK:
-                message = ''
-                for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
-
-        # edit the file of ends
-        if OK:
-
-            # edit the data file using "DialogEditor" 
-            dialog_editor = gdialogs.DialogEditor(self, xddradseqtools.get_end_file())
-            self.wait_window(dialog_editor)
-
-            # check the data file
-            (OK, error_list) = xddradseqtools.check_end_file(strict=False)
-            if OK:
-                message = 'The file {0} is OK.'.format(xddradseqtools.get_end_file())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
-            else:
-                message = 'Detected errors:\n\n'
-                for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
-
-    #---------------
-
-    def edit_end_file(self):
-        '''
-        Edit the file of ends.
-        '''
-
-        # initialize the control variable
-        OK = True
-
-        # close the current form
-        self.close_current_form()
-
-        # set the head
-        head = '{0} - Edit file of ends'.format(xlib.get_ddradseqtools_name())
-
-        # edit the file of ends using "DialogEditor" 
-        dialog_editor = gdialogs.DialogEditor(self, xddradseqtools.get_end_file())
-        self.wait_window(dialog_editor)
-
-        # check the file of ends
-        (OK, error_list) = xddradseqtools.check_end_file(strict=False)
-        if OK:
-            message = 'The file {0} is OK.'.format(xddradseqtools.get_end_file())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
-        else:
-            message = 'Detected errors:\n\n'
-            for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
-
-    #---------------
-
-    def recreate_individual_file(self):
-        '''
-        Recreate the file of individuals.
-        '''
-
-        # initialize the control variable
-        OK = True
-
-        # close the current form
-        self.close_current_form()
-
-        # set the head
-        head = '{0} - Recreate file of individuals'.format(xlib.get_ddradseqtools_name())
-
-        # confirm the creation of the file of individuals
-        message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xddradseqtools.get_individual_file())
-        OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), head), message)
-
-        # recreate the file of individuals
-        if OK:
-            (OK, error_list) = xddradseqtools.create_individual_file()
-            if not OK:
-                message = ''
-                for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
-
-        # edit the file of individuals
-        if OK:
-
-            # edit the data file using "DialogEditor" 
-            dialog_editor = gdialogs.DialogEditor(self, xddradseqtools.get_individual_file())
-            self.wait_window(dialog_editor)
-
-            # check the data file
-            (OK, error_list) = xddradseqtools.check_individual_file(strict=False)
-            if OK:
-                message = 'The file {0} is OK.'.format(xddradseqtools.get_individual_file())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
-            else:
-                message = 'Detected errors:\n\n'
-                for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
-
-    #---------------
-
-    def edit_individual_file(self):
-        '''
-        Edit the file of individuals.
-        '''
-
-        # initialize the control variable
-        OK = True
-
-        # close the current form
-        self.close_current_form()
-
-        # set the head
-        head = '{0} - Edit file of individuals'.format(xlib.get_ddradseqtools_name())
-
-        # edit the file of ends using "DialogEditor" 
-        dialog_editor = gdialogs.DialogEditor(self, xddradseqtools.get_individual_file())
-        self.wait_window(dialog_editor)
-
-        # check the file of individuals
-        (OK, error_list) = xddradseqtools.check_individual_file(strict=False)
-        if OK:
-            message = 'The file {0} is OK.'.format(xddradseqtools.get_individual_file())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
-        else:
-            message = 'Detected errors:\n\n'
-            for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
-
-    #---------------
-
-    def recreate_restriction_site_file(self):
-        '''
-        Recreate the file of restriction sites.
-        '''
-
-        # initialize the control variable
-        OK = True
-
-        # close the current form
-        self.close_current_form()
-
-        # set the head
-        head = '{0} - Recreate file of restriction sites'.format(xlib.get_ddradseqtools_name())
-
-        # confirm the creation of the file of restriction sites
-        message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xddradseqtools.get_restriction_site_file())
-        OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), head), message)
-
-        # recreate the file of restriction sites
-        if OK:
-            (OK, error_list) = xddradseqtools.create_restriction_site_file()
-            if not OK:
-                message = ''
-                for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
-
-        # edit the file of restriction sites
-        if OK:
-
-            # edit the data file using "DialogEditor" 
-            dialog_editor = gdialogs.DialogEditor(self, xddradseqtools.get_restriction_site_file())
-            self.wait_window(dialog_editor)
-
-            # check the data file
-            (OK, error_list) = xddradseqtools.check_restriction_site_file(strict=False)
-            if OK:
-                message = 'The file {0} is OK.'.format(xddradseqtools.get_restriction_site_file())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
-            else:
-                message = 'Detected errors:\n\n'
-                for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
-
-    #---------------
-
-    def edit_restriction_site_file(self):
-        '''
-        Edit the file of restriction sites.
-        '''
-
-        # initialize the control variable
-        OK = True
-
-        # close the current form
-        self.close_current_form()
-
-        # set the head
-        head = '{0} - Edit file of restriction sites'.format(xlib.get_ddradseqtools_name())
-
-        # edit the file of restriction sites using "DialogEditor" 
-        dialog_editor = gdialogs.DialogEditor(self, xddradseqtools.get_restriction_site_file())
-        self.wait_window(dialog_editor)
-
-        # check the file of restriction sites
-        (OK, error_list) = xddradseqtools.check_restriction_site_file(strict=False)
-        if OK:
-            message = 'The file {0} is OK.'.format(xddradseqtools.get_restriction_site_file())
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
-        else:
-            message = 'Detected errors:\n\n'
-            for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
-
-    #---------------
     # Datasets
     #---------------
 
@@ -6807,12 +7676,12 @@ class Main(tkinter.Tk):
         (OK, error_list) = xreference.check_reference_transfer_config_file(strict=False)
         if OK:
             message = 'The reference transfer config file is OK.'
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -6880,12 +7749,12 @@ class Main(tkinter.Tk):
         (OK, error_list) = xgzip.check_gzip_config_file('reference', strict=False)
         if OK:
             message = 'The reference gzip config file is OK.'
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -6974,12 +7843,12 @@ class Main(tkinter.Tk):
         (OK, error_list) = xdatabase.check_database_transfer_config_file(strict=False)
         if OK:
             message = 'The database transfer config file is OK.'
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -7047,12 +7916,12 @@ class Main(tkinter.Tk):
         (OK, error_list) = xgzip.check_gzip_config_file('database', strict=False)
         if OK:
             message = 'The database gzip config file is OK.'
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -7141,12 +8010,12 @@ class Main(tkinter.Tk):
         (OK, error_list) = xread.check_read_transfer_config_file(strict=False)
         if OK:
             message = 'The read transfer config file is OK.'
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -7214,12 +8083,12 @@ class Main(tkinter.Tk):
         (OK, error_list) = xgzip.check_gzip_config_file('read', strict=False)
         if OK:
             message = 'The read gzip config file is OK.'
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -7308,12 +8177,12 @@ class Main(tkinter.Tk):
         (OK, error_list) = xresult.check_result_transfer_config_file(strict=False)
         if OK:
             message = 'The result transfer config file is OK.'
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -7381,12 +8250,12 @@ class Main(tkinter.Tk):
         (OK, error_list) = xgzip.check_gzip_config_file('result', strict=False)
         if OK:
             message = 'The result gzip config file is OK.'
-            tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), head), message)
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
         else:
             message = 'Detected errors:\n\n'
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
 
     #---------------
 
@@ -7453,6 +8322,27 @@ class Main(tkinter.Tk):
 
     #---------------
 
+    def view_cluster_start_log(self):
+        '''
+        View the cluster start log.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "view_cluster_start_log" in container with the grid geometry manager
+        form_view_cluster_start_log = glog.FormViewClusterStartLog(self.container, self)
+        form_view_cluster_start_log.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_view_cluster_start_log" as current form and add it in the forms dictionary
+        self.current_form = 'form_view_cluster_start_log'
+        self.forms_dict[self.current_form] = form_view_cluster_start_log
+
+        # raise "form_view_cluster_start_log" to front
+        form_view_cluster_start_log.tkraise()
+
+    #---------------
+
     def view_submission_logs(self):
         '''
         List logs of process submission in local computer.
@@ -7501,11 +8391,11 @@ class Main(tkinter.Tk):
         '''
 
         try:
-            manual = os.path.abspath(xlib.get_project_manual_file())
-            webbrowser.open_new('file://{0}'.format(manual))
-        except Exception as e:
-            message = 'The document {0}\n is not available.'.format(manual)
-            tkinter.messagebox.showerror('{0} - Open help'.format(xlib.get_project_name()), message)
+            manual_file = os.path.abspath(xlib.get_project_manual_file())
+            webbrowser.open_new(f'file://{manual_file}')
+        except:
+            message = f'The document {manual_file}\n is not available.'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - Open help', message)
 
     #---------------
 
@@ -7546,8 +8436,8 @@ class Main(tkinter.Tk):
         Exit the application.
         '''
 
-        message = 'Are you sure to exit {0}?'.format(xlib.get_project_name())
-        if tkinter.messagebox.askyesno('{0} - Exit'.format(xlib.get_project_name()), message):
+        message = f'Are you sure to exit {xlib.get_project_name()}?'
+        if tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - Exit', message):
             self.destroy()
 
    #---------------
@@ -7580,16 +8470,16 @@ class FormWelcome(tkinter.Frame):
         Build the graphical user interface of "FormWelcome".
         '''
 
-        # create "image_perrault"
-        image_perrault = PIL.Image.open('./image_perrault_unai.jpg')
-        image_perrault.thumbnail((self.main.WINDOW_WIDTH,self.main.WINDOW_HEIGHT), PIL.Image.ANTIALIAS)
+        # create "image_hierro"
+        image_hierro = PIL.Image.open('./image_hierro.jpg')
+        image_hierro.thumbnail((self.main.WINDOW_WIDTH,self.main.WINDOW_HEIGHT), PIL.Image.ANTIALIAS)
 
-        # create "photoimage_perrault"
-        self.photoimage_perrault = PIL.ImageTk.PhotoImage(image_perrault)  
+        # create "photoimage_hierro"
+        self.photoimage_hierro = PIL.ImageTk.PhotoImage(image_hierro)  
 
-        # create "canvas_photoimage_perrault" and register it with the grid geometry manager
-        self.canvas_photoimage_perrault = tkinter.Canvas(self, width=self.main.WINDOW_WIDTH, height=self.main.WINDOW_HEIGHT)
-        self.canvas_photoimage_perrault.create_image(round(self.main.WINDOW_WIDTH / 2), round(self.main.WINDOW_HEIGHT / 2 - 45), image=self.photoimage_perrault, anchor='center')
+        # create "canvas_photoimage_hierro" and register it with the grid geometry manager
+        self.canvas_photoimage_hierro = tkinter.Canvas(self, width=self.main.WINDOW_WIDTH, height=self.main.WINDOW_HEIGHT)
+        self.canvas_photoimage_hierro.create_image(round(self.main.WINDOW_WIDTH / 2), round(self.main.WINDOW_HEIGHT / 2 - 45), image=self.photoimage_hierro, anchor='center')
         if sys.platform.startswith('linux'):
             x_coordinate = 10
             y_coordinate = self.main.WINDOW_HEIGHT - 100
@@ -7599,8 +8489,8 @@ class FormWelcome(tkinter.Frame):
         elif sys.platform.startswith('win32') or sys.platform.startswith('cygwin'):
             x_coordinate = 10
             y_coordinate = self.main.WINDOW_HEIGHT - 70
-        self.canvas_photoimage_perrault.create_text(x_coordinate, y_coordinate, anchor='w', text = 'Puente de Perrault also known as "DNA Bridge" (Madrid, Spain)') 
-        self.canvas_photoimage_perrault.pack(side='left', fill='both', expand=True)
+        self.canvas_photoimage_hierro.create_text(x_coordinate, y_coordinate, anchor='w', text='Canary Island pines over the sea (El Hierro, Canary Islands, Spain)', fill='white') 
+        self.canvas_photoimage_hierro.pack(side='left', fill='both', expand=True)
 
     #---------------
 
@@ -7617,7 +8507,7 @@ class FormWelcome(tkinter.Frame):
 #-------------------------------------------------------------------------------
 
 if __name__ == '__main__':
-    print('This file contains the class Main corresponding to the graphical user interface of the {0} software package.'.format(xlib.get_project_name()))
+    print(f'This file contains the class Main corresponding to the graphical user interface of the {xlib.get_project_name()} software package.')
     sys.exit(0)
 
 #-------------------------------------------------------------------------------

@@ -65,27 +65,28 @@ def create_quast_config_file(experiment_id='exp001', reference_dataset_id='NONE'
         if not os.path.exists(os.path.dirname(get_quast_config_file())):
             os.makedirs(os.path.dirname(get_quast_config_file()))
         with open(get_quast_config_file(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
-            file_id.write( '{0}\n'.format('# You must review the information of this file and update the values with the corresponding ones to the current run.'))
-            file_id.write( '{0}\n'.format('#'))
+            file_id.write( '# You must review the information of this file and update the values with the corresponding ones to the current run.\n')
+            file_id.write( '#\n')
             file_id.write( '{0}\n'.format('# The reference file has to be located in the cluster directory {0}/experiment_id/reference_dataset_id'.format(xlib.get_cluster_reference_dir())))
-            file_id.write( '{0}\n'.format('# The assembly files have to be located in the cluster directory {0}/experiment_id/assembly_dataset_id'.format(xlib.get_cluster_result_dir())))
+            file_id.write(f'# The assembly files have to be located in the cluster directory {xlib.get_cluster_result_dir()}/experiment_id/assembly_dataset_id\n')
             file_id.write( '{0}\n'.format('# The experiment_id, reference_dataset_id, reference_file and assembly_dataset_id are fixed in the identification section.'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('# You can consult the parameters of QUAST and their meaning in http://quast.sourceforge.net/quast.html.'))
+            file_id.write( '#\n')
+            file_id.write( '{0}\n'.format('# You can consult the parameters of QUAST and their meaning in "http://quast.sourceforge.net/quast.html".'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information identifies the experiment.'))
-            file_id.write( '{0}\n'.format('[identification]'))
-            file_id.write( '{0:<50} {1}\n'.format('experiment_id = {0}'.format(experiment_id), '# experiment identification'))
+            file_id.write( '# This section has the information identifies the experiment.\n')
+            file_id.write( '[identification]\n')
+            file_id.write( '{0:<50} {1}\n'.format(f'experiment_id = {experiment_id}', '# experiment identification'))
             file_id.write( '{0:<50} {1}\n'.format('reference_dataset_id = {0}'.format(reference_dataset_id), '# reference dataset identification or NONE'))
             file_id.write( '{0:<50} {1}\n'.format('reference_file = {0}'.format(reference_file), '# reference file name or NONE'))
-            file_id.write( '{0:<50} {1}\n'.format('assembly_software = {0}'.format(assembly_software), '# assembly software: {0}'.format(get_assembly_software_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('assembly_dataset_id = {0}'.format(assembly_dataset_id), '# assembly dataset identification'))
-            file_id.write( '{0:<50} {1}\n'.format('assembly_type = {0}'.format(assembly_type), '# assembly type: CONTIGS or SCAFFOLDS in {0}; NONE in any other case'.format(xlib.get_soapdenovotrans_name())))
+            file_id.write( '{0:<50} {1}\n'.format(f'assembly_software = {assembly_software}', f'# assembly software: {get_assembly_software_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format(f'assembly_dataset_id = {assembly_dataset_id}', '# assembly dataset identification'))
+            file_id.write( '{0:<50} {1}\n'.format(f'assembly_type = {assembly_type}', f'# assembly type: CONTIGS or SCAFFOLDS in {xlib.get_soapdenovotrans_name()}; NONE in any other case'))
             file_id.write( '\n')
             file_id.write( '{0}\n'.format('# This section has the information to set the QUAST parameters'))
             file_id.write( '{0}\n'.format('[QUAST parameters]'))
             file_id.write( '{0:<50} {1}\n'.format('threads = 4', '# number of threads for use'))
     except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append('*** ERROR: The file {0} can not be recreated'.format(get_quast_config_file()))
         OK = False
 
@@ -160,12 +161,12 @@ def run_quast_process(cluster_name, log, function=None):
     if OK:
         (master_state_code, master_state_name) = xec2.get_node_state(cluster_name)
         if master_state_code != 16:
-            log.write('*** ERROR: The cluster {0} is not running. Its state is {1} ({2}).\n'.format(cluster_name, master_state_code, master_state_name))
+            log.write(f'*** ERROR: The cluster {cluster_name} is not running. Its state is {master_state_code} ({master_state_name}).\n')
             OK = False
 
     # check the QUAST is installed
     if OK:
-        (OK, error_list, is_installed) = xbioinfoapp.is_installed_bioconda_package(xlib.get_quast_bioconda_code(), cluster_name, True, ssh_client)
+        (OK, error_list, is_installed) = xbioinfoapp.is_installed_anaconda_package(xlib.get_quast_anaconda_code(), cluster_name, True, ssh_client)
         if OK:
             if not is_installed:
                 log.write('*** ERROR: {0} is not installed.\n'.format(xlib.get_quast_name()))
@@ -185,7 +186,7 @@ def run_quast_process(cluster_name, log, function=None):
         command = f'mkdir --parents {current_run_dir}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
-            log.write('The directory path is {0}.\n'.format(current_run_dir))
+            log.write(f'The directory path is {current_run_dir}.\n')
         else:
             log.write(f'*** ERROR: Wrong command ---> {command}\n')
 
@@ -202,7 +203,7 @@ def run_quast_process(cluster_name, log, function=None):
     # upload the QUAST process script to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process script {0} to the directory {1} of the master ...\n'.format(get_quast_process_script(), current_run_dir))
+        log.write('Uploading the process script {0} to the directory {1} ...\n'.format(get_quast_process_script(), current_run_dir))
         cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_quast_process_script()))
         (OK, error_list) = xssh.put_file(sftp_client, get_quast_process_script(), cluster_path)
         if OK:
@@ -235,7 +236,7 @@ def run_quast_process(cluster_name, log, function=None):
     # upload the QUAST process starter to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process starter {0} to the directory {1} of the master ...\n'.format(get_quast_process_starter(), current_run_dir))
+        log.write('Uploading the process starter {0} to the directory {1} ...\n'.format(get_quast_process_starter(), current_run_dir))
         cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_quast_process_starter()))
         (OK, error_list) = xssh.put_file(sftp_client, get_quast_process_starter(), cluster_path)
         if OK:
@@ -305,7 +306,8 @@ def check_quast_config_file(strict):
     try:
         quast_option_dict = xlib.get_option_dict(get_quast_config_file())
     except Exception as e:
-        error_list.append('*** ERROR: The syntax is WRONG.')
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append('*** ERROR: The option dictionary could not be built from the config file')
         OK = False
     else:
 
@@ -345,7 +347,7 @@ def check_quast_config_file(strict):
                 error_list.append('*** ERROR: the key "assembly_software" is not found in the section "identification".')
                 OK = False
             elif not xlib.check_code(assembly_software, get_assembly_software_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "assembly_software" has to be {0}.'.format(get_assembly_software_code_list_text()))
+                error_list.append(f'*** ERROR: the key "assembly_software" has to be {get_assembly_software_code_list_text()}.')
                 OK = False
 
             # check section "identification" - key "assembly_dataset_id"
@@ -354,7 +356,7 @@ def check_quast_config_file(strict):
                 error_list.append('*** ERROR: the key "assembly_dataset_id" is not found in the section "identification".')
                 OK = False
             elif not xlib.check_startswith(assembly_dataset_id, get_assembly_software_code_list(), case_sensitive=True):
-                error_list.append('*** ERROR: the key "assembly_dataset_id" has to start with {0}.'.format(get_assembly_software_code_list_text()))
+                error_list.append(f'*** ERROR: the key "assembly_dataset_id" has to start with {get_assembly_software_code_list_text()}.')
                 OK = False
 
             # check section "identification" - key "assembly_type"
@@ -364,7 +366,7 @@ def check_quast_config_file(strict):
                 OK = False
             elif assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()) and assembly_type.upper() not in ['CONTIGS', 'SCAFFOLDS'] or \
                 not assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()) and assembly_type.upper() != 'NONE':
-                    error_list.append('*** ERROR: the key "assembly_type" has to be CONTIGS or SCAFFOLDS in {0} or NONE in any other case.'.format(xlib.get_soapdenovotrans_name()))
+                    error_list.append(f'*** ERROR: the key "assembly_type" has to be CONTIGS or SCAFFOLDS in {xlib.get_soapdenovotrans_name()} or NONE in any other case.')
                     OK = False
 
         # check section "QUAST parameters"
@@ -446,17 +448,18 @@ def build_quast_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'SEP="#########################################"\n')
             script_file_id.write( 'export HOST_IP=`curl --silent checkip.amazonaws.com`\n')
             script_file_id.write( 'export HOST_ADDRESS="ec2-${HOST_IP//./-}-compute-1.amazonaws.com"\n')
-            script_file_id.write( '{0}\n'.format('QUAST_PATH={0}/{1}/envs/{2}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name(), xlib.get_quast_bioconda_code())))
-            script_file_id.write( '{0}\n'.format('PATH=$QUAST_PATH:$PATH'))
-            script_file_id.write( '{0}\n'.format('cd {0}/{1}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name())))
-            script_file_id.write( '{0}\n'.format('source activate {0}'.format(xlib.get_quast_bioconda_code())))
+            script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
+            script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('STATUS_DIR={0}'.format(xlib.get_status_dir(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('SCRIPT_STATUS_OK={0}'.format(xlib.get_status_ok(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('SCRIPT_STATUS_WRONG={0}'.format(xlib.get_status_wrong(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('mkdir --parents $STATUS_DIR'))
-            script_file_id.write( '{0}\n'.format('if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi'))
-            script_file_id.write( '{0}\n'.format('if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi'))
+            script_file_id.write(f'MINICONDA3_BIN_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
+            script_file_id.write(f'export PATH=$MINICONDA3_BIN_PATH:$PATH\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
+            script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
+            script_file_id.write(f'SCRIPT_STATUS_WRONG={xlib.get_status_wrong(current_run_dir)}\n')
+            script_file_id.write( 'mkdir --parents $STATUS_DIR\n')
+            script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
+            script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function init\n')
             script_file_id.write( '{\n')
@@ -466,17 +469,20 @@ def build_quast_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "Script started at $FORMATTED_INIT_DATETIME+00:00."\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write(f'    echo "CLUSTER: {cluster_name}"\n')
-            script_file_id.write(f'    echo "HOST_IP: $HOST_IP - HOST_ADDRESS: $HOST_ADDRESS"\n')
+            script_file_id.write( '    echo "HOST NAME: $HOSTNAME"\n')
+            script_file_id.write( '    echo "HOST IP: $HOST_IP"\n')
+            script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( '{0}\n'.format('function run_quast_process'))
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    cd {0}'.format(current_run_dir)))
+            script_file_id.write(f'    source activate {xlib.get_quast_anaconda_code()}\n')
+            script_file_id.write(f'    cd {current_run_dir}\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write( '{0}\n'.format('    quast.py --version'))
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    /usr/bin/time \\'))
-            script_file_id.write( '{0}\n'.format('        --format="$SEP\\nElapsed real time (s): %e\\nCPU time in kernel mode (s): %S\\nCPU time in user mode (s): %U\\nPercentage of CPU: %P\\nMaximum resident set size(Kb): %M\\nAverage total memory use (Kb):%K" \\'))
+            script_file_id.write( '    /usr/bin/time \\\n')
+            script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
             script_file_id.write( '{0}\n'.format('        quast.py \\'))
             script_file_id.write( '{0}\n'.format('            --threads {0} \\'.format(threads)))
             script_file_id.write( '{0}\n'.format('            --output-dir {0} \\'.format(current_run_dir)))
@@ -485,41 +491,71 @@ def build_quast_process_script(cluster_name, current_run_dir):
             if assembly_type.upper() == 'SCAFFOLDS':
                 script_file_id.write( '{0}\n'.format('            --scaffolds \\'))
             script_file_id.write( '{0}\n'.format('            {0}'.format(transcriptome_file)))
-            script_file_id.write( '{0}\n'.format('    RC=$?'))
+            script_file_id.write( '    RC=$?\n')
             script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error quast.py $RC; fi'))
+            script_file_id.write( '    conda deactivate\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function end'))
+            script_file_id.write( 'function end\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    END_DATETIME=`date --utc +%s`'))
-            script_file_id.write( '{0}\n'.format('    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`'))
-            script_file_id.write( '{0}\n'.format('    calculate_duration'))
+            script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
+            script_file_id.write( '    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
+            script_file_id.write( '    calculate_duration\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "Script ended OK at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."'))
+            script_file_id.write( '    echo "Script ended OK at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    RECIPIENT={0}'.format(xconfiguration.get_contact_data())))
-            script_file_id.write( '{0}\n'.format('    SUBJECT="{0}: {1} process"'.format(xlib.get_project_name(), xlib.get_quast_name())))
-            script_file_id.write( '{0}\n'.format('    MESSAGE="{0}"'.format(xlib.get_mail_message_ok(xlib.get_quast_name(), cluster_name))))
-            script_file_id.write( '    mail --append "Content-type: text/html;" --append "FROM:root@NGScloud2" --subject="$SUBJECT" "$RECIPIENT" <<< "$MESSAGE"\n')
-            script_file_id.write( '{0}\n'.format('    touch $SCRIPT_STATUS_OK'))
-            script_file_id.write( '{0}\n'.format('    exit 0'))
+            script_file_id.write( '    send_mail ok\n')
+            script_file_id.write( '    touch $SCRIPT_STATUS_OK\n')
+            script_file_id.write( '    exit 0\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function manage_error'))
+            script_file_id.write( 'function manage_error\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    END_DATETIME=`date --utc +%s`'))
-            script_file_id.write( '{0}\n'.format('    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`'))
-            script_file_id.write( '{0}\n'.format('    calculate_duration'))
+            script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
+            script_file_id.write( '    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
+            script_file_id.write( '    calculate_duration\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "ERROR: $1 returned error $2"'))
-            script_file_id.write( '{0}\n'.format('    echo "Script ended WRONG at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."'))
+            script_file_id.write( '    echo "ERROR: $1 returned error $2"\n')
+            script_file_id.write( '    echo "Script ended WRONG at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    RECIPIENT={0}'.format(xconfiguration.get_contact_data())))
-            script_file_id.write( '{0}\n'.format('    SUBJECT="{0}: {1} process"'.format(xlib.get_project_name(), xlib.get_quast_name())))
-            script_file_id.write( '{0}\n'.format('    MESSAGE="{0}"'.format(xlib.get_mail_message_wrong(xlib.get_quast_name(), cluster_name))))
-            script_file_id.write( '    mail --append "Content-type: text/html;" --append "FROM:root@NGScloud2" --subject="$SUBJECT" "$RECIPIENT" <<< "$MESSAGE"\n')
-            script_file_id.write( '{0}\n'.format('    touch $SCRIPT_STATUS_WRONG'))
-            script_file_id.write( '{0}\n'.format('    exit 3'))
+            script_file_id.write( '    send_mail wrong\n')
+            script_file_id.write( '    touch $SCRIPT_STATUS_WRONG\n')
+            script_file_id.write( '    exit 3\n')
+            script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            process_name = f'{xlib.get_quast_name()} process'
+            mail_message_ok = xlib.get_mail_message_ok(process_name, cluster_name)
+            mail_message_wrong = xlib.get_mail_message_wrong(process_name, cluster_name)
+            script_file_id.write( 'function send_mail\n')
+            script_file_id.write( '{\n')
+            script_file_id.write(f'    SUBJECT="{xlib.get_project_name()}: {process_name}"\n')
+            script_file_id.write( '    if [ "$1" == "ok" ]; then\n')
+            script_file_id.write(f'        MESSAGE="{mail_message_ok}"\n')
+            script_file_id.write( '    elif [ "$1" == "wrong" ]; then\n')
+            script_file_id.write(f'        MESSAGE="{mail_message_wrong}"\n')
+            script_file_id.write( '    else\n')
+            script_file_id.write( '         MESSAGE=""\n')
+            script_file_id.write( '    fi\n')
+            script_file_id.write( '    DESTINATION_FILE=mail-destination.json\n')
+            script_file_id.write( '    echo "{" > $DESTINATION_FILE\n')
+            script_file_id.write(f'    echo "    \\\"ToAddresses\\\":  [\\\"{xconfiguration.get_contact_data()}\\\"]," >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "    \\\"CcAddresses\\\":  []," >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "    \\\"BccAddresses\\\":  []" >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "}" >> $DESTINATION_FILE\n')
+            script_file_id.write( '    MESSAGE_FILE=mail-message.json\n')
+            script_file_id.write( '    echo "{" > $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    \\\"Subject\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Data\\\":  \\\"$SUBJECT\\\"," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    }," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    \\\"Body\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Html\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "            \\\"Data\\\":  \\\"$MESSAGE\\\"," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "            \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        }" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    }" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "}" >> $MESSAGE_FILE\n')
+            script_file_id.write(f'    aws ses send-email --from {xconfiguration.get_contact_data()} --destination file://$DESTINATION_FILE --message file://$MESSAGE_FILE\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function calculate_duration\n')
@@ -535,6 +571,7 @@ def build_quast_process_script(cluster_name, current_run_dir):
             script_file_id.write( '{0}\n'.format('run_quast_process'))
             script_file_id.write( 'end\n')
     except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append('*** ERROR: The file {0} can not be created'.format(quast_process_script))
         OK = False
 
@@ -557,10 +594,11 @@ def build_quast_process_starter(current_run_dir):
         if not os.path.exists(os.path.dirname(get_quast_process_starter())):
             os.makedirs(os.path.dirname(get_quast_process_starter()))
         with open(get_quast_process_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
-            file_id.write( '{0}\n'.format('#!/bin/bash'))
-            file_id.write( '{0}\n'.format('#-------------------------------------------------------------------------------'))
-            file_id.write( '{0}\n'.format('{0}/{1} &>{0}/{2}'.format(current_run_dir, os.path.basename(get_quast_process_script()), xlib.get_cluster_log_file())))
+            file_id.write( '#!/bin/bash\n')
+            file_id.write( '#-------------------------------------------------------------------------------\n')
+            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_quast_process_script()), xlib.get_cluster_log_file())))
     except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append('*** ERROR: The file {0} can not be created'.format(get_quast_process_starter()))
         OK = False
 
@@ -622,7 +660,7 @@ def get_assembly_software_code_list_text():
     Get the code list of "assembly_software" as text.
     '''
 
-    return '{0} ({1}) or {2} ({3}) or {4} ({5}) or {6} ({7}) or {8} ({9}) or {10} ({11})'.format(xlib.get_soapdenovotrans_code(), xlib.get_soapdenovotrans_name(), xlib.get_transabyss_code(), xlib.get_transabyss_name(), xlib.get_trinity_code(), xlib.get_trinity_name(), xlib.get_ggtrinity_code(), xlib.get_ggtrinity_name(), xlib.get_cd_hit_est_code(), xlib.get_cd_hit_est_name(), xlib.get_transcript_filter_code(), xlib.get_transcript_filter_name())
+    return f'{xlib.get_soapdenovotrans_code()} ({xlib.get_soapdenovotrans_name()}) or {xlib.get_transabyss_code()} ({xlib.get_transabyss_name()}) or {xlib.get_trinity_code()} ({xlib.get_trinity_name()}) or {xlib.get_ggtrinity_code()} ({xlib.get_ggtrinity_name()}) or {xlib.get_cd_hit_est_code()} ({xlib.get_cd_hit_est_name()}) or {xlib.get_transcript_filter_code()} ({xlib.get_transcript_filter_name()})'
 
 #-------------------------------------------------------------------------------
 

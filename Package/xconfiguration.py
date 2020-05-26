@@ -57,9 +57,6 @@ def get_environments_list():
     '''
     Get the defined environments list
     '''
-    
-    # initialize the control variable
-    OK = True
 
     # initialize the environments list
     environments_list = []
@@ -71,7 +68,7 @@ def get_environments_list():
             records = file_id.readlines()
             for record in records:
                 environments_list.append(record.strip())
-    except Exception as e:
+    except Exception:
         pass
 
     # sort the environments list
@@ -100,6 +97,7 @@ def add_environment(environment):
         with open(environments_file, mode='a', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write(f'{environment.strip()}\n')
     except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append(f'*** ERROR: The file {environments_file} can not be written.')
         OK = False
 
@@ -162,13 +160,22 @@ def get_dataset_structure_multivolume():
     return 'multi-volume'
 
 #-------------------------------------------------------------------------------
+
+def get_dataset_structure_none():
+    '''
+    Get the value when there is not any volume linked.
+    '''
+
+    return 'none'
+
+#-------------------------------------------------------------------------------
     
 def get_dataset_structure_list():
     '''
     Get the code list of "dataset_structure".
     '''
 
-    return [get_dataset_structure_singlevolume(), get_dataset_structure_multivolume()]
+    return [get_dataset_structure_singlevolume(), get_dataset_structure_multivolume(), get_dataset_structure_none()]
 
 #-------------------------------------------------------------------------------
 
@@ -387,7 +394,7 @@ def create_ngscloud_config_file(user_id, access_key_id, secret_access_key, email
                 file_id.write(f'key_location = {xlib.get_keypairs_dir()}/{ngscloud_key}-{user_id}-{region_name}.rsa\n')
                 file_id.write( '\n')
                 file_id.write( '[dataset info]\n')
-                file_id.write( 'dataset_structure = single-volume\n')
+                file_id.write(f'dataset_structure = {get_dataset_structure_none()}\n')
                 file_id.write( 'ngscloud_volume =\n')
                 file_id.write( 'app_volume =\n')
                 file_id.write( 'database_volume =\n')
@@ -423,149 +430,307 @@ def create_ngscloud_config_file(user_id, access_key_id, secret_access_key, email
                 file_id.write(f'[bioinfoapp {xlib.get_miniconda3_name()}]\n')
                 file_id.write( 'version = last\n')
                 file_id.write( 'url = https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh\n')
+                file_id.write( 'channel = N/A\n')
+                file_id.write( '\n')
+                file_id.write(f'[bioinfoapp {xlib.get_bcftools_name()}]\n')
+                file_id.write( 'version = any\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_bedtools_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_blastplus_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_bowtie2_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_busco_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_cd_hit_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_cufflinks_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_cutadapt_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_ddradseqtools_name()}]\n')
                 file_id.write( 'version = last\n')
                 file_id.write( 'url = https://github.com/GGFHF/ddRADseqTools/archive/master.zip\n')
+                file_id.write( 'channel = N/A\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_detonate_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_emboss_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_entrez_direct_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
+                file_id.write( '\n')
+                file_id.write(f'[bioinfoapp {xlib.get_express_name()}]\n')
+                file_id.write( 'version = any\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_fastqc_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_gmap_gsnap_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_hisat2_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_htseq_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_ipyrad_name()}]\n')
-                file_id.write( 'version = last\n')
+                file_id.write( 'version = any\n')
                 file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_kallisto_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_ngshelper_name()}]\n')
                 file_id.write( 'version = last\n')
                 file_id.write( 'url = https://github.com/GGFHF/NGShelper/archive/master.zip\n')
+                file_id.write( 'channel = N/A\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_quast_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_r_name()}]\n')
                 file_id.write( 'version = last\n')
                 file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = conda-forge\n')
+                file_id.write( '\n')
+                file_id.write(f'[bioinfoapp {xlib.get_raddesigner_name()}]\n')
+                file_id.write( 'version = last\n')
+                file_id.write( 'url = https://github.com/GGFHF/RADdesigner/archive/master.zip\n')
+                file_id.write( 'channel = N/A\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_rnaquast_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_rsem_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_samtools_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_soapdenovo2_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_soapdenovotrans_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_star_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_starcode_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
+                file_id.write( '\n')
+                file_id.write(f'[bioinfoapp {xlib.get_tabix_name()}]\n')
+                file_id.write( 'version = any\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_toa_name()}]\n')
                 file_id.write( 'version = last\n')
                 file_id.write(f'url = https://github.com/GGFHF/TOA/archive/master.zip\n')
+                file_id.write( 'channel = N/A\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_tophat_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_transabyss_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_transdecoder_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_transrate_name()}]\n')
                 file_id.write( 'version = 1.0.3\n')
                 file_id.write(f'url = https://bintray.com/artifact/download/blahah/generic/transrate-1.0.3-linux-x86_64.tar.gz\n')
+                file_id.write( 'channel = N/A\n')
                 # -- file_id.write( 'version = any\n')
-                # -- file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                # -- file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                # -- file_id.write( 'channel = bioconda\n')
+                file_id.write( '\n')
+                # -- file_id.write(f'[bioinfoapp {xlib.get_transrate_tools_name()}]\n')
+                # -- file_id.write( 'version = any\n')
+                # -- file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                # -- file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_trimmomatic_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_trinity_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
+                file_id.write( '\n')
+                file_id.write(f'[bioinfoapp {xlib.get_vcftools_name()}]\n')
+                file_id.write( 'version = any\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
+                file_id.write( '\n')
+                file_id.write(f'[bioinfoapp {xlib.get_vcftools_perl_libraries_name()}]\n')
+                file_id.write( 'version = any\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_vsearch_name()}]\n')
                 file_id.write( 'version = any\n')
-                file_id.write(f'url = {xlib.get_bioconda_url()}\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda/label/cf201901\n')
+                file_id.write( '\n')
+                file_id.write( '[rsoftware r-essentials]\n')
+                file_id.write( 'version = 3.6\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = conda-forge\n')
+                file_id.write( '\n')
+                file_id.write( '[rsoftware bioconductor-phyloseq]\n')
+                file_id.write( 'version = 1.30.0\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda\n')
+                file_id.write( '\n')
+                file_id.write( '[rsoftware r-ade4]\n')
+                file_id.write( 'version = 1.7_15\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = conda-forge\n')
+                file_id.write( '\n')
+                file_id.write( '[rsoftware r-adegenet]\n')
+                file_id.write( 'version = 2.1.2\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = conda-forge\n')
+                file_id.write( '\n')
+                file_id.write( '[rsoftware r-adegraphics]\n')
+                file_id.write( 'version = 1.0_15\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = r\n')
+                file_id.write( '\n')
+                file_id.write( '[rsoftware r-devtools]\n')
+                file_id.write( 'version = 2.3.0\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = conda-forge\n')
+                file_id.write( '\n')
+                file_id.write( '[rsoftware r-ggmap]\n')
+                file_id.write( 'version = 3.0.0\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = conda-forge\n')
+                file_id.write( '\n')
+                file_id.write( '[rsoftware r-ggplot2]\n')
+                file_id.write( 'version = 3.3.0\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = conda-forge\n')
+                file_id.write( '\n')
+                file_id.write( '[rsoftware r-gplots]\n')
+                file_id.write( 'version = 3.0.3\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = conda-forge\n')
+                file_id.write( '\n')
+                file_id.write( '[rsoftware r-gridextra]\n')
+                file_id.write( 'version = 2.3\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = conda-forge\n')
+                file_id.write( '\n')
+                file_id.write( '[rsoftware r-rlist]\n')
+                file_id.write( 'version = 0.4.6.1\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = conda-forge\n')
+                file_id.write( '\n')
+                file_id.write( '[rsoftware r-sparkr]\n')
+                file_id.write( 'version = 2.4.4\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = r\n')
+                file_id.write( '\n')
+                file_id.write( '[rsoftware r-sqldf]\n')
+                file_id.write( 'version = 0.4_11\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = conda-forge\n')
+                file_id.write( '\n')
+                file_id.write( '[rsoftware r-stampp]\n')
+                file_id.write( 'version = 1.5.1\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = bioconda\n')
+                file_id.write( '\n')
+                file_id.write( '[rsoftware r-tidyverse]\n')
+                file_id.write( 'version = 1.3.0\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = conda-forge\n')
+                file_id.write( '\n')
+                file_id.write( '[rsoftware r-vcfr]\n')
+                file_id.write( 'version = 1.10.0\n')
+                file_id.write(f'url = {xlib.get_anaconda_url()}\n')
+                file_id.write( 'channel = conda-forge\n')
+                file_id.write( '\n')
+                file_id.write( '[rsoftware easyGgplot2]\n')
+                file_id.write( 'version = last\n')
+                file_id.write(f'url = {xlib.get_github_url()}\n')
+                file_id.write( 'channel = kassambara/easyGgplot2\n')
         except Exception as e:
+            error_list.append(f'*** EXCEPTION: "{e}".')
             error_list.append(f'*** ERROR: The file {ngscloud_config_file} can not be created')
             OK = False
 
@@ -589,7 +754,7 @@ def update_connection_data(user_id, access_key_id, secret_access_key):
     # get the option dictionary corresponding to the NGScloud config file
     ngscloud_options_dict = xlib.get_option_dict(ngscloud_config_file)
 
-    # update the current region and zone in the option dictionary corresponding to the NGScloud config file
+    # update the connection data in the option dictionary corresponding to the NGScloud config file
     ngscloud_options_dict['aws info']['aws_user_id'] = user_id
     ngscloud_options_dict['aws info']['aws_access_key_id'] = access_key_id
     ngscloud_options_dict['aws info']['aws_secret_access_key'] = secret_access_key
@@ -903,11 +1068,19 @@ def save_ngscloud_config_file(ngscloud_options_dict):
             for k, v in ngscloud_options_dict[section].items():
                 config[section][k] = v
 
+    # build the sections "rsoftware *"
+    for section in sections_list:
+        if section.startswith('rsoftware'):
+            config[section] = {}
+            for k, v in ngscloud_options_dict[section].items():
+                config[section][k] = v
+
     # write the NGScloud config file
     try:
         with open(ngscloud_config_file, mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             config.write(file_id)
     except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append(f'*** ERROR: The file {ngscloud_config_file} can not be written')
         OK = False
 
@@ -1137,32 +1310,6 @@ def get_volume_names_list():
 
 #-------------------------------------------------------------------------------
 
-def get_linked_volumes_list(template_name):
-    '''
-    Get the list of volumes linked to a cluster template from the NGScloud
-    config file corresponding to the environment.
-    '''
-
-    # create class to parse the config files
-    config = configparser.ConfigParser()
-
-    # get the NGScloud config file
-    ngscloud_config_file = get_ngscloud_config_file()
-
-    # read the NGScloud config file
-    config.read(ngscloud_config_file)
-
-    # get the linked volumes of the template name
-    linked_volumes = config.get(f'cluster {template_name}', 'volumes', fallback='')
-
-    # get the linked volumes list
-    linked_volumes_list = xlib.split_literal_to_string_list(linked_volumes)
-
-    # return the linked volumes list
-    return linked_volumes_list
-
-#-------------------------------------------------------------------------------
-
 def get_current_region_name():
     '''
     Get the current region name from the NGScloud config file corresponding
@@ -1247,9 +1394,71 @@ def get_bioinfo_app_data(bioinfo_app_name):
     # get the data
     bioinfo_app_version = config.get(f'bioinfoapp {bioinfo_app_name}', 'version', fallback='')
     bioinfo_app_url = config.get(f'bioinfoapp {bioinfo_app_name}', 'url', fallback='')
+    bioinfo_app_channel = config.get(f'bioinfoapp {bioinfo_app_name}', 'channel', fallback='')
 
     # return the data
-    return (bioinfo_app_version, bioinfo_app_url)
+    return (bioinfo_app_version, bioinfo_app_url, bioinfo_app_channel)
+
+#-------------------------------------------------------------------------------
+
+def get_r_software_dict():
+    '''
+    Get the R software data dictionary from the NGScloud config file
+    corresponding to the environment.
+    '''
+
+    # initialize the key sections data dictionary
+    r_software_dict = {}
+    
+    # create class to parse the config files
+    config = configparser.ConfigParser()
+
+    # read the NGScloud config file
+    ngscloud_config_file = get_ngscloud_config_file()
+    config.read(ngscloud_config_file)
+
+    # get the sections list
+    sections_list = []
+    for section in config.sections():
+        sections_list.append(section)
+    sections_list.sort()
+
+    # build the R software data dictionary
+    for section in sections_list:
+        section_type = 'rsoftware'
+        if section.startswith(section_type):
+            key_section_name = section[len(section_type) + 1:]
+            r_software_dict[key_section_name] = {}
+            for k, v in config[section].items():
+                r_software_dict[key_section_name][k] = v
+
+    # return the R software data dictionary
+    return r_software_dict
+
+#-------------------------------------------------------------------------------
+
+def get_r_software_data(r_software_name):
+    '''
+    Get the data of a R software from the NGScloud
+    config file corresponding to the environment.
+    '''
+
+    # create class to parse the config files
+    config = configparser.ConfigParser()
+
+    # get the NGScloud config file
+    ngscloud_config_file = get_ngscloud_config_file()
+
+    # read the NGScloud config file
+    config.read(ngscloud_config_file)
+
+    # get the data
+    r_software_version = config.get(f'rsoftware {r_software_name}', 'version', fallback='')
+    r_software_url = config.get(f'rsoftware {r_software_name}', 'url', fallback='')
+    r_software_channel = config.get(f'rsoftware {r_software_name}', 'channel', fallback='')
+
+    # return the data
+    return (r_software_version, r_software_url, r_software_channel)
 
 #-------------------------------------------------------------------------------
 

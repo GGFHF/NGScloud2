@@ -51,27 +51,27 @@ def create_cufflinks_cuffmerge_config_file(experiment_id='exp001', reference_dat
         if not os.path.exists(os.path.dirname(get_cufflinks_cuffmerge_config_file())):
             os.makedirs(os.path.dirname(get_cufflinks_cuffmerge_config_file()))
         with open(get_cufflinks_cuffmerge_config_file(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
-            file_id.write( '{0}\n'.format('# You must review the information of this file and update the values with the corresponding ones to the current run.'))
-            file_id.write( '{0}\n'.format('#'))
+            file_id.write( '# You must review the information of this file and update the values with the corresponding ones to the current run.\n')
+            file_id.write( '#\n')
             file_id.write( '{0}\n'.format('# The reference and GTF files have to be located in the cluster directory {0}/experiment_id/reference_dataset_id'.format(xlib.get_cluster_reference_dir())))
             file_id.write( '{0}\n'.format('# The experiment_id, reference_dataset_id, reference_file, gtf_guide and mask_file names are fixed in the identification section.'))
             file_id.write( '{0}\n'.format('# The alignment files have to be located in the cluster directory {0}/experiment_id/alignment_dataset_id'.format(xlib.get_cluster_result_dir())))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('# You can consult the parameters of Cufflinks and Cuffmerge, and their meaning in http://cole-trapnell-lab.github.io/cufflinks/.'))
-            file_id.write( '{0}\n'.format('#'))
+            file_id.write( '#\n')
+            file_id.write( '{0}\n'.format('# You can consult the parameters of Cufflinks and Cuffmerge, and their meaning in "http://cole-trapnell-lab.github.io/cufflinks/".'))
+            file_id.write( '#\n')
             file_id.write( '{0}\n'.format('# In section "Cufflinks parameters", the key "other_parameters" allows you to input additional parameters in the format:'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('#    other_parameters = --parameter-1[=value-1][; --parameter-2[=value-2][; ...; --parameter-n[=value-n]]]'))
-            file_id.write( '{0}\n'.format('#'))
+            file_id.write( '#\n')
+            file_id.write( '#    other_parameters = --parameter-1[=value-1][; --parameter-2[=value-2][; ...; --parameter-n[=value-n]]]\n')
+            file_id.write( '#\n')
             file_id.write( '{0}\n'.format('# parameter-i is a parameter name of Cufflinks and value-i a valid value of parameter-i, e.g.'))
-            file_id.write( '{0}\n'.format('#'))
+            file_id.write( '#\n')
             file_id.write( '{0}\n'.format('#    other_parameters = --label; --min-intron-length=50'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information identifies the experiment.'))
-            file_id.write( '{0}\n'.format('[identification]'))
-            file_id.write( '{0:<50} {1}\n'.format('experiment_id = {0}'.format(experiment_id), '# experiment identification'))
-            file_id.write( '{0:<50} {1}\n'.format('reference_dataset_id = {0}'.format(reference_dataset_id), '# reference dataset identification'))
-            file_id.write( '{0:<50} {1}\n'.format('reference_file = {0}'.format(reference_file), '# reference file name'))
+            file_id.write( '# This section has the information identifies the experiment.\n')
+            file_id.write( '[identification]\n')
+            file_id.write( '{0:<50} {1}\n'.format(f'experiment_id = {experiment_id}', '# experiment identification'))
+            file_id.write( '{0:<50} {1}\n'.format(f'reference_dataset_id = {reference_dataset_id}', '# reference dataset identification'))
+            file_id.write( '{0:<50} {1}\n'.format(f'reference_file = {reference_file}', '# reference file name'))
             file_id.write( '{0:<50} {1}\n'.format('gtf_guide = {0}'.format(annotation_file), '# reference annotation file name'))
             file_id.write( '{0:<50} {1}\n'.format('mask_file = {0}'.format(mask_file), '# mask file name (ignore all alignment within transcripts in this file) or NONE'))
             for i in range(len(alignment_dataset_id_list)):
@@ -97,12 +97,13 @@ def create_cufflinks_cuffmerge_config_file(experiment_id='exp001', reference_dat
             file_id.write( '{0}\n'.format('[Cufflinks parameters]'))
             file_id.write( '{0:<50} {1}\n'.format('threads = 4', '# number of threads for use'))
             file_id.write( '{0:<50} {1}\n'.format('library_type = FR-UNSTRANDED', '# library type: {0}'.format(get_library_type_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('other_parameters = NONE', '# additional parameters to the previous ones or NONE'))
+            file_id.write( '{0:<50} {1}\n'.format( 'other_parameters = NONE', '# additional parameters to the previous ones or NONE'))
             file_id.write( '\n')
             file_id.write( '{0}\n'.format('# This section has the information to set the Cuffmerge parameters'))
             file_id.write( '{0}\n'.format('[Cuffmerge parameters]'))
             file_id.write( '{0:<50} {1}\n'.format('min_isoform_fraction = 0.05', '# discard isoforms with abundance below this ((0.0 <= min_isoform_fraction <= 1.0))'))
     except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append('*** ERROR: The file {0} can not be recreated'.format(get_cufflinks_cuffmerge_config_file()))
         OK = False
 
@@ -177,12 +178,12 @@ def run_cufflinks_cuffmerge_process(cluster_name, log, function=None):
     if OK:
         (master_state_code, master_state_name) = xec2.get_node_state(cluster_name)
         if master_state_code != 16:
-            log.write('*** ERROR: The cluster {0} is not running. Its state is {1} ({2}).\n'.format(cluster_name, master_state_code, master_state_name))
+            log.write(f'*** ERROR: The cluster {cluster_name} is not running. Its state is {master_state_code} ({master_state_name}).\n')
             OK = False
 
     # check Cufflinks is installed
     if OK:
-        (OK, error_list, is_installed) = xbioinfoapp.is_installed_bioconda_package(xlib.get_cufflinks_bioconda_code(), cluster_name, True, ssh_client)
+        (OK, error_list, is_installed) = xbioinfoapp.is_installed_anaconda_package(xlib.get_cufflinks_anaconda_code(), cluster_name, True, ssh_client)
         if OK:
             if not is_installed:
                 log.write('*** ERROR: {0} is not installed.\n'.format(xlib.get_cufflinks_name()))
@@ -202,7 +203,7 @@ def run_cufflinks_cuffmerge_process(cluster_name, log, function=None):
         command = f'mkdir --parents {current_run_dir}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
-            log.write('The directory path is {0}.\n'.format(current_run_dir))
+            log.write(f'The directory path is {current_run_dir}.\n')
         else:
             log.write(f'*** ERROR: Wrong command ---> {command}\n')
 
@@ -219,7 +220,7 @@ def run_cufflinks_cuffmerge_process(cluster_name, log, function=None):
     # upload the Cufflinks-Cuffmerge process script to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process script {0} to the directory {1} of the master ...\n'.format(get_cufflinks_cuffmerge_process_script(), current_run_dir))
+        log.write('Uploading the process script {0} to the directory {1} ...\n'.format(get_cufflinks_cuffmerge_process_script(), current_run_dir))
         cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_cufflinks_cuffmerge_process_script()))
         (OK, error_list) = xssh.put_file(sftp_client, get_cufflinks_cuffmerge_process_script(), cluster_path)
         if OK:
@@ -252,7 +253,7 @@ def run_cufflinks_cuffmerge_process(cluster_name, log, function=None):
     # upload the Cufflinks-Cuffmerge process starter to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process starter {0} to the directory {1} of the master ...\n'.format(get_cufflinks_cuffmerge_process_starter(), current_run_dir))
+        log.write('Uploading the process starter {0} to the directory {1} ...\n'.format(get_cufflinks_cuffmerge_process_starter(), current_run_dir))
         cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_cufflinks_cuffmerge_process_starter()))
         (OK, error_list) = xssh.put_file(sftp_client, get_cufflinks_cuffmerge_process_starter(), cluster_path)
         if OK:
@@ -322,7 +323,8 @@ def check_cufflinks_cuffmerge_config_file(strict):
     try:
         cufflinks_cuffmerge_option_dict = xlib.get_option_dict(get_cufflinks_cuffmerge_config_file())
     except Exception as e:
-        error_list.append('*** ERROR: The syntax is WRONG.')
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append('*** ERROR: The option dictionary could not be built from the config file')
         OK = False
     else:
 
@@ -391,7 +393,7 @@ def check_cufflinks_cuffmerge_config_file(strict):
 
                 # check than the section identification is like alignment-dataset-n 
                 if not re.match('^alignment-dataset-[0-9]+$', section):
-                    error_list.append('*** ERROR: the section "{0}" has a wrong identification.'.format(section))
+                    error_list.append(f'*** ERROR: the section "{section}" has a wrong identification.')
                     OK = False
 
                 else:
@@ -430,12 +432,12 @@ def check_cufflinks_cuffmerge_config_file(strict):
                 OK = False
 
             # check section "Cufflinks parameters" - key "library_type"
-            library_type = cufflinks_cuffmerge_option_dict.get('Cufflinks parameters', {}).get('library_type', not_found).lower()
+            library_type = cufflinks_cuffmerge_option_dict.get('Cufflinks parameters', {}).get('library_type', not_found)
             if library_type == not_found:
                 error_list.append('*** ERROR: the key "library_type" is not found in the section "Cufflinks parameters".')
                 OK = False
             elif not xlib.check_code(library_type, get_library_type_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "library_type" has to be {0}.'.format(get_library_type_code_list_text()))
+                error_list.append(f'*** ERROR: the key "library_type" has to be {get_library_type_code_list_text()}.')
                 OK = False
 
             # check section "Cufflinks parameters" - key "other_parameters"
@@ -492,7 +494,7 @@ def build_cufflinks_cuffmerge_process_script(cluster_name, current_run_dir):
     gtf_guide = cufflinks_cuffmerge_option_dict['identification']['gtf_guide']
     mask_file = cufflinks_cuffmerge_option_dict['identification']['mask_file']
     threads = cufflinks_cuffmerge_option_dict['Cufflinks parameters']['threads']
-    library_type = cufflinks_cuffmerge_option_dict['Cufflinks parameters']['library_type']
+    library_type = cufflinks_cuffmerge_option_dict['Cufflinks parameters']['library_type'].lower()
     other_parameters = cufflinks_cuffmerge_option_dict['Cufflinks parameters']['other_parameters']
     min_isoform_fraction = cufflinks_cuffmerge_option_dict['Cuffmerge parameters']['min_isoform_fraction']
 
@@ -537,17 +539,20 @@ def build_cufflinks_cuffmerge_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'SEP="#########################################"\n')
             script_file_id.write( 'export HOST_IP=`curl --silent checkip.amazonaws.com`\n')
             script_file_id.write( 'export HOST_ADDRESS="ec2-${HOST_IP//./-}-compute-1.amazonaws.com"\n')
-            script_file_id.write( '{0}\n'.format('CUFFLINKS_PATH={0}/{1}/envs/{2}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name(), xlib.get_cufflinks_bioconda_code())))
+            script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
+            script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write( '{0}\n'.format('CUFFLINKS_PATH={0}/{1}/envs/{2}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name(), xlib.get_cufflinks_anaconda_code())))
             script_file_id.write( '{0}\n'.format('export PATH=$CUFFLINKS_PATH:$PATH'))
             script_file_id.write( '{0}\n'.format('cd {0}/{1}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name())))
-            script_file_id.write( '{0}\n'.format('source activate {0}'.format(xlib.get_cufflinks_bioconda_code())))
+            script_file_id.write( '{0}\n'.format('source activate {0}'.format(xlib.get_cufflinks_anaconda_code())))
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('STATUS_DIR={0}'.format(xlib.get_status_dir(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('SCRIPT_STATUS_OK={0}'.format(xlib.get_status_ok(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('SCRIPT_STATUS_WRONG={0}'.format(xlib.get_status_wrong(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('mkdir --parents $STATUS_DIR'))
-            script_file_id.write( '{0}\n'.format('if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi'))
-            script_file_id.write( '{0}\n'.format('if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi'))
+            script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
+            script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
+            script_file_id.write(f'SCRIPT_STATUS_WRONG={xlib.get_status_wrong(current_run_dir)}\n')
+            script_file_id.write( 'mkdir --parents $STATUS_DIR\n')
+            script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
+            script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function init\n')
             script_file_id.write( '{\n')
@@ -557,12 +562,14 @@ def build_cufflinks_cuffmerge_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "Script started at $FORMATTED_INIT_DATETIME+00:00."\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write(f'    echo "CLUSTER: {cluster_name}"\n')
-            script_file_id.write(f'    echo "HOST_IP: $HOST_IP - HOST_ADDRESS: $HOST_ADDRESS"\n')
+            script_file_id.write( '    echo "HOST NAME: $HOSTNAME"\n')
+            script_file_id.write( '    echo "HOST IP: $HOST_IP"\n')
+            script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( '{0}\n'.format('function create_alignment_dataset_list_file'))
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    cd {0}'.format(current_run_dir)))
+            script_file_id.write(f'    cd {current_run_dir}\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write( '{0}\n'.format('    echo "Creation of alignment dataset list file ..."'))
             script_file_id.write( '{0}\n'.format('    touch {0}'.format(alignment_dataset_id_list_file)))
@@ -576,13 +583,20 @@ def build_cufflinks_cuffmerge_process_script(cluster_name, current_run_dir):
                 script_file_id.write( '{0}\n'.format('    mkdir --parents {0}/{1}'.format(current_run_dir, alignment_dataset_id_list[i])))
                 script_file_id.write( '{0}\n'.format('    cd {0}/{1}'.format(current_run_dir, alignment_dataset_id_list[i])))
                 script_file_id.write( '    echo "$SEP"\n')
-                if alignment_software_list[i] == xlib.get_star_code():
+                if alignment_software_list[i] == xlib.get_gsnap_code():
+                    alignment_output_type = 'SAM'
+                    alignment_file = '{0}/*-split.concordant_uniq'.format(xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id_list[i]))
+                elif alignment_software_list[i] == xlib.get_hisat2_code():
+                    alignment_output_type = 'SAM'
+                    alignment_file = '{0}/alignment.sam'.format(xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id_list[i]))
+                    aligment_file = 'alignment.sam'
+                elif alignment_software_list[i] == xlib.get_star_code():
                     alignment_file = '{0}/starAligned.sortedByCoord.out.bam'.format(xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id_list[i]))
                 elif alignment_software_list[i] == xlib.get_tophat_code():
                     alignment_file = '{0}/accepted_hits.bam'.format(xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id_list[i]))
                 script_file_id.write( '{0}\n'.format('    echo "Cufflinks process for alignment dataset {0}..."'.format(alignment_dataset_id_list[i])))
-                script_file_id.write( '{0}\n'.format('    /usr/bin/time \\'))
-                script_file_id.write( '{0}\n'.format('        --format="$SEP\\nElapsed real time (s): %e\\nCPU time in kernel mode (s): %S\\nCPU time in user mode (s): %U\\nPercentage of CPU: %P\\nMaximum resident set size(Kb): %M\\nAverage total memory use (Kb):%K" \\'))
+                script_file_id.write( '    /usr/bin/time \\\n')
+                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
                 script_file_id.write( '{0}\n'.format('        cufflinks \\'))
                 script_file_id.write( '{0}\n'.format('            --no-update-check \\'))
                 script_file_id.write( '{0}\n'.format('            --num-threads {0} \\'.format(threads)))
@@ -598,37 +612,37 @@ def build_cufflinks_cuffmerge_process_script(cluster_name, current_run_dir):
                             mo = re.search(pattern, parameter_list[j])
                             parameter_name = mo.group(1).strip()
                             parameter_value = mo.group(2).strip()
-                            script_file_id.write( '{0}\n'.format('            --{0} {1} \\'.format(parameter_name, parameter_value)))
+                            script_file_id.write(f'            --{parameter_name} {parameter_value} \\\n')
                         else:
                             pattern = r'^--(.+)$'
                             mo = re.search(pattern, parameter_list[j])
                             parameter_name = mo.group(1).strip()
-                            script_file_id.write( '{0}\n'.format('            --{0} \\'.format(parameter_name)))
+                            script_file_id.write(f'            --{parameter_name} \\\n')
                 script_file_id.write( '{0}\n'.format('            --output-dir {0}/{1} \\'.format(current_run_dir, alignment_dataset_id_list[i])))
                 script_file_id.write( '{0}\n'.format('            {0}'.format(alignment_file)))
-                script_file_id.write( '{0}\n'.format('    RC=$?'))
+                script_file_id.write( '    RC=$?\n')
                 script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error cufflinks $RC; fi'))
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( '{0}\n'.format('function create_cufflinks_output_gtf_list_file'))
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    cd {0}'.format(current_run_dir)))
+            script_file_id.write(f'    cd {current_run_dir}\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write( '{0}\n'.format('    echo "Create Cufflinks output gtf list file ..."'))
             script_file_id.write( '{0}\n'.format('    touch {0}'.format(cufflinks_output_gft_list_file)))
             for alignment_dataset_id in alignment_dataset_id_list:
                 script_file_id.write( '{0}\n'.format('    ls {0}/{1}/transcripts.gtf >> {2}'.format(current_run_dir, alignment_dataset_id, cufflinks_output_gft_list_file)))
-                script_file_id.write( '{0}\n'.format('    RC=$?'))
+                script_file_id.write( '    RC=$?\n')
                 script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error ls $RC; fi'))
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( '{0}\n'.format('function run_cuffmerge_process'))
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    cd {0}'.format(current_run_dir)))
+            script_file_id.write(f'    cd {current_run_dir}\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write( '{0}\n'.format('    echo "Cuffmerge process ..."'))
-            script_file_id.write( '{0}\n'.format('    /usr/bin/time \\'))
-            script_file_id.write( '{0}\n'.format('        --format="$SEP\\nElapsed real time (s): %e\\nCPU time in kernel mode (s): %S\\nCPU time in user mode (s): %U\\nPercentage of CPU: %P\\nMaximum resident set size(Kb): %M\\nAverage total memory use (Kb):%K" \\'))
+            script_file_id.write( '    /usr/bin/time \\\n')
+            script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
             script_file_id.write( '{0}\n'.format('        cuffmerge \\'))
             script_file_id.write( '{0}\n'.format('            --num-threads {0} \\'.format(threads)))
             script_file_id.write( '{0}\n'.format('            --ref-sequence {0} \\'.format(reference_file)))
@@ -636,41 +650,70 @@ def build_cufflinks_cuffmerge_process_script(cluster_name, current_run_dir):
             script_file_id.write( '{0}\n'.format('            --min-isoform-fraction {0} \\'.format(min_isoform_fraction)))
             script_file_id.write( '{0}\n'.format('            --output-dir {0} \\'.format(current_run_dir)))
             script_file_id.write( '{0}\n'.format('            {0}'.format(cufflinks_output_gft_list_file)))
-            script_file_id.write( '{0}\n'.format('    RC=$?'))
+            script_file_id.write( '    RC=$?\n')
             script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error cuffmerge $RC; fi'))
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function end'))
+            script_file_id.write( 'function end\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    END_DATETIME=`date --utc +%s`'))
-            script_file_id.write( '{0}\n'.format('    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`'))
-            script_file_id.write( '{0}\n'.format('    calculate_duration'))
+            script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
+            script_file_id.write( '    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
+            script_file_id.write( '    calculate_duration\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "Script ended OK at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."'))
+            script_file_id.write( '    echo "Script ended OK at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    RECIPIENT={0}'.format(xconfiguration.get_contact_data())))
-            script_file_id.write( '{0}\n'.format('    SUBJECT="{0}: {1} process"'.format(xlib.get_project_name(), xlib.get_cufflinks_cuffmerge_name())))
-            script_file_id.write( '{0}\n'.format('    MESSAGE="{0}"'.format(xlib.get_mail_message_ok(xlib.get_cufflinks_cuffmerge_name(), cluster_name))))
-            script_file_id.write( '    mail --append "Content-type: text/html;" --append "FROM:root@NGScloud2" --subject="$SUBJECT" "$RECIPIENT" <<< "$MESSAGE"\n')
-            script_file_id.write( '{0}\n'.format('    touch $SCRIPT_STATUS_OK'))
-            script_file_id.write( '{0}\n'.format('    exit 0'))
+            script_file_id.write( '    send_mail ok\n')
+            script_file_id.write( '    touch $SCRIPT_STATUS_OK\n')
+            script_file_id.write( '    exit 0\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function manage_error'))
+            script_file_id.write( 'function manage_error\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    END_DATETIME=`date --utc +%s`'))
-            script_file_id.write( '{0}\n'.format('    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`'))
-            script_file_id.write( '{0}\n'.format('    calculate_duration'))
+            script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
+            script_file_id.write( '    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
+            script_file_id.write( '    calculate_duration\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "ERROR: $1 returned error $2"'))
-            script_file_id.write( '{0}\n'.format('    echo "Script ended WRONG at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."'))
+            script_file_id.write( '    echo "ERROR: $1 returned error $2"\n')
+            script_file_id.write( '    echo "Script ended WRONG at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    RECIPIENT={0}'.format(xconfiguration.get_contact_data())))
-            script_file_id.write( '{0}\n'.format('    SUBJECT="{0}: {1} process"'.format(xlib.get_project_name(), xlib.get_cufflinks_cuffmerge_name())))
-            script_file_id.write( '{0}\n'.format('    MESSAGE="{0}"'.format(xlib.get_mail_message_wrong(xlib.get_cufflinks_cuffmerge_name(), cluster_name))))
-            script_file_id.write( '    mail --append "Content-type: text/html;" --append "FROM:root@NGScloud2" --subject="$SUBJECT" "$RECIPIENT" <<< "$MESSAGE"\n')
-            script_file_id.write( '{0}\n'.format('    touch $SCRIPT_STATUS_WRONG'))
-            script_file_id.write( '{0}\n'.format('    exit 3'))
+            script_file_id.write( '    send_mail wrong\n')
+            script_file_id.write( '    touch $SCRIPT_STATUS_WRONG\n')
+            script_file_id.write( '    exit 3\n')
+            script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            process_name = f'{xlib.get_cufflinks_cuffmerge_name()} process'
+            mail_message_ok = xlib.get_mail_message_ok(process_name, cluster_name)
+            mail_message_wrong = xlib.get_mail_message_wrong(process_name, cluster_name)
+            script_file_id.write( 'function send_mail\n')
+            script_file_id.write( '{\n')
+            script_file_id.write(f'    SUBJECT="{xlib.get_project_name()}: {process_name}"\n')
+            script_file_id.write( '    if [ "$1" == "ok" ]; then\n')
+            script_file_id.write(f'        MESSAGE="{mail_message_ok}"\n')
+            script_file_id.write( '    elif [ "$1" == "wrong" ]; then\n')
+            script_file_id.write(f'        MESSAGE="{mail_message_wrong}"\n')
+            script_file_id.write( '    else\n')
+            script_file_id.write( '         MESSAGE=""\n')
+            script_file_id.write( '    fi\n')
+            script_file_id.write( '    DESTINATION_FILE=mail-destination.json\n')
+            script_file_id.write( '    echo "{" > $DESTINATION_FILE\n')
+            script_file_id.write(f'    echo "    \\\"ToAddresses\\\":  [\\\"{xconfiguration.get_contact_data()}\\\"]," >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "    \\\"CcAddresses\\\":  []," >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "    \\\"BccAddresses\\\":  []" >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "}" >> $DESTINATION_FILE\n')
+            script_file_id.write( '    MESSAGE_FILE=mail-message.json\n')
+            script_file_id.write( '    echo "{" > $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    \\\"Subject\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Data\\\":  \\\"$SUBJECT\\\"," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    }," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    \\\"Body\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Html\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "            \\\"Data\\\":  \\\"$MESSAGE\\\"," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "            \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        }" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    }" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "}" >> $MESSAGE_FILE\n')
+            script_file_id.write(f'    aws ses send-email --from {xconfiguration.get_contact_data()} --destination file://$DESTINATION_FILE --message file://$MESSAGE_FILE\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function calculate_duration\n')
@@ -689,6 +732,7 @@ def build_cufflinks_cuffmerge_process_script(cluster_name, current_run_dir):
             script_file_id.write( '{0}\n'.format('run_cuffmerge_process'))
             script_file_id.write( 'end\n')
     except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append('*** ERROR: The file {0} can not be created'.format(get_cufflinks_cuffmerge_process_script()))
         OK = False
 
@@ -711,10 +755,11 @@ def build_cufflinks_cuffmerge_process_starter(current_run_dir):
         if not os.path.exists(os.path.dirname(get_cufflinks_cuffmerge_process_starter())):
             os.makedirs(os.path.dirname(get_cufflinks_cuffmerge_process_starter()))
         with open(get_cufflinks_cuffmerge_process_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
-            file_id.write( '{0}\n'.format('#!/bin/bash'))
-            file_id.write( '{0}\n'.format('#-------------------------------------------------------------------------------'))
-            file_id.write( '{0}\n'.format('{0}/{1} &>{0}/{2}'.format(current_run_dir, os.path.basename(get_cufflinks_cuffmerge_process_script()), xlib.get_cluster_log_file())))
+            file_id.write( '#!/bin/bash\n')
+            file_id.write( '#-------------------------------------------------------------------------------\n')
+            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_cufflinks_cuffmerge_process_script()), xlib.get_cluster_log_file())))
     except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append('*** ERROR: The file {0} can not be created'.format(get_cufflinks_cuffmerge_process_starter()))
         OK = False
 
@@ -781,30 +826,30 @@ def create_cuffquant_config_file(experiment_id='exp001', reference_dataset_id='A
         if not os.path.exists(os.path.dirname(get_cuffquant_config_file())):
             os.makedirs(os.path.dirname(get_cuffquant_config_file()))
         with open(get_cuffquant_config_file(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
-            file_id.write( '{0}\n'.format('# You must review the information of this file and update the values with the corresponding ones to the current run.'))
-            file_id.write( '{0}\n'.format('#'))
+            file_id.write( '# You must review the information of this file and update the values with the corresponding ones to the current run.\n')
+            file_id.write( '#\n')
             file_id.write( '{0}\n'.format('# The reference and GTF files have to be located in the cluster directory {0}/experiment_id/reference_dataset_id'.format(xlib.get_cluster_reference_dir())))
             file_id.write( '{0}\n'.format('# The experiment_id, reference_dataset_id, mask_file and assembly_dataset_id names are fixed in the identification section.'))
             file_id.write( '{0}\n'.format('# The alignment files have to be located in the cluster directory {0}/experiment_id/alignment_dataset_id'.format(xlib.get_cluster_result_dir())))
-            file_id.write( '{0}\n'.format('# The assembly files have to be located in the cluster directory {0}/experiment_id/assembly_dataset_id'.format(xlib.get_cluster_result_dir())))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('# You can consult the parameters of Cuffquant and their meaning in http://cole-trapnell-lab.github.io/cufflinks/.'))
-            file_id.write( '{0}\n'.format('#'))
+            file_id.write(f'# The assembly files have to be located in the cluster directory {xlib.get_cluster_result_dir()}/experiment_id/assembly_dataset_id\n')
+            file_id.write( '#\n')
+            file_id.write( '{0}\n'.format('# You can consult the parameters of Cuffquant and their meaning in "http://cole-trapnell-lab.github.io/cufflinks/".'))
+            file_id.write( '#\n')
             file_id.write( '{0}\n'.format('# In section "Cuffquant parameters", the key "other_parameters" allows you to input additional parameters in the format:'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('#    other_parameters = --parameter-1[=value-1][; --parameter-2[=value-2][; ...; --parameter-n[=value-n]]]'))
-            file_id.write( '{0}\n'.format('#'))
+            file_id.write( '#\n')
+            file_id.write( '#    other_parameters = --parameter-1[=value-1][; --parameter-2[=value-2][; ...; --parameter-n[=value-n]]]\n')
+            file_id.write( '#\n')
             file_id.write( '{0}\n'.format('# parameter-i is a parameter name of Cuffquant and value-i a valid value of parameter-i, e.g.'))
-            file_id.write( '{0}\n'.format('#'))
+            file_id.write( '#\n')
             file_id.write( '{0}\n'.format('#    other_parameters = --multi-read-correct; --no-length-correction'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information identifies the experiment.'))
-            file_id.write( '{0}\n'.format('[identification]'))
-            file_id.write( '{0:<50} {1}\n'.format('experiment_id = {0}'.format(experiment_id), '# experiment identification'))
-            file_id.write( '{0:<50} {1}\n'.format('reference_dataset_id = {0}'.format(reference_dataset_id), '# reference dataset identification'))
+            file_id.write( '# This section has the information identifies the experiment.\n')
+            file_id.write( '[identification]\n')
+            file_id.write( '{0:<50} {1}\n'.format(f'experiment_id = {experiment_id}', '# experiment identification'))
+            file_id.write( '{0:<50} {1}\n'.format(f'reference_dataset_id = {reference_dataset_id}', '# reference dataset identification'))
             file_id.write( '{0:<50} {1}\n'.format('mask_file = {0}'.format(mask_file), '# mask file name (ignore all alignment within transcripts in this file) or NONE'))
             file_id.write( '{0:<50} {1}\n'.format('assembly_software = {0}'.format(assembly_software), '# assembly software: {0})'.format(get_assembly_software_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('assembly_dataset_id = {0}'.format(assembly_dataset_id), '# assembly dataset identification'))
+            file_id.write( '{0:<50} {1}\n'.format(f'assembly_dataset_id = {assembly_dataset_id}', '# assembly dataset identification'))
             for i in range(len(alignment_dataset_id_list)):
                 # set the alignment software
                 alignment_dataset_id = alignment_dataset_id_list[i]
@@ -833,8 +878,9 @@ def create_cuffquant_config_file(experiment_id='exp001', reference_dataset_id='A
             file_id.write( '{0:<50} {1}\n'.format('frag_len_std_dev = 80', '# standard deviation for the distribution on fragment lengths'))
             file_id.write( '{0:<50} {1}\n'.format('max_mle_iterations = 5000', '# number of iterations allowed during maximum likelihood estimation of abundances'))
             file_id.write( '{0:<50} {1}\n'.format('max_bundle_frags = 1000000', '# maximum number of fragments a locus may have before being skipped'))
-            file_id.write( '{0:<50} {1}\n'.format('other_parameters = NONE', '# additional parameters to the previous ones or NONE'))
+            file_id.write( '{0:<50} {1}\n'.format( 'other_parameters = NONE', '# additional parameters to the previous ones or NONE'))
     except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append('*** ERROR: The file {0} can not be recreated'.format(get_cufflinks_cuffmerge_config_file()))
         OK = False
 
@@ -909,12 +955,12 @@ def run_cuffquant_process(cluster_name, log, function=None):
     if OK:
         (master_state_code, master_state_name) = xec2.get_node_state(cluster_name)
         if master_state_code != 16:
-            log.write('*** ERROR: The cluster {0} is not running. Its state is {1} ({2}).\n'.format(cluster_name, master_state_code, master_state_name))
+            log.write(f'*** ERROR: The cluster {cluster_name} is not running. Its state is {master_state_code} ({master_state_name}).\n')
             OK = False
 
     # check Cufflinks is installed
     if OK:
-        (OK, error_list, is_installed) = xbioinfoapp.is_installed_bioconda_package(xlib.get_cufflinks_bioconda_code(), cluster_name, True, ssh_client)
+        (OK, error_list, is_installed) = xbioinfoapp.is_installed_anaconda_package(xlib.get_cufflinks_anaconda_code(), cluster_name, True, ssh_client)
         if OK:
             if not is_installed:
                 log.write('*** ERROR: {0} is not installed.\n'.format(xlib.get_cufflinks_name()))
@@ -934,7 +980,7 @@ def run_cuffquant_process(cluster_name, log, function=None):
         command = f'mkdir --parents {current_run_dir}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
-            log.write('The directory path is {0}.\n'.format(current_run_dir))
+            log.write(f'The directory path is {current_run_dir}.\n')
         else:
             log.write(f'*** ERROR: Wrong command ---> {command}\n')
 
@@ -951,7 +997,7 @@ def run_cuffquant_process(cluster_name, log, function=None):
     # upload the Cuffquant process script to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process script {0} to the directory {1} of the master ...\n'.format(get_cuffquant_process_script(), current_run_dir))
+        log.write('Uploading the process script {0} to the directory {1} ...\n'.format(get_cuffquant_process_script(), current_run_dir))
         cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_cuffquant_process_script()))
         (OK, error_list) = xssh.put_file(sftp_client, get_cuffquant_process_script(), cluster_path)
         if OK:
@@ -984,7 +1030,7 @@ def run_cuffquant_process(cluster_name, log, function=None):
     # upload the Cuffquant process starter to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process starter {0} to the directory {1} of the master ...\n'.format(get_cuffquant_process_starter(), current_run_dir))
+        log.write('Uploading the process starter {0} to the directory {1} ...\n'.format(get_cuffquant_process_starter(), current_run_dir))
         cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_cuffquant_process_starter()))
         (OK, error_list) = xssh.put_file(sftp_client, get_cuffquant_process_starter(), cluster_path)
         if OK:
@@ -1054,7 +1100,8 @@ def check_cuffquant_config_file(strict):
     try:
         cuffquant_option_dict = xlib.get_option_dict(get_cuffquant_config_file())
     except Exception as e:
-        error_list.append('*** ERROR: The syntax is WRONG.')
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append('*** ERROR: The option dictionary could not be built from the config file')
         OK = False
     else:
 
@@ -1097,7 +1144,7 @@ def check_cuffquant_config_file(strict):
                 error_list.append('*** ERROR: the key "assembly_software" is not found in the section "identification".')
                 OK = False
             elif not xlib.check_code(assembly_software, get_assembly_software_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "assembly_software" has to be {0}.'.format(get_assembly_software_code_list_text()))
+                error_list.append(f'*** ERROR: the key "assembly_software" has to be {get_assembly_software_code_list_text()}.')
                 OK = False
 
             # check section "identification" - key "assembly_dataset_id"
@@ -1106,7 +1153,7 @@ def check_cuffquant_config_file(strict):
                 error_list.append('*** ERROR: the key "assembly_dataset_id" is not found in the section "identification".')
                 OK = False
             elif not xlib.check_startswith(assembly_dataset_id, get_assembly_software_code_list(), case_sensitive=True):
-                error_list.append('*** ERROR: the key "assembly_dataset_id" has to start with {0}.'.format(get_assembly_software_code_list_text()))
+                error_list.append(f'*** ERROR: the key "assembly_dataset_id" has to start with {get_assembly_software_code_list_text()}.')
                 OK = False
 
         # check section "alignment-dataset-1"
@@ -1121,7 +1168,7 @@ def check_cuffquant_config_file(strict):
 
                 # check than the section identification is like alignment-dataset-n 
                 if not re.match('^alignment-dataset-[0-9]+$', section):
-                    error_list.append('*** ERROR: the section "{0}" has a wrong identification.'.format(section))
+                    error_list.append(f'*** ERROR: the section "{section}" has a wrong identification.')
                     OK = False
 
                 else:
@@ -1166,12 +1213,12 @@ def check_cuffquant_config_file(strict):
                 OK = False
 
             # check section "Cuffquant parameters" - key "library_type"
-            library_type = cuffquant_option_dict.get('Cuffquant parameters', {}).get('library_type', not_found).lower()
+            library_type = cuffquant_option_dict.get('Cuffquant parameters', {}).get('library_type', not_found)
             if library_type == not_found:
                 error_list.append('*** ERROR: the key "library_type" is not found in the section "Cuffdiff parameters".')
                 OK = False
             elif not xlib.check_code(library_type, get_library_type_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "library_type" has to be {0}.'.format(get_library_type_code_list_text()))
+                error_list.append(f'*** ERROR: the key "library_type" has to be {get_library_type_code_list_text()}.')
                 OK = False
 
             # check section "Cuffquant parameters" - key "frag_len_mean"
@@ -1248,7 +1295,7 @@ def build_cuffquant_process_script(cluster_name, current_run_dir):
     assembly_software = cuffquant_option_dict['identification']['assembly_software']
     assembly_dataset_id = cuffquant_option_dict['identification']['assembly_dataset_id']
     threads = cuffquant_option_dict['Cuffquant parameters']['threads']
-    library_type = cuffquant_option_dict['Cuffquant parameters']['library_type']
+    library_type = cuffquant_option_dict['Cuffquant parameters']['library_type'].lower()
     frag_len_mean = cuffquant_option_dict['Cuffquant parameters']['frag_len_mean']
     frag_len_std_dev = cuffquant_option_dict['Cuffquant parameters']['frag_len_std_dev']
     max_mle_iterations = cuffquant_option_dict['Cuffquant parameters']['max_mle_iterations']
@@ -1295,17 +1342,20 @@ def build_cuffquant_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'SEP="#########################################"\n')
             script_file_id.write( 'export HOST_IP=`curl --silent checkip.amazonaws.com`\n')
             script_file_id.write( 'export HOST_ADDRESS="ec2-${HOST_IP//./-}-compute-1.amazonaws.com"\n')
-            script_file_id.write( '{0}\n'.format('CUFFLINKS_PATH={0}/{1}/envs/{2}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name(), xlib.get_cufflinks_bioconda_code())))
+            script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
+            script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write( '{0}\n'.format('CUFFLINKS_PATH={0}/{1}/envs/{2}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name(), xlib.get_cufflinks_anaconda_code())))
             script_file_id.write( '{0}\n'.format('export PATH=$CUFFLINKS_PATH:$PATH'))
             script_file_id.write( '{0}\n'.format('cd {0}/{1}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name())))
-            script_file_id.write( '{0}\n'.format('source activate {0}'.format(xlib.get_cufflinks_bioconda_code())))
+            script_file_id.write( '{0}\n'.format('source activate {0}'.format(xlib.get_cufflinks_anaconda_code())))
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('STATUS_DIR={0}'.format(xlib.get_status_dir(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('SCRIPT_STATUS_OK={0}'.format(xlib.get_status_ok(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('SCRIPT_STATUS_WRONG={0}'.format(xlib.get_status_wrong(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('mkdir --parents $STATUS_DIR'))
-            script_file_id.write( '{0}\n'.format('if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi'))
-            script_file_id.write( '{0}\n'.format('if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi'))
+            script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
+            script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
+            script_file_id.write(f'SCRIPT_STATUS_WRONG={xlib.get_status_wrong(current_run_dir)}\n')
+            script_file_id.write( 'mkdir --parents $STATUS_DIR\n')
+            script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
+            script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function init\n')
             script_file_id.write( '{\n')
@@ -1315,12 +1365,14 @@ def build_cuffquant_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "Script started at $FORMATTED_INIT_DATETIME+00:00."\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write(f'    echo "CLUSTER: {cluster_name}"\n')
-            script_file_id.write(f'    echo "HOST_IP: $HOST_IP - HOST_ADDRESS: $HOST_ADDRESS"\n')
+            script_file_id.write( '    echo "HOST NAME: $HOSTNAME"\n')
+            script_file_id.write( '    echo "HOST IP: $HOST_IP"\n')
+            script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( '{0}\n'.format('function create_alignment_dataset_list_file'))
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    cd {0}'.format(current_run_dir)))
+            script_file_id.write(f'    cd {current_run_dir}\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write( '{0}\n'.format('    echo "Creation of alignment dataset list file ..."'))
             script_file_id.write( '{0}\n'.format('    touch {0}'.format(alignment_dataset_id_list_file)))
@@ -1330,7 +1382,7 @@ def build_cuffquant_process_script(cluster_name, current_run_dir):
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( '{0}\n'.format('function create_sample_sheet_file'))
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    cd {0}'.format(current_run_dir)))
+            script_file_id.write(f'    cd {current_run_dir}\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write( '{0}\n'.format('    echo "Creation of sample sheet file ..."'))
             script_file_id.write( '{0}\n'.format('    touch {0}'.format(sample_sheet_file)))
@@ -1350,8 +1402,8 @@ def build_cuffquant_process_script(cluster_name, current_run_dir):
                 elif alignment_software_list[i] == xlib.get_tophat_code():
                     alignment_file = '{0}/accepted_hits.bam'.format(xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id_list[i]))
                 script_file_id.write( '{0}\n'.format('    echo "Cuffquant process  for alignment dataset {0}..."'.format(alignment_dataset_id_list[i])))
-                script_file_id.write( '{0}\n'.format('    /usr/bin/time \\'))
-                script_file_id.write( '{0}\n'.format('        --format="$SEP\\nElapsed real time (s): %e\\nCPU time in kernel mode (s): %S\\nCPU time in user mode (s): %U\\nPercentage of CPU: %P\\nMaximum resident set size(Kb): %M\\nAverage total memory use (Kb):%K" \\'))
+                script_file_id.write( '    /usr/bin/time \\\n')
+                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
                 script_file_id.write( '{0}\n'.format('        cuffquant \\'))
                 script_file_id.write( '{0}\n'.format('            --no-update-check \\'))
                 script_file_id.write( '{0}\n'.format('            --num-threads {0} \\'.format(threads)))
@@ -1370,50 +1422,79 @@ def build_cuffquant_process_script(cluster_name, current_run_dir):
                             mo = re.search(pattern, parameter_list[i])
                             parameter_name = mo.group(1).strip()
                             parameter_value = mo.group(2).strip()
-                            script_file_id.write( '{0}\n'.format('            --{0} {1} \\'.format(parameter_name, parameter_value)))
+                            script_file_id.write(f'            --{parameter_name} {parameter_value} \\\n')
                         else:
                             pattern = r'^--(.+)$'
                             mo = re.search(pattern, parameter_list[i])
                             parameter_name = mo.group(1).strip()
-                            script_file_id.write( '{0}\n'.format('            --{0} \\'.format(parameter_name)))
+                            script_file_id.write(f'            --{parameter_name} \\\n')
                 script_file_id.write( '{0}\n'.format('            --output-dir {0}/{1} \\'.format(current_run_dir, alignment_dataset_id_list[i])))
                 script_file_id.write( '{0}\n'.format('            {0} \\'.format(transcriptome_file)))
                 script_file_id.write( '{0}\n'.format('            {0}'.format(alignment_file)))
-                script_file_id.write( '{0}\n'.format('    RC=$?'))
+                script_file_id.write( '    RC=$?\n')
                 script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error cuffquant $RC; fi'))
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function end'))
+            script_file_id.write( 'function end\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    END_DATETIME=`date --utc +%s`'))
-            script_file_id.write( '{0}\n'.format('    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`'))
-            script_file_id.write( '{0}\n'.format('    calculate_duration'))
+            script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
+            script_file_id.write( '    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
+            script_file_id.write( '    calculate_duration\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "Script ended OK at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."'))
+            script_file_id.write( '    echo "Script ended OK at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    RECIPIENT={0}'.format(xconfiguration.get_contact_data())))
-            script_file_id.write( '{0}\n'.format('    SUBJECT="{0}: {1} process"'.format(xlib.get_project_name(), xlib.get_cuffquant_name())))
-            script_file_id.write( '{0}\n'.format('    MESSAGE="{0}"'.format(xlib.get_mail_message_ok(xlib.get_cuffquant_name(), cluster_name))))
-            script_file_id.write( '    mail --append "Content-type: text/html;" --append "FROM:root@NGScloud2" --subject="$SUBJECT" "$RECIPIENT" <<< "$MESSAGE"\n')
-            script_file_id.write( '{0}\n'.format('    touch $SCRIPT_STATUS_OK'))
-            script_file_id.write( '{0}\n'.format('    exit 0'))
+            script_file_id.write( '    send_mail ok\n')
+            script_file_id.write( '    touch $SCRIPT_STATUS_OK\n')
+            script_file_id.write( '    exit 0\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function manage_error'))
+            script_file_id.write( 'function manage_error\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    END_DATETIME=`date --utc +%s`'))
-            script_file_id.write( '{0}\n'.format('    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`'))
-            script_file_id.write( '{0}\n'.format('    calculate_duration'))
+            script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
+            script_file_id.write( '    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
+            script_file_id.write( '    calculate_duration\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "ERROR: $1 returned error $2"'))
-            script_file_id.write( '{0}\n'.format('    echo "Script ended WRONG at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."'))
+            script_file_id.write( '    echo "ERROR: $1 returned error $2"\n')
+            script_file_id.write( '    echo "Script ended WRONG at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    RECIPIENT={0}'.format(xconfiguration.get_contact_data())))
-            script_file_id.write( '{0}\n'.format('    SUBJECT="{0}: {1} process"'.format(xlib.get_project_name(), xlib.get_cuffquant_name())))
-            script_file_id.write( '{0}\n'.format('    MESSAGE="{0}"'.format(xlib.get_mail_message_wrong(xlib.get_cuffquant_name(), cluster_name))))
-            script_file_id.write( '    mail --append "Content-type: text/html;" --append "FROM:root@NGScloud2" --subject="$SUBJECT" "$RECIPIENT" <<< "$MESSAGE"\n')
-            script_file_id.write( '{0}\n'.format('    touch $SCRIPT_STATUS_WRONG'))
-            script_file_id.write( '{0}\n'.format('    exit 3'))
+            script_file_id.write( '    send_mail wrong\n')
+            script_file_id.write( '    touch $SCRIPT_STATUS_WRONG\n')
+            script_file_id.write( '    exit 3\n')
+            script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            process_name = f'{xlib.get_cuffquant_name()} process'
+            mail_message_ok = xlib.get_mail_message_ok(process_name, cluster_name)
+            mail_message_wrong = xlib.get_mail_message_wrong(process_name, cluster_name)
+            script_file_id.write( 'function send_mail\n')
+            script_file_id.write( '{\n')
+            script_file_id.write(f'    SUBJECT="{xlib.get_project_name()}: {process_name}"\n')
+            script_file_id.write( '    if [ "$1" == "ok" ]; then\n')
+            script_file_id.write(f'        MESSAGE="{mail_message_ok}"\n')
+            script_file_id.write( '    elif [ "$1" == "wrong" ]; then\n')
+            script_file_id.write(f'        MESSAGE="{mail_message_wrong}"\n')
+            script_file_id.write( '    else\n')
+            script_file_id.write( '         MESSAGE=""\n')
+            script_file_id.write( '    fi\n')
+            script_file_id.write( '    DESTINATION_FILE=mail-destination.json\n')
+            script_file_id.write( '    echo "{" > $DESTINATION_FILE\n')
+            script_file_id.write(f'    echo "    \\\"ToAddresses\\\":  [\\\"{xconfiguration.get_contact_data()}\\\"]," >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "    \\\"CcAddresses\\\":  []," >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "    \\\"BccAddresses\\\":  []" >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "}" >> $DESTINATION_FILE\n')
+            script_file_id.write( '    MESSAGE_FILE=mail-message.json\n')
+            script_file_id.write( '    echo "{" > $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    \\\"Subject\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Data\\\":  \\\"$SUBJECT\\\"," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    }," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    \\\"Body\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Html\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "            \\\"Data\\\":  \\\"$MESSAGE\\\"," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "            \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        }" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    }" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "}" >> $MESSAGE_FILE\n')
+            script_file_id.write(f'    aws ses send-email --from {xconfiguration.get_contact_data()} --destination file://$DESTINATION_FILE --message file://$MESSAGE_FILE\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function calculate_duration\n')
@@ -1431,6 +1512,7 @@ def build_cuffquant_process_script(cluster_name, current_run_dir):
             script_file_id.write( '{0}\n'.format('run_cuffquant_process'))
             script_file_id.write( 'end\n')
     except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append('*** ERROR: The file {0} can not be created'.format(get_cuffquant_process_script()))
         OK = False
 
@@ -1453,10 +1535,11 @@ def build_cuffquant_process_starter(current_run_dir):
         if not os.path.exists(os.path.dirname(get_cuffquant_process_starter())):
             os.makedirs(os.path.dirname(get_cuffquant_process_starter()))
         with open(get_cuffquant_process_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
-            file_id.write( '{0}\n'.format('#!/bin/bash'))
-            file_id.write( '{0}\n'.format('#-------------------------------------------------------------------------------'))
-            file_id.write( '{0}\n'.format('{0}/{1} &>{0}/{2}'.format(current_run_dir, os.path.basename(get_cuffquant_process_script()), xlib.get_cluster_log_file())))
+            file_id.write( '#!/bin/bash\n')
+            file_id.write( '#-------------------------------------------------------------------------------\n')
+            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_cuffquant_process_script()), xlib.get_cluster_log_file())))
     except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append('*** ERROR: The file {0} can not be created'.format(get_cuffquant_process_starter()))
         OK = False
 
@@ -1527,28 +1610,28 @@ def create_cuffdiff_config_file(experiment_id='exp001', assembly_dataset_id='cuf
         if not os.path.exists(os.path.dirname(get_cuffdiff_config_file())):
             os.makedirs(os.path.dirname(get_cuffdiff_config_file()))
         with open(get_cuffdiff_config_file(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
-            file_id.write( '{0}\n'.format('# You must review the information of this file and update the values with the corresponding ones to the current run.'))
-            file_id.write( '{0}\n'.format('#'))
+            file_id.write( '# You must review the information of this file and update the values with the corresponding ones to the current run.\n')
+            file_id.write( '#\n')
             file_id.write( '{0}\n'.format('# The reference and GTF files have to be located in the cluster directory {0}/experiment_id/reference_dataset_id'.format(xlib.get_cluster_reference_dir())))
             file_id.write( '{0}\n'.format('# The experiment_id, alignment_dataset_id and assembly_dataset_id names are fixed in the identification section.'))
-            file_id.write( '{0}\n'.format('# The assembly files have to be located in the cluster directory {0}/experiment_id/assembly_dataset_id'.format(xlib.get_cluster_result_dir())))
+            file_id.write(f'# The assembly files have to be located in the cluster directory {xlib.get_cluster_result_dir()}/experiment_id/assembly_dataset_id\n')
             file_id.write( '{0}\n'.format('# The quantitation files have to be located in the cluster directory {0}/experiment_id/quantitation_dataset_id'.format(xlib.get_cluster_result_dir())))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('# You can consult the parameters of Cuffdiff and their meaning in http://cole-trapnell-lab.github.io/cufflinks/.'))
-            file_id.write( '{0}\n'.format('#'))
+            file_id.write( '#\n')
+            file_id.write( '{0}\n'.format('# You can consult the parameters of Cuffdiff and their meaning in "http://cole-trapnell-lab.github.io/cufflinks/".'))
+            file_id.write( '#\n')
             file_id.write( '{0}\n'.format('# In section "Cuffdiff parameters", the key "other_parameters" allows you to input additional parameters in the format:'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('#    other_parameters = --parameter-1[=value-1][; --parameter-2[=value-2][; ...; --parameter-n[=value-n]]]'))
-            file_id.write( '{0}\n'.format('#'))
+            file_id.write( '#\n')
+            file_id.write( '#    other_parameters = --parameter-1[=value-1][; --parameter-2[=value-2][; ...; --parameter-n[=value-n]]]\n')
+            file_id.write( '#\n')
             file_id.write( '{0}\n'.format('# parameter-i is a parameter name of Cuffdiff and value-i a valid value of parameter-i, e.g.'))
-            file_id.write( '{0}\n'.format('#'))
+            file_id.write( '#\n')
             file_id.write( '{0}\n'.format('#    other_parameters = --multi-read-correct; --no-length-correction'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information identifies the experiment.'))
-            file_id.write( '{0}\n'.format('[identification]'))
-            file_id.write( '{0:<50} {1}\n'.format('experiment_id = {0}'.format(experiment_id), '# experiment identification'))
+            file_id.write( '# This section has the information identifies the experiment.\n')
+            file_id.write( '[identification]\n')
+            file_id.write( '{0:<50} {1}\n'.format(f'experiment_id = {experiment_id}', '# experiment identification'))
             file_id.write( '{0:<50} {1}\n'.format('assembly_software = {0}'.format(assembly_software), '# assembly software: {0})'.format(get_assembly_software_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('assembly_dataset_id = {0}'.format(assembly_dataset_id), '# assembly dataset identification'))
+            file_id.write( '{0:<50} {1}\n'.format(f'assembly_dataset_id = {assembly_dataset_id}', '# assembly dataset identification'))
             file_id.write( '{0:<50} {1}\n'.format('quantitation_software = {0}'.format(quantitation_software), '#quantitation software: {0}'.format(get_quantitation_software_code_list_text())))
             file_id.write( '{0:<50} {1}\n'.format('quantitation_dataset_id = {0}'.format(quantitation_dataset_id), '# quantitation dataset identification'))
             file_id.write( '\n')
@@ -1564,8 +1647,9 @@ def create_cuffdiff_config_file(experiment_id='exp001', assembly_dataset_id='cuf
             file_id.write( '{0:<50} {1}\n'.format('frag_len_std_dev = 80', '# standard deviation for the distribution on fragment lengths'))
             file_id.write( '{0:<50} {1}\n'.format('max_mle_iterations = 5000', '# number of iterations allowed during maximum likelihood estimation of abundances'))
             file_id.write( '{0:<50} {1}\n'.format('max_bundle_frags = 1000000', '# maximum number of fragments a locus may have before being skipped'))
-            file_id.write( '{0:<50} {1}\n'.format('other_parameters = NONE', '# additional parameters to the previous ones or NONE'))
+            file_id.write( '{0:<50} {1}\n'.format( 'other_parameters = NONE', '# additional parameters to the previous ones or NONE'))
     except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append('*** ERROR: The file {0} can not be recreated'.format(get_cufflinks_cuffmerge_config_file()))
         OK = False
 
@@ -1640,12 +1724,12 @@ def run_cuffdiff_process(cluster_name, log, function=None):
     if OK:
         (master_state_code, master_state_name) = xec2.get_node_state(cluster_name)
         if master_state_code != 16:
-            log.write('*** ERROR: The cluster {0} is not running. Its state is {1} ({2}).\n'.format(cluster_name, master_state_code, master_state_name))
+            log.write(f'*** ERROR: The cluster {cluster_name} is not running. Its state is {master_state_code} ({master_state_name}).\n')
             OK = False
 
     # check Cufflinks is installed
     if OK:
-        (OK, error_list, is_installed) = xbioinfoapp.is_installed_bioconda_package(xlib.get_cufflinks_bioconda_code(), cluster_name, True, ssh_client)
+        (OK, error_list, is_installed) = xbioinfoapp.is_installed_anaconda_package(xlib.get_cufflinks_anaconda_code(), cluster_name, True, ssh_client)
         if OK:
             if not is_installed:
                 log.write('*** ERROR: {0} is not installed.\n'.format(xlib.get_cufflinks_name()))
@@ -1665,7 +1749,7 @@ def run_cuffdiff_process(cluster_name, log, function=None):
         command = f'mkdir --parents {current_run_dir}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
-            log.write('The directory path is {0}.\n'.format(current_run_dir))
+            log.write(f'The directory path is {current_run_dir}.\n')
         else:
             log.write(f'*** ERROR: Wrong command ---> {command}\n')
 
@@ -1682,7 +1766,7 @@ def run_cuffdiff_process(cluster_name, log, function=None):
     # upload the Cuffdiff process script to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process script {0} to the directory {1} of the master ...\n'.format(get_cuffdiff_process_script(), current_run_dir))
+        log.write('Uploading the process script {0} to the directory {1} ...\n'.format(get_cuffdiff_process_script(), current_run_dir))
         cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_cuffdiff_process_script()))
         (OK, error_list) = xssh.put_file(sftp_client, get_cuffdiff_process_script(), cluster_path)
         if OK:
@@ -1715,7 +1799,7 @@ def run_cuffdiff_process(cluster_name, log, function=None):
     # upload the Cuffdiff process starter to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process starter {0} to the directory {1} of the master ...\n'.format(get_cuffdiff_process_starter(), current_run_dir))
+        log.write('Uploading the process starter {0} to the directory {1} ...\n'.format(get_cuffdiff_process_starter(), current_run_dir))
         cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_cuffdiff_process_starter()))
         (OK, error_list) = xssh.put_file(sftp_client, get_cuffdiff_process_starter(), cluster_path)
         if OK:
@@ -1785,7 +1869,8 @@ def check_cuffdiff_config_file(strict):
     try:
         cuffdiff_option_dict = xlib.get_option_dict(get_cuffdiff_config_file())
     except Exception as e:
-        error_list.append('*** ERROR: The syntax is WRONG.')
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append('*** ERROR: The option dictionary could not be built from the config file')
         OK = False
     else:
 
@@ -1813,7 +1898,7 @@ def check_cuffdiff_config_file(strict):
                 error_list.append('*** ERROR: the key "assembly_software" is not found in the section "identification".')
                 OK = False
             elif not xlib.check_code(assembly_software, get_assembly_software_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "assembly_software" has to be {0}.'.format(get_assembly_software_code_list_text()))
+                error_list.append(f'*** ERROR: the key "assembly_software" has to be {get_assembly_software_code_list_text()}.')
                 OK = False
 
             # check section "identification" - key "assembly_dataset_id"
@@ -1822,7 +1907,7 @@ def check_cuffdiff_config_file(strict):
                 error_list.append('*** ERROR: the key "assembly_dataset_id" is not found in the section "identification".')
                 OK = False
             elif not xlib.check_startswith(assembly_dataset_id, get_assembly_software_code_list(), case_sensitive=True):
-                error_list.append('*** ERROR: the key "assembly_dataset_id" has to start with {0}.'.format(get_assembly_software_code_list_text()))
+                error_list.append(f'*** ERROR: the key "assembly_dataset_id" has to start with {get_assembly_software_code_list_text()}.')
                 OK = False
 
             # check section "identification" - key "quantitation_software"
@@ -1864,7 +1949,7 @@ def check_cuffdiff_config_file(strict):
                 error_list.append('*** ERROR: the key "library_type" is not found in the section "Cuffdiff parameters".')
                 OK = False
             elif not xlib.check_code(library_type, get_library_type_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "library_type" has to be {0}.'.format(get_library_type_code_list_text()))
+                error_list.append(f'*** ERROR: the key "library_type" has to be {get_library_type_code_list_text()}.')
                 OK = False
 
             # check section "Cuffdiff parameters" - key "total_hits_norm"
@@ -1975,7 +2060,7 @@ def build_cuffdiff_process_script(cluster_name, current_run_dir):
     quantitation_software = cuffdiff_option_dict['identification']['quantitation_software']
     quantitation_dataset_id = cuffdiff_option_dict['identification']['quantitation_dataset_id']
     threads = cuffdiff_option_dict['Cuffdiff parameters']['threads']
-    library_type = cuffdiff_option_dict['Cuffdiff parameters']['library_type']
+    library_type = cuffdiff_option_dict['Cuffdiff parameters']['library_type'].lower()
     total_hits_norm = cuffdiff_option_dict['Cuffdiff parameters']['total_hits_norm']
     compatible_hits_norm = cuffdiff_option_dict['Cuffdiff parameters']['compatible_hits_norm']
     min_alignment_count = cuffdiff_option_dict['Cuffdiff parameters']['min_alignment_count']
@@ -2014,17 +2099,20 @@ def build_cuffdiff_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'SEP="#########################################"\n')
             script_file_id.write( 'export HOST_IP=`curl --silent checkip.amazonaws.com`\n')
             script_file_id.write( 'export HOST_ADDRESS="ec2-${HOST_IP//./-}-compute-1.amazonaws.com"\n')
-            script_file_id.write( '{0}\n'.format('CUFFLINKS_PATH={0}/{1}/envs/{2}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name(), xlib.get_cufflinks_bioconda_code())))
+            script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
+            script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write( '{0}\n'.format('CUFFLINKS_PATH={0}/{1}/envs/{2}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name(), xlib.get_cufflinks_anaconda_code())))
             script_file_id.write( '{0}\n'.format('export PATH=$CUFFLINKS_PATH:$PATH'))
             script_file_id.write( '{0}\n'.format('cd {0}/{1}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name())))
-            script_file_id.write( '{0}\n'.format('source activate {0}'.format(xlib.get_cufflinks_bioconda_code())))
+            script_file_id.write( '{0}\n'.format('source activate {0}'.format(xlib.get_cufflinks_anaconda_code())))
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('STATUS_DIR={0}'.format(xlib.get_status_dir(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('SCRIPT_STATUS_OK={0}'.format(xlib.get_status_ok(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('SCRIPT_STATUS_WRONG={0}'.format(xlib.get_status_wrong(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('mkdir --parents $STATUS_DIR'))
-            script_file_id.write( '{0}\n'.format('if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi'))
-            script_file_id.write( '{0}\n'.format('if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi'))
+            script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
+            script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
+            script_file_id.write(f'SCRIPT_STATUS_WRONG={xlib.get_status_wrong(current_run_dir)}\n')
+            script_file_id.write( 'mkdir --parents $STATUS_DIR\n')
+            script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
+            script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function init\n')
             script_file_id.write( '{\n')
@@ -2034,32 +2122,34 @@ def build_cuffdiff_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "Script started at $FORMATTED_INIT_DATETIME+00:00."\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write(f'    echo "CLUSTER: {cluster_name}"\n')
-            script_file_id.write(f'    echo "HOST_IP: $HOST_IP - HOST_ADDRESS: $HOST_ADDRESS"\n')
+            script_file_id.write( '    echo "HOST NAME: $HOSTNAME"\n')
+            script_file_id.write( '    echo "HOST IP: $HOST_IP"\n')
+            script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( '{0}\n'.format('function copy_alignment_dataset_list_file'))
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    cd {0}'.format(current_run_dir)))
+            script_file_id.write(f'    cd {current_run_dir}\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write( '{0}\n'.format('    echo "Copying the alignment dataset list file ..."'))
             script_file_id.write( '{0}\n'.format('    cp {0} {1}'.format(quantitation_alignment_dataset_id_list_file, current_alignment_dataset_id_list_file)))
-            script_file_id.write( '{0}\n'.format('    RC=$?'))
+            script_file_id.write( '    RC=$?\n')
             script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error cp $RC; fi'))
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( '{0}\n'.format('function copy_sample_sheet_file'))
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    cd {0}'.format(current_run_dir)))
+            script_file_id.write(f'    cd {current_run_dir}\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write( '{0}\n'.format('    echo "Copying the sample sheet file ..."'))
             script_file_id.write( '{0}\n'.format('    cp {0} {1}'.format(quantitation_sample_sheet_file, current_sample_sheet_file)))
-            script_file_id.write( '{0}\n'.format('    RC=$?'))
+            script_file_id.write( '    RC=$?\n')
             script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error cp $RC; fi'))
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( '{0}\n'.format('function create_cuffquant_output_abundance_list_file'))
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    cd {0}'.format(current_run_dir)))
+            script_file_id.write(f'    cd {current_run_dir}\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write( '{0}\n'.format('    echo "Create Cufflinks output gtf list file ..."'))
             script_file_id.write( '{0}\n'.format('    ABUNDANCE_FILE_LIST=""'))
@@ -2076,11 +2166,11 @@ def build_cuffdiff_process_script(cluster_name, current_run_dir):
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( '{0}\n'.format('function run_cuffdiff_process'))
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    cd {0}'.format(current_run_dir)))
+            script_file_id.write(f'    cd {current_run_dir}\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write( '{0}\n'.format('    echo "Cuffdiff process ..."'))
-            script_file_id.write( '{0}\n'.format('    /usr/bin/time \\'))
-            script_file_id.write( '{0}\n'.format('        --format="$SEP\\nElapsed real time (s): %e\\nCPU time in kernel mode (s): %S\\nCPU time in user mode (s): %U\\nPercentage of CPU: %P\\nMaximum resident set size(Kb): %M\\nAverage total memory use (Kb):%K" \\'))
+            script_file_id.write( '    /usr/bin/time \\\n')
+            script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
             script_file_id.write( '{0}\n'.format('        cuffdiff \\'))
             script_file_id.write( '{0}\n'.format('            --no-update-check \\'))
             script_file_id.write( '{0}\n'.format('            --num-threads {0} \\'.format(threads)))
@@ -2103,52 +2193,81 @@ def build_cuffdiff_process_script(cluster_name, current_run_dir):
                         mo = re.search(pattern, parameter_list[i])
                         parameter_name = mo.group(1).strip()
                         parameter_value = mo.group(2).strip()
-                        script_file_id.write( '{0}\n'.format('            --{0} {1} \\'.format(parameter_name, parameter_value)))
+                        script_file_id.write(f'            --{parameter_name} {parameter_value} \\\n')
                     else:
                         pattern = r'^--(.+)$'
                         mo = re.search(pattern, parameter_list[i])
                         parameter_name = mo.group(1).strip()
-                        script_file_id.write( '{0}\n'.format('            --{0} \\'.format(parameter_name)))
+                        script_file_id.write(f'            --{parameter_name} \\\n')
             script_file_id.write( '{0}\n'.format('            --output-dir {0} \\'.format(current_run_dir)))
             script_file_id.write( '{0}\n'.format('            --use-sample-sheet \\'))
             script_file_id.write( '{0}\n'.format('            {0} \\'.format(transcriptome_file)))
             #--file_id.write( '{0}\n'.format('            $ABUNDANCE_FILE_LIST'))
             script_file_id.write( '{0}\n'.format('            {0} \\'.format(current_sample_sheet_file)))
-            script_file_id.write( '{0}\n'.format('    RC=$?'))
+            script_file_id.write( '    RC=$?\n')
             script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error cuffdiff $RC; fi'))
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function end'))
+            script_file_id.write( 'function end\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    END_DATETIME=`date --utc +%s`'))
-            script_file_id.write( '{0}\n'.format('    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`'))
-            script_file_id.write( '{0}\n'.format('    calculate_duration'))
+            script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
+            script_file_id.write( '    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
+            script_file_id.write( '    calculate_duration\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "Script ended OK at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."'))
+            script_file_id.write( '    echo "Script ended OK at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    RECIPIENT={0}'.format(xconfiguration.get_contact_data())))
-            script_file_id.write( '{0}\n'.format('    SUBJECT="{0}: {1} process"'.format(xlib.get_project_name(), xlib.get_cuffdiff_name())))
-            script_file_id.write( '{0}\n'.format('    MESSAGE="{0}"'.format(xlib.get_mail_message_ok(xlib.get_cuffdiff_name(), cluster_name))))
-            script_file_id.write( '    mail --append "Content-type: text/html;" --append "FROM:root@NGScloud2" --subject="$SUBJECT" "$RECIPIENT" <<< "$MESSAGE"\n')
-            script_file_id.write( '{0}\n'.format('    touch $SCRIPT_STATUS_OK'))
-            script_file_id.write( '{0}\n'.format('    exit 0'))
+            script_file_id.write( '    send_mail ok\n')
+            script_file_id.write( '    touch $SCRIPT_STATUS_OK\n')
+            script_file_id.write( '    exit 0\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function manage_error'))
+            script_file_id.write( 'function manage_error\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    END_DATETIME=`date --utc +%s`'))
-            script_file_id.write( '{0}\n'.format('    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`'))
-            script_file_id.write( '{0}\n'.format('    calculate_duration'))
+            script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
+            script_file_id.write( '    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
+            script_file_id.write( '    calculate_duration\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "ERROR: $1 returned error $2"'))
-            script_file_id.write( '{0}\n'.format('    echo "Script ended WRONG at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."'))
+            script_file_id.write( '    echo "ERROR: $1 returned error $2"\n')
+            script_file_id.write( '    echo "Script ended WRONG at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    RECIPIENT={0}'.format(xconfiguration.get_contact_data())))
-            script_file_id.write( '{0}\n'.format('    SUBJECT="{0}: {1} process"'.format(xlib.get_project_name(), xlib.get_cuffdiff_name())))
-            script_file_id.write( '{0}\n'.format('    MESSAGE="{0}"'.format(xlib.get_mail_message_wrong(xlib.get_cuffdiff_name(), cluster_name))))
-            script_file_id.write( '    mail --append "Content-type: text/html;" --append "FROM:root@NGScloud2" --subject="$SUBJECT" "$RECIPIENT" <<< "$MESSAGE"\n')
-            script_file_id.write( '{0}\n'.format('    touch $SCRIPT_STATUS_WRONG'))
-            script_file_id.write( '{0}\n'.format('    exit 3'))
+            script_file_id.write( '    send_mail wrong\n')
+            script_file_id.write( '    touch $SCRIPT_STATUS_WRONG\n')
+            script_file_id.write( '    exit 3\n')
+            script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            process_name = f'{xlib.get_cuffdiff_name()} process'
+            mail_message_ok = xlib.get_mail_message_ok(process_name, cluster_name)
+            mail_message_wrong = xlib.get_mail_message_wrong(process_name, cluster_name)
+            script_file_id.write( 'function send_mail\n')
+            script_file_id.write( '{\n')
+            script_file_id.write(f'    SUBJECT="{xlib.get_project_name()}: {process_name}"\n')
+            script_file_id.write( '    if [ "$1" == "ok" ]; then\n')
+            script_file_id.write(f'        MESSAGE="{mail_message_ok}"\n')
+            script_file_id.write( '    elif [ "$1" == "wrong" ]; then\n')
+            script_file_id.write(f'        MESSAGE="{mail_message_wrong}"\n')
+            script_file_id.write( '    else\n')
+            script_file_id.write( '         MESSAGE=""\n')
+            script_file_id.write( '    fi\n')
+            script_file_id.write( '    DESTINATION_FILE=mail-destination.json\n')
+            script_file_id.write( '    echo "{" > $DESTINATION_FILE\n')
+            script_file_id.write(f'    echo "    \\\"ToAddresses\\\":  [\\\"{xconfiguration.get_contact_data()}\\\"]," >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "    \\\"CcAddresses\\\":  []," >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "    \\\"BccAddresses\\\":  []" >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "}" >> $DESTINATION_FILE\n')
+            script_file_id.write( '    MESSAGE_FILE=mail-message.json\n')
+            script_file_id.write( '    echo "{" > $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    \\\"Subject\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Data\\\":  \\\"$SUBJECT\\\"," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    }," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    \\\"Body\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Html\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "            \\\"Data\\\":  \\\"$MESSAGE\\\"," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "            \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        }" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    }" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "}" >> $MESSAGE_FILE\n')
+            script_file_id.write(f'    aws ses send-email --from {xconfiguration.get_contact_data()} --destination file://$DESTINATION_FILE --message file://$MESSAGE_FILE\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function calculate_duration\n')
@@ -2166,6 +2285,7 @@ def build_cuffdiff_process_script(cluster_name, current_run_dir):
             script_file_id.write( '{0}\n'.format('run_cuffdiff_process'))
             script_file_id.write( 'end\n')
     except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append('*** ERROR: The file {0} can not be created'.format(get_cuffdiff_process_script()))
         OK = False
 
@@ -2188,10 +2308,11 @@ def build_cuffdiff_process_starter(current_run_dir):
         if not os.path.exists(os.path.dirname(get_cuffdiff_process_starter())):
             os.makedirs(os.path.dirname(get_cuffdiff_process_starter()))
         with open(get_cuffdiff_process_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
-            file_id.write( '{0}\n'.format('#!/bin/bash'))
-            file_id.write( '{0}\n'.format('#-------------------------------------------------------------------------------'))
-            file_id.write( '{0}\n'.format('{0}/{1} &>{0}/{2}'.format(current_run_dir, os.path.basename(get_cuffdiff_process_script()), xlib.get_cluster_log_file())))
+            file_id.write( '#!/bin/bash\n')
+            file_id.write( '#-------------------------------------------------------------------------------\n')
+            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_cuffdiff_process_script()), xlib.get_cluster_log_file())))
     except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append('*** ERROR: The file {0} can not be created'.format(get_cuffdiff_process_starter()))
         OK = False
 
@@ -2244,7 +2365,8 @@ def get_alignment_software_code_list():
     Get the code list of "alignment_software".
     '''
 
-    return [xlib.get_star_code(), xlib.get_tophat_code()]
+    # -- return [xlib.get_gsnap_code(), xlib.get_hisat2_code(), xlib.get_star_code(), xlib.get_tophat_code()]
+    return [xlib.get_hisat2_code(), xlib.get_star_code(), xlib.get_tophat_code()]
 
 #-------------------------------------------------------------------------------
     
@@ -2253,7 +2375,8 @@ def get_alignment_software_code_list_text():
     Get the code list of "alignment_software" as text.
     '''
 
-    return '{0} ({1}) or {2} ({3})'.format(xlib.get_star_code(), xlib.get_star_name(), xlib.get_tophat_code(), xlib.get_tophat_name())
+    # -- return f'{xlib.get_gsnap_code()} ({xlib.get_gsnap_name()}) or {xlib.get_hisat2_code()} ({xlib.get_hisat2_name()}) or {xlib.get_star_code()} ({xlib.get_star_name()}) or {xlib.get_tophat_code()} ({xlib.get_tophat_name()})'
+    return f'{xlib.get_hisat2_code()} ({xlib.get_hisat2_name()}) or {xlib.get_star_code()} ({xlib.get_star_name()}) or {xlib.get_tophat_code()} ({xlib.get_tophat_name()})'
 
 #-------------------------------------------------------------------------------
     

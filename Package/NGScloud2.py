@@ -49,16 +49,16 @@ def main(argv):
         sys.exit(1)
 
     # check the Python version
-    if sys.version_info[0] == 3 and sys.version_info[1] >= 5:
+    if sys.version_info[0] == 3 and sys.version_info[1] >= 6:
         pass
     else:
-        print('*** ERROR: Python 3.5 or greater is required.')
+        print('*** ERROR: Python 3.6 or greater is required.')
         sys.exit(1)
 
     # check if Boto3 is installed
     try:
         import boto3
-    except Exception as e:
+    except:
         print('*** ERROR: The library boto3 is not installed.')
         print('Please, review how to install Boto3 in the manual.')
         sys.exit(1)
@@ -66,7 +66,7 @@ def main(argv):
     # check if Paramiko is installed
     try:
         import paramiko
-    except Exception as e:
+    except:
         print('*** ERROR: The library paramiko is not installed.')
         print('Please, review how to install Paramiko in the manual.')
         sys.exit(1)
@@ -74,9 +74,9 @@ def main(argv):
     # check if Plotnine is installed
     try:
         import plotnine
-    except Exception as e:
-        print('*** ERROR: The library paramiko is not installed.')
-        print('Please, review how to install Paramiko in the manual.')
+    except:
+        print('*** ERROR: The library plotnine is not installed.')
+        print('Please, review how to install Plotnine in the manual.')
         sys.exit(1)
 
     # get and check the arguments
@@ -90,7 +90,7 @@ def main(argv):
         # check if the library PIL.Image is installed
         try:
             import tkinter
-        except Exception as e:
+        except:
             print('*** ERROR: The library tkinter is not installed.')
             print('Please, review how to install Tkinter in the manual.')
             sys.exit(1)
@@ -98,7 +98,7 @@ def main(argv):
         # check if the library PIL.Image is installed
         try:
             import PIL.Image
-        except Exception as e:
+        except:
             print('*** ERROR: The library PIL.Image is not installed.')
             print('Please, review how to install PIL.Image in the manual.')
             sys.exit(1)
@@ -106,43 +106,41 @@ def main(argv):
         # check if the library PIL.ImageTk is installed
         try:
             import PIL.ImageTk
-        except Exception as e:
+        except:
             print('*** ERROR: The library PIL.ImageTk is not installed.')
             print('Please, review how to install PIL.ImageTk in the manual.')
             sys.exit(1)
 
-    # import required modules
-    import ccloud
-    import cmenu
-    import gmain
-    import xlib
-
     # check if StarCluster is installed
-    command = '{0} --version'.format(xlib.get_starcluster())
-    devstdout = xlib.DevStdOut('starcluster_version', print_stdout=False)
-    rc = xlib.run_command(command, devstdout)
-    if rc != 0:
-        print('*** ERROR: The cluster-computing toolkit StarCluster 0.95.6 is not installed or excecution permissions have not set.')
-        print('Please, review how to install in the manual.')
-        sys.exit(1)
-    else:
-        with open(devstdout.get_log_file(), 'r') as log_command:
-            version_found = False
-            for line in log_command:
-                if line.startswith('0.95.6'):
-                    version_found = True
-            if not version_found:
-                print('*** ERROR: The cluster-computing toolkit StarCluster 0.95.6 is not installed or excecution permissions have not set.')
-                print('Please, review how to install in the manual.')
-                sys.exit(1)
+    # -- import xlib
+    # -- command = '{0} --version'.format(xlib.get_starcluster())
+    # -- devstdout = xlib.DevStdOut('starcluster_version', print_stdout=False)
+    # -- rc = xlib.run_command(command, devstdout)
+    # -- if rc != 0:
+    # --     print('*** ERROR: The cluster-computing toolkit StarCluster 0.95.6 is not installed or excecution permissions have not set.')
+    # --     print('Please, review how to install in the manual.')
+    # --     sys.exit(1)
+    # -- else:
+    # --     with open(devstdout.get_log_file(), 'r') as log_command:
+    # --         version_found = False
+    # --         for line in log_command:
+    # --             if line.startswith('0.95.6'):
+    # --                 version_found = True
+    # --         if not version_found:
+    # --             print('*** ERROR: The cluster-computing toolkit StarCluster 0.95.6 is not installed or excecution permissions have not set.')
+    # --             print('Please, review how to install in the manual.')
+    # --             sys.exit(1)
 
     # remove the subdirectory __pycache__
     try:
         shutil.rmtree('__pycache__')
-    except Exception as e:
+    except:
         pass
 
     # start the user interface depending on the mode
+    import ccloud
+    import cmenu
+    import gmain
     if args.mode == 'gui' or args.mode is None:
         main = gmain.Main()
         main.mainloop()

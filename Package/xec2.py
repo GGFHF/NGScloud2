@@ -81,7 +81,7 @@ def get_available_region_list():
     # create a low-level service client
     try: 
         client = boto3.client('ec2', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name='us-east-1')
-    except Exception as e:
+    except:
         OK = False
     
     # get the region that are currently avaiable
@@ -149,7 +149,7 @@ def get_available_zone_list(region_name):
     # create a low-level service client
     try:
         client = boto3.client('ec2', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=region_name)
-    except Exception as e:
+    except:
         OK = False
 
     # get the region that are currently available in the region name
@@ -217,7 +217,7 @@ def get_keypair_dict(region_name):
     # create a low-level service client
     try:
         client = boto3.client('ec2', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=region_name)
-    except Exception as e:
+    except:
         OK = False
     
     # get the key pairs description
@@ -296,7 +296,7 @@ def create_keypair(keypair_file, keypair_name, region_name):
     # create a low-level service client
     try:
         client = boto3.client('ec2', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=region_name)
-    except Exception as e:
+    except:
         OK = False
 
     # create the key pair
@@ -314,6 +314,7 @@ def create_keypair(keypair_file, keypair_name, region_name):
             try:
                 os.makedirs(keypair_dir)
             except Exception as e:
+                error_list.append(f'*** EXCEPTION: "{e}".')
                 error_list.append('** ERROR: The directory {0} can not be created.'.format(keypair_dir))
                 OK = False
 
@@ -376,7 +377,7 @@ def delete_keypair(keypair_file, keypair_name, region_name):
     # create a low-level service client
     try:
         client = boto3.client('ec2', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=region_name)
-    except Exception as e:
+    except:
         OK = False
 
     # delete the key pair
@@ -390,6 +391,7 @@ def delete_keypair(keypair_file, keypair_name, region_name):
                 os.chmod(keypair_file, stat.S_IWUSR)
                 os.remove(keypair_file)
             except Exception as e:
+                error_list.append(f'*** EXCEPTION: "{e}".')
                 error_list.append('*** WARNING: The file {0} can not be removed.'.format(keypair_file))
 
     # delete the file that contains the SHA-1 digest of the DER encoded private key
@@ -567,7 +569,7 @@ def delete_security_group(security_group_id):
     if OK:
         try:
             response = client.delete_security_group(GroupId=security_group_id)
-        except Exception as e:
+        except:
             OK = False
 
     # return the control variable
@@ -805,7 +807,7 @@ def terminate_instance(instance_id):
     if OK:
         try:
             response = client.terminate_instances(InstanceIds=[instance_id], DryRun=False)
-        except Exception as e:
+        except:
             OK = False
 
     # return the control variable
@@ -980,21 +982,24 @@ def get_node_dict():
         for inst in resource.instances.all():
             security_group_name = inst.security_groups[0]['GroupName'] if inst.security_groups != [] else ' '
             zone_name = inst.placement['AvailabilityZone']
-            for tag in inst.tags:
-                if tag['Key'] == 'Name':
-                    node_name = tag['Value']
-            node_id = inst.instance_id
-            instance_type = inst.instance_type
-            state_code = inst.state['Code']
-            state_name = inst.state['Name']
-            state = '{0} ({1})'.format(state_code, state_name)
-            security_group_list = inst.security_groups
-            public_ip_address = inst.public_ip_address
-            public_dns_name = inst.public_dns_name
-            launch_time = inst.launch_time
-            image_id = inst.image_id
-            node_key = '{0}-{1}-{2}-{3}'.format(security_group_name, zone_name, node_name, node_id)
-            node_dict[node_key] = {'security_group_name': security_group_name, 'zone_name': zone_name, 'node_name': node_name, 'node_id': node_id, 'instance_type': instance_type, 'state_code': state_code, 'state_name': state_name, 'state': state, 'security_group_list': security_group_list, 'public_ip_address': public_ip_address, 'public_dns_name': public_dns_name, 'launch_time': launch_time, 'image_id': image_id}
+            try:
+                for tag in inst.tags:
+                    if tag['Key'] == 'Name':
+                        node_name = tag['Value']
+                node_id = inst.instance_id
+                instance_type = inst.instance_type
+                state_code = inst.state['Code']
+                state_name = inst.state['Name']
+                state = '{0} ({1})'.format(state_code, state_name)
+                security_group_list = inst.security_groups
+                public_ip_address = inst.public_ip_address
+                public_dns_name = inst.public_dns_name
+                launch_time = inst.launch_time
+                image_id = inst.image_id
+                node_key = '{0}-{1}-{2}-{3}'.format(security_group_name, zone_name, node_name, node_id)
+                node_dict[node_key] = {'security_group_name': security_group_name, 'zone_name': zone_name, 'node_name': node_name, 'node_id': node_id, 'instance_type': instance_type, 'state_code': state_code, 'state_name': state_name, 'state': state, 'security_group_list': security_group_list, 'public_ip_address': public_ip_address, 'public_dns_name': public_dns_name, 'launch_time': launch_time, 'image_id': image_id}
+            except:
+                pass
 
     # return the node dictionary
     return node_dict
@@ -1484,7 +1489,7 @@ def create_volume(volume_name, volume_type, volume_size, iops=0):
                 response = client.create_volume(DryRun=False, Size=volume_size, AvailabilityZone=current_zone_name, VolumeType=volume_type, Iops=iops, Encrypted=False)
             else:
                 response = client.create_volume(DryRun=False, Size=volume_size, AvailabilityZone=current_zone_name, VolumeType=volume_type, Encrypted=False)
-        except Exception as e:
+        except:
             OK = False
 
     # get the volume identification
@@ -1549,7 +1554,7 @@ def delete_volume(volume_name):
     if OK:
         try:
             response = volume.delete(DryRun=False)
-        except Exception as e:
+        except:
             OK = False
 
     # return the control variable
@@ -2114,7 +2119,7 @@ def attach_volume(node_id, volume_id, aws_device_file):
     if OK:
         try:
             response = instance.attach_volume(DryRun=False, VolumeId=volume_id, Device=aws_device_file)
-        except Exception as e:
+        except:
             OK = False
 
     # return the control variable
@@ -2159,7 +2164,7 @@ def detach_volume(node_id, volume_id, aws_device_file):
     if OK:
         try:
             response = instance.detach_volume(DryRun=False, VolumeId=volume_id, Device=aws_device_file, Force=False)
-        except Exception as e:
+        except:
             OK = False
 
     # return the control variable

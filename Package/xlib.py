@@ -24,6 +24,7 @@ software package used in both console mode and gui mode.
 
 #-------------------------------------------------------------------------------
 
+import collections
 import configparser
 import datetime
 import os
@@ -59,7 +60,7 @@ def get_project_version():
     Get the project name.
     '''
 
-    return '2.0'
+    return '2.07'
 
 #-------------------------------------------------------------------------------
     
@@ -149,13 +150,13 @@ def get_os_size_fix():
 
 def get_volume_creator_name():
     '''
-    Get the template name of the volume creator.
+    Get the name of volume creator.
     '''
 
-    # set the template name of the volume creator
+    # set the name of volume creator
     volume_creator_name = '{0}-volume-creator'.format(xconfiguration.environment)
 
-    # return the template name of the volume creator
+    # return the name of volume creator
     return volume_creator_name
 
 #-------------------------------------------------------------------------------
@@ -169,12 +170,84 @@ def get_all_applications_selected_code():
 
 #-------------------------------------------------------------------------------
 
+def get_awscli_name():
+    '''
+    Get the AWS CLI 2 name used to title.
+    '''
+
+    return 'AWSCLI2'
+
+#-------------------------------------------------------------------------------
+
+def get_awscli_url():
+    '''
+    Get the AWS CLI 2 URL.
+    '''
+
+    return 'https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip'
+
+#-------------------------------------------------------------------------------
+
+def get_anaconda_name():
+    '''
+    Get the Anaconda name used to title.
+    '''
+
+    return 'Anaconda'
+
+#-------------------------------------------------------------------------------
+
 def get_anaconda_url():
     '''
-    Get the Bioconda URL.
+    Get the Anaconda URL.
     '''
 
     return 'https://anaconda.org/'
+
+#-------------------------------------------------------------------------------
+
+def get_github_name():
+    '''
+    Get the GitHub name used to title.
+    '''
+
+    return 'GitHub'
+
+#-------------------------------------------------------------------------------
+
+def get_github_url():
+    '''
+    Get the GitHub URL.
+    '''
+
+    return 'https://github.com/'
+
+#-------------------------------------------------------------------------------
+
+def get_bcftools_code():
+    '''
+    Get the BCFTools code used to identify its processes.
+    '''
+
+    return 'bcftools'
+
+#-------------------------------------------------------------------------------
+
+def get_bcftools_name():
+    '''
+    Get the BCFTools name used to title.
+    '''
+
+    return 'BCFtools'
+
+#-------------------------------------------------------------------------------
+
+def get_bcftools_anaconda_code():
+    '''
+    Get the BCFTools code used to identify the Anaconda package.
+    '''
+
+    return 'bcftools'
 
 #-------------------------------------------------------------------------------
 
@@ -196,39 +269,12 @@ def get_bedtools_name():
 
 #-------------------------------------------------------------------------------
 
-def get_bedtools_bioconda_code():
+def get_bedtools_anaconda_code():
     '''
-    Get the BEDTools code used to identify the Bioconda package.
+    Get the BEDTools code used to identify the Anaconda package.
     '''
 
     return 'bedtools'
-
-#-------------------------------------------------------------------------------
-
-def get_bioconda_code():
-    '''
-    Get the Bioconda code used to identify its processes.
-    '''
-
-    return 'bioconda'
-
-#-------------------------------------------------------------------------------
-
-def get_bioconda_name():
-    '''
-    Get the Bioconda name used to title.
-    '''
-
-    return 'Bioconda'
-
-#-------------------------------------------------------------------------------
-
-def get_bioconda_url():
-    '''
-    Get the Bioconda URL.
-    '''
-
-    return 'https://bioconda.github.io/'
 
 #-------------------------------------------------------------------------------
 
@@ -250,9 +296,9 @@ def get_blastplus_name():
 
 #-------------------------------------------------------------------------------
 
-def get_blastplus_bioconda_code():
+def get_blastplus_anaconda_code():
     '''
-    Get the BLAST+ code used to identify the Bioconda package.
+    Get the BLAST+ code used to identify the Anaconda package.
     '''
 
     return 'blast'
@@ -277,9 +323,9 @@ def get_bowtie2_name():
 
 #-------------------------------------------------------------------------------
 
-def get_bowtie2_bioconda_code():
+def get_bowtie2_anaconda_code():
     '''
-    Get the Bowtie2 code used to identify the Bioconda package.
+    Get the Bowtie2 code used to identify the Anaconda package.
     '''
 
     return 'bowtie2'
@@ -304,9 +350,9 @@ def get_busco_name():
 
 #-------------------------------------------------------------------------------
 
-def get_busco_bioconda_code():
+def get_busco_anaconda_code():
     '''
-    Get the BUSCO code used to identify the Bioconda package.
+    Get the BUSCO code used to identify the Anaconda package.
     '''
 
     return 'busco'
@@ -331,9 +377,9 @@ def get_cd_hit_name():
 
 #-------------------------------------------------------------------------------
 
-def get_cd_hit_bioconda_code():
+def get_cd_hit_anaconda_code():
     '''
-    Get the CD-HIT code used to identify the Bioconda package.
+    Get the CD-HIT code used to identify the Anaconda package.
     '''
 
     return 'cd-hit'
@@ -412,9 +458,9 @@ def get_cufflinks_name():
 
 #-------------------------------------------------------------------------------
 
-def get_cufflinks_bioconda_code():
+def get_cufflinks_anaconda_code():
     '''
-    Get the Cufflinks code used to identify the Bioconda package.
+    Get the Cufflinks code used to identify the Anaconda package.
     '''
 
     return 'cufflinks'
@@ -475,31 +521,12 @@ def get_cutadapt_name():
 
 #-------------------------------------------------------------------------------
 
-def get_cutadapt_bioconda_code():
+def get_cutadapt_anaconda_code():
     '''
-    Get the cutadapt code used to identify the Bioconda package.
+    Get the cutadapt code used to identify the Anaconda package.
     '''
 
     return 'cutadapt'
-
-#-------------------------------------------------------------------------------
-
-def get_ddradseq_pipeline_code():
-    '''
-    Get the ddRADseq pipeline (ddRADseqTools package) code used to identify its
-    processes.
-    '''
-
-    return 'ddradseqpl'
-
-#-------------------------------------------------------------------------------
-
-def get_ddradseq_pipeline_name():
-    '''
-    Get the ddRADseq pipeline (ddRADseqTools package) name used to title.
-    '''
-
-    return 'ddRADseq pipeline'
 
 #-------------------------------------------------------------------------------
 
@@ -558,9 +585,9 @@ def get_detonate_name():
 
 #-------------------------------------------------------------------------------
 
-def get_detonate_bioconda_code():
+def get_detonate_anaconda_code():
     '''
-    Get the DETONATE code used to identify the Bioconda package.
+    Get the DETONATE code used to identify the Anaconda package.
     '''
 
     return 'detonate'
@@ -585,9 +612,9 @@ def get_emboss_name():
 
 #-------------------------------------------------------------------------------
 
-def get_emboss_bioconda_code():
+def get_emboss_anaconda_code():
     '''
-    Get the EMBOSS code used to identify the Bioconda package
+    Get the EMBOSS code used to identify the Anaconda package
     '''
 
     return 'emboss'
@@ -612,12 +639,39 @@ def get_entrez_direct_name():
 
 #-------------------------------------------------------------------------------
 
-def get_entrez_direct_bioconda_code():
+def get_entrez_direct_anaconda_code():
     '''
-    Get the Entrez Direct code used to the Bioconda package.
+    Get the Entrez Direct code used to the Anaconda package.
     '''
 
     return 'entrez-direct'
+
+#-------------------------------------------------------------------------------
+
+def get_express_code():
+    '''
+    Get the eXpress code used to identify its processes.
+    '''
+
+    return 'express'
+
+#-------------------------------------------------------------------------------
+
+def get_express_name():
+    '''
+    Get the eXpress name used to title.
+    '''
+
+    return 'eXpress'
+
+#-------------------------------------------------------------------------------
+
+def get_express_anaconda_code():
+    '''
+    Get the eXpress code used to identify the Anaconda package.
+    '''
+
+    return 'express'
 
 #-------------------------------------------------------------------------------
 
@@ -639,9 +693,9 @@ def get_fastqc_name():
 
 #-------------------------------------------------------------------------------
 
-def get_fastqc_bioconda_code():
+def get_fastqc_anaconda_code():
     '''
-    Get the FastQC code used to identify the Bioconda package.
+    Get the FastQC code used to identify the Anaconda package.
     '''
 
     return 'fastqc'
@@ -685,9 +739,9 @@ def get_gmap_gsnap_name():
 
 #-------------------------------------------------------------------------------
 
-def get_gmap_gsnap_bioconda_code():
+def get_gmap_gsnap_anaconda_code():
     '''
-    Get the GMAP-GSNAP code used to identify the Bioconda package.
+    Get the GMAP-GSNAP code used to identify the Anaconda package.
     '''
 
     return 'gmap'
@@ -766,9 +820,9 @@ def get_hisat2_name():
 
 #-------------------------------------------------------------------------------
 
-def get_hisat2_bioconda_code():
+def get_hisat2_anaconda_code():
     '''
-    Get the HISAT2 code used to identify the Bioconda package.
+    Get the HISAT2 code used to identify the Anaconda package.
     '''
 
     return 'hisat2'
@@ -793,9 +847,9 @@ def get_htseq_name():
 
 #-------------------------------------------------------------------------------
 
-def get_htseq_bioconda_code():
+def get_htseq_anaconda_code():
     '''
-    Get the HTSeq code used to identify the Bioconda package.
+    Get the HTSeq code used to identify the Anaconda package.
     '''
 
     return 'htseq'
@@ -859,7 +913,7 @@ def get_ipyrad_name():
 
 def get_ipyrad_conda_code():
     '''
-    Get the ipyrad code used to identify the Bioconda package.
+    Get the ipyrad code used to identify the Anaconda package.
     '''
 
     return 'ipyrad'
@@ -884,9 +938,9 @@ def get_kallisto_name():
 
 #-------------------------------------------------------------------------------
 
-def get_kallisto_bioconda_code():
+def get_kallisto_anaconda_code():
     '''
-    Get the kallisto code used to identify the Bioconda package.
+    Get the kallisto code used to identify the Anaconda package.
     '''
 
     return 'kallisto'
@@ -947,9 +1001,9 @@ def get_quast_name():
 
 #-------------------------------------------------------------------------------
 
-def get_quast_bioconda_code():
+def get_quast_anaconda_code():
     '''
-    Get the QUAST code used to identify the Bioconda package.
+    Get the QUAST code used to identify the Anaconda package.
     '''
 
     return 'quast'
@@ -971,6 +1025,33 @@ def get_r_name():
     '''
 
     return 'R'
+
+#-------------------------------------------------------------------------------
+
+def get_r_anaconda_code():
+    '''
+    Get the R code used to identify the Anaconda package.
+    '''
+
+    return 'R'
+
+#-------------------------------------------------------------------------------
+
+def get_raddesigner_code():
+    '''
+    Get the RADdesigner code used to identify its processes.
+    '''
+
+    return 'raddesigner'
+
+#-------------------------------------------------------------------------------
+
+def get_raddesigner_name():
+    '''
+    Get the RADdesigner name used to title.
+    '''
+
+    return 'RADdesigner'
 
 #-------------------------------------------------------------------------------
 
@@ -1010,9 +1091,9 @@ def get_rnaquast_name():
 
 #-------------------------------------------------------------------------------
 
-def get_rnaquast_bioconda_code():
+def get_rnaquast_anaconda_code():
     '''
-    Get the rnaQUAST code used to the Bioconda package.
+    Get the rnaQUAST code used to the Anaconda package.
     '''
 
     return 'rnaquast'
@@ -1037,9 +1118,9 @@ def get_rsem_name():
 
 #-------------------------------------------------------------------------------
 
-def get_rsem_bioconda_code():
+def get_rsem_anaconda_code():
     '''
-    Get the RSEM code used to identify the Bioconda package.
+    Get the RSEM code used to identify the Anaconda package.
     '''
 
     return 'rsem'
@@ -1085,7 +1166,7 @@ def get_rsitesearch_name():
 
 def get_samtools_code():
     '''
-    Get the BEDTools code used to identify its processes.
+    Get the SAMtools code used to identify its processes.
     '''
 
     return 'samtools'
@@ -1094,16 +1175,16 @@ def get_samtools_code():
 
 def get_samtools_name():
     '''
-    Get the BEDTools name used to title.
+    Get the SAMtools name used to title.
     '''
 
     return 'SAMtools'
 
 #-------------------------------------------------------------------------------
 
-def get_samtools_bioconda_code():
+def get_samtools_anaconda_code():
     '''
-    Get the BEDTools code used to identify the Bioconda package.
+    Get the SAMtools code used to identify the Anaconda package.
     '''
 
     return 'samtools'
@@ -1128,9 +1209,9 @@ def get_soapdenovo2_name():
 
 #-------------------------------------------------------------------------------
 
-def get_soapdenovo2_bioconda_code():
+def get_soapdenovo2_anaconda_code():
     '''
-    Get the SOAPdenovo2 code used to identify the Bioconda package.
+    Get the SOAPdenovo2 code used to identify the Anaconda package.
     '''
 
     return 'soapdenovo2'
@@ -1155,9 +1236,9 @@ def get_soapdenovotrans_name():
 
 #-------------------------------------------------------------------------------
 
-def get_soapdenovotrans_bioconda_code():
+def get_soapdenovotrans_anaconda_code():
     '''
-    Get the SOAPdenovo-Trans code used to identify the Bioconda package.
+    Get the SOAPdenovo-Trans code used to identify the Anaconda package.
     '''
 
     return 'soapdenovo-trans'
@@ -1182,9 +1263,9 @@ def get_star_name():
 
 #-------------------------------------------------------------------------------
 
-def get_star_bioconda_code():
+def get_star_anaconda_code():
     '''
-    Get the STAR code used to identify the Bioconda package.
+    Get the STAR code used to identify the Anaconda package.
     '''
 
     return 'star'
@@ -1209,12 +1290,366 @@ def get_starcode_name():
 
 #-------------------------------------------------------------------------------
 
-def get_starcode_bioconda_code():
+def get_starcode_anaconda_code():
     '''
-    Get the starcode code used to the Bioconda package.
+    Get the starcode code used to the Anaconda package.
     '''
 
     return 'starcode'
+
+#-------------------------------------------------------------------------------
+
+def get_tabix_code():
+    '''
+    Get the tabix code used to identify its processes.
+    '''
+
+    return 'tabix'
+
+#-------------------------------------------------------------------------------
+
+def get_tabix_name():
+    '''
+    Get the tabix name used to title.
+    '''
+
+    return 'Tabix'
+
+#-------------------------------------------------------------------------------
+
+def get_tabix_anaconda_code():
+    '''
+    Get the tabix code used to identify the Anaconda package.
+    '''
+
+    return 'tabix'
+
+#-------------------------------------------------------------------------------
+
+def get_tophat_code():
+    '''
+    Get the TopHat code used to identify its processes.
+    '''
+
+    return 'tophat'
+
+#-------------------------------------------------------------------------------
+
+def get_tophat_name():
+    '''
+    Get the TopHat name used to title.
+    '''
+
+    return 'TopHat'
+
+#-------------------------------------------------------------------------------
+
+def get_tophat_anaconda_code():
+    '''
+    Get the TopHat code used to identify the Anaconda package.
+    '''
+
+    return 'tophat'
+
+#-------------------------------------------------------------------------------
+
+def get_transabyss_code():
+    '''
+    Get the Trans-ABySS code used to identify its processes.
+    '''
+
+    return 'transabyss'
+
+#-------------------------------------------------------------------------------
+
+def get_transabyss_name():
+    '''
+    Get the Trans-ABySS name used to title.
+    '''
+
+    return 'Trans-ABySS'
+
+#-------------------------------------------------------------------------------
+
+def get_transabyss_anaconda_code():
+    '''
+    Get the Trans-ABySS code used to the Anaconda package.
+    '''
+
+    return 'transabyss'
+
+#-------------------------------------------------------------------------------
+
+def get_transcript_filter_code():
+    '''
+    Get the transcripts-filter (NGShelper package) code used to identify its
+    processes.
+    '''
+
+    return 'transfil'
+
+#-------------------------------------------------------------------------------
+
+def get_transcript_filter_name():
+    '''
+    Get the transcripts-filter (NGShelper package) name used to title.
+    '''
+
+    return 'transcript-filter'
+
+#-------------------------------------------------------------------------------
+
+def get_transcriptome_blastx_code():
+    '''
+    Get the transcriptome-blastx (NGShelper package) code used to identify its
+    processes.
+    '''
+
+    return 'transbastx'
+
+#-------------------------------------------------------------------------------
+
+def get_transcriptome_blastx_name():
+    '''
+    Get the transcriptome-blastx (NGShelper package) name used to title.
+    '''
+
+    return 'transcriptome-blastx'
+
+#-------------------------------------------------------------------------------
+
+def get_transdecoder_code():
+    '''
+    Get the TransDecoder code used to identify its processes.
+    '''
+
+    return 'transdecod'
+
+#-------------------------------------------------------------------------------
+
+def get_transdecoder_name():
+    '''
+    Get the TransDecoder name used to title.
+    '''
+
+    return 'TransDecoder'
+
+#-------------------------------------------------------------------------------
+
+def get_transdecoder_anaconda_code():
+    '''
+    Get the TransDecoder code used to the Anaconda package.
+    '''
+
+    return 'transdecoder'
+
+#-------------------------------------------------------------------------------
+
+def get_transrate_code():
+    '''
+    Get the Transrate code used to identify its processes.
+    '''
+
+    return 'transrate'
+
+#-------------------------------------------------------------------------------
+
+def get_transrate_name():
+    '''
+    Get the Transrate name used to title.
+    '''
+
+    return 'Transrate'
+
+#-------------------------------------------------------------------------------
+
+def get_transrate_anaconda_code():
+    '''
+    Get the Transrate code used to the Anaconda package.
+    '''
+
+    return 'transrate'
+
+#-------------------------------------------------------------------------------
+
+def get_transrate_tools_code():
+    '''
+    Get the Transrate tools code used to identify its processes.
+    '''
+
+    return 'transratools'
+
+#-------------------------------------------------------------------------------
+
+def get_transrate_tools_name():
+    '''
+    Get the Transrate Tools name used to title.
+    '''
+
+    return 'Transrate tools'
+
+#-------------------------------------------------------------------------------
+
+def get_transrate_tools_anaconda_code():
+    '''
+    Get the Transrate Tools code used to the Anaconda package.
+    '''
+
+    return 'transrate-tools'
+
+#-------------------------------------------------------------------------------
+
+def get_trimmomatic_code():
+    '''
+    Get the Trimmomatic code used to identify its processes.
+    '''
+
+    return 'trimmo'
+
+#-------------------------------------------------------------------------------
+
+def get_trimmomatic_name():
+    '''
+    Get the Trimmomatic name used to title.
+    '''
+
+    return 'Trimmomatic'
+
+#-------------------------------------------------------------------------------
+
+def get_trimmomatic_anaconda_code():
+    '''
+    Get the Trimmomatic code used to the Anaconda package.
+    '''
+
+    return 'trimmomatic'
+
+#-------------------------------------------------------------------------------
+
+def get_trinity_code():
+    '''
+    Get the Trinity code used to identify its processes.
+    '''
+
+    return 'trinity'
+
+#-------------------------------------------------------------------------------
+
+def get_trinity_name():
+    '''
+    Get the Trinity name used to title.
+    '''
+
+    return 'Trinity'
+
+#-------------------------------------------------------------------------------
+
+def get_trinity_anaconda_code():
+    '''
+    Get the Trinity code used to the Anaconda package.
+    '''
+
+    return 'trinity'
+
+#-------------------------------------------------------------------------------
+
+def get_variant_calling_code():
+    '''
+    Get the Variant calling (ddRADseqTools package) code used to identify its
+    processes.
+    '''
+
+    return 'varcalling'
+
+#-------------------------------------------------------------------------------
+
+def get_variant_calling_name():
+    '''
+    Get the Variant calling (ddRADseqTools package) name used to title.
+    '''
+
+    return 'Variant calling'
+
+#-------------------------------------------------------------------------------
+
+def get_vcftools_code():
+    '''
+    Get the VCFtools code used to identify its processes.
+    '''
+
+    return 'vcftools'
+
+#-------------------------------------------------------------------------------
+
+def get_vcftools_name():
+    '''
+    Get the VCFtools name used to title.
+    '''
+
+    return 'VCFtools'
+
+#-------------------------------------------------------------------------------
+
+def get_vcftools_anaconda_code():
+    '''
+    Get the VCFtools code used to identify the Anaconda package.
+    '''
+
+    return 'vcftools'
+
+#-------------------------------------------------------------------------------
+
+def get_vcftools_perl_libraries_code():
+    '''
+    Get the VCFtools Perl libraries code used to identify its processes.
+    '''
+
+    return 'vcftools-perl'
+
+#-------------------------------------------------------------------------------
+
+def get_vcftools_perl_libraries_name():
+    '''
+    Get the VCFtools Perl libraries name used to title.
+    '''
+
+    return 'VCFtools Perl libraries'
+
+#-------------------------------------------------------------------------------
+
+def get_vcftools_perl_libraries_anaconda_code():
+    '''
+    Get the VCFtools Perl libraries code used to identify the Anaconda package.
+    '''
+
+    return 'perl-vcftools-vcf'
+
+#-------------------------------------------------------------------------------
+
+def get_vsearch_code():
+    '''
+    Get the VSEARCH code used to identify process.
+    '''
+
+    return 'vsearch'
+
+#-------------------------------------------------------------------------------
+
+def get_vsearch_name():
+    '''
+    Get the VSEARCH name used to title.
+    '''
+
+    return 'VSEARCH'
+
+#-------------------------------------------------------------------------------
+
+def get_vsearch_anaconda_code():
+    '''
+    Get the VSEARCH code used to identify the Anaconda package.
+    '''
+
+    return 'vsearch'
 
 #-------------------------------------------------------------------------------
 
@@ -2010,232 +2445,6 @@ def get_toa_type_recreate():
 
 #-------------------------------------------------------------------------------
 
-def get_tophat_code():
-    '''
-    Get the TopHat code used to identify its processes.
-    '''
-
-    return 'tophat'
-
-#-------------------------------------------------------------------------------
-
-def get_tophat_name():
-    '''
-    Get the TopHat name used to title.
-    '''
-
-    return 'TopHat'
-
-#-------------------------------------------------------------------------------
-
-def get_tophat_bioconda_code():
-    '''
-    Get the TopHat code used to identify the Bioconda package.
-    '''
-
-    return 'tophat'
-
-#-------------------------------------------------------------------------------
-
-def get_transabyss_code():
-    '''
-    Get the Trans-ABySS code used to identify its processes.
-    '''
-
-    return 'transabyss'
-
-#-------------------------------------------------------------------------------
-
-def get_transabyss_name():
-    '''
-    Get the Trans-ABySS name used to title.
-    '''
-
-    return 'Trans-ABySS'
-
-#-------------------------------------------------------------------------------
-
-def get_transabyss_bioconda_code():
-    '''
-    Get the Trans-ABySS code used to the Bioconda package.
-    '''
-
-    return 'transabyss'
-
-#-------------------------------------------------------------------------------
-
-def get_transcript_filter_code():
-    '''
-    Get the transcripts-filter (NGShelper package) code used to identify its
-    processes.
-    '''
-
-    return 'transfil'
-
-#-------------------------------------------------------------------------------
-
-def get_transcript_filter_name():
-    '''
-    Get the transcripts-filter (NGShelper package) name used to title.
-    '''
-
-    return 'transcript-filter'
-
-#-------------------------------------------------------------------------------
-
-def get_transcriptome_blastx_code():
-    '''
-    Get the transcriptome-blastx (NGShelper package) code used to identify its
-    processes.
-    '''
-
-    return 'transbastx'
-
-#-------------------------------------------------------------------------------
-
-def get_transcriptome_blastx_name():
-    '''
-    Get the transcriptome-blastx (NGShelper package) name used to title.
-    '''
-
-    return 'transcriptome-blastx'
-
-#-------------------------------------------------------------------------------
-
-def get_transdecoder_code():
-    '''
-    Get the TransDecoder code used to identify its processes.
-    '''
-
-    return 'transdecod'
-
-#-------------------------------------------------------------------------------
-
-def get_transdecoder_name():
-    '''
-    Get the TransDecoder name used to title.
-    '''
-
-    return 'TransDecoder'
-
-#-------------------------------------------------------------------------------
-
-def get_transdecoder_bioconda_code():
-    '''
-    Get the TransDecoder code used to the Bioconda package.
-    '''
-
-    return 'transdecoder'
-
-#-------------------------------------------------------------------------------
-
-def get_transrate_code():
-    '''
-    Get the Transrate code used to identify its processes.
-    '''
-
-    return 'transrate'
-
-#-------------------------------------------------------------------------------
-
-def get_transrate_name():
-    '''
-    Get the Transrate name used to title.
-    '''
-
-    return 'Transrate'
-
-#-------------------------------------------------------------------------------
-
-def get_transrate_bioconda_code():
-    '''
-    Get the Transrate code used to the Bioconda package.
-    '''
-
-    return 'transrate'
-#-------------------------------------------------------------------------------
-
-def get_trimmomatic_code():
-    '''
-    Get the Trimmomatic code used to identify its processes.
-    '''
-
-    return 'trimmo'
-
-#-------------------------------------------------------------------------------
-
-def get_trimmomatic_name():
-    '''
-    Get the Trimmomatic name used to title.
-    '''
-
-    return 'Trimmomatic'
-
-#-------------------------------------------------------------------------------
-
-def get_trimmomatic_bioconda_code():
-    '''
-    Get the Trimmomatic code used to the Bioconda package.
-    '''
-
-    return 'trimmomatic'
-
-#-------------------------------------------------------------------------------
-
-def get_trinity_code():
-    '''
-    Get the Trinity code used to identify its processes.
-    '''
-
-    return 'trinity'
-
-#-------------------------------------------------------------------------------
-
-def get_trinity_name():
-    '''
-    Get the Trinity name used to title.
-    '''
-
-    return 'Trinity'
-
-#-------------------------------------------------------------------------------
-
-def get_trinity_bioconda_code():
-    '''
-    Get the Trinity code used to the Bioconda package.
-    '''
-
-    return 'trinity'
-
-#-------------------------------------------------------------------------------
-
-def get_vsearch_code():
-    '''
-    Get the VSEARCH code used to identify process.
-    '''
-
-    return 'vsearch'
-
-#-------------------------------------------------------------------------------
-
-def get_vsearch_name():
-    '''
-    Get the VSEARCH name used to title.
-    '''
-
-    return 'VSEARCH'
-
-#-------------------------------------------------------------------------------
-
-def get_vsearch_bioconda_code():
-    '''
-    Get the VSEARCH code used to identify the Bioconda package.
-    '''
-
-    return 'vsearch'
-
-#-------------------------------------------------------------------------------
-
 def get_config_dir():
     '''
     Get the configuration directory in the local computer.
@@ -2338,7 +2547,16 @@ def get_submission_process_dict():
     submission_process_dict['remove_volume']= {'text': 'Remove volume'}
     submission_process_dict['replicate_volume']= {'text': 'Replicate volume to another zone'}
     submission_process_dict['resize_volume']= {'text': 'Resize volume'}
+    submission_process_dict['restart_ddradseq_simulation_process']= {'text': 'Restart {0} process'.format(get_ddradseq_simulation_name())}
+    submission_process_dict['restart_ggtrinity_process']= {'text': 'Restart {0} process'.format(get_ggtrinity_name())}
+    submission_process_dict['restart_insilico_read_normalization_process']= {'text': 'Restart {0} process'.format(get_insilico_read_normalization_name())}
     submission_process_dict['restart_pipeline_process']= {'text': 'Restart {0} process'.format(get_toa_pipeline_name())}
+    submission_process_dict['restart_raddesigner_process']= {'text': 'Restart {0} process'.format(get_raddesigner_name())}
+    submission_process_dict['restart_soapdenovo2_process']= {'text': 'Restart {0} process'.format(get_soapdenovo2_name())}
+    submission_process_dict['restart_soapdenovotrans_process']= {'text': 'Restart {0} process'.format(get_soapdenovotrans_name())}
+    submission_process_dict['restart_trinity_process']= {'text': 'Restart {0} process'.format(get_trinity_name())}
+    submission_process_dict['restart_variant_calling_process']= {'text': 'Restart {0} process'.format(get_variant_calling_name())}
+    submission_process_dict['run_bowtie2_process']= {'text': 'Run {0} process'.format(get_bowtie2_name())}
     submission_process_dict['run_busco_process']= {'text': 'Run {0} process'.format(get_busco_name())}
     submission_process_dict['run_cd_hit_est_process']= {'text': 'Run {0} process'.format(get_cd_hit_est_name())}
     submission_process_dict['run_cuffdiff_process']= {'text': 'Run {0} process'.format(get_cuffdiff_name())}
@@ -2346,6 +2564,7 @@ def get_submission_process_dict():
     submission_process_dict['run_cuffquant_process']= {'text': 'Run {0} process'.format(get_cuffquant_name())}
     submission_process_dict['run_ddradseq_simulation_process']= {'text': 'Run ddRADseq simulation process'}
     submission_process_dict['run_entrez_direct_process']= {'text': 'Run {0} process'.format(get_entrez_direct_name())}
+    submission_process_dict['run_express_process']= {'text': 'Run {0} process'.format(get_express_name())}
     submission_process_dict['run_fastqc_process']= {'text': 'Run {0} process'.format(get_fastqc_name())}
     submission_process_dict['run_ggtrinity_process']= {'text': 'Run {0} process'.format(get_ggtrinity_name())}
     submission_process_dict['run_gmap_process']= {'text': 'Run {0} process'.format(get_gmap_name())}
@@ -2358,6 +2577,7 @@ def get_submission_process_dict():
     submission_process_dict['run_kallisto_process']= {'text': 'Run {0} process'.format(get_kallisto_name())}
     submission_process_dict['run_pipeline_process']= {'text': 'Run {0} process'.format(get_toa_pipeline_name())}
     submission_process_dict['run_quast_process']= {'text': 'Run {0} process'.format(get_quast_name())}
+    submission_process_dict['run_raddesigner_process']= {'text': 'Run {0} process'.format(get_raddesigner_name())}
     submission_process_dict['run_ref_eval_process']= {'text': 'Run {0} process'.format(get_ref_eval_name())}
     submission_process_dict['run_rnaquast_process']= {'text': 'Run {0} process'.format(get_rnaquast_name())}
     submission_process_dict['run_rsem_eval_process']= {'text': 'Run {0} process'.format(get_rsem_eval_name())}
@@ -2374,12 +2594,13 @@ def get_submission_process_dict():
     submission_process_dict['run_transrate_process']= {'text': 'Run {0} process'.format(get_transrate_name())}
     submission_process_dict['run_trimmomatic_process']= {'text': 'Run {0} process'.format(get_trimmomatic_name())}
     submission_process_dict['run_trinity_process']= {'text': 'Run {0} process'.format(get_trinity_name())}
-    submission_process_dict['install_bioconda_package_list']= {'text': 'Install Bioconda package list'}
-    submission_process_dict['install_conda_package_list']= {'text': 'Install Conda package list'}
+    submission_process_dict['run_variant_calling_process']= {'text': 'Run {0} process'.format(get_variant_calling_name())}
+    submission_process_dict['install_anaconda_package_list']= {'text': 'Install Anaconda package list'}
     submission_process_dict['install_ddradseqtools']= {'text': 'Install {0}'.format(get_ddradseqtools_name())}
     submission_process_dict['install_miniconda3']= {'text': 'Install {0}'.format(get_miniconda3_name())}
     submission_process_dict['install_ngshelper']= {'text': 'Install {0}'.format(get_ngshelper_name())}
     submission_process_dict['install_r']= {'text': 'Install {0}'.format(get_r_name())}
+    submission_process_dict['install_raddesigner']= {'text': 'Install {0}'.format(get_raddesigner_name())}
     submission_process_dict['install_transrate']= {'text': 'Install {0}'.format(get_transrate_name())}
     submission_process_dict['show_cluster_composition']= {'text': 'Show cluster composition'}
     submission_process_dict['show_status_batch_jobs']= {'text': 'Show status of batch jobs'}
@@ -2439,7 +2660,7 @@ def get_cluster_ngscloud_device_file():
 
 def get_cluster_app_dir():
     '''
-    Get the aplication directory in the cluster (multi-volume).
+    Get the aplication directory in the cluster.
     '''
 
     return '/ngscloud/apps'
@@ -2457,7 +2678,7 @@ def get_cluster_app_device_file():
 
 def get_cluster_database_dir():
     '''
-    Get the database directory in the cluster (multi-volume).
+    Get the database directory in the cluster.
     '''
 
     return '/ngscloud/databases'
@@ -2475,7 +2696,7 @@ def get_cluster_database_device_file():
 
 def get_cluster_database_dataset_dir(database_dataset_id):
     '''
-    Get the directory of a database dataset in the cluster (multi-volume).
+    Get the directory of a database dataset in the cluster.
     '''
 
     # set the database directory in the cluster
@@ -2488,7 +2709,7 @@ def get_cluster_database_dataset_dir(database_dataset_id):
 
 def get_cluster_database_file(database_dataset_id, file_name):
     '''
-    Get the database file path of a database dataset in the cluster (multi-volume).
+    Get the database file path of a database dataset in the cluster.
     '''
 
     # set the path of the database file
@@ -2501,7 +2722,7 @@ def get_cluster_database_file(database_dataset_id, file_name):
 
 def get_cluster_read_dir():
     '''
-    Get the read directory in the cluster (multi-volume).
+    Get the read directory in the cluster.
     '''
 
     return '/ngscloud/reads'
@@ -2519,7 +2740,7 @@ def get_cluster_read_device_file():
 
 def get_uploaded_read_dataset_name():
     '''
-    Get the name of the row read dataset in the cluster (multi-volume).
+    Get the name of the raw read dataset in the cluster.
     '''
 
     return 'uploaded-reads'
@@ -2528,7 +2749,7 @@ def get_uploaded_read_dataset_name():
 
 def get_cluster_experiment_read_dataset_dir(experiment_id, read_dataset_id):
     '''
-    Get the directory of a experiment read dataset in the cluster (multi-volume).
+    Get the directory of a experiment read dataset in the cluster.
     '''
 
     # set the experiment read directory in the cluster
@@ -2554,7 +2775,7 @@ def get_cluster_read_file(experiment_id, read_dataset_id, file_name):
 
 def get_cluster_reference_dir():
     '''
-    Get the reference directory in the cluster (multi-volume).
+    Get the reference directory in the cluster.
     '''
 
     return '/ngscloud/references'
@@ -2598,7 +2819,7 @@ def get_cluster_reference_file(reference_dataset_id, file_name):
 
 def get_cluster_result_dir():
     '''
-    Get the result directory in the cluster (multi-volume).
+    Get the result directory in the cluster.
     '''
 
     return '/ngscloud/results'
@@ -2611,6 +2832,15 @@ def get_cluster_result_device_file():
     '''
 
     return '/dev/sdk'
+
+#-------------------------------------------------------------------------------
+
+def get_design_dataset_name():
+    '''
+    Get the name of design dataset in the cluster.
+    '''
+
+    return 'design'
 
 #-------------------------------------------------------------------------------
 
@@ -2944,7 +3174,7 @@ def split_literal_to_integer_list(literal):
     for i in range(len(strings_list)):
         try:
             integers_list.append(int(strings_list[i]))
-        except Exception as e:
+        except:
             integers_list = []
             break
 
@@ -2969,7 +3199,7 @@ def split_literal_to_float_list(literal):
     for i in range(len(strings_list)):
         try:
             float_list.append(float(strings_list[i]))
-        except Exception as e:
+        except:
             float_list = []
             break
 
@@ -3065,11 +3295,11 @@ def check_startswith(literal, text_list, case_sensitive=False):
     if not case_sensitive:
         try:
             literal = literal.upper()
-        except Exception as e:
+        except:
             pass
         try:
             list = [x.upper() for x in text_list]
-        except Exception as e:
+        except:
             pass
     else:
         list = text_list
@@ -3097,11 +3327,11 @@ def check_code(literal, code_list, case_sensitive=False):
     if not case_sensitive:
         try:
             literal = literal.upper()
-        except Exception as e:
+        except:
             pass
         try:
             list = [x.upper() for x in code_list]
-        except Exception as e:
+        except:
             pass
     else:
         list = code_list
@@ -3127,7 +3357,7 @@ def check_int(literal, minimum=(-sys.maxsize - 1), maximum=sys.maxsize):
         int(literal)
         int(minimum)
         int(maximum)
-    except Exception as e:
+    except:
         OK = False
     else:
         if int(literal) < int(minimum) or int(literal) > int(maximum):
@@ -3153,7 +3383,7 @@ def check_float(literal, minimum=float(-sys.maxsize - 1), maximum=float(sys.maxs
         float(maximum)
         float(mne)
         float(mxe)
-    except Exception as e:
+    except:
         OK = False
     else:
         if float(literal) < (float(minimum) + float(mne)) or float(literal) > (float(maximum) - float(mxe)):
@@ -3188,7 +3418,7 @@ def check_parameter_list(parameters, key, not_allowed_parameters_list):
                 pattern = r'^--(.+)$'
                 mo = re.search(pattern, parameter)
                 parameter_name = mo.group(1).strip()
-        except Exception as e:
+        except:
             error_list.append('*** ERROR: the value of the key "{0}" has to NONE or a valid parameter list.'.format(key))
             OK = False
             break
@@ -3447,6 +3677,26 @@ def get_separator():
 
 #-------------------------------------------------------------------------------
 
+def get_time_output_format(separator=True):
+    '''
+    Get the format of the command time.
+    '''
+
+    # set the format
+    format = 'Elapsed real time (s): %e\\n' + \
+             'CPU time in kernel mode (s): %S\\n' + \
+             'CPU time in user mode (s): %U\\n' + \
+             'Percentage of CPU: %P\\n' + \
+             'Maximum resident set size(Kb): %M\\n' + \
+             'Average total memory use (Kb):%K'
+    if separator:
+       format = '$SEP\\n' + format
+
+    # return the format
+    return format
+
+#-------------------------------------------------------------------------------
+
 def get_mail_message_ok(process_name, cluster_name):
     '''
     Get the message text of the mail sent when a process ends with errors.
@@ -3466,7 +3716,7 @@ def get_mail_message_ok(process_name, cluster_name):
                'https://github.com/ggfhf/'
 
 
-    # build the message
+    # return the message
     return message
 
 #-------------------------------------------------------------------------------
@@ -3519,7 +3769,7 @@ class DevStdOut(object):
             if not os.path.exists(os.path.dirname(self.log_file)):
                 os.makedirs(os.path.dirname(self.log_file))
             self.log_file_id = open(self.log_file, mode='w', encoding='iso-8859-1', newline='\n')
-        except Exception as e:
+        except:
             print('*** ERROR: The file {0} can not be created'.format(self.log_file))
 
     #---------------
@@ -3616,6 +3866,19 @@ class ProgramException(Exception):
             sys.exit(1)
 
    #---------------
+
+#-------------------------------------------------------------------------------
+
+class NestedDefaultDict(collections.defaultdict):
+    '''
+    This class is used to create nested dictionaries.
+    '''
+
+    def __init__(self, *args, **kwargs):
+        super(NestedDefaultDict, self).__init__(NestedDefaultDict, *args, **kwargs)
+
+    def __repr__(self):
+        return repr(dict(self))
 
 #-------------------------------------------------------------------------------
 

@@ -29,6 +29,7 @@ import sys
 
 import cinputs
 import clib
+import xbowtie2
 import xbusco
 import xcdhit
 import xcluster
@@ -39,6 +40,7 @@ import xdatabase
 import xddradseqtools
 import xdetonate
 import xec2
+import xexpress
 import xfastqc
 import xgmap
 import xgzip
@@ -51,6 +53,7 @@ import xlib
 import xngshelper
 import xnode
 import xquast
+import xraddesigner
 import xread
 import xreference
 import xresult
@@ -78,7 +81,7 @@ def form_set_environment():
     # print headers
     clib.clear_screen()
     clib.print_headers_without_environment('Set environment')
-    # -- print('function name: {0}'.format(sys._getframe().f_code.co_name))
+    # -- print(f'function name: {sys._getframe().f_code.co_name}')
 
     # initialize the environment and the input environment
     xconfiguration.environment = ''
@@ -89,7 +92,8 @@ def form_set_environment():
 
     # print the available region names
     if environments_list != []:
-        print('Current environments list: {0} ...'.format(str(environments_list).strip('[]').replace('\'', '')))
+        environments_list_text = str(environments_list).strip('[]').replace('\'', '')
+        print(f'Current environments list: {environments_list_text} ...')
         input_text = '... Enter the environment name: '
     else:
         print('Currently there is not any environment recorded.')
@@ -100,7 +104,7 @@ def form_set_environment():
         xconfiguration.environment = input(input_text)
         if xconfiguration.environment not in environments_list:
             print(xlib.get_separator())
-            anwser = input('{0} is not a recorded environment. Do you like to record it? (Y/N): '.format(xconfiguration.environment))
+            anwser = input(f'{xconfiguration.environment} is not a recorded environment. Do you like to record it? (Y/N): ')
             if anwser not in ['Y', 'y']:
                 xconfiguration.environment = ''
             else:
@@ -123,6 +127,9 @@ def form_set_environment():
         if not os.path.exists(xlib.get_keypairs_dir()):
             os.makedirs(xlib.get_keypairs_dir())
 
+        # create the Bowtie2 config file
+        (OK, error_list) = xbowtie2.create_bowtie2_config_file()
+
         # create the BUSCO config file
         (OK, error_list) = xbusco.create_busco_config_file()
 
@@ -141,11 +148,11 @@ def form_set_environment():
         # create the cutadapt config file
         (OK, error_list) = xcutadapt.create_cutadapt_config_file()
 
-        # create the ddRADseqTools config and data files
+        # create the ddRADseq simulation config file
         (OK, error_list) = xddradseqtools.create_ddradseq_simulation_config_file()
-        (OK, error_list) = xddradseqtools.create_restriction_site_file()
-        (OK, error_list) = xddradseqtools.create_end_file()
-        (OK, error_list) = xddradseqtools.create_individual_file()
+
+        # create the eXpress config file
+        (OK, error_list) = xexpress.create_express_config_file()
 
         # create the FastQC config file
         (OK, error_list) = xfastqc.create_fastqc_config_file()
@@ -177,6 +184,9 @@ def form_set_environment():
         # create the QUAST config file
         (OK, error_list) = xquast.create_quast_config_file()
 
+        # create the RADdesigner config file
+        (OK, error_list) = xraddesigner.create_raddesigner_config_file()
+
         # create the REF-EVAL config file
         (OK, error_list) = xdetonate.create_ref_eval_config_file()
 
@@ -201,13 +211,6 @@ def form_set_environment():
         # create the starcode config file
         (OK, error_list) = xstarcode.create_starcode_config_file()
 
-        # create the TOA config and data files
-        (OK, error_list) = xtoa.create_toa_config_file()
-        (OK, error_list) = xtoa.create_dataset_file()
-        (OK, error_list) = xtoa.create_species_file()
-        (OK, error_list) = xtoa.create_pipeline_config_file(pipeline_type=xlib.get_toa_process_pipeline_nucleotide_code())
-        (OK, error_list) = xtoa.create_pipeline_config_file(pipeline_type=xlib.get_toa_process_pipeline_aminoacid_code())
-
         # create the TopHat config file
         (OK, error_list) = xtophat.create_tophat_config_file()
 
@@ -228,6 +231,23 @@ def form_set_environment():
 
         # create the Trinity config file
         (OK, error_list) = xtrinity.create_trinity_config_file()
+
+        # create the Variant calling config file
+        (OK, error_list) = xddradseqtools.create_variant_calling_config_file()
+
+        # create the RAD-seq data files
+        (OK, error_list) = xddradseqtools.create_end_file()
+        (OK, error_list) = xddradseqtools.create_individual_file()
+        (OK, error_list) = xddradseqtools.create_restriction_site_file()
+        (OK, error_list) = xngshelper.create_vcf_sample_file()
+        (OK, error_list) = xraddesigner.create_condition_file()
+
+        # create the TOA config and data files
+        (OK, error_list) = xtoa.create_toa_config_file()
+        (OK, error_list) = xtoa.create_dataset_file()
+        (OK, error_list) = xtoa.create_species_file()
+        (OK, error_list) = xtoa.create_pipeline_config_file(pipeline_type=xlib.get_toa_process_pipeline_nucleotide_code())
+        (OK, error_list) = xtoa.create_pipeline_config_file(pipeline_type=xlib.get_toa_process_pipeline_aminoacid_code())
 
         # create the transfer config files
         (OK, error_list) = xreference.create_reference_transfer_config_file()
@@ -265,7 +285,7 @@ def form_create_ngscloud_config_file(is_menu_call):
     # print the header
     if is_menu_call:
         clib.clear_screen()
-        clib.print_headers_with_environment('Configuration - Recreate {0} config file'.format(xlib.get_toa_name()))
+        clib.print_headers_with_environment(f'Configuration - Recreate {xlib.get_project_name()} config file')
 
     # get current region and zone names
     region_name = xconfiguration.get_current_region_name()
@@ -297,19 +317,20 @@ def form_create_ngscloud_config_file(is_menu_call):
     if OK:
         if is_menu_call:
             print(xlib.get_separator())
-            OK = clib.confirm_action('The {0} config file is going to be created. The previous files will be lost.'.format(xlib.get_project_name()))
+            OK = clib.confirm_action(f'The {xlib.get_project_name()} config file is going to be created. The previous files will be lost.')
 
     # create the NGScloud config file corresponding to the environment
     if OK:
         print(xlib.get_separator())
-        print('The file {0} is being created ...'.format(xconfiguration.get_ngscloud_config_file()))
+        print(f'The file {xconfiguration.get_ngscloud_config_file()} is being created ...')
         (OK, error_list) = xconfiguration.create_ngscloud_config_file(user_id, access_key_id, secret_access_key, email)
         if OK:
             print('The config file is created with default values.')
             print()
             print('You can modify the conection data and contact e-mail address in:')
             print('    "Cloud control" -> "Configuration" -> "Update connection data and contact e-mail"')
-            print('The assigned region and zone are {0} and {1}, respectively. You can modify them in:'.format(xconfiguration.get_default_region_name(), xconfiguration.get_default_zone_name()))
+            print()
+            print(f'The assigned region and zone are {xconfiguration.get_default_region_name()} and {xconfiguration.get_default_zone_name()}, respectively. You can modify them in:')
             print('    "Cloud control" -> "Configuration" -> "Update region and zone data"')
         else:
             for error in error_list:
@@ -334,7 +355,7 @@ def form_view_ngscloud_config_file():
     ngscloud_config_file = xconfiguration.get_ngscloud_config_file()
 
     # view the file
-    text = 'Configuration - View {0} config file'.format(xlib.get_toa_name())
+    text = f'Configuration - View {xlib.get_project_name()} config file'
     OK = clib.view_file(ngscloud_config_file, text)
 
     # show continuation message 
@@ -363,23 +384,23 @@ def form_list_instance_types():
     starcluster_width = 13
     generation_width = 11
 
-    # set line template
-    line_template = '{0:' + str(use_width) + '}   {1:' + str(instance_type_width) + '}   {2:' + str(vcpu_width) + '}   {3:>' + str(memory_width) + '}   {4:' + str(nitro_width) + '}   {5:' + str(starcluster_width) + '}   {6:' + str(generation_width) + '}'
+    # set line
+    line = '{0:' + str(use_width) + '}   {1:' + str(instance_type_width) + '}   {2:' + str(vcpu_width) + '}   {3:>' + str(memory_width) + '}   {4:' + str(nitro_width) + '}   {5:' + str(starcluster_width) + '}   {6:' + str(generation_width) + '}'
 
     # print header
-    print(line_template.format('Use', 'Instance type', 'vCPUs', 'Memory', 'Nitro', 'StarCluster', 'Generation'))
-    print(line_template.format('=' * use_width, '=' * instance_type_width, '=' * vcpu_width, '=' * memory_width, '=' * nitro_width, '=' * starcluster_width, '=' * generation_width))
+    print(line.format('Use', 'Instance type', 'vCPUs', 'Memory', 'Nitro', 'StarCluster', 'Generation'))
+    print(line.format('=' * use_width, '=' * instance_type_width, '=' * vcpu_width, '=' * memory_width, '=' * nitro_width, '=' * starcluster_width, '=' * generation_width))
 
     # print detail lines
     for key in sorted(instance_type_dict.keys()):
         use = instance_type_dict[key]['use']
         instance_type = instance_type_dict[key]['id']
         vcpu = instance_type_dict[key]['vcpu']
-        memory = '{0} GiB'.format(instance_type_dict[key]['memory'])
+        memory = f'{instance_type_dict[key]["memory"]} GiB'
         nitro = instance_type_dict[key]['nitro']
         starcluster = instance_type_dict[key]['starcluster']
         generation = instance_type_dict[key]['generation']
-        print(line_template.format(use, instance_type, vcpu, memory, nitro, starcluster, generation))
+        print(line.format(use, instance_type, vcpu, memory, nitro, starcluster, generation))
 
     # show warnings about characteristics and pricing
     print(xlib.get_separator())
@@ -434,12 +455,12 @@ def form_update_connection_data():
     # confirm the connection data update in the NGScloud config file
     if OK:
         print(xlib.get_separator())
-        OK = clib.confirm_action('The file {0} is going to be update with the new connection data.'.format(ngscloud_config_file))
+        OK = clib.confirm_action(f'The file {ngscloud_config_file} is going to be update with the new connection data.')
 
     # save the option dictionary in the NGScloud config file
     if OK:
         print(xlib.get_separator())
-        print('The file {0} is being update with the new connection data ...'.format(ngscloud_config_file))
+        print(f'The file {ngscloud_config_file} is being update with the new connection data ...')
         (OK, error_list) = xconfiguration.update_connection_data(user_id, access_key_id, secret_access_key)
         if OK:
             (OK, error_list) = xconfiguration.update_contact_data(email)
@@ -479,12 +500,12 @@ def form_update_region_zone():
   
     # confirm the region and zone update in the NGScloud config file
     print(xlib.get_separator())
-    OK = clib.confirm_action('The file {0} is going to be update with the new region and zone.'.format(ngscloud_config_file))
+    OK = clib.confirm_action(f'The file {ngscloud_config_file} is going to be update with the new region and zone.')
 
     # save the option dictionary in the NGScloud config file
     if OK:
         print(xlib.get_separator())
-        print('The file {0} is being update with the new region and zone ...'.format(ngscloud_config_file))
+        print(f'The file {ngscloud_config_file} is being update with the new region and zone ...')
         (OK, error_list) = xconfiguration.update_region_zone_data(region_name, zone_name)
         if OK:
             for error in error_list:
@@ -518,7 +539,7 @@ def form_link_volumes():
 
     # check there are created volumes in the zone
     if xec2.get_created_volume_name_list(zone_name) == []:
-        print('*** WARNING: There is not any volume created in the zone {0}.'.format(zone_name))
+        print(f'*** WARNING: There is not any volume created in the zone {zone_name}.')
         OK = False
 
     # get the dataset structure
@@ -529,8 +550,17 @@ def form_link_volumes():
     # get volume names
     if OK:
 
+        # when there is not any volume linked
+        if dataset_structure.lower() == xconfiguration.get_dataset_structure_none():
+            ngscloud_volume = ''
+            app_volume = ''
+            database_volume = ''
+            read_volume = ''
+            reference_volume = ''
+            result_volume = ''
+
         # when the dataset structure is single-volume
-        if dataset_structure == xconfiguration.get_dataset_structure_singlevolume():
+        elif dataset_structure.lower() == xconfiguration.get_dataset_structure_singlevolume():
             ngscloud_volume = cinputs.input_volume_name(text='NGScloud volume name', zone_name=zone_name, type='created', allowed_none=False, help=True)
             app_volume = ''
             database_volume = ''
@@ -539,7 +569,7 @@ def form_link_volumes():
             result_volume = ''
 
         # when the dataset structure is multi-volume
-        elif dataset_structure == xconfiguration.get_dataset_structure_multivolume():
+        elif dataset_structure.lower() == xconfiguration.get_dataset_structure_multivolume():
 
             # input volume names
             ngscloud_volume = ''
@@ -549,51 +579,57 @@ def form_link_volumes():
             reference_volume = cinputs.input_volume_name(text='Reference volume name', zone_name=zone_name, type='created', allowed_none=True, help=True)
             result_volume = cinputs.input_volume_name(text='Result volume name', zone_name=zone_name, type='created', allowed_none=True, help=True)
 
-            # check volume names
-            if OK:
-                used_volume_name_list = []
+        # check volume names
+        used_volume_name_list = []
 
-                if ngscloud_volume == 'NONE': ngscloud_volume = ''
-                if app_volume == 'NONE': app_volume = ''
-                if database_volume == 'NONE': database_volume = ''
-                if read_volume == 'NONE': read_volume = ''
-                if reference_volume == 'NONE': reference_volume = ''
-                if result_volume == 'NONE': result_volume = ''
+        if ngscloud_volume == 'NONE': ngscloud_volume = ''
+        if app_volume == 'NONE': app_volume = ''
+        if database_volume == 'NONE': database_volume = ''
+        if read_volume == 'NONE': read_volume = ''
+        if reference_volume == 'NONE': reference_volume = ''
+        if result_volume == 'NONE': result_volume = ''
 
-                if app_volume != '':
-                    used_volume_name_list.append(app_volume)
-                if database_volume != '':
-                    if database_volume not in used_volume_name_list:
-                        used_volume_name_list.append(database_volume)
-                    else:
-                        OK = False
-                if OK and read_volume != '':
-                    if read_volume not in used_volume_name_list:
-                        used_volume_name_list.append(read_volume)
-                    else:
-                        OK = False
-                if OK and reference_volume != '':
-                    if reference_volume not in used_volume_name_list:
-                        used_volume_name_list.append(reference_volume)
-                    else:
-                        OK = False
-                if OK and result_volume != '':
-                    if result_volume not in used_volume_name_list:
-                        used_volume_name_list.append(result_volume)
-                    else:
-                        OK = False
-                if not OK:
-                    print('*** ERROR: A volume can be linked only once.')
+        if app_volume != '':
+            used_volume_name_list.append(app_volume)
+        if database_volume != '':
+            if database_volume not in used_volume_name_list:
+                used_volume_name_list.append(database_volume)
+            else:
+                OK = False
+        if OK and read_volume != '':
+            if read_volume not in used_volume_name_list:
+                used_volume_name_list.append(read_volume)
+            else:
+                OK = False
+        if OK and reference_volume != '':
+            if reference_volume not in used_volume_name_list:
+                used_volume_name_list.append(reference_volume)
+            else:
+                OK = False
+        if OK and result_volume != '':
+            if result_volume not in used_volume_name_list:
+                used_volume_name_list.append(result_volume)
+            else:
+                OK = False
+
+            if not OK:
+                print('*** ERROR: A volume can be linked only once.')
 
     # confirm the linkage of volumes
     if OK:
-        print(xlib.get_separator())
-        OK = clib.confirm_action('The volumes are going to be linked.')
+        OK = clib.confirm_action('The dataset structure are going to be modified.')
 
     # link volumes
     if OK:
         devstdout = xlib.DevStdOut(xconfiguration.link_volumes.__name__)
-        (OK, error_list) = xconfiguration.link_volumes(dataset_structure, ngscloud_volume, app_volume, database_volume, read_volume, reference_volume, result_volume, devstdout, function=None)
+        (OK, error_list) = xconfiguration.link_volumes(dataset_structure.lower(), ngscloud_volume, app_volume, database_volume, read_volume, reference_volume, result_volume, devstdout, function=None)
+        if OK:
+            for error in error_list:
+                print(error)
+            print('The data structure is modified.')
+        else:
+            for error in error_list:
+                print(error)
 
     # show continuation message 
     print(xlib.get_separator())
@@ -617,21 +653,21 @@ def form_list_keypairs():
     # list keypairs
     print(xlib.get_separator())
     if keypair_keys_list == []:
-        print('WARNING: There is not any keypair created in the region {0}.'.format(xconfiguration.get_current_region_name()))
+        print(f'WARNING: There is not any keypair created in the region {xconfiguration.get_current_region_name()}.')
     else:
         # set data width
         keypair_name_width = 25
         fingerprint_width = 59
-        # set line template
-        line_template = '{0:' + str(keypair_name_width) + '}   {1:' + str(fingerprint_width) + '}'
+        # set line
+        line = '{0:' + str(keypair_name_width) + '}   {1:' + str(fingerprint_width) + '}'
         # print header
-        print(line_template.format('Key Pair Name', 'Fingerprint'))
-        print(line_template.format('=' * keypair_name_width, '=' * fingerprint_width))
+        print(line.format('Key Pair Name', 'Fingerprint'))
+        print(line.format('=' * keypair_name_width, '=' * fingerprint_width))
         # print detail lines
         for keypair_key in keypair_keys_list:
             keypair_name = keypairs_dict[keypair_key]['keypair_name']
             fingerprint = keypairs_dict[keypair_key]['fingerprint']
-            print(line_template.format(keypair_name, fingerprint))
+            print(line.format(keypair_name, fingerprint))
 
     # show continuation message 
     print(xlib.get_separator())
@@ -656,12 +692,12 @@ def form_create_keypairs():
 
     # confirm the creation of the key pairs
     print(xlib.get_separator())
-    OK = clib.confirm_action('The key pairs of the region {0} are going to be created.'.format(region_name))
+    OK = clib.confirm_action(f'The key pairs of the region {region_name} are going to be created.')
 
     # create key pairs
     if OK:
         print(xlib.get_separator())
-        print('The key pairs of the region {0} are been created ...'.format(region_name))
+        print(f'The key pairs of the region {region_name} are been created ...')
         (OK, error_list) = xec2.create_keypairs(region_name)
         if OK:
             print('The key pairs and their corresponding local files have been created.')
@@ -699,7 +735,7 @@ def form_list_clusters():
 
 def form_create_cluster():
     '''
-    Create a cluster from a template name.
+    Create a cluster with one instance type.
     '''
 
     # initialize the control variable
@@ -707,6 +743,15 @@ def form_create_cluster():
 
     # get current region name
     region_name = xconfiguration.get_current_region_name()
+
+    # get the NGScloud config file
+    ngscloud_config_file = xconfiguration.get_ngscloud_config_file()
+
+    # get the option dictionary corresponding to the NGScloud config file
+    ngscloud_options_dict = xlib.get_option_dict(ngscloud_config_file)
+
+    # get the dataset structure and NGScloud_volume
+    dataset_structure = ngscloud_options_dict['dataset info']['dataset_structure'].lower()
 
     # get the volume type dictionary
     volume_type_dict = xec2.get_volume_type_dict()
@@ -722,6 +767,16 @@ def form_create_cluster():
         print('WARNING: There is already a cluster running in this environment.')
         OK = False
 
+    # check the dataset structure
+    if OK:
+        if dataset_structure == xconfiguration.get_dataset_structure_none():
+            print(xlib.get_separator())
+            print(f'The dataset structure is not {xconfiguration.get_dataset_structure_singlevolume()} nor {xconfiguration.get_dataset_structure_multivolume()}, then datasets will be created in the root volume and they will be lost when the cluster is terminated.')
+            print()
+            print('The dataset structure can be modified in:')
+            print('    "Cloud control" -> "Configuration" -> "Links volumes"')
+            OK = clib.confirm_action('')
+
     # show sites related to EBS volumes
     if OK:
         print(xlib.get_separator())
@@ -730,10 +785,33 @@ def form_create_cluster():
         print('and the EC2 pricing is detailed in:')
         print('    https://aws.amazon.com/ec2/pricing/')
 
+    # check if StarCluster is installed
+    if OK:
+        is_starcluster_installed = True
+        command = f'{xlib.get_starcluster()} --version'
+        devstdout = xlib.DevStdOut('starcluster_version', print_stdout=False)
+        rc = xlib.run_command(command, devstdout)
+        if rc != 0:
+            is_starcluster_installed = False
+        else:
+            with open(devstdout.get_log_file(), 'r') as log_command:
+                version_found = False
+                for line in log_command:
+                    if line.startswith('0.95.6'):
+                        version_found = True
+                if not version_found:
+                    is_starcluster_installed = False
+
+    # get the cluster mode list
+    if OK:
+        cluster_mode_list = xconfiguration.get_cluster_mode_list()
+        if not is_starcluster_installed:
+            cluster_mode_list.remove(xconfiguration.get_cluster_mode_starcluster())
+
     # get the cluster mode
     if OK:
         print(xlib.get_separator())
-        cluster_mode = cinputs.input_code(text='Cluster mode', code_list=xconfiguration.get_cluster_mode_list(), default_code=xconfiguration.get_cluster_mode_native())
+        cluster_mode = cinputs.input_code(text='Cluster mode', code_list=cluster_mode_list, default_code=xconfiguration.get_cluster_mode_native())
 
     # check the AMI identification is create in the current zone
     if OK:
@@ -936,18 +1014,18 @@ def form_show_status_batch_jobs():
         state_width = 15
         start_date_width = 10
         start_time_width = 10
-        # set line template
-        line_template = '{0:' + str(job_id_width) + '} {1:' + str(job_name_width) + '} {2:' + str(state_width) + '} {3:' + str(start_date_width) + '} {4:' + str(start_time_width) + '}'
+        # set line
+        line = '{0:' + str(job_id_width) + '} {1:' + str(job_name_width) + '} {2:' + str(state_width) + '} {3:' + str(start_date_width) + '} {4:' + str(start_time_width) + '}'
         # print header
-        print(line_template.format('Job id', 'Job name', 'State', 'Start date', 'Start time'))
-        print(line_template.format('=' * job_id_width, '=' * job_name_width, '=' * state_width, '=' * start_date_width, '=' * start_time_width))
+        print(line.format('Job id', 'Job name', 'State', 'Start date', 'Start time'))
+        print(line.format('=' * job_id_width, '=' * job_name_width, '=' * state_width, '=' * start_date_width, '=' * start_time_width))
         # print detail lines
         for job_id in batch_job_id_list:
             job_name = batch_job_dict[job_id]['job_name']
             state = batch_job_dict[job_id]['state']
             start_date = batch_job_dict[job_id]['start_date']
             start_time = batch_job_dict[job_id]['start_time']
-            print(line_template.format(job_id, job_name, state, start_date, start_time))
+            print(line.format(job_id, job_name, state, start_date, start_time))
 
     # close the SSH client connection
     if OK:
@@ -1000,7 +1078,7 @@ def form_kill_batch_job():
     # confirm the kill of the batch job
     if OK:
         print(xlib.get_separator())
-        OK = clib.confirm_action('The batch job {0} is going to be killed.'.format(batch_job_id))
+        OK = clib.confirm_action(f'The batch job {batch_job_id} is going to be killed.')
 
     # kill the batch job
     if OK:
@@ -1041,11 +1119,11 @@ def form_list_nodes():
         node_name_width = 20
         node_id_width = 19
         state_width = 20
-        # set line template
-        line_template = '{0:' + str(security_group_name_width) + '}   {1:' + str(zone_name_width) + '}   {2:' + str(node_name_width) + '}   {3:' + str(node_id_width) + '}   {4:' + str(state_width) + '}'
+        # set line
+        line = '{0:' + str(security_group_name_width) + '}   {1:' + str(zone_name_width) + '}   {2:' + str(node_name_width) + '}   {3:' + str(node_id_width) + '}   {4:' + str(state_width) + '}'
         # print header
-        print(line_template.format('Security Group', 'Zone', 'Node Name', 'Node Id', 'State'))
-        print(line_template.format('=' * security_group_name_width, '=' * zone_name_width, '=' * node_name_width, '=' * node_id_width, '=' * state_width))
+        print(line.format('Security Group', 'Zone', 'Node Name', 'Node Id', 'State'))
+        print(line.format('=' * security_group_name_width, '=' * zone_name_width, '=' * node_name_width, '=' * node_id_width, '=' * state_width))
         # print detail lines
         for node_key in node_key_list:
             security_group_name = node_dict[node_key]['security_group_name']
@@ -1053,7 +1131,7 @@ def form_list_nodes():
             node_name = node_dict[node_key]['node_name']
             node_id = node_dict[node_key]['node_id'] 
             state = node_dict[node_key]['state']
-            print(line_template.format(security_group_name, zone_name, node_name, node_id, state))
+            print(line.format(security_group_name, zone_name, node_name, node_id, state))
 
     # show continuation message 
     print(xlib.get_separator())
@@ -1090,7 +1168,7 @@ def form_add_node():
     # check the instance number
     if OK:
         if len(xec2.get_cluster_node_list(cluster_name)) >= xec2.get_max_node_number():
-            print('WARNING: The maximum number ({0}) of instances is already running.'.format(xec2.get_max_node_number()))
+            print(f'WARNING: The maximum number ({xec2.get_max_node_number()}) of instances is already running.')
             OK = False
 
     # get the node name
@@ -1187,11 +1265,11 @@ def form_list_volumes():
         size_width = 10
         state_width = 10
         attachments_number_width = 11
-        # set line template
-        line_template = '{0:' + str(zone_name_width) + '}   {1:' + str(volume_name_width) + '}   {2:' + str(volume_id_width) + '}   {3:' + str(size_width) + '}   {4:' + str(state_width) + '}   {5:' + str(attachments_number_width) + '}'
+        # set line
+        line = '{0:' + str(zone_name_width) + '}   {1:' + str(volume_name_width) + '}   {2:' + str(volume_id_width) + '}   {3:' + str(size_width) + '}   {4:' + str(state_width) + '}   {5:' + str(attachments_number_width) + '}'
         # print header
-        print(line_template.format('Zone', 'Volume Name', 'Volume Id', 'Size (GiB)', 'State', 'Attachments'))
-        print(line_template.format('=' * zone_name_width, '=' * volume_name_width, '=' * volume_id_width, '=' * size_width, '=' * state_width, '=' * attachments_number_width))
+        print(line.format('Zone', 'Volume Name', 'Volume Id', 'Size (GiB)', 'State', 'Attachments'))
+        print(line.format('=' * zone_name_width, '=' * volume_name_width, '=' * volume_id_width, '=' * size_width, '=' * state_width, '=' * attachments_number_width))
         # print detail lines
         for volume_key in volume_keys_list:
             zone_name = volumes_dict[volume_key]['zone_name']
@@ -1200,7 +1278,7 @@ def form_list_volumes():
             size = volumes_dict[volume_key]['size']
             state = volumes_dict[volume_key]['state']
             attachments_number = volumes_dict[volume_key]['attachments_number']
-            print(line_template.format(zone_name, volume_name, volume_id, size, state, attachments_number))
+            print(line.format(zone_name, volume_name, volume_id, size, state, attachments_number))
 
     # show continuation message 
     print(xlib.get_separator())

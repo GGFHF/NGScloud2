@@ -48,31 +48,31 @@ def form_create_toa_config_file():
 
     # print the header
     clib.clear_screen()
-    clib.print_headers_with_environment('{0} - Recreate config file'.format(xlib.get_toa_name()))
+    clib.print_headers_with_environment(f'{xlib.get_toa_name()} - Recreate config file')
 
     # set the TOA directory
     print(xlib.get_separator())
     toa_dir = f'{xlib.get_cluster_app_dir()}/TOA/Package'
-    print('TOA directory: {0}'.format(toa_dir))
+    print(f'TOA directory: {toa_dir}')
 
     # set the Miniconda3 directory
     miniconda3_bin_dir = f'{xlib.get_cluster_app_dir()}/Miniconda3/bin'
-    print('Miniconda bin directory: {0}'.format(miniconda3_bin_dir))
+    print(f'Miniconda bin directory: {miniconda3_bin_dir}')
 
     # set the database directory
     db_dir = xlib.get_cluster_database_dir()
-    print('Databases directory: {0}'.format(db_dir))
+    print(f'Databases directory: {db_dir}')
 
     # set the result directory
     result_dir = '/result'
-    print('Result directory: {0}'.format(result_dir))
+    print(f'Result directory: {result_dir}')
 
     # create the TOA config file
     if OK:
 
         # confirm the creation of the config file
         print(xlib.get_separator())
-        OK = clib.confirm_action('The file {0} is going to be recreated. The previous files will be lost.'.format(xtoa.get_toa_config_file()))
+        OK = clib.confirm_action(f'The file {xtoa.get_toa_config_file()} is going to be recreated. The previous files will be lost.')
 
         # recreate the config file
         if OK:
@@ -100,9 +100,9 @@ def form_manage_toa_database(process_type):
     # print the header
     clib.clear_screen()
     if process_type == xlib.get_toa_type_recreate():
-        clib.print_headers_with_environment('{0} - Recreate database'.format(xlib.get_toa_name()))
+        clib.print_headers_with_environment(f'{xlib.get_toa_name()} - Recreate database')
     elif process_type == xlib.get_toa_type_rebuild():
-        clib.print_headers_with_environment('{0} - Rebuild database'.format(xlib.get_toa_name()))
+        clib.print_headers_with_environment(f'{xlib.get_toa_name()} - Rebuild database')
 
     # get the cluster name
     print(xlib.get_separator())
@@ -115,7 +115,7 @@ def form_manage_toa_database(process_type):
     # confirm the process run
     if OK:
         print(xlib.get_separator())
-        OK = clib.confirm_action('The {0} database is going to be {1}.'.format(xlib.get_toa_name(), process_type))
+        OK = clib.confirm_action(f'The {xlib.get_toa_name()} database is going to be {process_type}.')
 
     # run the process
     if OK:
@@ -137,7 +137,7 @@ def form_view_toa_config_file():
     toa_config_file = xtoa.get_toa_config_file()
 
     # view the file
-    text = '{0} - View config file'.format(xlib.get_toa_name())
+    text = f'{xlib.get_toa_name()} - View config file'
     clib.view_file(toa_config_file, text)
 
     # show continuation message 
@@ -182,15 +182,15 @@ def form_manage_genomic_database(process_type, genomic_database):
     # print the header
     clib.clear_screen()
     if process_type == xlib.get_toa_type_build_blastdb():
-        clib.print_headers_with_environment('Build {0}'.format(name))
+        clib.print_headers_with_environment(f'Build {name}')
     elif process_type == xlib.get_toa_type_build_gilist():
-        clib.print_headers_with_environment('Build {0}'.format(name))
+        clib.print_headers_with_environment(f'Build {name}')
     elif process_type == xlib.get_toa_type_build_proteome():
-        clib.print_headers_with_environment('Build {0} proteome'.format(name))
+        clib.print_headers_with_environment(f'Build {name} proteome')
     elif process_type == xlib.get_toa_type_download_data():
-        clib.print_headers_with_environment('Download {0} functional annotations'.format(name))
+        clib.print_headers_with_environment(f'Download {name} functional annotations')
     elif process_type == xlib.get_toa_type_load_data():
-        clib.print_headers_with_environment('Load {0} data in {1} database'.format(name, xlib.get_toa_name()))
+        clib.print_headers_with_environment(f'Load {name} data in {xlib.get_toa_name()} database')
 
     # get the cluster name
     print(xlib.get_separator())
@@ -203,7 +203,7 @@ def form_manage_genomic_database(process_type, genomic_database):
     # confirm the process run
     if OK:
         print(xlib.get_separator())
-        OK = clib.confirm_action('The {0} process is going to be run.'.format(name))
+        OK = clib.confirm_action(f'The {name} process is going to be run.')
 
     # run the process
     if OK:
@@ -238,7 +238,7 @@ def form_recreate_pipeline_config_file(pipeline_type):
 
     # print the header
     clib.clear_screen()
-    clib.print_headers_with_environment('{0} - Recreate config file'.format(name))
+    clib.print_headers_with_environment(f'{name} - Recreate config file')
 
     # get the cluster name, experiment identification, read dataset identification and the file pattern
     print(xlib.get_separator())
@@ -262,7 +262,7 @@ def form_recreate_pipeline_config_file(pipeline_type):
         if assembly_origin == 'NGSCLOUD':
             experiment_id = cinputs.input_experiment_id(ssh_client, help=True)
             if experiment_id == '':
-                print('WARNING: The cluster {0} does not have experiment data.'.format(cluster_name))
+                print(f'WARNING: The cluster {cluster_name} does not have experiment data.')
                 OK = False
         elif assembly_origin == 'EXTERNAL':
             experiment_id = 'NONE'
@@ -273,7 +273,7 @@ def form_recreate_pipeline_config_file(pipeline_type):
             app_list = [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(), xlib.get_transcript_filter_code()]
             assembly_dataset_id = cinputs.input_result_dataset_id(ssh_client, experiment_id, 'assembly', app_list, 'uncompressed', help=True)
             if assembly_dataset_id == '':
-                print('WARNING: The cluster {0} does not have assembly datasets.'.format(cluster_name))
+                print(f'WARNING: The cluster {cluster_name} does not have assembly datasets.')
                 OK = False
         elif assembly_origin == 'EXTERNAL':
             assembly_dataset_id = 'NONE'
@@ -295,7 +295,7 @@ def form_recreate_pipeline_config_file(pipeline_type):
         elif assembly_origin == 'EXTERNAL':
             reference_dataset_id = cinputs.input_reference_dataset_id(ssh_client, allowed_none=False, help=True)
             if reference_dataset_id == '':
-                print('ERROR: The cluster {0} does not have reference datasets.'.format(cluster_name))
+                print(f'*** ERROR: The cluster {cluster_name} does not have reference datasets.')
                 OK = False
 
     # get the transcriptome file
@@ -305,7 +305,7 @@ def form_recreate_pipeline_config_file(pipeline_type):
         elif assembly_origin == 'EXTERNAL':
             transcriptome_file = cinputs.input_transcriptome_file(ssh_client, reference_dataset_id, help=True)
             if transcriptome_file == '':
-                print('ERROR: The reference dataset {0} does not have any file.'.format(reference_dataset_id))
+                print(f'ERROR: The reference dataset {reference_dataset_id} does not have any file.'.format())
                 OK = False
 
     # get the database list
@@ -325,7 +325,7 @@ def form_recreate_pipeline_config_file(pipeline_type):
         # confirm the creation of the config file
         print(xlib.get_separator())
         print('config_file: {}'.format(config_file))
-        OK = clib.confirm_action('The file {0} is going to be recreated. The previous files will be lost.'.format(config_file))
+        OK = clib.confirm_action(f'The file {config_file} is going to be recreated. The previous files will be lost.')
 
         # recreate the config file
         if OK:
@@ -362,7 +362,7 @@ def form_edit_pipeline_config_file(pipeline_type):
 
     # print the header
     clib.clear_screen()
-    clib.print_headers_with_environment('{0} - Edit config file'.format(name))
+    clib.print_headers_with_environment(f'{name} - Edit config file')
 
     # get the config file
     if pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
@@ -372,17 +372,17 @@ def form_edit_pipeline_config_file(pipeline_type):
 
     # edit the read transfer config file
     print(xlib.get_separator())
-    print('Editing the {0} config file ...'.format(name))
-    command = '{0} {1}'.format(xlib.get_editor(), config_file)
+    print(f'Editing the {name} config file ...')
+    command = f'{xlib.get_editor()} {config_file}'
     rc = subprocess.call(command, shell=True)
     if rc != 0:
-        print('*** ERROR: Return code {0} in command -> {1}'.format(rc, command))
+        print(f'*** ERROR: Return code {rc} in command -> {command}')
         OK = False
 
     # check the config file
     if OK:
         print(xlib.get_separator())
-        print('Checking the {0} config file ...'.format(name))
+        print(f'Checking the {name} config file ...')
         (OK, error_list) = xtoa.check_pipeline_config_file(pipeline_type, strict=False)
         if OK:
             print('The file is OK.')
@@ -414,7 +414,7 @@ def form_run_pipeline_process(pipeline_type):
 
     # print the header
     clib.clear_screen()
-    clib.print_headers_with_environment('{0} - Run process'.format(name))
+    clib.print_headers_with_environment(f'{name} - Run process')
 
     # get the cluster name
     print(xlib.get_separator())
@@ -427,7 +427,7 @@ def form_run_pipeline_process(pipeline_type):
     # confirm the process run
     if OK:
         print(xlib.get_separator())
-        OK = clib.confirm_action('The {0} process is going to be run.'.format(name))
+        OK = clib.confirm_action(f'The {name} process is going to be run.')
 
     # run the process
     if OK:
@@ -457,7 +457,7 @@ def form_restart_pipeline_process(pipeline_type):
 
     # print the header
     clib.clear_screen()
-    clib.print_headers_with_environment('{0} - Run process'.format(name))
+    clib.print_headers_with_environment(f'{name} - Restart process')
 
     # get the cluster name
     print(xlib.get_separator())
@@ -476,20 +476,20 @@ def form_restart_pipeline_process(pipeline_type):
     # get the experiment identification
     if OK:
         experiment_id = xlib.get_toa_result_pipeline_dir()
-        print('... Enter the experiment id: {0} ...'.format(experiment_id))
+        print(f'... Enter the experiment id: {experiment_id} ...')
 
     # get the pipeline dataset identification
     if OK:
         app_list = [pipeline_type]
         pipeline_dataset_id = cinputs.input_result_dataset_id(ssh_client, experiment_id, 'pipeline', app_list, 'uncompressed', help=True)
         if pipeline_dataset_id == '':
-            print('WARNING: The experiment {0} does not have result datasets.'.format(experiment_id))
+            print(f'WARNING: The experiment {experiment_id} does not have result datasets.')
             OK = False
 
     # confirm the process run
     if OK:
         print(xlib.get_separator())
-        OK = clib.confirm_action('The {0} process is going to be run.'.format(name))
+        OK = clib.confirm_action(f'The {name} process is going to be run.')
 
     # run the process
     if OK:
@@ -533,14 +533,29 @@ def form_view_x_per_y_data(stats_code):
 
     # print the header
     clib.clear_screen()
-    clib.print_headers_with_environment('Statistics - {0} data'.format(name))
+    clib.print_headers_with_environment(f'Statistics - {name} data')
+
+    # get the cluster name
+    print(xlib.get_separator())
+    if xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False) == []:
+        print('WARNING: There is not any running cluster.')
+        OK = False
+    else:
+        cluster_name = cinputs.input_cluster_name(volume_creator_included=False, help=True)
+
+    # create the SSH client connection
+    if OK:
+        (OK, error_list, ssh_client) = xssh.create_ssh_client_connection(cluster_name)
+        for error in error_list:
+            print(error)
 
     # get the pipeline dataset identification
-    app_list = [xlib.get_all_applications_selected_code()]
-    pipeline_dataset_id = cinputs.input_result_dataset_id(xlib.get_toa_result_pipeline_dir(), app_list)
-    if pipeline_dataset_id == '':
-        print('WARNING: There are not any annotation pipeline result datasets.')
-        OK = False
+    if OK:
+        app_list = [xlib.get_all_applications_selected_code()]
+        pipeline_dataset_id = cinputs.input_result_dataset_id(ssh_client, xlib.get_toa_result_pipeline_dir(), '', app_list, status='uncompressed', help=True)
+        if pipeline_dataset_id == '':
+            print('WARNING: There are not any annotation pipeline result datasets.')
+            OK = False
 
     # build distribution dictionary
     if OK:
@@ -552,18 +567,20 @@ def form_view_x_per_y_data(stats_code):
         toa_config_dict = xtoa.get_toa_config_dict()
 
         # get the statistics file path
-        stats_file = '{0}/{1}/{2}/{3}/{4}-{5}.csv'.format(toa_config_dict['RESULT_DIR'], xlib.get_toa_result_pipeline_dir(), pipeline_dataset_id, toa_config_dict['STATS_SUBDIR_NAME'], stats_code, toa_config_dict['STATS_BASE_NAME'])
+        stats_file = f'{toa_config_dict["RESULT_DIR"]}/{xlib.get_toa_result_pipeline_dir()}/{pipeline_dataset_id}/{toa_config_dict["STATS_SUBDIR_NAME"]}/{stats_code}-{toa_config_dict["STATS_BASE_NAME"]}.csv'
 
         # open the statistics file
         if stats_file.endswith('.gz'):
             try:
                 stats_file_id = gzip.open(stats_file, mode='rt', encoding='iso-8859-1', newline='\n')
             except Exception as e:
+                print(f'*** EXCEPTION: "{e}".')
                 raise xlib.ProgramException('F002', stats_file)
         else:
             try:
                 stats_file_id = open(stats_file, mode='r', encoding='iso-8859-1', newline='\n')
             except Exception as e:
+                print(f'*** EXCEPTION: "{e}".')
                 raise xlib.ProgramException('F001', stats_file)
 
         # initialize the record counter
@@ -600,6 +617,7 @@ def form_view_x_per_y_data(stats_code):
                     x_count = data_list[0]
                     y_count = data_list[1]
                 except Exception as e:
+                    print(f'*** EXCEPTION: "{e}".')
                     raise xlib.ProgramException('F006', os.path.basename(stats_file), record_counter)
 
                 # add dato to the dictionary
@@ -617,27 +635,31 @@ def form_view_x_per_y_data(stats_code):
             # set data width
             x_count_width = 15
             y_count_width = 15
-            # set line template
-            line_template = '{0:' + str(x_count_width) + '}   {1:' + str(y_count_width) + '}'
+            # set line
+            line = '{0:' + str(x_count_width) + '}   {1:' + str(y_count_width) + '}'
             # print header
             if stats_code == 'hit_per_hsp':
-                print(line_template.format('# HSPs', '# HITs'))
+                print(line.format('# HSPs', '# HITs'))
             elif stats_code == 'seq_per_go':
-                print(line_template.format('GO terms', '# sequences'))
+                print(line.format('GO terms', '# sequences'))
             elif stats_code == 'seq_per_ec':
-                print(line_template.format('# EC ids', '# sequences'))
+                print(line.format('# EC ids', '# sequences'))
             elif stats_code == 'seq_per_interpro':
-                print(line_template.format('# InterPro ids', '# sequences'))
+                print(line.format('# InterPro ids', '# sequences'))
             elif stats_code == 'seq_per_kegg':
-                print(line_template.format('# KEGG ids', '# sequences'))
+                print(line.format('# KEGG ids', '# sequences'))
             elif stats_code == 'seq_per_mapman':
-                print(line_template.format('# MapMan ids', '# sequences'))
+                print(line.format('# MapMan ids', '# sequences'))
             elif stats_code == 'seq_per_metacyc':
-                print(line_template.format('# MetaCyc ids', '# sequences'))
-            print(line_template.format('=' * x_count_width, '=' * y_count_width))
+                print(line.format('# MetaCyc ids', '# sequences'))
+            print(line.format('=' * x_count_width, '=' * y_count_width))
             # print detail lines
             for key in sorted(distribution_dict.keys()):
-                print(line_template.format(distribution_dict[key]['x_count'], distribution_dict[key]['y_count']))
+                print(line.format(distribution_dict[key]['x_count'], distribution_dict[key]['y_count']))
+
+    # close the SSH client connection
+    if OK:
+        xssh.close_ssh_client_connection(ssh_client)
 
     # show continuation message 
     print(xlib.get_separator())
@@ -657,12 +679,27 @@ def form_view_dataset_data_frecuency():
     clib.clear_screen()
     clib.print_headers_with_environment('Statistics - Annotation datasets - Frequency distribution data')
 
-    # get the pipeline dataset identification
-    app_list = [xlib.get_all_applications_selected_code()]
-    pipeline_dataset_id = cinputs.input_result_dataset_id(xlib.get_toa_result_pipeline_dir(), app_list)
-    if pipeline_dataset_id == '':
-        print('WARNING: There are not any annotation pipeline result datasets.')
+    # get the cluster name
+    print(xlib.get_separator())
+    if xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False) == []:
+        print('WARNING: There is not any running cluster.')
         OK = False
+    else:
+        cluster_name = cinputs.input_cluster_name(volume_creator_included=False, help=True)
+
+    # create the SSH client connection
+    if OK:
+        (OK, error_list, ssh_client) = xssh.create_ssh_client_connection(cluster_name)
+        for error in error_list:
+            print(error)
+
+    # get the pipeline dataset identification
+    if OK:
+        app_list = [xlib.get_all_applications_selected_code()]
+        pipeline_dataset_id = cinputs.input_result_dataset_id(ssh_client, xlib.get_toa_result_pipeline_dir(), '', app_list, status='uncompressed', help=True)
+        if pipeline_dataset_id == '':
+            print('WARNING: There are not any annotation pipeline result datasets.')
+            OK = False
 
     # build distribution dictionary
     if OK:
@@ -674,13 +711,14 @@ def form_view_dataset_data_frecuency():
         toa_config_dict = xtoa.get_toa_config_dict()
 
         # get the statistics file path
-        stats_file = '{0}/{1}/{2}/{3}/{4}-{5}.csv'.format(toa_config_dict['RESULT_DIR'], xlib.get_toa_result_pipeline_dir(), pipeline_dataset_id, toa_config_dict['STATS_SUBDIR_NAME'], 'dataset', toa_config_dict['STATS_BASE_NAME'])
+        stats_file = f'{toa_config_dict["RESULT_DIR"]}/{xlib.get_toa_result_pipeline_dir()}/{pipeline_dataset_id}/{toa_config_dict["STATS_SUBDIR_NAME"]}/dataset-{toa_config_dict["STATS_BASE_NAME"]}.csv'
 
         # open the statistics file
         if stats_file.endswith('.gz'):
             try:
                 stats_file_id = gzip.open(stats_file, mode='rt', encoding='iso-8859-1', newline='\n')
             except Exception as e:
+                print(f'*** EXCEPTION: "{e}".')
                 raise xlib.ProgramException('F002', stats_file)
         else:
             try:
@@ -741,14 +779,18 @@ def form_view_dataset_data_frecuency():
             dataset_name_width = 19
             annotated_seq_count_width = 14
             remained_seq_count_width = 14
-            # set line template
-            line_template = '{0:' + str(dataset_name_width) + '}   {1:' + str(annotated_seq_count_width) + '}   {2:' + str(remained_seq_count_width) + '}'
+            # set line
+            line = '{0:' + str(dataset_name_width) + '}   {1:' + str(annotated_seq_count_width) + '}   {2:' + str(remained_seq_count_width) + '}'
             # print header
-            print(line_template.format('Dataset', 'Annotated seqs', 'Remained seqs'))
-            print(line_template.format('=' * dataset_name_width, '=' * annotated_seq_count_width, '=' * remained_seq_count_width))
+            print(line.format('Dataset', 'Annotated seqs', 'Remained seqs'))
+            print(line.format('=' * dataset_name_width, '=' * annotated_seq_count_width, '=' * remained_seq_count_width))
             # print detail lines
             for key in sorted(distribution_dict.keys()):
-                print(line_template.format(distribution_dict[key]['dataset_name'], distribution_dict[key]['annotated_seq_count'], distribution_dict[key]['remained_seq_count']))
+                print(line.format(distribution_dict[key]['dataset_name'], distribution_dict[key]['annotated_seq_count'], distribution_dict[key]['remained_seq_count']))
+
+    # close the SSH client connection
+    if OK:
+        xssh.close_ssh_client_connection(ssh_client)
 
     # show continuation message 
     print(xlib.get_separator())
@@ -776,14 +818,29 @@ def form_view_phylogenic_data_frecuency(stats_code):
 
     # print the header
     clib.clear_screen()
-    clib.print_headers_with_environment('Statistics - {0} data'.format(name))
+    clib.print_headers_with_environment(f'Statistics - {name} data')
+
+    # get the cluster name
+    print(xlib.get_separator())
+    if xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False) == []:
+        print('WARNING: There is not any running cluster.')
+        OK = False
+    else:
+        cluster_name = cinputs.input_cluster_name(volume_creator_included=False, help=True)
+
+    # create the SSH client connection
+    if OK:
+        (OK, error_list, ssh_client) = xssh.create_ssh_client_connection(cluster_name)
+        for error in error_list:
+            print(error)
 
     # get the pipeline dataset identification
-    app_list = [xlib.get_all_applications_selected_code()]
-    pipeline_dataset_id = cinputs.input_result_dataset_id(xlib.get_toa_result_pipeline_dir(), app_list)
-    if pipeline_dataset_id == '':
-        print('WARNING: There are not any annotation pipeline result datasets.')
-        OK = False
+    if OK:
+        app_list = [xlib.get_all_applications_selected_code()]
+        pipeline_dataset_id = cinputs.input_result_dataset_id(ssh_client, xlib.get_toa_result_pipeline_dir(), '', app_list, status='uncompressed', help=True)
+        if pipeline_dataset_id == '':
+            print('WARNING: There are not any annotation pipeline result datasets.')
+            OK = False
 
     # build distribution dictionary
     if OK:
@@ -795,18 +852,20 @@ def form_view_phylogenic_data_frecuency(stats_code):
         toa_config_dict = xtoa.get_toa_config_dict()
 
         # get the statistics file path
-        stats_file = '{0}/{1}/{2}/{3}/{4}-{5}.csv'.format(toa_config_dict['RESULT_DIR'], xlib.get_toa_result_pipeline_dir(), pipeline_dataset_id, toa_config_dict['STATS_SUBDIR_NAME'], stats_code, toa_config_dict['STATS_BASE_NAME'])
+        stats_file = f'{toa_config_dict["RESULT_DIR"]}/{xlib.get_toa_result_pipeline_dir()}/{pipeline_dataset_id}/{toa_config_dict["STATS_SUBDIR_NAME"]}/{stats_code}-{toa_config_dict["STATS_BASE_NAME"]}.csv'
 
         # open the statistics file
         if stats_file.endswith('.gz'):
             try:
                 stats_file_id = gzip.open(stats_file, mode='rt', encoding='iso-8859-1', newline='\n')
             except Exception as e:
+                print(f'*** EXCEPTION: "{e}".')
                 raise xlib.ProgramException('F002', stats_file)
         else:
             try:
                 stats_file_id = open(stats_file, mode='r', encoding='iso-8859-1', newline='\n')
             except Exception as e:
+                print(f'*** EXCEPTION: "{e}".')
                 raise xlib.ProgramException('F001', stats_file)
 
         # initialize the record counter
@@ -864,14 +923,18 @@ def form_view_phylogenic_data_frecuency(stats_code):
             all_count_width = 11
             first_hsp_count_width = 11
             min_evalue_count_width = 11
-            # set line template
-            line_template = '{0:' + str(id_width) + '}   {1:' + str(all_count_width) + '}   {2:' + str(first_hsp_count_width) + '}   {3:' + str(min_evalue_count_width) + '}'
+            # set line
+            line = '{0:' + str(id_width) + '}   {1:' + str(all_count_width) + '}   {2:' + str(first_hsp_count_width) + '}   {3:' + str(min_evalue_count_width) + '}'
             # print header
-            print(line_template.format(stats_code.capitalize(), 'All', 'First HSP', 'Min e-value'))
-            print(line_template.format('=' * id_width, '=' * all_count_width, '=' * first_hsp_count_width, '=' * min_evalue_count_width))
+            print(line.format(stats_code.capitalize(), 'All', 'First HSP', 'Min e-value'))
+            print(line.format('=' * id_width, '=' * all_count_width, '=' * first_hsp_count_width, '=' * min_evalue_count_width))
             # print detail lines
             for key in sorted(distribution_dict.keys()):
-                print(line_template.format(distribution_dict[key]['id'], distribution_dict[key]['all_count'], distribution_dict[key]['first_hsp_count'], distribution_dict[key]['min_evalue_count']))
+                print(line.format(distribution_dict[key]['id'], distribution_dict[key]['all_count'], distribution_dict[key]['first_hsp_count'], distribution_dict[key]['min_evalue_count']))
+
+    # close the SSH client connection
+    if OK:
+        xssh.close_ssh_client_connection(ssh_client)
 
     # show continuation message 
     print(xlib.get_separator())
@@ -903,14 +966,29 @@ def form_view_ontologic_data_frecuency(stats_code):
 
     # print the header
     clib.clear_screen()
-    clib.print_headers_with_environment('Statistics - {0} data'.format(name))
+    clib.print_headers_with_environment(f'Statistics - {name} data')
+
+    # get the cluster name
+    print(xlib.get_separator())
+    if xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False) == []:
+        print('WARNING: There is not any running cluster.')
+        OK = False
+    else:
+        cluster_name = cinputs.input_cluster_name(volume_creator_included=False, help=True)
+
+    # create the SSH client connection
+    if OK:
+        (OK, error_list, ssh_client) = xssh.create_ssh_client_connection(cluster_name)
+        for error in error_list:
+            print(error)
 
     # get the pipeline dataset identification
-    app_list = [xlib.get_all_applications_selected_code()]
-    pipeline_dataset_id = cinputs.input_result_dataset_id(xlib.get_toa_result_pipeline_dir(), app_list)
-    if pipeline_dataset_id == '':
-        print('WARNING: There are not any annotation pipeline result datasets.')
-        OK = False
+    if OK:
+        app_list = [xlib.get_all_applications_selected_code()]
+        pipeline_dataset_id = cinputs.input_result_dataset_id(ssh_client, xlib.get_toa_result_pipeline_dir(), '', app_list, status='uncompressed', help=True)
+        if pipeline_dataset_id == '':
+            print('WARNING: There are not any annotation pipeline result datasets.')
+            OK = False
 
     # build distribution dictionary
     if OK:
@@ -922,18 +1000,20 @@ def form_view_ontologic_data_frecuency(stats_code):
         toa_config_dict = xtoa.get_toa_config_dict()
 
         # get the statistics file path
-        stats_file = '{0}/{1}/{2}/{3}/{4}-{5}.csv'.format(toa_config_dict['RESULT_DIR'], xlib.get_toa_result_pipeline_dir(), pipeline_dataset_id, toa_config_dict['STATS_SUBDIR_NAME'], stats_code, toa_config_dict['STATS_BASE_NAME'])
+        stats_file = f'{toa_config_dict["RESULT_DIR"]}/{xlib.get_toa_result_pipeline_dir()}/{pipeline_dataset_id}/{toa_config_dict["STATS_SUBDIR_NAME"]}/{stats_code}-{toa_config_dict["STATS_BASE_NAME"]}.csv'
 
         # open the statistics file
         if stats_file.endswith('.gz'):
             try:
                 stats_file_id = gzip.open(stats_file, mode='rt', encoding='iso-8859-1', newline='\n')
             except Exception as e:
+                print(f'*** EXCEPTION: "{e}".')
                 raise xlib.ProgramException('F002', stats_file)
         else:
             try:
                 stats_file_id = open(stats_file, mode='r', encoding='iso-8859-1', newline='\n')
             except Exception as e:
+                print(f'*** EXCEPTION: "{e}".')
                 raise xlib.ProgramException('F001', stats_file)
 
         # initialize the record counter
@@ -993,14 +1073,18 @@ def form_view_ontologic_data_frecuency(stats_code):
             all_count_width = 11
             first_hsp_count_width = 11
             min_evalue_count_width = 11
-            # set line template
-            line_template = '{0:' + str(id_width) + '}   {1:' + str(desc_width) + '}   {2:' + str(all_count_width) + '}   {3:' + str(first_hsp_count_width) + '}   {4:' + str(min_evalue_count_width) + '}'
+            # set line
+            line = '{0:' + str(id_width) + '}   {1:' + str(desc_width) + '}   {2:' + str(all_count_width) + '}   {3:' + str(first_hsp_count_width) + '}   {4:' + str(min_evalue_count_width) + '}'
             # print header
-            print(line_template.format('{0} id'.format(stats_code.capitalize()), 'Description', 'All', 'First HSP', 'Min e-value'))
-            print(line_template.format('=' * id_width, '=' * desc_width, '=' * all_count_width, '=' * first_hsp_count_width, '=' * min_evalue_count_width))
+            print(line.format(f'{stats_code.capitalize()} id', 'Description', 'All', 'First HSP', 'Min e-value'))
+            print(line.format('=' * id_width, '=' * desc_width, '=' * all_count_width, '=' * first_hsp_count_width, '=' * min_evalue_count_width))
             # print detail lines
             for key in sorted(distribution_dict.keys()):
-                print(line_template.format(distribution_dict[key]['id'], distribution_dict[key]['desc'], distribution_dict[key]['all_count'], distribution_dict[key]['first_hsp_count'], distribution_dict[key]['min_evalue_count']))
+                print(line.format(distribution_dict[key]['id'], distribution_dict[key]['desc'], distribution_dict[key]['all_count'], distribution_dict[key]['first_hsp_count'], distribution_dict[key]['min_evalue_count']))
+
+    # close the SSH client connection
+    if OK:
+        xssh.close_ssh_client_connection(ssh_client)
 
     # show continuation message 
     print(xlib.get_separator())
@@ -1020,12 +1104,27 @@ def form_view_go_data_frecuency():
     clib.clear_screen()
     clib.print_headers_with_environment('Statistics - Gene Ontology - Frequency distribution data')
 
-    # get the pipeline dataset identification
-    app_list = [xlib.get_all_applications_selected_code()]
-    pipeline_dataset_id = cinputs.input_result_dataset_id(xlib.get_toa_result_pipeline_dir(), app_list)
-    if pipeline_dataset_id == '':
-        print('WARNING: There are not any annotation pipeline result datasets.')
+    # get the cluster name
+    print(xlib.get_separator())
+    if xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False) == []:
+        print('WARNING: There is not any running cluster.')
         OK = False
+    else:
+        cluster_name = cinputs.input_cluster_name(volume_creator_included=False, help=True)
+
+    # create the SSH client connection
+    if OK:
+        (OK, error_list, ssh_client) = xssh.create_ssh_client_connection(cluster_name)
+        for error in error_list:
+            print(error)
+
+    # get the pipeline dataset identification
+    if OK:
+        app_list = [xlib.get_all_applications_selected_code()]
+        pipeline_dataset_id = cinputs.input_result_dataset_id(ssh_client, xlib.get_toa_result_pipeline_dir(), '', app_list, status='uncompressed', help=True)
+        if pipeline_dataset_id == '':
+            print('WARNING: There are not any annotation pipeline result datasets.')
+            OK = False
 
     # build distribution dictionary
     if OK:
@@ -1037,18 +1136,20 @@ def form_view_go_data_frecuency():
         toa_config_dict = xtoa.get_toa_config_dict()
 
         # get the statistics file path
-        stats_file = '{0}/{1}/{2}/{3}/{4}-{5}.csv'.format(toa_config_dict['RESULT_DIR'], xlib.get_toa_result_pipeline_dir(), pipeline_dataset_id, toa_config_dict['STATS_SUBDIR_NAME'], 'go', toa_config_dict['STATS_BASE_NAME'])
+        stats_file = f'{toa_config_dict["RESULT_DIR"]}/{xlib.get_toa_result_pipeline_dir()}/{pipeline_dataset_id}/{toa_config_dict["STATS_SUBDIR_NAME"]}/go-{toa_config_dict["STATS_BASE_NAME"]}.csv'
 
         # open the statistics file
         if stats_file.endswith('.gz'):
             try:
                 stats_file_id = gzip.open(stats_file, mode='rt', encoding='iso-8859-1', newline='\n')
             except Exception as e:
+                print(f'*** EXCEPTION: "{e}".')
                 raise xlib.ProgramException('F002', stats_file)
         else:
             try:
                 stats_file_id = open(stats_file, mode='r', encoding='iso-8859-1', newline='\n')
             except Exception as e:
+                print(f'*** EXCEPTION: "{e}".')
                 raise xlib.ProgramException('F001', stats_file)
 
         # initialize the record counter
@@ -1110,14 +1211,18 @@ def form_view_go_data_frecuency():
             all_count_width = 11
             first_hsp_count_width = 11
             min_evalue_count_width = 11
-            # set line template
-            line_template = '{0:' + str(id_width) + '}   {1:' + str(desc_width) + '}   {2:' + str(namespace_width) + '}   {3:' + str(all_count_width) + '}   {4:' + str(first_hsp_count_width) + '}   {5:' + str(min_evalue_count_width) + '}'
+            # set line
+            line = '{0:' + str(id_width) + '}   {1:' + str(desc_width) + '}   {2:' + str(namespace_width) + '}   {3:' + str(all_count_width) + '}   {4:' + str(first_hsp_count_width) + '}   {5:' + str(min_evalue_count_width) + '}'
             # print header
-            print(line_template.format('GO id', 'Description', 'Namespace', 'All', 'First HSP', 'Min e-value'))
-            print(line_template.format('=' * id_width, '=' * desc_width, '=' * namespace_width, '=' * all_count_width, '=' * first_hsp_count_width, '=' * min_evalue_count_width))
+            print(line.format('GO id', 'Description', 'Namespace', 'All', 'First HSP', 'Min e-value'))
+            print(line.format('=' * id_width, '=' * desc_width, '=' * namespace_width, '=' * all_count_width, '=' * first_hsp_count_width, '=' * min_evalue_count_width))
             # print detail lines
             for key in sorted(distribution_dict.keys()):
-                print(line_template.format(distribution_dict[key]['id'], distribution_dict[key]['desc'], distribution_dict[key]['namespace'], distribution_dict[key]['all_count'], distribution_dict[key]['first_hsp_count'], distribution_dict[key]['min_evalue_count']))
+                print(line.format(distribution_dict[key]['id'], distribution_dict[key]['desc'], distribution_dict[key]['namespace'], distribution_dict[key]['all_count'], distribution_dict[key]['first_hsp_count'], distribution_dict[key]['min_evalue_count']))
+
+    # close the SSH client connection
+    if OK:
+        xssh.close_ssh_client_connection(ssh_client)
 
     # show continuation message 
     print(xlib.get_separator())

@@ -34,6 +34,7 @@ import tkinter.filedialog
 import tkinter.ttk
 
 import gdialogs
+import xbowtie2
 import xbusco
 import xcdhit
 import xcluster
@@ -44,6 +45,7 @@ import xdatabase
 import xddradseqtools
 import xdetonate
 import xec2
+import xexpress
 import xfastqc
 import xgmap
 import xgzip
@@ -56,6 +58,7 @@ import xlib
 import xngshelper
 import xnode
 import xquast
+import xraddesigner
 import xrnaquast
 import xsoapdenovo2
 import xsoapdenovotrans
@@ -172,7 +175,7 @@ class FormSetEnvironment(tkinter.Frame):
         # check if there are any running clusters
         if xconfiguration.get_environments_list() == []:
             message = 'There is not any environment recorded. You have to type a new one.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -215,8 +218,8 @@ class FormSetEnvironment(tkinter.Frame):
 
         # if the environment is new, check it is right
         if self.wrapper_environment.get() not in xconfiguration.get_environments_list():
-            message = '{0} is not an environment recorded. Do you like to record it?'.format(self.wrapper_environment.get())
-            OK = tkinter.messagebox.askyesno('{0} - Exit'.format(xlib.get_project_name()), message)
+            message = f'{self.wrapper_environment.get()} is not an environment recorded. Do you like to record it?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - Exit', message)
             if not OK:
                 return
 
@@ -229,8 +232,8 @@ class FormSetEnvironment(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 raise xlib.ProgramException('C002')
 
         # check if it is necesary to create the NGScloud config file corresponding to the environment
@@ -284,8 +287,8 @@ class FormSetEnvironment(tkinter.Frame):
         OK = True
 
         # confirm the exit of NGScloud
-        message = 'Are you sure to exit {0}?'.format(xlib.get_project_name())
-        OK = tkinter.messagebox.askyesno('{0} - Exit'.format(xlib.get_project_name()), message)
+        message = f'Are you sure to exit {xlib.get_project_name()}?'
+        OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - Exit', message)
 
         # exit NGScloud
         if OK:
@@ -410,7 +413,7 @@ class FormCreateConfigFiles(tkinter.Frame):
         OK = xec2.check_aws_credentials(self.wrapper_access_key_id.get(), self.wrapper_secret_access_key.get())
         if not OK:
             message = 'ERROR: The credentials are wrong. Please review your access key identification and secret access key in the AWS web.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # create the NGScloud config file corresponding to the environment
         if OK:
@@ -418,8 +421,8 @@ class FormCreateConfigFiles(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 raise xlib.ProgramException('C001')
 
         # create the key pairs directory
@@ -429,6 +432,9 @@ class FormCreateConfigFiles(tkinter.Frame):
 
         # create the config files
         if OK:
+
+            # create the Bowtie2 config file
+            (OK, error_list) = xbowtie2.create_bowtie2_config_file()
 
             # create the BUSCO config file
             (OK, error_list) = xbusco.create_busco_config_file()
@@ -448,11 +454,11 @@ class FormCreateConfigFiles(tkinter.Frame):
             # create the cutadapt config file
             (OK, error_list) = xcutadapt.create_cutadapt_config_file()
 
-            # create the ddRADseqTools config and data files
+            # create the ddRADseq simulation config file
             (OK, error_list) = xddradseqtools.create_ddradseq_simulation_config_file()
-            (OK, error_list) = xddradseqtools.create_restriction_site_file()
-            (OK, error_list) = xddradseqtools.create_end_file()
-            (OK, error_list) = xddradseqtools.create_individual_file()
+
+            # create the eXpress config file
+            (OK, error_list) = xexpress.create_express_config_file()
 
             # create the FastQC config file
             (OK, error_list) = xfastqc.create_fastqc_config_file()
@@ -484,6 +490,9 @@ class FormCreateConfigFiles(tkinter.Frame):
             # create the QUAST config file
             (OK, error_list) = xquast.create_quast_config_file()
 
+            # create the RADdesigner config file
+            (OK, error_list) = xraddesigner.create_raddesigner_config_file()
+
             # create the REF-EVAL config file
             (OK, error_list) = xdetonate.create_ref_eval_config_file()
 
@@ -504,13 +513,6 @@ class FormCreateConfigFiles(tkinter.Frame):
 
             # create the STAR config file
             (OK, error_list) = xstar.create_star_config_file()
-
-            # create the TOA config and data files
-            (OK, error_list) = xtoa.create_toa_config_file()
-            (OK, error_list) = xtoa.create_dataset_file()
-            (OK, error_list) = xtoa.create_species_file()
-            (OK, error_list) = xtoa.create_pipeline_config_file(pipeline_type=xlib.get_toa_process_pipeline_nucleotide_code())
-            (OK, error_list) = xtoa.create_pipeline_config_file(pipeline_type=xlib.get_toa_process_pipeline_aminoacid_code())
 
             # create the TopHat config file
             (OK, error_list) = xtophat.create_tophat_config_file()
@@ -536,6 +538,23 @@ class FormCreateConfigFiles(tkinter.Frame):
             # create the Trinity config file
             (OK, error_list) = xtrinity.create_trinity_config_file()
 
+            # create the Variant calling config file
+            (OK, error_list) = xddradseqtools.create_variant_calling_config_file()
+
+            # create the RAD-seq data files
+            (OK, error_list) = xddradseqtools.create_end_file()
+            (OK, error_list) = xddradseqtools.create_individual_file()
+            (OK, error_list) = xddradseqtools.create_restriction_site_file()
+            (OK, error_list) = xngshelper.create_vcf_sample_file()
+            (OK, error_list) = xraddesigner.create_condition_file()
+
+            # create the TOA config and data files
+            (OK, error_list) = xtoa.create_toa_config_file()
+            (OK, error_list) = xtoa.create_dataset_file()
+            (OK, error_list) = xtoa.create_species_file()
+            (OK, error_list) = xtoa.create_pipeline_config_file(pipeline_type=xlib.get_toa_process_pipeline_nucleotide_code())
+            (OK, error_list) = xtoa.create_pipeline_config_file(pipeline_type=xlib.get_toa_process_pipeline_aminoacid_code())
+
             # create the transfer config files
             (OK, error_list) = xreference.create_reference_transfer_config_file()
             (OK, error_list) = xdatabase.create_database_transfer_config_file()
@@ -551,7 +570,7 @@ class FormCreateConfigFiles(tkinter.Frame):
         # show the creation message
         if OK:
             message = 'The config files are created with default values.'
-            tkinter.messagebox.showinfo('{0} - Start'.format(xlib.get_project_name()), message)
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - Start', message)
 
         # set the environment variables corresponding to the NGScloud config file
         if OK:
@@ -586,8 +605,8 @@ class FormCreateConfigFiles(tkinter.Frame):
         OK = True
 
         # confirm the exit of NGScloud
-        message = 'Are you sure to exit {0}?'.format(xlib.get_project_name())
-        OK = tkinter.messagebox.askyesno('{0} - Exit'.format(xlib.get_project_name()), message)
+        message = f'Are you sure to exit {xlib.get_project_name()}?'
+        OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - Exit', message)
 
         # exit NGScloud
         if OK:
@@ -666,7 +685,7 @@ class FormRecreateNGScloudConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = 'Configuration - Recreate {0} config file'.format(xlib.get_project_name())
+        self.head = f'Configuration - Recreate {xlib.get_project_name()} config file'
 
         # create the wrappers to track changes in inputs
         self.wrapper_user_id = tkinter.StringVar()
@@ -819,24 +838,24 @@ class FormRecreateNGScloudConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the recreation of the NGScloud config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xconfiguration.get_ngscloud_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xconfiguration.get_ngscloud_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the NGScloud config file corresponding to the environment
         if OK:
             (OK, error_list) = xconfiguration.create_ngscloud_config_file(self.wrapper_user_id.get(), self.wrapper_access_key_id.get(), self.wrapper_secret_access_key.get(), self.wrapper_email.get())
             if OK:
-                message = 'The file {0} is created with default values.'.format(xconfiguration.get_ngscloud_config_file())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The file {xconfiguration.get_ngscloud_config_file()} is created with default values.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 OK = False
 
         # set the current region and zone in the corresponding widgets of "frame_information"
@@ -1038,14 +1057,14 @@ class FormUpdateConnectionData(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # check the AWS access key identification and the AWS secret access key
         if OK:
             OK = xec2.check_aws_credentials(self.wrapper_access_key_id.get(), self.wrapper_secret_access_key.get())
             if not OK:
                 message = 'ERROR: The credentials are wrong. Please review your access key identification and secret access key in the AWS web.'
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the NGScloud config file
         if OK:
@@ -1053,8 +1072,8 @@ class FormUpdateConnectionData(tkinter.Frame):
 
         # confirm the connection data update in the NGScloud config file
         if OK:
-            message = 'The file {0} is going to be update with the new connection data.\n\nAre you sure to continue?'.format(ngscloud_config_file)
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {ngscloud_config_file} is going to be update with the new connection data.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # update the connection data in the NGScloud config file corresponding to the environment
         if OK:
@@ -1062,13 +1081,13 @@ class FormUpdateConnectionData(tkinter.Frame):
             if OK:
                 (OK, error_list) = xconfiguration.update_contact_data(self.wrapper_email.get())
             if OK:
-                message = 'The file {0} has been updated.'.format(ngscloud_config_file)
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The file {ngscloud_config_file} has been updated.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 raise xlib.ProgramException('C001')
 
         # close the form
@@ -1385,6 +1404,11 @@ class FormLinkVolumes(tkinter.Frame):
             message = f'There is not any volume created in the zone {self.zone_name}.'
             tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
+        # check there are created volumes in the zone
+        if self.created_volume_name_list == []:
+            message = f'There is not any volume created in the zone {self.zone_name}.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+
         # load initial data in inputs
         self.initialize_inputs()
 
@@ -1607,7 +1631,26 @@ class FormLinkVolumes(tkinter.Frame):
         Process the event when a dataset structure item has been selected
         '''
 
-        if self.wrapper_dataset_structure.get() == xconfiguration.get_dataset_structure_singlevolume():
+        if self.wrapper_dataset_structure.get() == xconfiguration.get_dataset_structure_none():
+            self.combobox_ngscloud_volume['state'] = 'readonly'
+            self.wrapper_ngscloud_volume.set('')
+            self.combobox_ngscloud_volume['state'] = 'disabled'
+            self.combobox_app_volume['state'] = 'readonly'
+            self.wrapper_app_volume.set('')
+            self.combobox_app_volume['state'] = 'disabled'
+            self.combobox_database_volume['state'] = 'readonly'
+            self.wrapper_database_volume.set('')
+            self.combobox_database_volume['state'] = 'disabled'
+            self.combobox_read_volume['state'] = 'readonly'
+            self.wrapper_read_volume.set('')
+            self.combobox_read_volume['state'] = 'disabled'
+            self.combobox_reference_volume['state'] = 'readonly'
+            self.wrapper_reference_volume.set('')
+            self.combobox_reference_volume['state'] = 'disabled'
+            self.combobox_result_volume['state'] = 'readonly'
+            self.wrapper_result_volume.set('')
+            self.combobox_result_volume['state'] = 'disabled'
+        elif self.wrapper_dataset_structure.get() == xconfiguration.get_dataset_structure_singlevolume():
             self.combobox_ngscloud_volume['state'] = 'readonly'
             self.wrapper_ngscloud_volume.set('')
             self.combobox_app_volume['state'] = 'readonly'
@@ -1705,7 +1748,7 @@ class FormLinkVolumes(tkinter.Frame):
         OK = True
 
         # check if "button_execute" has to be enabled or disabled
-        if self.wrapper_dataset_structure.get() == xconfiguration.get_dataset_structure_singlevolume() and self.wrapper_ngscloud_volume.get() != '' or self.wrapper_dataset_structure.get() == xconfiguration.get_dataset_structure_multivolume() and self.wrapper_app_volume.get() != '' and self.wrapper_database_volume.get() != '' and self.wrapper_read_volume.get() != '' and self.wrapper_reference_volume.get() != '' and self.wrapper_result_volume.get() != '':
+        if self.wrapper_dataset_structure.get() == xconfiguration.get_dataset_structure_none() or self.wrapper_dataset_structure.get() == xconfiguration.get_dataset_structure_singlevolume() and self.wrapper_ngscloud_volume.get() != '' or self.wrapper_dataset_structure.get() == xconfiguration.get_dataset_structure_multivolume() and self.wrapper_app_volume.get() != '' and self.wrapper_database_volume.get() != '' and self.wrapper_read_volume.get() != '' and self.wrapper_reference_volume.get() != '' and self.wrapper_result_volume.get() != '':
             self.button_execute['state'] = 'enable'
         else:
             self.button_execute['state'] = 'disabled'
@@ -1717,14 +1760,14 @@ class FormLinkVolumes(tkinter.Frame):
 
     def execute(self):
         '''
-        Execute the link of the volume to the cluster template.
+        Execute the link volumes to the configuration.
         '''
 
         # check inputs
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # prepare and check volume names
         if OK:
@@ -1767,18 +1810,14 @@ class FormLinkVolumes(tkinter.Frame):
                     OK = False
             if not OK:
                 message = 'A volume can be linked only once.'
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
-
-        # get the NGScloud config file
-        if OK:
-            ngscloud_config_file = xconfiguration.get_ngscloud_config_file()
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the region and zone update in the NGScloud config file
         if OK:
-            message = 'The file {0} is going to be update linking the volume {1}.\n\nAre you sure to continue?'.format(ngscloud_config_file, self.wrapper_ngscloud_volume.get())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = 'The dataset structure are going to be modified.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
-        # link the volume to the cluster template in the NGScloud config file corresponding to the environment
+        # link volumes in the NGScloud config file corresponding to the environment
         if OK:
             dialog_log = gdialogs.DialogLog(self, self.head, xconfiguration.link_volumes.__name__)
             threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
@@ -1831,6 +1870,20 @@ class FormCreateCluster(tkinter.Frame):
         # get current region name
         self.region_name = xconfiguration.get_current_region_name()
 
+        # get the NGScloud config file
+        ngscloud_config_file = xconfiguration.get_ngscloud_config_file()
+
+        # get the option dictionary corresponding to the NGScloud config file
+        ngscloud_options_dict = xlib.get_option_dict(ngscloud_config_file)
+
+        # get the dataset structure and NGScloud_volume
+        self.dataset_structure = ngscloud_options_dict['dataset info']['dataset_structure'].lower()
+
+        # check the dataset structure
+        if self.dataset_structure == xconfiguration.get_dataset_structure_none():
+            message = f'The dataset structure is not {xconfiguration.get_dataset_structure_singlevolume()} nor {xconfiguration.get_dataset_structure_multivolume()}, then datasets will be created in the root volume and they will be lost when the cluster is terminated.\n\nThe dataset structure can be modified in:\n\n"Cloud control" -> "Configuration" -> "Links volumes"'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+
         # get the volume type dictinary
         self.volume_type_dict = xec2.get_volume_type_dict()
 
@@ -1865,7 +1918,7 @@ class FormCreateCluster(tkinter.Frame):
         message += 'https://aws.amazon.com/ec2/instance-types/\n\n'
         message += 'and the EC2 pricing is detailed in:\n\n'
         message += 'https://aws.amazon.com/ec2/pricing/'
-        tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+        tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
     #---------------
 
@@ -2012,8 +2065,29 @@ class FormCreateCluster(tkinter.Frame):
         # clear the value selected in the combobox
         self.wrapper_cluster_mode.set('')
 
-        # load the template names list in the combobox
-        self.combobox_cluster_mode['values'] = xconfiguration.get_cluster_mode_list()
+        # check if StarCluster is installed
+        is_starcluster_installed = True
+        command = f'{xlib.get_starcluster()} --version'
+        devstdout = xlib.DevStdOut('starcluster_version', print_stdout=False)
+        rc = xlib.run_command(command, devstdout)
+        if rc != 0:
+            is_starcluster_installed = False
+        else:
+            with open(devstdout.get_log_file(), 'r') as log_command:
+                version_found = False
+                for line in log_command:
+                    if line.startswith('0.95.6'):
+                        version_found = True
+                if not version_found:
+                    is_starcluster_installed = False
+
+        # get the cluster mode list
+        cluster_mode_list = xconfiguration.get_cluster_mode_list()
+        if not is_starcluster_installed:
+            cluster_mode_list.remove(xconfiguration.get_cluster_mode_starcluster())
+
+        # load the cluster mode list in the combobox
+        self.combobox_cluster_mode['values'] = cluster_mode_list
 
     #---------------
 
@@ -2189,7 +2263,7 @@ class FormCreateCluster(tkinter.Frame):
         # set the instance type description
         description = f'Use: {instance_type_data_dict["use"]} - vCPU: {instance_type_data_dict["vcpu"]} - Memory: {instance_type_data_dict["memory"]} GiB - Generation: {instance_type_data_dict["generation"]}'
 
-        # show the description template in the template name warning
+        # show the description in the instance type warning
         self.label_instance_type_warning['text'] = description
 
     #---------------
@@ -2231,12 +2305,12 @@ class FormCreateCluster(tkinter.Frame):
 
         # check that "entry_volume_size" is an integer value between the minimum and maximum value size
         if self.wrapper_volume_type_text.get() != '':
-            self.label_volume_size_warning['text'] = 'Integer number between {0} and {1}'.format(self.minimum_size, self.maximum_size)
+            self.label_volume_size_warning['text'] = f'Integer number between {self.minimum_size} and {self.maximum_size}'
             self.label_volume_size_warning['foreground'] = 'black'
             if self.wrapper_volume_size.get() != '':
                 try:
                     volume_size = int(self.wrapper_volume_size.get())
-                except Exception as e:
+                except:
                     self.label_volume_size_warning['foreground'] = 'red'
                     OK = False
                 else:
@@ -2270,7 +2344,7 @@ class FormCreateCluster(tkinter.Frame):
             if self.wrapper_max_spot_price.get() != '':
                 try:
                     max_spot_price = float(self.wrapper_max_spot_price.get())
-                except Exception as e:
+                except:
                     self.label_max_spot_price_warning['foreground'] = 'red'
                     OK = False
                 else:
@@ -2292,7 +2366,7 @@ class FormCreateCluster(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # check the AMI identification is create in the current zone
         if OK:
@@ -2307,8 +2381,12 @@ class FormCreateCluster(tkinter.Frame):
 
         # confirm the creation of the cluster
         if OK:
-            message = 'The cluster with instace type {0} is going to be created.\n\nAre you sure to continue?\n\n'.format(self.wrapper_instance_type.get())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            if self.dataset_structure == xconfiguration.get_dataset_structure_none():
+                message = f'The cluster with instace type {self.wrapper_instance_type.get()} is going to be created.\n\nThe dataset structure is not {xconfiguration.get_dataset_structure_singlevolume()} nor {xconfiguration.get_dataset_structure_multivolume()}, then datasets will be created in the root volume and they will be lost when the cluster is terminated.\n\nAre you sure to continue?\n\n'.format(self.wrapper_instance_type.get())
+            else:
+
+                message = f'The cluster with instace type {self.wrapper_instance_type.get()} is going to be created.\n\nAre you sure to continue?\n\n'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # create the cluster
         if OK:
@@ -2368,7 +2446,7 @@ class FormTerminateCluster(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = 'Cluster operation - {0}'.format('Terminate cluster' if not self.force else 'Force termination of a cluster')
+        self.head = f'Cluster operation - {"Terminate cluster" if not self.force else "Force termination of a cluster"}'
 
         # create the wrappers to track changes in the inputs
         if not self.force:
@@ -2404,7 +2482,7 @@ class FormTerminateCluster(tkinter.Frame):
 
         # create "label_cluster_name" and register it with the grid geometry manager
         if not self.force:
-            self.label_cluster_name = tkinter.Label(self, text='Cluster name' if not self.force else 'Template name')
+            self.label_cluster_name = tkinter.Label(self, text='Cluster name')
             self.label_cluster_name.grid(row=0, column=0, padx=(15,5), pady=(75,5), sticky='e')
 
         # create "combobox_cluster_name" and register it with the grid geometry manager
@@ -2474,22 +2552,18 @@ class FormTerminateCluster(tkinter.Frame):
         self.wrapper_cluster_name.set('')
 
         # check if there are some running clusters
-        if not self.force:
-            running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
-            if running_cluster_list == []:
-                self.combobox_cluster_name['values'] = []
-                message = 'There is not any running cluster.'
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
-                return
+        running_cluster_list = xec2.get_running_cluster_list(volume_creator_included=False)
+        if running_cluster_list == []:
+            self.combobox_cluster_name['values'] = []
+            message = 'There is not any running cluster.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+            return
 
         # load the names of clusters which are running in the combobox
-        if not self.force:
-            self.combobox_cluster_name['values'] = running_cluster_list
-        else:
-            self.combobox_cluster_name['values'] = xconfiguration.get_template_name_list()
+        self.combobox_cluster_name['values'] = running_cluster_list
 
         # if there is only one cluster running, set its cluster name by default
-        if  not self.force and len(running_cluster_list) == 1:
+        if len(running_cluster_list) == 1:
             self.wrapper_cluster_name.set(running_cluster_list[0])
             self.combobox_cluster_name['state'] = 'disabled'
             self.combobox_cluster_name_selected_item()
@@ -2536,7 +2610,7 @@ class FormTerminateCluster(tkinter.Frame):
 
     def write_label_instance_type_warning(self, event=None):
         '''
-        Process the event when a template name item has been selected
+        Process the event when a instance type item has been selected
         '''
 
         # get the data dictoonary corresponding to the instance type
@@ -2545,7 +2619,7 @@ class FormTerminateCluster(tkinter.Frame):
         # set the instance type description
         description = f'Use: {instance_type_data_dict["use"]} - vCPU: {instance_type_data_dict["vcpu"]} - Memory: {instance_type_data_dict["memory"]} GiB - Generation: {instance_type_data_dict["generation"]}'
 
-        # show the description template in the template name warning
+        # show the instance type description in the instance type warning
         self.label_instance_type_warning['text'] = description
 
     #---------------
@@ -2584,15 +2658,15 @@ class FormTerminateCluster(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the termination of the cluster
         if OK:
             if not self.force:
-                message = 'The cluster {0} is going to be terminated.\n\nAre you sure to continue?'.format(self.wrapper_cluster_name.get())
+                message = f'The cluster {self.wrapper_cluster_name.get()} is going to be terminated.\n\nAre you sure to continue?'
             else:
-                message = 'The cluster  {0} is going to be forced to terminate..\n\nAre you sure to continue?'.format(xconfiguration.build_cluster_name(self.wrapper_instance_type.get()))
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The cluster  {xconfiguration.build_cluster_name(self.wrapper_instance_type.get())} is going to be forced to terminate..\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # terminate the cluster and initialize inputs
         if OK:
@@ -2732,7 +2806,7 @@ class FormShowClusterComposition(tkinter.Frame):
         if running_cluster_list == []:
             self.combobox_cluster_name['values'] = []
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -2788,7 +2862,7 @@ class FormShowClusterComposition(tkinter.Frame):
         # check the cluster mode
         if self.wrapper_cluster_name.get() != '' and xec2.get_cluster_mode(self.wrapper_cluster_name.get()) != xconfiguration.get_cluster_mode_starcluster():
             message = f'This option is only available for clusters started in mode {xconfiguration.get_cluster_mode_starcluster()}.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             OK = False
 
         # return the control variable
@@ -2805,7 +2879,7 @@ class FormShowClusterComposition(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # show the status of batch jobs in the cluster
         if OK:
@@ -2936,7 +3010,7 @@ class FormShowStatusBatchJobs(tkinter.Frame):
         if running_cluster_list == []:
             self.combobox_cluster_name['values'] = []
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -2971,8 +3045,8 @@ class FormShowStatusBatchJobs(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -3017,7 +3091,7 @@ class FormShowStatusBatchJobs(tkinter.Frame):
         # check the cluster mode
         if self.wrapper_cluster_name.get() != '' and xec2.get_cluster_mode(self.wrapper_cluster_name.get()) != xconfiguration.get_cluster_mode_starcluster():
             message = f'This option is only available for clusters started in mode {xconfiguration.get_cluster_mode_starcluster()}.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             OK = False
 
         # return the control variable
@@ -3034,7 +3108,7 @@ class FormShowStatusBatchJobs(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the batch job dictionary
         if OK:
@@ -3044,7 +3118,7 @@ class FormShowStatusBatchJobs(tkinter.Frame):
         if OK:
             if batch_job_dict == {}:
                 message = 'There is not any batch job.'
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 OK = False
 
         # build the data list
@@ -3203,7 +3277,7 @@ class FormKillBatchJob(tkinter.Frame):
         if running_cluster_list == []:
             self.combobox_cluster_name['values'] = []
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -3229,7 +3303,7 @@ class FormKillBatchJob(tkinter.Frame):
         (OK, error_list, batch_job_dict) = xcluster.get_batch_job_dict(self.ssh_client)
         if batch_job_dict == {}:
             message = 'There is not any batch job.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # build the list of batch jobs
@@ -3268,8 +3342,8 @@ class FormKillBatchJob(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -3291,7 +3365,7 @@ class FormKillBatchJob(tkinter.Frame):
 
         try:
             self.job_id = int(self.wrapper_job.get()[0:3])
-        except Exception as e:
+        except:
             self.job_id = 0
 
     #---------------
@@ -3329,7 +3403,7 @@ class FormKillBatchJob(tkinter.Frame):
         # check the cluster mode
         if self.wrapper_cluster_name.get() != '' and xec2.get_cluster_mode(self.wrapper_cluster_name.get()) != xconfiguration.get_cluster_mode_starcluster():
             message = f'This option is only available for clusters started in mode {xconfiguration.get_cluster_mode_starcluster()}.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             OK = False
 
         # return the control variable
@@ -3346,12 +3420,12 @@ class FormKillBatchJob(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the removal of the volume in the node
         if OK:
-            message = 'The batch job {0} is going to be killed in the cluster {1}.\n\nAre you sure to continue?'.format(self.wrapper_job.get(), self.wrapper_cluster_name.get())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The batch job {self.wrapper_job.get()} is going to be killed in the cluster {self.wrapper_cluster_name.get()}.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # remove the volume and initialize inputs
         if OK:
@@ -3499,7 +3573,7 @@ class FormAddNode(tkinter.Frame):
         if running_cluster_list == []:
             self.combobox_cluster_name['values'] = []
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -3560,13 +3634,13 @@ class FormAddNode(tkinter.Frame):
         # check the cluster mode
         if self.wrapper_cluster_name.get() != '' and xec2.get_cluster_mode(self.wrapper_cluster_name.get()) != xconfiguration.get_cluster_mode_starcluster():
             message = f'This option is only available for clusters started in mode {xconfiguration.get_cluster_mode_starcluster()}.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             OK = False
 
         # check if the maximum number of instances is already running
         if len(self.cluster_node_list) >= xec2.get_max_node_number():
-            message = 'The maximum number ({0}) of instances is already running.'.format(xec2.get_max_node_number())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The maximum number ({xec2.get_max_node_number()}) of instances is already running.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             OK = False
 
         # return the control variable
@@ -3602,8 +3676,8 @@ class FormAddNode(tkinter.Frame):
         # check if the a node with the node name is instances is already running
         if OK:
             if self.wrapper_node_name.get() in self.cluster_node_list:
-                message = 'The {0} is already running.'.format(self.wrapper_node_name.get())
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {self.wrapper_node_name.get()} is already running.'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 OK = False
 
         # return the control variable
@@ -3620,12 +3694,12 @@ class FormAddNode(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the addition of the volume in the node
         if OK:
-            message = 'The node {0} is going to be added in the cluster {1}.\n\nAre you sure to continue?'.format(self.wrapper_node_name.get(), self.wrapper_cluster_name.get())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The node {self.wrapper_node_name.get()} is going to be added in the cluster {self.wrapper_cluster_name.get()}.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # add the node
         if OK:
@@ -3764,7 +3838,7 @@ class FormRemoveNode(tkinter.Frame):
         if self.running_cluster_list == []:
             self.combobox_cluster_name['values'] = []
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -3796,7 +3870,7 @@ class FormRemoveNode(tkinter.Frame):
         if cluster_node_list == []:
             self.combobox_cluster_name['values'] = []
             message = 'There is not any running node besides the master.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of cluster nodes created in the combobox
@@ -3865,7 +3939,7 @@ class FormRemoveNode(tkinter.Frame):
         # check the cluster mode
         if self.wrapper_cluster_name.get() != '' and xec2.get_cluster_mode(self.wrapper_cluster_name.get()) != xconfiguration.get_cluster_mode_starcluster():
             message = f'This option is only available for clusters started in mode {xconfiguration.get_cluster_mode_starcluster()}.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             OK = False
 
         # return the control variable
@@ -3882,12 +3956,12 @@ class FormRemoveNode(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the removal of the volume in the node
         if OK:
-            message = 'The node {0} is going to be removed in the cluster {1}.\n\nAre you sure to continue?'.format(self.wrapper_node_name.get(), self.wrapper_cluster_name.get())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The node {self.wrapper_node_name.get()} is going to be removed in the cluster {self.wrapper_cluster_name.get()}.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # remove the volume and initialize inputs
         if OK:
@@ -3967,7 +4041,7 @@ class FormCreateVolume(tkinter.Frame):
         message += 'https://aws.amazon.com/ebs/details/\n\n'
         message += 'and the EBS pricing is detailed in:\n\n'
         message += '    https://aws.amazon.com/ebs/pricing/'
-        tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+        tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
     #---------------
 
@@ -4113,11 +4187,11 @@ class FormCreateVolume(tkinter.Frame):
         OK = True
 
         # check that "entry_volume_size" an integer value and it is  greater than or equal to the minimum value size
-        self.label_volume_size_warning['text'] = 'It has to be an integer number between {0} and {1}'.format(self.minimum_size, self.maximum_size)
+        self.label_volume_size_warning['text'] = f'It has to be an integer number between {self.minimum_size} and {self.maximum_size}'
         self.label_volume_size_warning['foreground'] = 'black'
         try:
             volume_size = int(self.wrapper_volume_size.get())
-        except Exception as e:
+        except:
             self.label_volume_size_warning['foreground'] = 'red'
             OK = False
         else:
@@ -4139,12 +4213,12 @@ class FormCreateVolume(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the creation of the cluster
         if OK:
-            message = 'The volume {0} is going to be created.\n\nAre you sure to continue?'.format(self.wrapper_volume_name.get())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The volume {self.wrapper_volume_name.get()} is going to be created.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # create the cluster and initialize inputs
         if OK:
@@ -4282,7 +4356,7 @@ class FormRemoveVolume(tkinter.Frame):
         if volume_names_list == []:
             self.combobox_volume_name['values'] = []
             message = 'There is not any volume created.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -4318,12 +4392,12 @@ class FormRemoveVolume(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the removal of the volume
         if OK:
-            message = 'The volume {0} is going to be removed.\n\nAre you sure to continue?'.format(self.wrapper_volume_name.get())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The volume {self.wrapper_volume_name.get()} is going to be removed.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # remove the volume and initialize inputs
         if OK:
@@ -4504,7 +4578,7 @@ class FormMountVolume(tkinter.Frame):
         if running_cluster_list == []:
             self.combobox_cluster_name['values'] = []
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -4544,8 +4618,8 @@ class FormMountVolume(tkinter.Frame):
 
         # check if there are any linked volumes
         if xec2.get_created_volume_name_list(zone_name) == []:
-            message = 'There is not any volume created in the zone {0}.'.format(zone_name)
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'There is not any volume created in the zone {zone_name}.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the volume names list in the combobox
@@ -4629,7 +4703,7 @@ class FormMountVolume(tkinter.Frame):
 
         # check that "entry_aws_device_file" value is valid
         if not xlib.is_device_file(self.wrapper_aws_device_file.get(), device_file_pattern):
-            self.label_aws_device_file_warning['text'] = 'It has to have a pattern {0}.'.format(device_file_pattern)
+            self.label_aws_device_file_warning['text'] = f'It has to have a pattern {device_file_pattern}.'
             self.label_aws_device_file_warning['foreground'] = 'red'
             OK = False
         else:
@@ -4672,12 +4746,12 @@ class FormMountVolume(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the mounting of the volume in the node
         if OK:
-            message = 'The volume {0} is going to be mounted in the node {1}.\n\nAre you sure to continue?'.format(self.wrapper_volume_name.get(), self.wrapper_node_name.get())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The volume {self.wrapper_volume_name.get()} is going to be mounted in the node {self.wrapper_node_name.get()}.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # terminate the cluster and initialize inputs
         if OK:
@@ -4843,7 +4917,7 @@ class FormUnmountVolume(tkinter.Frame):
         if running_cluster_list == []:
             self.combobox_cluster_name['values'] = []
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -4883,8 +4957,8 @@ class FormUnmountVolume(tkinter.Frame):
 
         # check if there are any volumes linked
         if xec2.get_created_volume_name_list(zone_name) == []:
-            message = 'There is not any volume created in the zone {0}.'.format(zone_name)
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'There is not any volume created in the zone {zone_name}.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the volume names list in the combobox
@@ -4982,12 +5056,12 @@ class FormUnmountVolume(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the unmounting of the volume in the node
         if OK:
-            message = 'The volume {0} is going to be unmounted in the node {1}.\n\nAre you sure to continue?'.format(self.wrapper_volume_name.get(), self.wrapper_node_name.get())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The volume {self.wrapper_volume_name.get()} is going to be unmounted in the node {self.wrapper_node_name.get()}.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # terminate the cluster and initialize inputs
         if OK:
@@ -5126,7 +5200,7 @@ class FormOpenTerminal(tkinter.Frame):
         if running_cluster_list == []:
             self.combobox_cluster_name['values'] = []
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -5208,12 +5282,12 @@ class FormOpenTerminal(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the opening of a windows terminal of a node cluster
         if OK:
-            message = 'A terminal window of the node {0} in the cluster {1} is going to be opened.\n\nAre you sure to continue?'.format(self.wrapper_node_name.get(), self.wrapper_cluster_name.get())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'A terminal window of the node {self.wrapper_node_name.get()} in the cluster {self.wrapper_cluster_name.get()} is going to be opened.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # open the terminal windows
         if OK:

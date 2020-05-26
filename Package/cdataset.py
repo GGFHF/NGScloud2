@@ -69,9 +69,10 @@ def form_recreate_reference_transfer_config_file():
         if os.path.isfile(os.path.join(local_dir, file)) and re.match(file_pattern, file):
             selected_file_list.append(file)
     if selected_file_list != []:
-        print('The selected file list is built: {0}'.format(str(selected_file_list).strip('[]').replace('\'','')))
+        selected_file_list = str(selected_file_list).strip('[]').replace('\'','')
+        print(f'The selected file list is built: {selected_file_list}')
     else:
-        print('*** ERROR: There are not files in the directory {0} with the pattern {1}'.format(local_dir, file_pattern))
+        print(f'*** ERROR: There are not files in the directory {local_dir} with the pattern {file_pattern}')
         OK = False
 
     # confirm the creation of the config file
@@ -82,7 +83,7 @@ def form_recreate_reference_transfer_config_file():
     # create the config file
     if OK:
         print(xlib.get_separator())
-        print('The file {0} is been created ...'.format(xreference.get_reference_transfer_config_file()))
+        print(f'The file {xreference.get_reference_transfer_config_file()} is been created ...')
         (OK, error_list) = xreference.create_reference_transfer_config_file(local_dir, selected_file_list, cluster_directoy)
         if OK:
             print('The config file is created.')
@@ -115,10 +116,10 @@ def form_edit_reference_transfer_config_file():
     # edit the reference transfer config file
     print(xlib.get_separator())
     print('The reference transfer config file is being edited ...')
-    command = '{0} {1}'.format(xlib.get_editor(), reference_transfer_config_file)
+    command = f'{xlib.get_editor()} {reference_transfer_config_file}'
     rc = subprocess.call(command, shell=True)
     if rc != 0:
-        print('*** ERROR: Return code {0} in command -> {1}'.format(rc, command))
+        print(f'*** ERROR: Return code {rc} in command -> {command}')
         OK = False
 
     # check the reference transfer config file
@@ -225,18 +226,19 @@ def form_recreate_reference_gzip_config_file():
         print('Building the selected file list ...')
         reference_dataset_dir = xlib.get_cluster_reference_dataset_dir(reference_dataset_id)
         selected_file_list = []
-        command = 'cd {0}; find . -type f -regex "./{1}"'.format(reference_dataset_dir, file_pattern)
+        command = f'cd {reference_dataset_dir}; find . -type f -regex "./{file_pattern}"'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 selected_file_list.append(line.rstrip('\n'))
             if selected_file_list != []:
-                print('The selected file list is built: {0}'.format(str(selected_file_list).strip('[]').replace('\'','')))
+                selected_file_list = str(selected_file_list).strip('[]').replace('\'','')
+                print(f'The selected file list is built: {selected_file_list}')
             else:
-                print('*** ERROR: There are not files in the directory {0} with the pattern {1}'.format(reference_dataset_dir, file_pattern))
+                print(f'*** ERROR: There are not files in the directory {reference_dataset_dir} with the pattern {file_pattern}')
                 OK = False
         else:
-            print('*** ERROR: Wrong command ---> {0}'.format(command))
+            print(f'*** ERROR: Wrong command ---> {command}')
 
     # confirm the creation of the config file
     if OK:
@@ -246,7 +248,7 @@ def form_recreate_reference_gzip_config_file():
     # create the config file
     if OK:
         print(xlib.get_separator())
-        print('The file {0} is been created ...'.format(gzip_config_file))
+        print(f'The file {gzip_config_file} is been created ...')
         (OK, error_list) = xgzip.create_gzip_config_file(action, 'reference', None, reference_dataset_id, selected_file_list)
         if OK:
             print('The config file is created.')
@@ -282,10 +284,10 @@ def form_edit_reference_gzip_config_file():
     # edit the reference gzip config file
     print(xlib.get_separator())
     print('The reference gzip config file is being edited ...')
-    command = '{0} {1}'.format(xlib.get_editor(), reference_gzip_config_file)
+    command = f'{xlib.get_editor()} {reference_gzip_config_file}'
     rc = subprocess.call(command, shell=True)
     if rc != 0:
-        print('*** ERROR: Return code {0} in command -> {1}'.format(rc, command))
+        print(f'*** ERROR: Return code {rc} in command -> {command}')
         OK = False
 
     # check the reference gzip config file
@@ -382,12 +384,12 @@ def form_remove_reference_dataset():
 
     # removal the reference dataset in the cluster
     if OK:
-        command = 'rm -fr {0}/{1}'.format(xlib.get_cluster_reference_dir(), reference_dataset_id)
+        command = f'rm -fr {xlib.get_cluster_reference_dir()}/{reference_dataset_id}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
-            print('The dataset {0} is removed.'.format(reference_dataset_id))
+            print(f'The dataset {reference_dataset_id} is removed.')
         else:
-            print('*** ERROR: Wrong command ---> {0}'.format(command))
+            print(f'*** ERROR: Wrong command ---> {command}')
             OK = False
 
     # close the SSH client connection
@@ -426,9 +428,10 @@ def form_recreate_database_transfer_config_file():
         if os.path.isfile(os.path.join(local_dir, file)) and re.match(file_pattern, file):
             selected_file_list.append(file)
     if selected_file_list != []:
-        print('The selected file list is built: {0}'.format(str(selected_file_list).strip('[]').replace('\'','')))
+        selected_file_list_text = str(selected_file_list).strip('[]').replace('\'','')
+        print(f'The selected file list is built: {selected_file_list_text}')
     else:
-        print('*** ERROR: There are not files in the directory {0} with the pattern {1}'.format(local_dir, file_pattern))
+        print(f'*** ERROR: There are not files in the directory {local_dir} with the pattern {file_pattern}')
         OK = False
 
     # confirm the creation of the config file
@@ -439,7 +442,7 @@ def form_recreate_database_transfer_config_file():
     # create the config file
     if OK:
         print(xlib.get_separator())
-        print('The file {0} is been created ...'.format(xdatabase.get_database_transfer_config_file()))
+        print(f'The file {xdatabase.get_database_transfer_config_file()} is been created ...')
         (OK, error_list) = xdatabase.create_database_transfer_config_file(local_dir, selected_file_list, cluster_directoy)
         if OK:
             print('The config file is created.')
@@ -469,10 +472,10 @@ def form_edit_database_transfer_config_file():
     # edit the database transfer config file
     print(xlib.get_separator())
     print('The database transfer config file is being edited ...')
-    command = '{0} {1}'.format(xlib.get_editor(), xdatabase.get_database_transfer_config_file())
+    command = f'{xlib.get_editor()} {xdatabase.get_database_transfer_config_file()}'
     rc = subprocess.call(command, shell=True)
     if rc != 0:
-        print('*** ERROR: Return code {0} in command -> {1}'.format(rc, command))
+        print(f'*** ERROR: Return code {rc} in command -> {command}')
         OK = False
 
     # check the database transfer config file
@@ -576,18 +579,19 @@ def form_recreate_database_gzip_config_file():
         print('Building the selected file list ...')
         database_dataset_dir = xlib.get_cluster_database_dataset_dir(database_dataset_id)
         selected_file_list = []
-        command = 'cd {0}; find . -type f -regex "./{1}"'.format(database_dataset_dir, file_pattern)
+        command = f'cd {database_dataset_dir}; find . -type f -regex "./{file_pattern}"'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 selected_file_list.append(line.rstrip('\n'))
             if selected_file_list != []:
-                print('The selected file list is built: {0}'.format(str(selected_file_list).strip('[]').replace('\'','')))
+                selected_file_list_text = str(selected_file_list).strip('[]').replace('\'','')
+                print(f'The selected file list is built: {selected_file_list_text}')
             else:
-                print('*** ERROR: There are not files in the directory {0} with the pattern {1}'.format(database_dataset_dir, file_pattern))
+                print(f'*** ERROR: There are not files in the directory {database_dataset_dir} with the pattern {file_pattern}')
                 OK = False
         else:
-            print('*** ERROR: Wrong command ---> {0}'.format(command))
+            print(f'*** ERROR: Wrong command ---> {command}')
 
     # confirm the creation of the config file
     if OK:
@@ -597,7 +601,7 @@ def form_recreate_database_gzip_config_file():
     # create the config file
     if OK:
         print(xlib.get_separator())
-        print('The file {0} is been created ...'.format(xgzip.get_gzip_config_file('database')))
+        print(f'The file {xgzip.get_gzip_config_file("database")} is been created ...')
         (OK, error_list) = xgzip.create_gzip_config_file(action, 'database', None, database_dataset_id, selected_file_list)
         if OK:
             print('The config file is created.')
@@ -630,10 +634,10 @@ def form_edit_database_gzip_config_file():
     # edit the database gzip config file
     print(xlib.get_separator())
     print('The database gzip config file is being edited ...')
-    command = '{0} {1}'.format(xlib.get_editor(), xgzip.get_gzip_config_file('database'))
+    command = f'{xlib.get_editor()} {xgzip.get_gzip_config_file("database")}'
     rc = subprocess.call(command, shell=True)
     if rc != 0:
-        print('*** ERROR: Return code {0} in command -> {1}'.format(rc, command))
+        print(f'*** ERROR: Return code {rc} in command -> {command}')
         OK = False
 
     # check the database gzip config file
@@ -730,12 +734,12 @@ def form_remove_database_dataset():
 
     # removal the database dataset in the cluster
     if OK:
-        command = 'rm -fr {0}/{1}'.format(xlib.get_cluster_database_dir(), database_dataset_id)
+        command = f'rm -fr {xlib.get_cluster_database_dir()}/{database_dataset_id}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
-            print('The dataset {0} is removed.'.format(database_dataset_id))
+            print(f'The dataset {database_dataset_id} is removed.')
         else:
-            print('*** ERROR: Wrong command ---> {0}'.format(command))
+            print(f'*** ERROR: Wrong command ---> {command}')
             OK = False
 
     # close the SSH client connection
@@ -774,9 +778,10 @@ def form_recreate_read_transfer_config_file():
         if os.path.isfile(os.path.join(local_dir, file)) and re.match(file_pattern, file):
             selected_file_list.append(file)
     if selected_file_list != []:
-        print('The selected file list is built: {0}'.format(str(selected_file_list).strip('[]').replace('\'','')))
+        selected_file_list_text = str(selected_file_list).strip('[]').replace('\'','')
+        print(f'The selected file list is built: {selected_file_list_text}')
     else:
-        print('*** ERROR: There are not files in the directory {0} with the pattern {1}'.format(local_dir, file_pattern))
+        print(f'*** ERROR: There are not files in the directory {local_dir} with the pattern {file_pattern}')
         OK = False
 
     # confirm the creation of the config file
@@ -787,7 +792,7 @@ def form_recreate_read_transfer_config_file():
     # create the config file
     if OK:
         print(xlib.get_separator())
-        print('The file {0} is been created ...'.format(xread.get_read_transfer_config_file()))
+        print(f'The file {xread.get_read_transfer_config_file()} is been created ...')
         (OK, error_list) = xread.create_read_transfer_config_file(experiment_id, local_dir, selected_file_list)
         if OK:
             print('The config file is created.')
@@ -819,10 +824,10 @@ def form_edit_read_transfer_config_file():
     # edit the read transfer config file
     print(xlib.get_separator())
     print('The read transfer config file is being edited ...')
-    command = '{0} {1}'.format(xlib.get_editor(), read_transfer_config_file)
+    command = f'{xlib.get_editor()} {read_transfer_config_file}'
     rc = subprocess.call(command, shell=True)
     if rc != 0:
-        print('*** ERROR: Return code {0} in command -> {1}'.format(rc, command))
+        print(f'*** ERROR: Return code {rc} in command -> {command}')
         OK = False
 
     # check the config file
@@ -924,7 +929,7 @@ def form_recreate_read_gzip_config_file():
     if OK:
         read_dataset_id = cinputs.input_read_dataset_id(ssh_client, experiment_id, help=True)
         if read_dataset_id == '':
-            print('WARNING: The experiment {0} does not have result datasets.'.format(experiment_id))
+            print(f'WARNING: The experiment {experiment_id} does not have result datasets.')
             OK = False
 
     # get the file pattern
@@ -937,18 +942,19 @@ def form_recreate_read_gzip_config_file():
         print('Building the selected file list ...')
         read_dataset_dir = xlib.get_cluster_experiment_read_dataset_dir(experiment_id, read_dataset_id)
         selected_file_list = []
-        command = 'cd {0}; find . -type f -regex "./{1}"'.format(read_dataset_dir, file_pattern)
+        command = f'cd {read_dataset_dir}; find . -type f -regex "./{file_pattern}"'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 selected_file_list.append(line.rstrip('\n'))
             if selected_file_list != []:
-                print('The selected file list is built: {0}'.format(str(selected_file_list).strip('[]').replace('\'','')))
+                selected_file_list_text = str(selected_file_list).strip('[]').replace('\'','')
+                print(f'The selected file list is built: {selected_file_list_text}')
             else:
-                print('*** ERROR: There are not files in the directory {0} with the pattern {1}'.format(read_dataset_dir, file_pattern))
+                print(f'*** ERROR: There are not files in the directory {read_dataset_dir} with the pattern {file_pattern}')
                 OK = False
         else:
-            print('*** ERROR: Wrong command ---> {0}'.format(command))
+            print(f'*** ERROR: Wrong command ---> {command}')
 
     # confirm the creation of the config file
     if OK:
@@ -958,7 +964,7 @@ def form_recreate_read_gzip_config_file():
     # create the config file
     if OK:
         print(xlib.get_separator())
-        print('The file {0} is been created ...'.format(gzip_config_file))
+        print(f'The file {gzip_config_file} is been created ...')
         (OK, error_list) = xgzip.create_gzip_config_file(action, 'read', experiment_id, read_dataset_id, selected_file_list)
         if OK:
             print('The config file is created.')
@@ -994,10 +1000,10 @@ def form_edit_read_gzip_config_file():
     # edit the read gzip config file
     print(xlib.get_separator())
     print('The read gzip config file is being edited ...')
-    command = '{0} {1}'.format(xlib.get_editor(), read_gzip_config_file)
+    command = f'{xlib.get_editor()} {read_gzip_config_file}'
     rc = subprocess.call(command, shell=True)
     if rc != 0:
-        print('*** ERROR: Return code {0} in command -> {1}'.format(rc, command))
+        print(f'*** ERROR: Return code {rc} in command -> {command}')
         OK = False
 
     # check the read gzip config file
@@ -1084,14 +1090,14 @@ def form_remove_read_dataset():
     if OK:
         experiment_id = cinputs.input_experiment_id(ssh_client, help=True)
         if experiment_id == '':
-            print('WARNING: The cluster {0} does not have experiment data.'.format(cluster_name))
+            print(f'WARNING: The cluster {cluster_name} does not have experiment data.')
             OK = False
 
     # get the read dataset identification
     if OK:
         read_dataset_id = cinputs.input_read_dataset_id(ssh_client, experiment_id, help=True)
         if experiment_id == '':
-            print('WARNING: The experiment {0} does not have read datasets.'.format(experiment_id))
+            print(f'WARNING: The experiment {experiment_id} does not have read datasets.')
             OK = False
 
     # confirm the removal of the read dataset
@@ -1101,12 +1107,12 @@ def form_remove_read_dataset():
 
     # removal the read dataset in the cluster
     if OK:
-        command = 'rm -fr {0}/{1}/{2}'.format(xlib.get_cluster_read_dir(), experiment_id, read_dataset_id)
+        command = f'rm -fr {xlib.get_cluster_read_dir()}/{experiment_id}/{read_dataset_id}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
-            print('The dataset {0} is removed.'.format(read_dataset_id))
+            print(f'The dataset {read_dataset_id} is removed.')
         else:
-            print('*** ERROR: Wrong command ---> {0}'.format(command))
+            print(f'*** ERROR: Wrong command ---> {command}')
             OK = False
 
     # close the SSH client connection
@@ -1161,7 +1167,7 @@ def form_recreate_result_transfer_config_file():
     if OK:
         result_dataset_id = cinputs.input_result_dataset_id(ssh_client, experiment_id, 'result', xlib.get_all_applications_selected_code(), status, help=True)
         if result_dataset_id == '':
-            print('WARNING: The experiment {0} does not have result datasets.'.format(experiment_id))
+            print(f'WARNING: The experiment {experiment_id} does not have result datasets.')
             OK = False
 
     # get the file pattern and local directory
@@ -1179,20 +1185,21 @@ def form_recreate_result_transfer_config_file():
             print(xlib.get_separator())
             print('Building the selected file list ...')
             selected_file_list = []
-            cluster_result_dir = '{0}/{1}/{2}'.format(xlib.get_cluster_result_dir(), experiment_id, result_dataset_id)
-            command = 'cd {0}; find . -type f -regex "./{1}"'.format(cluster_result_dir, file_pattern)
+            cluster_result_dir = f'{xlib.get_cluster_result_dir()}/{experiment_id}/{result_dataset_id}'
+            command = f'cd {cluster_result_dir}; find . -type f -regex "./{file_pattern}"'
             (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
             else:
-                print('*** ERROR: Wrong command ---> {0}'.format(command))
+                print(f'*** ERROR: Wrong command ---> {command}')
                 OK = False
             if OK:
                 if selected_file_list != []:
-                    print('The selected file list is built: {0}'.format(str(selected_file_list).strip('[]').replace('\'','')))
+                    selected_file_list_text = str(selected_file_list).strip('[]').replace('\'','')
+                    print(f'The selected file list is built: {selected_file_list_text}')
                 else:
-                    print('*** WARNING: There are not files in the cluster directory {0} with the pattern {1}'.format(cluster_result_dir, file_pattern))
+                    print(f'*** WARNING: There are not files in the cluster directory {cluster_result_dir} with the pattern {file_pattern}')
                     OK = False
         elif status == 'compressed':
             selected_file_list = [None]
@@ -1205,7 +1212,7 @@ def form_recreate_result_transfer_config_file():
     # create the config file
     if OK:
         print(xlib.get_separator())
-        print('The file {0} is been created ...'.format(xresult.get_result_transfer_config_file()))
+        print(f'The file {xresult.get_result_transfer_config_file()} is been created ...')
         (OK, error_list) = xresult.create_result_transfer_config_file(experiment_id, result_dataset_id, status, selected_file_list, local_dir)
         if OK:
             print('The config file is created.')
@@ -1242,10 +1249,10 @@ def form_edit_result_transfer_config_file():
     # edit the result transfer config file
     print(xlib.get_separator())
     print('The result transfer config file is being edited ...')
-    command = '{0} {1}'.format(xlib.get_editor(), result_transfer_config_file)
+    command = f'{xlib.get_editor()} {result_transfer_config_file}'
     rc = subprocess.call(command, shell=True)
     if rc != 0:
-        print('*** ERROR: Return code {0} in command -> {1}'.format(rc, command))
+        print(f'*** ERROR: Return code {rc} in command -> {command}')
         OK = False
 
     # check the result transfer config file
@@ -1354,7 +1361,7 @@ def form_recreate_result_gzip_config_file():
             status = 'uncompressed'
         result_dataset_id = cinputs.input_result_dataset_id(ssh_client, experiment_id, 'result', xlib.get_all_applications_selected_code(), status, help=True)
         if result_dataset_id == '':
-            print('WARNING: The experiment {0} does not have result datasets.'.format(experiment_id))
+            print(f'WARNING: The experiment {experiment_id} does not have result datasets.')
             OK = False
 
     # get the file pattern
@@ -1369,18 +1376,19 @@ def form_recreate_result_gzip_config_file():
             print('Building the selected file list ...')
             selected_file_list = []
             result_dataset_dir = xlib.get_cluster_experiment_result_dataset_dir(experiment_id, result_dataset_id)
-            command = 'cd {0}; find . -type f -regex "./{1}"'.format(result_dataset_dir, file_pattern)
+            command = f'cd {result_dataset_dir}; find . -type f -regex "./{file_pattern}"'
             (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
                 if selected_file_list != []:
-                    print('The selected file list is built: {0}'.format(str(selected_file_list).strip('[]').replace('\'','')))
+                    selected_file_list_text = str(selected_file_list).strip('[]').replace('\'','')
+                    print(f'The selected file list is built: {selected_file_list_text}')
                 else:
-                    print('*** ERROR: There are not files in the directory {0} with the pattern {1}'.format(result_dataset_dir, file_pattern))
+                    print(f'*** ERROR: There are not files in the directory {result_dataset_dir} with the pattern {file_pattern}')
                     OK = False
             else:
-                print('*** ERROR: Wrong command ---> {0}'.format(command))
+                print(f'*** ERROR: Wrong command ---> {command}')
         elif whole == 'y':
             selected_file_list = [None]
 
@@ -1392,7 +1400,7 @@ def form_recreate_result_gzip_config_file():
     # create the config file
     if OK:
         print(xlib.get_separator())
-        print('The file {0} is been created ...'.format(gzip_config_file))
+        print(f'The file {gzip_config_file} is been created ...')
         dataset_type = 'result' if whole == 'n' else 'whole-result'
         (OK, error_list) = xgzip.create_gzip_config_file(action, dataset_type, experiment_id, result_dataset_id, selected_file_list)
         if OK:
@@ -1429,10 +1437,10 @@ def form_edit_result_gzip_config_file():
     # edit the result gzip config file
     print(xlib.get_separator())
     print('The result gzip config file is being edited ...')
-    command = '{0} {1}'.format(xlib.get_editor(), result_gzip_config_file)
+    command = f'{xlib.get_editor()} {result_gzip_config_file}'
     rc = subprocess.call(command, shell=True)
     if rc != 0:
-        print('*** ERROR: Return code {0} in command -> {1}'.format(rc, command))
+        print(f'*** ERROR: Return code {rc} in command -> {command}')
         OK = False
 
     # check the result gzip config file
@@ -1519,14 +1527,14 @@ def form_remove_result_dataset():
     if OK:
         experiment_id = cinputs.input_experiment_id(ssh_client, help=True)
         if experiment_id == '':
-            print('WARNING: The cluster {0} does not have experiment data.'.format(cluster_name))
+            print(f'WARNING: The cluster {cluster_name} does not have experiment data.')
             OK = False
 
     # get the result dataset identification
     if OK:
         result_dataset_id = cinputs.input_result_dataset_id(ssh_client, experiment_id, 'result', xlib.get_all_applications_selected_code(), 'uncompressed', help=True)
         if result_dataset_id == '':
-            print('WARNING: The experiment {0} does not have result datasets.'.format(experiment_id))
+            print(f'WARNING: The experiment {experiment_id} does not have result datasets.')
             OK = False
 
     # confirm the removal of the result dataset
@@ -1536,12 +1544,12 @@ def form_remove_result_dataset():
 
     # removal the result dataset in the cluster
     if OK:
-        command = 'rm -fr {0}/{1}/{2}'.format(xlib.get_cluster_result_dir(), experiment_id, result_dataset_id)
+        command = f'rm -fr {xlib.get_cluster_result_dir()}/{experiment_id}/{result_dataset_id}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
-            print('The dataset {0} is removed.'.format(result_dataset_id))
+            print(f'The dataset {result_dataset_id} is removed.')
         else:
-            print('*** ERROR: Wrong command ---> {0}'.format(command))
+            print(f'*** ERROR: Wrong command ---> {command}')
             OK = False
 
     # close the SSH client connection
@@ -1584,25 +1592,25 @@ def form_remove_experiment():
     if OK:
         experiment_id = cinputs.input_experiment_id(ssh_client, help=True)
         if experiment_id == '':
-            print('WARNING: The cluster {0} does not have experiment data.'.format(cluster_name))
+            print(f'WARNING: The cluster {cluster_name} does not have experiment data.')
             OK = False
 
     # confirm the removal of the result dataset
     if OK:
         print(xlib.get_separator())
-        OK = clib.confirm_action('Every read and run result dataset of the experiment {0} is going to be irreversibly removed.'.format(experiment_id))
+        OK = clib.confirm_action(f'Every read and run result dataset of the experiment {experiment_id} is going to be irreversibly removed.')
 
     # removal every read and result dataset in the cluster
     if OK:
-        command = 'rm -fr {0}/{1}'.format(xlib.get_cluster_result_dir(), experiment_id)
+        command = f'rm -fr {xlib.get_cluster_result_dir()}/{experiment_id}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
-            command = 'rm -fr {0}/{1}'.format(xlib.get_cluster_read_dir(), experiment_id)
+            command = f'rm -fr {xlib.get_cluster_read_dir()}/{experiment_id}'
             (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
-            print('The datasets of experiment {0} are removed.'.format(experiment_id))
+            print(f'The datasets of experiment {experiment_id} are removed.')
         else:
-            print('*** ERROR: Wrong command ---> {0}'.format(command))
+            print(f'*** ERROR: Wrong command ---> {command}')
             OK = False
 
     # close the SSH client connection

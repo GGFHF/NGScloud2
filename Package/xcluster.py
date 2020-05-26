@@ -261,7 +261,7 @@ def terminate_cluster(cluster_name, force, log, function=None, is_menu_call=True
     if OK:
         (master_state_code, master_state_name) = xec2.get_node_state(cluster_name, node_name='master')
         if not force and master_state_code != 16:
-            log.write('*** ERROR: The cluster {0} is not running. Its state is {1} ({2}).\n'.format(cluster_name, master_state_code, master_state_name))
+            log.write(f'*** ERROR: The cluster {cluster_name} is not running. Its state is {master_state_code} ({master_state_name}).\n')
             OK = False
 
     # warn that the requirements are OK 
@@ -504,8 +504,8 @@ def open_terminal(cluster_name, node_name):
             if not os.path.exists(os.path.dirname(open_terminal_script)):
                 os.makedirs(os.path.dirname(open_terminal_script))
             with open(open_terminal_script, mode='w', encoding='iso-8859-1', newline='\n') as file_id:
-                file_id.write( '{0}\n'.format('#!/bin/bash'))
-                file_id.write( '{0}\n'.format('#-------------------------------------------------------------------------------'))
+                file_id.write( '#!/bin/bash\n')
+                file_id.write( '#-------------------------------------------------------------------------------\n')
                 file_id.write( '{0}\n'.format('cd {0}'.format(os.getcwd())))
                 file_id.write( '{0}\n'.format('./sshinstance.sh {0} {1} {2}'.format(keypair_file, 'root', public_ip_address)))
         except Exception as e:

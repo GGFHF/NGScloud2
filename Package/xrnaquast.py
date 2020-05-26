@@ -66,17 +66,17 @@ def create_rnaquast_config_file(experiment_id='exp001', reference_dataset_id='At
         if not os.path.exists(os.path.dirname(get_rnaquast_config_file())):
             os.makedirs(os.path.dirname(get_rnaquast_config_file()))
         with open(get_rnaquast_config_file(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
-            file_id.write( '{0}\n'.format('# You must review the information of this file and update the values with the corresponding ones to the current run.'))
-            file_id.write( '{0}\n'.format('#'))
+            file_id.write( '# You must review the information of this file and update the values with the corresponding ones to the current run.\n')
+            file_id.write( '#\n')
             file_id.write( '{0}\n'.format(f'# The reference file has to be located in the cluster directory {xlib.get_cluster_reference_dir()}/experiment_id/reference_dataset_id'))
             file_id.write( '{0}\n'.format(f'# The read files have to be located in the cluster directory {xlib.get_cluster_read_dir()}/experiment_id/read_dataset_id'))
             file_id.write( '{0}\n'.format(f'# The assembly files have to be located in the cluster directory {xlib.get_cluster_result_dir()}/experiment_id/assembly_dataset_id'))
-            file_id.write( '{0}\n'.format('# The experiment_id, reference_dataset_id, reference_file_name, read_dataset_id and assembly_dataset_id names are fixed in the identification section.'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('# You can consult the parameters of rnaQUAST and their meaning in http://cab.spbu.ru/software/rnaquast/.'))
+            file_id.write( '# The experiment_id, reference_dataset_id, reference_file_name, read_dataset_id and assembly_dataset_id names are fixed in the identification section.\n')
+            file_id.write( '#\n')
+            file_id.write( '{0}\n'.format('# You can consult the parameters of rnaQUAST and their meaning in "http://cab.spbu.ru/software/rnaquast/".'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information identifies the experiment.'))
-            file_id.write( '{0}\n'.format('[identification]'))
+            file_id.write( '# This section has the information identifies the experiment.\n')
+            file_id.write( '[identification]\n')
             file_id.write( '{0:<50} {1}\n'.format(f'experiment_id = {experiment_id}', '# experiment identification'))
             file_id.write( '{0:<50} {1}\n'.format(f'reference_dataset_id = {reference_dataset_id}', '# reference dataset identification or NONE'))
             file_id.write( '{0:<50} {1}\n'.format(f'reference_file = {reference_file}', '# reference file name or NONE'))
@@ -92,25 +92,26 @@ def create_rnaquast_config_file(experiment_id='exp001', reference_dataset_id='At
             file_id.write( '{0:<50} {1}\n'.format('lineage_data_url = http://busco.ezlab.org/v2/datasets/embryophyta_odb9.tar.gz', '# the url of lineage data file that will be used'))
             file_id.write( '{0:<50} {1}\n'.format('busco_mode = TRAN', f'# Busco mode: {get_busco_mode_code_list_text()}'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the global information of all libraries.'))
-            file_id.write( '{0}\n'.format('[library]'))
+            file_id.write( '# This section has the global information of all libraries.\n')
+            file_id.write( '[library]\n')
             file_id.write( '{0:<50} {1}\n'.format('format = FASTQ', f'# format: {get_format_code_list_text()}'))
             file_id.write( '{0:<50} {1}\n'.format(f'read_type = {read_type}', f'# read type: {get_read_type_code_list_text()}'))
             for i in range(len(file_1_list)):
                 file_id.write( '\n')
                 if i == 0:
-                    file_id.write( '{0}\n'.format('# This section has the information of the first library.'))
+                    file_id.write( '# This section has the information of the first library.\n')
                 file_id.write( '{0}\n'.format(f'[library-{i + 1}]'))
                 file_id.write( '{0:<50} {1}\n'.format(f'read_file_1 = {os.path.basename(file_1_list[i])}', '# name of the read file in SE read type or the + strand read file in PE case'))
                 if read_type == 'SE':
-                    file_id.write( '{0:<50} {1}\n'.format('read_file_2 = NONE', '# name of the - strand reads file in PE read type or NONE in SE case'))
+                    file_id.write( '{0:<50} {1}\n'.format( 'read_file_2 = NONE', '# name of the - strand reads file in PE read type or NONE in SE case'))
                 elif read_type == 'PE':
                     file_id.write( '{0:<50} {1}\n'.format(f'read_file_2 = {os.path.basename(file_2_list[i])}', '# name of the - strand reads file in PE read type or NONE in SE case'))
                 if i == 0:
                     file_id.write( '\n')
-                    file_id.write( '{0}\n'.format('# If there are more libraries, you have to repeat the section library-1 with the data of each file.'))
-                    file_id.write( '{0}\n'.format('# The section identification has to be library-n (n is an integer not repeated)'))
+                    file_id.write( '# If there are more libraries, you have to repeat the section library-1 with the data of each file.\n')
+                    file_id.write( '# The section identification has to be library-n (n is an integer not repeated)\n')
     except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append(f'*** ERROR: The file {get_rnaquast_config_file()} can not be recreated')
         OK = False
 
@@ -190,7 +191,7 @@ def run_rnaquast_process(cluster_name, log, function=None):
 
     # check the rnaQUAST is installed
     if OK:
-        (OK, error_list, is_installed) = xbioinfoapp.is_installed_bioconda_package(xlib.get_rnaquast_bioconda_code(), cluster_name, True, ssh_client)
+        (OK, error_list, is_installed) = xbioinfoapp.is_installed_anaconda_package(xlib.get_rnaquast_anaconda_code(), cluster_name, True, ssh_client)
         if OK:
             if not is_installed:
                 log.write(f'*** ERROR: {xlib.get_rnaquast_name()} is not installed.\n')
@@ -200,7 +201,7 @@ def run_rnaquast_process(cluster_name, log, function=None):
 
     # check BLAST+ is installed
     if OK:
-        (OK, error_list, is_installed) = xbioinfoapp.is_installed_bioconda_package(xlib.get_blastplus_bioconda_code(), cluster_name, True, ssh_client)
+        (OK, error_list, is_installed) = xbioinfoapp.is_installed_anaconda_package(xlib.get_blastplus_anaconda_code(), cluster_name, True, ssh_client)
         if OK:
             if not is_installed:
                 log.write(f'*** ERROR: {xlib.get_blastplus_name()} is not installed.\n')
@@ -237,7 +238,7 @@ def run_rnaquast_process(cluster_name, log, function=None):
     # upload the rnaQUAST process script to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write(f'Uploading the process script {get_rnaquast_process_script()} to the directory {current_run_dir} of the master ...\n')
+        log.write(f'Uploading the process script {get_rnaquast_process_script()} to the directory {current_run_dir} ...\n')
         cluster_path = f'{current_run_dir}/{os.path.basename(get_rnaquast_process_script())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_rnaquast_process_script(), cluster_path)
         if OK:
@@ -270,7 +271,7 @@ def run_rnaquast_process(cluster_name, log, function=None):
     # upload the rnaQUAST process starter to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write(f'Uploading the process starter {get_rnaquast_process_starter()} to the directory {current_run_dir} of the master ...\n')
+        log.write(f'Uploading the process starter {get_rnaquast_process_starter()} to the directory {current_run_dir} ...\n')
         cluster_path = f'{current_run_dir}/{os.path.basename(get_rnaquast_process_starter())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_rnaquast_process_starter(), cluster_path)
         if OK:
@@ -340,7 +341,8 @@ def check_rnaquast_config_file(strict):
     try:
         rnaquast_option_dict = xlib.get_option_dict(get_rnaquast_config_file())
     except Exception as e:
-        error_list.append('*** ERROR: The syntax is WRONG.')
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append('*** ERROR: The option dictionary could not be built from the config file')
         OK = False
     else:
 
@@ -589,11 +591,14 @@ def build_rnaquast_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'SEP="#########################################"\n')
             script_file_id.write( 'export HOST_IP=`curl --silent checkip.amazonaws.com`\n')
             script_file_id.write( 'export HOST_ADDRESS="ec2-${HOST_IP//./-}-compute-1.amazonaws.com"\n')
-            script_file_id.write(f'PYTHON3_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-            script_file_id.write(f'RNAQUASTPATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/envs/{xlib.get_rnaquast_bioconda_code()}/bin\n')
+            script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
+            script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write(f'MINICONDA3_BIN_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
+            script_file_id.write(f'RNAQUASTPATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/envs/{xlib.get_rnaquast_anaconda_code()}/bin\n')
             script_file_id.write( 'export PATH=$RNAQUAST_PATH$PATH\n')
-            script_file_id.write(f'export AUGUSTUS_CONFIG_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/envs/{xlib.get_rnaquast_bioconda_code()}/config\n')
-            script_file_id.write(f'source {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin/activate {xlib.get_rnaquast_bioconda_code()}\n')
+            script_file_id.write(f'export AUGUSTUS_CONFIG_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/envs/{xlib.get_rnaquast_anaconda_code()}/config\n')
+            script_file_id.write(f'source {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin/activate {xlib.get_rnaquast_anaconda_code()}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
             script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -610,7 +615,9 @@ def build_rnaquast_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "Script started at $FORMATTED_INIT_DATETIME+00:00."\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write(f'    echo "CLUSTER: {cluster_name}"\n')
-            script_file_id.write(f'    echo "HOST_IP: $HOST_IP - HOST_ADDRESS: $HOST_ADDRESS"\n')
+            script_file_id.write( '    echo "HOST NAME: $HOSTNAME"\n')
+            script_file_id.write( '    echo "HOST IP: $HOST_IP"\n')
+            script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function download_lineage_data\n')
@@ -620,7 +627,7 @@ def build_rnaquast_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "Downloading lineage data ..."\n')
             # --- script_file_id.write(f'    wget --quiet --output-document ./{lineage_data_file} {lineage_data_url}\n')
             download_script = f'import requests; r = requests.get(\'{lineage_data_url}\') ; open(\'{lineage_data_file}\' , \'wb\').write(r.content)'
-            script_file_id.write(f'    $PYTHON3_PATH/python3 -c "{download_script}"\n')
+            script_file_id.write(f'    $MINICONDA3_BIN_PATH/python3 -c "{download_script}"\n')
             script_file_id.write( '    RC=$?\n')
             script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error download_script $RC; fi\n')
             script_file_id.write(f'    tar -xzvf ./{lineage_data_file}\n')
@@ -652,7 +659,7 @@ def build_rnaquast_process_script(cluster_name, current_run_dir):
             script_file_id.write(f'    cd {current_run_dir}\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write( '    /usr/bin/time \\\n')
-            script_file_id.write( '        --format="$SEP\\nElapsed real time (s): %e\\nCPU time in kernel mode (s): %S\\nCPU time in user mode (s): %U\\nPercentage of CPU: %P\\nMaximum resident set size(Kb): %M\\nAverage total memory use (Kb):%K" \\\n')
+            script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
             script_file_id.write( '        rnaQUAST.py \\\n')
             script_file_id.write(f'            --threads {threads} \\\n')
             script_file_id.write(f'            --output_dir {current_run_dir} \\\n')
@@ -684,10 +691,7 @@ def build_rnaquast_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write( '    echo "Script ended OK at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write(f'    RECIPIENT={xconfiguration.get_contact_data()}\n')
-            script_file_id.write(f'    SUBJECT="{xlib.get_project_name()}: {xlib.get_rnaquast_name()} process"\n')
-            script_file_id.write(f'    MESSAGE="{xlib.get_mail_message_ok(xlib.get_rnaquast_name(), cluster_name)}"\n')
-            script_file_id.write( '    mail --append "Content-type: text/html;" --append "FROM:root@NGScloud2" --subject="$SUBJECT" "$RECIPIENT" <<< "$MESSAGE"\n')
+            script_file_id.write( '    send_mail ok\n')
             script_file_id.write( '    touch $SCRIPT_STATUS_OK\n')
             script_file_id.write( '    exit 0\n')
             script_file_id.write( '}\n')
@@ -701,12 +705,44 @@ def build_rnaquast_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "ERROR: $1 returned error $2"\n')
             script_file_id.write( '    echo "Script ended WRONG at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write(f'    RECIPIENT={xconfiguration.get_contact_data()}\n')
-            script_file_id.write(f'    SUBJECT="{xlib.get_project_name()}: {xlib.get_rnaquast_name()} process"\n')
-            script_file_id.write(f'    MESSAGE="{xlib.get_mail_message_wrong(xlib.get_rnaquast_name(), cluster_name)}"\n')
-            script_file_id.write( '    mail --append "Content-type: text/html;" --append "FROM:root@NGScloud2" --subject="$SUBJECT" "$RECIPIENT" <<< "$MESSAGE"\n')
+            script_file_id.write( '    send_mail wrong\n')
             script_file_id.write( '    touch $SCRIPT_STATUS_WRONG\n')
             script_file_id.write( '    exit 3\n')
+            script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            process_name = f'{xlib.get_rnaquast_name()} process'
+            mail_message_ok = xlib.get_mail_message_ok(process_name, cluster_name)
+            mail_message_wrong = xlib.get_mail_message_wrong(process_name, cluster_name)
+            script_file_id.write( 'function send_mail\n')
+            script_file_id.write( '{\n')
+            script_file_id.write(f'    SUBJECT="{xlib.get_project_name()}: {process_name}"\n')
+            script_file_id.write( '    if [ "$1" == "ok" ]; then\n')
+            script_file_id.write(f'        MESSAGE="{mail_message_ok}"\n')
+            script_file_id.write( '    elif [ "$1" == "wrong" ]; then\n')
+            script_file_id.write(f'        MESSAGE="{mail_message_wrong}"\n')
+            script_file_id.write( '    else\n')
+            script_file_id.write( '         MESSAGE=""\n')
+            script_file_id.write( '    fi\n')
+            script_file_id.write( '    DESTINATION_FILE=mail-destination.json\n')
+            script_file_id.write( '    echo "{" > $DESTINATION_FILE\n')
+            script_file_id.write(f'    echo "    \\\"ToAddresses\\\":  [\\\"{xconfiguration.get_contact_data()}\\\"]," >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "    \\\"CcAddresses\\\":  []," >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "    \\\"BccAddresses\\\":  []" >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "}" >> $DESTINATION_FILE\n')
+            script_file_id.write( '    MESSAGE_FILE=mail-message.json\n')
+            script_file_id.write( '    echo "{" > $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    \\\"Subject\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Data\\\":  \\\"$SUBJECT\\\"," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    }," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    \\\"Body\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Html\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "            \\\"Data\\\":  \\\"$MESSAGE\\\"," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "            \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        }" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    }" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "}" >> $MESSAGE_FILE\n')
+            script_file_id.write(f'    aws ses send-email --from {xconfiguration.get_contact_data()} --destination file://$DESTINATION_FILE --message file://$MESSAGE_FILE\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function calculate_duration\n')
@@ -725,6 +761,7 @@ def build_rnaquast_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'run_rnaquast_process\n')
             script_file_id.write( 'end\n')
     except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append(f'*** ERROR: The file {get_rnaquast_process_script()} can not be created')
         OK = False
 
@@ -749,8 +786,9 @@ def build_rnaquast_process_starter(current_run_dir):
         with open(get_rnaquast_process_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write(f'{current_run_dir}/{os.path.basename(get_rnaquast_process_script())} &>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_rnaquast_process_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append(f'*** ERROR: The file {get_rnaquast_process_starter()} can not be created')
         OK = False
 

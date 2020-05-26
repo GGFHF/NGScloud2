@@ -273,7 +273,7 @@ def remove_volume(volume_name, log, function=None):
     if OK:
         volume_status = xec2.get_volume_state(volume_name, zone_name)
         if volume_status != 'available':
-            log.write('*** ERROR: The volume {0} is not available in the zone {1}.\n'.format(volume_name, zone_name))
+            log.write('*** ERROR: The volume {0} is in use or unavailable in the zone {1}.\n'.format(volume_name, zone_name))
             OK = False
 
     # check that the volume is not linked to any cluster templates
@@ -359,7 +359,7 @@ def mount_volume(cluster_name, node_name, volume_name, aws_device_file, mount_pa
     if OK:
         (master_state_code, master_state_name) = xec2.get_node_state(cluster_name)
         if master_state_code != 16:
-            log.write('*** ERROR: The cluster {0} is not running. Its state is {1} ({2}).\n'.format(cluster_name, master_state_code, master_state_name))
+            log.write(f'*** ERROR: The cluster {cluster_name} is not running. Its state is {master_state_code} ({master_state_name}).\n')
             OK = False
 
     # warn that the requirements are OK 

@@ -175,7 +175,7 @@ class DialogTable(tkinter.Toplevel):
         try:
             # get the table item selected
             item = self.treeview.selection()[0]
-        except Exception as e:
+        except:
             message = 'There is not any action asociated with this table item.'
             OK = tkinter.messagebox.showwarning(self.title(), message)
         else:
@@ -318,7 +318,7 @@ class DialogTable(tkinter.Toplevel):
                 day = int(file_data_list[6])
                 try:
                     month = 1 + ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Sep', 'Oct', 'Nov', 'Dec'].index(file_data_list[5])
-                except Exception as e:
+                except:
                     month = 0
                 if file_data_list[7].find(':') > -1:
                     year = datetime.datetime.now().year
@@ -633,7 +633,7 @@ class DialogOptionUpdate(tkinter.Toplevel):
         elif value_type == 'integer':
             try:
                 self.item_dict[option_id]['option_value'] = int(option_value)
-            except Exception as e:
+            except:
                 OK = False
                 message = 'The value {0} is not OK. It has to be an integer number.'.format(option_value)
                 tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), 'Check option value - Error'), message)
@@ -723,7 +723,7 @@ class DialogLog(tkinter.Toplevel):
             self.log_file_id = open(self.log_file, mode='w', encoding='iso-8859-1', newline='\n')
         except Exception as e:
             message = '*** ERROR: The file {0} can not be created'.format(self.log_file)
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             # delete all widgets and terminate the mainloop
             self.destroy()
 
@@ -990,7 +990,7 @@ class DialogViewer(tkinter.Toplevel):
                 if not OK:
                     message = ''
                     for error in error_list:
-                        message = '{0}{1}\n'.format(message, error) 
+                        message = f'{message}{error}\n'
                     tkinter.messagebox.showerror(self.title(), message)
 
             # create the SFTP client 

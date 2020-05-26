@@ -156,7 +156,7 @@ class FormListDataset(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -193,7 +193,7 @@ class FormListDataset(tkinter.Frame):
         # check if there is any dataset
         if dataset_type_list == []:
             message = 'The cluster does not have any dataset.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -222,8 +222,8 @@ class FormListDataset(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -275,7 +275,7 @@ class FormListDataset(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the directory dictionary of directories in the dataset type directory
         if OK:
@@ -305,7 +305,7 @@ class FormListDataset(tkinter.Frame):
         if OK:
             if directory_dict == {}:
                 message = 'There is not any file.'
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # build the data list
         if OK:
@@ -594,7 +594,7 @@ class FormRecreateReferenceTransferConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the seleted files list
         if OK:
@@ -604,13 +604,13 @@ class FormRecreateReferenceTransferConfigFile(tkinter.Frame):
                     selected_file_list.append(file)
             if selected_file_list == []:
                 message = '*** ERROR: There are not files in the directory {0} with the pattern {1}'.format(self.wrapper_local_dir.get(), self.wrapper_file_pattern.get())
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 OK = False
 
         # confirm the creation of the reference transfer config file
         if OK:
             message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xreference.get_reference_transfer_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the reference transfer config file corresponding to the environment
         if OK:
@@ -618,8 +618,8 @@ class FormRecreateReferenceTransferConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the reference transfer config file corresponding to the environment
         if OK:
@@ -632,12 +632,12 @@ class FormRecreateReferenceTransferConfigFile(tkinter.Frame):
             (OK, error_list) = xreference.check_reference_transfer_config_file(strict=False)
             if OK:
                 message = 'The reference dataset transfer config file is OK.'
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -754,7 +754,7 @@ class FormUploadReferenceDataSet(tkinter.Frame):
         if running_cluster_list == []:
             self.combobox_cluster_name['values'] = []
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -805,12 +805,12 @@ class FormUploadReferenceDataSet(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the upload of the read files to the cluster
         if OK:
             message = 'The reference files are going to be uploaded to {0}.\n\nAre you sure to continue?\n\nCAUTION: before a transfer process, the config file should be updated.'.format(self.wrapper_cluster_name.get())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # upload the read files to the cluster and initialize inputs
         if OK:
@@ -1083,7 +1083,7 @@ class FormRecreateDatabaseTransferConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the seleted files list
         if OK:
@@ -1093,13 +1093,13 @@ class FormRecreateDatabaseTransferConfigFile(tkinter.Frame):
                     selected_file_list.append(file)
             if selected_file_list == []:
                 message = '*** ERROR: There are not files in the directory {0} with the pattern {1}'.format(self.wrapper_local_dir.get(), self.wrapper_file_pattern.get())
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 OK = False
 
         # confirm the creation of the database transfer config file
         if OK:
             message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xdatabase.get_database_transfer_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the database transfer config file corresponding to the environment
         if OK:
@@ -1107,8 +1107,8 @@ class FormRecreateDatabaseTransferConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the database transfer config file corresponding to the environment
         if OK:
@@ -1121,12 +1121,12 @@ class FormRecreateDatabaseTransferConfigFile(tkinter.Frame):
             (OK, error_list) = xdatabase.check_database_transfer_config_file(strict=False)
             if OK:
                 message = 'The database transfer config file is OK.'
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -1243,7 +1243,7 @@ class FormUploadDatabaseDataSet(tkinter.Frame):
         if running_cluster_list == []:
             self.combobox_cluster_name['values'] = []
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -1294,12 +1294,12 @@ class FormUploadDatabaseDataSet(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the upload of the read files to the cluster
         if OK:
             message = 'The database files are going to be uploaded to {0}.\n\nAre you sure to continue?\n\nCAUTION: before a transfer process, the config file should be updated.'.format(self.wrapper_cluster_name.get())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # upload the read files to the cluster and initialize inputs
         if OK:
@@ -1572,7 +1572,7 @@ class FormRecreateReadTransferConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the seleted files list
         if OK:
@@ -1582,13 +1582,13 @@ class FormRecreateReadTransferConfigFile(tkinter.Frame):
                     selected_file_list.append(file)
             if selected_file_list == []:
                 message = '*** ERROR: There are not files in the directory {0} with the pattern {1}'.format(self.wrapper_local_dir.get(), self.wrapper_file_pattern.get())
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 OK = False
 
         # confirm the creation of the read transfer config file
         if OK:
             message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xread.get_read_transfer_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the read transfer config file corresponding to the environment
         if OK:
@@ -1596,8 +1596,8 @@ class FormRecreateReadTransferConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the read transfer config file corresponding to the environment
         if OK:
@@ -1610,12 +1610,12 @@ class FormRecreateReadTransferConfigFile(tkinter.Frame):
             (OK, error_list) = xread.check_read_transfer_config_file(strict=False)
             if OK:
                 message = 'The read dataset transfer config file is OK.'
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -1732,7 +1732,7 @@ class FormUploadReadDataSet(tkinter.Frame):
         if running_cluster_list == []:
             self.combobox_cluster_name['values'] = []
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -1783,12 +1783,12 @@ class FormUploadReadDataSet(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the upload of the read files to the cluster
         if OK:
             message = 'The read files are going to be uploaded to {0}.\n\nAre you sure to continue?\n\nCAUTION: before a transfer process, the config file should be updated.'.format(self.wrapper_cluster_name.get())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # upload the read files to the cluster and initialize inputs
         if OK:
@@ -1999,7 +1999,7 @@ class FormRecreateResultTransferConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -2025,7 +2025,7 @@ class FormRecreateResultTransferConfigFile(tkinter.Frame):
         experiment_ids_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_result_dir())
+        command = f'ls {xlib.get_cluster_result_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -2035,8 +2035,8 @@ class FormRecreateResultTransferConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_ids_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -2081,7 +2081,7 @@ class FormRecreateResultTransferConfigFile(tkinter.Frame):
         # check if there are any experimment identifications
         if result_dataset_list == []:
             message = 'There is not any run of the experiment {0}.'.format(self.wrapper_experiment_id.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the run identifications in the combobox
@@ -2110,8 +2110,8 @@ class FormRecreateResultTransferConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -2275,7 +2275,7 @@ class FormRecreateResultTransferConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the selected file list
         if OK:
@@ -2288,19 +2288,19 @@ class FormRecreateResultTransferConfigFile(tkinter.Frame):
                     for line in stdout:
                         selected_file_list.append(line.rstrip('\n'))
                 else:
-                    message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                    tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'*** ERROR: Wrong command ---> {command}'
+                    tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                     return
                 if selected_file_list == []:
                     message = '*** ERROR: There are not files in the cluster directory {0} with the pattern {1}'.format(cluster_result_dir, self.wrapper_file_pattern.get())
-                    tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             elif self.wrapper_status.get() == 'compressed':
                 selected_file_list = [None]
 
         # confirm the creation of the result transfer config file
         if OK:
             message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xresult.get_result_transfer_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the result transfer config file
         if OK:
@@ -2308,8 +2308,8 @@ class FormRecreateResultTransferConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the result transfer config file corresponding to the environment
         if OK:
@@ -2322,12 +2322,12 @@ class FormRecreateResultTransferConfigFile(tkinter.Frame):
             (OK, error_list) = xresult.check_result_transfer_config_file(strict=False)
             if OK:
                 message = 'The result dataset transfer config file is OK.'
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -2447,7 +2447,7 @@ class FormDownloadResultDataSet(tkinter.Frame):
         if running_cluster_list == []:
             self.combobox_cluster_name['values'] = []
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -2498,12 +2498,12 @@ class FormDownloadResultDataSet(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the download of the result files from the cluster
         if OK:
             message = 'The result files are going to be downloaded from {0}.\n\nAre you sure to continue?\n\nCAUTION: before a transfer process, the config file should be updated.'.format(self.wrapper_cluster_name.get())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # download the result files from the cluster and initialize inputs
         if OK:
@@ -2683,7 +2683,7 @@ class FormRecreateReferenceGzipConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -2747,8 +2747,8 @@ class FormRecreateReferenceGzipConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -2844,7 +2844,7 @@ class FormRecreateReferenceGzipConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the dataset directory
         if OK:
@@ -2859,17 +2859,17 @@ class FormRecreateReferenceGzipConfigFile(tkinter.Frame):
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             if selected_file_list == []:
                 message = 'WARNING: There are not files in the dataset directory {0} with the pattern {1}'.format(dataset_dir, self.wrapper_file_pattern.get())
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 OK = False
 
         # confirm the creation of the compress/decompress config file
         if OK:
             message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xgzip.get_gzip_config_file('reference'))
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the reference dataset compress/decompress config file
         if OK:
@@ -2877,8 +2877,8 @@ class FormRecreateReferenceGzipConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the reference dataset compress/decompress config file
         if OK:
@@ -2891,12 +2891,12 @@ class FormRecreateReferenceGzipConfigFile(tkinter.Frame):
             (OK, error_list) = xgzip.check_gzip_config_file('reference', strict=False)
             if OK:
                 message = 'The reference dataset gzip config file is OK.'
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -3072,7 +3072,7 @@ class FormRecreateDatabaseGzipConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -3136,8 +3136,8 @@ class FormRecreateDatabaseGzipConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -3233,7 +3233,7 @@ class FormRecreateDatabaseGzipConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the dataset directory
         if OK:
@@ -3248,17 +3248,17 @@ class FormRecreateDatabaseGzipConfigFile(tkinter.Frame):
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             if selected_file_list == []:
                 message = 'WARNING: There are not files in the dataset directory {0} with the pattern {1}'.format(dataset_dir, self.wrapper_file_pattern.get())
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 OK = False
 
         # confirm the creation of the compress/decompress config file
         if OK:
             message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xgzip.get_gzip_config_file('database'))
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the database dataset compress/decompress config file
         if OK:
@@ -3266,8 +3266,8 @@ class FormRecreateDatabaseGzipConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the database dataset compress/decompress config file
         if OK:
@@ -3280,12 +3280,12 @@ class FormRecreateDatabaseGzipConfigFile(tkinter.Frame):
             (OK, error_list) = xgzip.check_gzip_config_file('database', strict=False)
             if OK:
                 message = 'The database dataset gzip config file is OK.'
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -3472,7 +3472,7 @@ class FormRecreateReadGzipConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -3521,8 +3521,8 @@ class FormRecreateReadGzipConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -3567,8 +3567,8 @@ class FormRecreateReadGzipConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -3682,7 +3682,7 @@ class FormRecreateReadGzipConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the dataset directory
         if OK:
@@ -3697,17 +3697,17 @@ class FormRecreateReadGzipConfigFile(tkinter.Frame):
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             if selected_file_list == []:
                 message = 'WARNING: There are not files in the dataset directory {0} with the pattern {1}'.format(dataset_dir, self.wrapper_file_pattern.get())
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 OK = False
 
         # confirm the creation of the compress/decompress config file
         if OK:
             message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xgzip.get_gzip_config_file('read'))
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the read dataset compress/decompress config file
         if OK:
@@ -3715,8 +3715,8 @@ class FormRecreateReadGzipConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the read dataset compress/decompress config file
         if OK:
@@ -3729,12 +3729,12 @@ class FormRecreateReadGzipConfigFile(tkinter.Frame):
             (OK, error_list) = xgzip.check_gzip_config_file('read', strict=False)
             if OK:
                 message = 'The read dataset gzip config file is OK.'
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -3936,7 +3936,7 @@ class FormRecreateResultGzipConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -3998,8 +3998,8 @@ class FormRecreateResultGzipConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -4045,8 +4045,8 @@ class FormRecreateResultGzipConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -4206,7 +4206,7 @@ class FormRecreateResultGzipConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the dataset directory
         if OK:
@@ -4222,11 +4222,11 @@ class FormRecreateResultGzipConfigFile(tkinter.Frame):
                     for line in stdout:
                         selected_file_list.append(line.rstrip('\n'))
                 else:
-                    message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                    tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'*** ERROR: Wrong command ---> {command}'
+                    tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 if selected_file_list == []:
                     message = 'WARNING: There are not files in the dataset directory {0} with the pattern {1}'.format(dataset_dir, self.wrapper_file_pattern.get())
-                    tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                     OK = False
             elif self.combobox_whole.get() == 'whole dataset':
                 selected_file_list = [None]
@@ -4234,7 +4234,7 @@ class FormRecreateResultGzipConfigFile(tkinter.Frame):
         # confirm the creation of the compress/decompress config file
         if OK:
             message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xgzip.get_gzip_config_file('result'))
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the result dataset compress/decompress config file
         if OK:
@@ -4243,8 +4243,8 @@ class FormRecreateResultGzipConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the result dataset compress/decompress config file
         if OK:
@@ -4257,12 +4257,12 @@ class FormRecreateResultGzipConfigFile(tkinter.Frame):
             (OK, error_list) = xgzip.check_gzip_config_file('result', strict=False)
             if OK:
                 message = 'The result dataset gzip config file is OK.'
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -4391,7 +4391,7 @@ class FormRunGzipProcess(tkinter.Frame):
         if running_cluster_list == []:
             self.combobox_cluster_name['values'] = []
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -4442,12 +4442,12 @@ class FormRunGzipProcess(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the download of the result files from the cluster
         if OK:
             message = 'The files are going to be compressed/decompressed in {0}.\n\nAre you sure to continue?\n\nCAUTION: before a compression/decompression process, the config file should be updated.'.format(self.wrapper_cluster_name.get())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # download the result files from the cluster and initialize inputs
         if OK:
@@ -4593,7 +4593,7 @@ class FormRemoveReferenceDataSet(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -4644,8 +4644,8 @@ class FormRemoveReferenceDataSet(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -4698,12 +4698,12 @@ class FormRemoveReferenceDataSet(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the removal of the reference dataset
         if OK:
             message = 'The reference dataset {0} is going to be irreversibly removed.\n\nAre you sure to continue?\n\nCAUTION: This action can NOT be undone.'.format(self.wrapper_reference_dataset.get())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # remove the reference dataset
         if OK:
@@ -4711,10 +4711,10 @@ class FormRemoveReferenceDataSet(tkinter.Frame):
             (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 message = 'The reference dataset {0} is removed.'.format(self.wrapper_reference_dataset.get())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
         # close the form
@@ -4859,7 +4859,7 @@ class FormRemoveDatabaseDataSet(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -4910,8 +4910,8 @@ class FormRemoveDatabaseDataSet(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -4964,12 +4964,12 @@ class FormRemoveDatabaseDataSet(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the removal of the database dataset
         if OK:
             message = 'The database {0} is going to be irreversibly removed.\n\nAre you sure to continue?\n\nCAUTION: This action can NOT be undone.'.format(self.wrapper_database_dataset.get())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # remove the database dataset
         if OK:
@@ -4977,10 +4977,10 @@ class FormRemoveDatabaseDataSet(tkinter.Frame):
             (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 message = 'The database {0} is removed.'.format(self.wrapper_database_dataset.get())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
         # close the form
@@ -5142,7 +5142,7 @@ class FormRemoveReadDataSet(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -5178,8 +5178,8 @@ class FormRemoveReadDataSet(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -5224,8 +5224,8 @@ class FormRemoveReadDataSet(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -5296,12 +5296,12 @@ class FormRemoveReadDataSet(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the removal of the read dataset
         if OK:
             message = 'The read dataset {0} is going to be irreversibly removed.\n\nAre you sure to continue?\n\nCAUTION: This action can NOT be undone.'.format(self.wrapper_read_dataset.get())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # remove the read dataset
         if OK:
@@ -5309,10 +5309,10 @@ class FormRemoveReadDataSet(tkinter.Frame):
             (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 message = 'The read dataset {0} is removed.'.format(self.wrapper_read_dataset.get())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
         # close the form
@@ -5474,7 +5474,7 @@ class FormRemoveResultDataSet(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -5510,8 +5510,8 @@ class FormRemoveResultDataSet(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -5557,8 +5557,8 @@ class FormRemoveResultDataSet(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -5629,12 +5629,12 @@ class FormRemoveResultDataSet(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the removal of the result dataset
         if OK:
             message = 'The result dataset {0} is going to be irreversibly removed.\n\nAre you sure to continue?\n\nCAUTION: This action can NOT be undone.'.format(self.wrapper_result_dataset.get())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # remove the dataset
         if OK:
@@ -5642,10 +5642,10 @@ class FormRemoveResultDataSet(tkinter.Frame):
             (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 message = 'The result dataset {0} is removed.'.format(self.wrapper_result_dataset.get())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
         # close the form
@@ -5793,7 +5793,7 @@ class FormRemoveExperiment(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -5829,8 +5829,8 @@ class FormRemoveExperiment(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -5859,8 +5859,8 @@ class FormRemoveExperiment(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -5912,12 +5912,12 @@ class FormRemoveExperiment(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the removal of the experiment
         if OK:
             message = 'Every read and run result dataset of the experiment {0} is going to be irreversibly removed.\n\nAre you sure to continue?\n\nCAUTION: This action can NOT be undone.'.format(self.wrapper_experiment_id.get())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # remove the experiment
         if OK:
@@ -5928,10 +5928,10 @@ class FormRemoveExperiment(tkinter.Frame):
                 (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 message = 'The datasets of experiment {0} are removed.'.format(self.wrapper_experiment_id.get())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
         # close the form

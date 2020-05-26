@@ -188,24 +188,24 @@ class FormRecreateToaConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the recreation of the TOA config file
         if OK:
             message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xtoa.get_toa_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the TOA config file corresponding to the environment
         if OK:
             (OK, error_list) = xtoa.create_toa_config_file(self.wrapper_toa_dir.get(), self.wrapper_miniconda3_bin_dir.get(), self.wrapper_db_dir.get())
             if OK:
                 message = 'The file {0} is created with default values.'.format(xtoa.get_toa_config_file())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 OK = False
 
         # close the form
@@ -328,7 +328,7 @@ class FormManageToaDatabase(tkinter.Frame):
         if running_cluster_list == []:
             self.combobox_cluster_name['values'] = []
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -379,12 +379,12 @@ class FormManageToaDatabase(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the process run
         if OK:
             message = 'The {0} database is going to be {1}.\n\nAre you sure to continue?'.format(xlib.get_toa_name(), self.process_type)
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # execute the process
         if OK:
@@ -546,7 +546,7 @@ class FormManageGenomicDatabase(tkinter.Frame):
         if running_cluster_list == []:
             self.combobox_cluster_name['values'] = []
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -597,12 +597,12 @@ class FormManageGenomicDatabase(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the process run
         if OK:
             message = 'The {0} process is going to be run.\n\nAre you sure to continue?'.format(self.name)
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # execute the process
         if OK:
@@ -856,7 +856,7 @@ class FormRecreatePipelineConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -892,7 +892,7 @@ class FormRecreatePipelineConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_read_dir())
+        command = f'ls {xlib.get_cluster_read_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -902,8 +902,8 @@ class FormRecreatePipelineConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -981,8 +981,8 @@ class FormRecreatePipelineConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -1253,8 +1253,8 @@ class FormRecreatePipelineConfigFile(tkinter.Frame):
         if not OK:
             message = ''
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # return the control variable
         return OK
@@ -1270,7 +1270,7 @@ class FormRecreatePipelineConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the config file
         if self.pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
@@ -1281,7 +1281,7 @@ class FormRecreatePipelineConfigFile(tkinter.Frame):
         # confirm the creation of the pipeline config file
         if OK:
             message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(config_file)
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the pipeline config file
         if OK:
@@ -1289,8 +1289,8 @@ class FormRecreatePipelineConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the pipeline config file
         if OK:
@@ -1303,12 +1303,12 @@ class FormRecreatePipelineConfigFile(tkinter.Frame):
             (OK, error_list) = xtoa.check_pipeline_config_file(self.pipeline_type, strict=False)
             if OK:
                 message = 'The {0} config file is OK.'.format(self.name)
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -1436,7 +1436,7 @@ class FormRunPipelineProcess(tkinter.Frame):
         if running_cluster_list == []:
             self.combobox_cluster_name['values'] = []
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -1487,12 +1487,12 @@ class FormRunPipelineProcess(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the process run
         if OK:
             message = 'The {0} process is going to be run.\n\nAre you sure to continue?'.format(self.name)
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # execute the process
         if OK:
@@ -1657,7 +1657,7 @@ class FormRestartPipelineProcess(tkinter.Frame):
         if running_cluster_list == []:
             self.combobox_cluster_name['values'] = []
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -1725,8 +1725,8 @@ class FormRestartPipelineProcess(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -1801,12 +1801,12 @@ class FormRestartPipelineProcess(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the process run
         if OK:
             message = 'The {0} process is going to be run.\n\nAre you sure to continue?'.format(self.name)
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # execute the process
         if OK:
@@ -2006,7 +2006,7 @@ class FormViewStats(tkinter.Frame):
         if running_cluster_list == []:
             self.combobox_cluster_name['values'] = []
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -2074,8 +2074,8 @@ class FormViewStats(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -2150,7 +2150,7 @@ class FormViewStats(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # execute the corresponding process
         if OK:
@@ -2190,8 +2190,8 @@ class FormViewStats(tkinter.Frame):
         if not OK:
             message = ''
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # create the SFTP client 
         if OK:
@@ -2214,7 +2214,7 @@ class FormViewStats(tkinter.Frame):
             OK = xssh.get_file(sftp_client, cluster_stats_file, stats_file)
             if not OK:
                 message = 'The log file {0} could not be downloaded.'.format(cluster_stats_file)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the SSH transport connection
         xssh.close_ssh_transport_connection(ssh_transport)
@@ -2279,7 +2279,7 @@ class FormViewStats(tkinter.Frame):
             # check if there are any stats
             if distribution_dict == {}:
                 message = 'There is not any stats data.'
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 OK = False
 
             # build the data list
@@ -2337,8 +2337,8 @@ class FormViewStats(tkinter.Frame):
         if not OK:
             message = ''
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # create the SFTP client 
         if OK:
@@ -2361,7 +2361,7 @@ class FormViewStats(tkinter.Frame):
             OK = xssh.get_file(sftp_client, cluster_stats_file, stats_file)
             if not OK:
                 message = 'The log file {0} could not be downloaded.'.format(cluster_stats_file)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the SSH transport connection
         xssh.close_ssh_transport_connection(ssh_transport)
@@ -2427,7 +2427,7 @@ class FormViewStats(tkinter.Frame):
             # check if there are any stats
             if distribution_dict == {}:
                 message = 'There is not any stats data.'
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 OK = False
 
             # build the data list
@@ -2467,8 +2467,8 @@ class FormViewStats(tkinter.Frame):
         if not OK:
             message = ''
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # create the SFTP client 
         if OK:
@@ -2491,7 +2491,7 @@ class FormViewStats(tkinter.Frame):
             OK = xssh.get_file(sftp_client, cluster_stats_file, stats_file)
             if not OK:
                 message = 'The log file {0} could not be downloaded.'.format(cluster_stats_file)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the SSH transport connection
         xssh.close_ssh_transport_connection(ssh_transport)
@@ -2558,7 +2558,7 @@ class FormViewStats(tkinter.Frame):
             # check if there are any stats
             if distribution_dict == {}:
                 message = 'There is not any stats data.'
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 OK = False
 
             # build the data list
@@ -2599,8 +2599,8 @@ class FormViewStats(tkinter.Frame):
         if not OK:
             message = ''
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # create the SFTP client 
         if OK:
@@ -2623,7 +2623,7 @@ class FormViewStats(tkinter.Frame):
             OK = xssh.get_file(sftp_client, cluster_stats_file, stats_file)
             if not OK:
                 message = 'The log file {0} could not be downloaded.'.format(cluster_stats_file)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the SSH transport connection
         xssh.close_ssh_transport_connection(ssh_transport)
@@ -2691,7 +2691,7 @@ class FormViewStats(tkinter.Frame):
             # check if there are any stats
             if distribution_dict == {}:
                 message = 'There is not any stats data.'
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 OK = False
 
             # build the data list
@@ -2733,8 +2733,8 @@ class FormViewStats(tkinter.Frame):
         if not OK:
             message = ''
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # create the SFTP client 
         if OK:
@@ -2757,7 +2757,7 @@ class FormViewStats(tkinter.Frame):
             OK = xssh.get_file(sftp_client, cluster_stats_file, stats_file)
             if not OK:
                 message = 'The log file {0} could not be downloaded.'.format(cluster_stats_file)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the SSH transport connection
         xssh.close_ssh_transport_connection(ssh_transport)
@@ -2826,7 +2826,7 @@ class FormViewStats(tkinter.Frame):
             # check if there are any stats
             if distribution_dict == {}:
                 message = 'There is not any stats data.'
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 OK = False
 
             # build the data list
@@ -3136,7 +3136,7 @@ class FormPlotStats(tkinter.Frame):
         if running_cluster_list == []:
             self.combobox_cluster_name['values'] = []
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -3260,8 +3260,8 @@ class FormPlotStats(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -3428,7 +3428,7 @@ class FormPlotStats(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # check if the image file exists
         if OK:
@@ -3474,8 +3474,8 @@ class FormPlotStats(tkinter.Frame):
         if not OK:
             message = ''
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # create the SFTP client 
         if OK:
@@ -3498,7 +3498,7 @@ class FormPlotStats(tkinter.Frame):
             OK = xssh.get_file(sftp_client, cluster_stats_file, stats_file)
             if not OK:
                 message = 'The log file {0} could not be downloaded.'.format(cluster_stats_file)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the SSH transport connection
         xssh.close_ssh_transport_connection(ssh_transport)
@@ -3568,7 +3568,7 @@ class FormPlotStats(tkinter.Frame):
             # check if there are any stats
             if len(x_count_list) == 0:
                 message = 'There is not any stats data.'
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 OK = False
 
             # there are data
@@ -3646,8 +3646,8 @@ class FormPlotStats(tkinter.Frame):
         if not OK:
             message = ''
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # create the SFTP client 
         if OK:
@@ -3670,7 +3670,7 @@ class FormPlotStats(tkinter.Frame):
             OK = xssh.get_file(sftp_client, cluster_stats_file, stats_file)
             if not OK:
                 message = 'The log file {0} could not be downloaded.'.format(cluster_stats_file)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the SSH transport connection
         xssh.close_ssh_transport_connection(ssh_transport)
@@ -3802,7 +3802,7 @@ class FormPlotStats(tkinter.Frame):
             # check if there are any stats
             if data_dict == {}:
                 message = 'There is not any stats data.'
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 OK = False
 
             # there are data

@@ -52,63 +52,64 @@ def create_trinity_config_file(experiment_id='exp001', read_dataset_id=xlib.get_
         if not os.path.exists(os.path.dirname(get_trinity_config_file())):
             os.makedirs(os.path.dirname(get_trinity_config_file()))
         with open(get_trinity_config_file(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
-            file_id.write( '{0}\n'.format('# You must review the information of this file and update the values with the corresponding ones to the current run.'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('# The read files have to be located in the cluster directory {0}/experiment_id/read_dataset_id'.format(xlib.get_cluster_read_dir())))
-            file_id.write( '{0}\n'.format('# The experiment_id and read_dataset_id names are fixed in the identification section.'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('# You can consult the parameters of Trinity and their meaning in https://github.com/trinityrnaseq/trinityrnaseq/wiki.'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('# There are two formats to set an option:'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('#    option = value                             <- if the option supports a single value'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('#    option = value-1, value-2, ..., value-n    <- if the option supports a values list'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('# In section "Trinity parameters", the key "other_parameters" allows you to input additional parameters in the format:'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('#    other_parameters = --parameter-1[=value-1][; --parameter-2[=value-2][; ...; --parameter-n[=value-n]]]'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('# parameter-i is a parameter name of Trinity and value-i a valid value of parameter-i, e.g.'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('#    other_parameters = --max_reads_per_graph=200000; --min_glue=2'))
+            file_id.write( '# You must review the information of this file and update the values with the corresponding ones to the current run.\n')
+            file_id.write( '#\n')
+            file_id.write(f'# The read files have to be located in the cluster directory {xlib.get_cluster_read_dir()}/experiment_id/read_dataset_id\n')
+            file_id.write( '# The experiment_id and read_dataset_id names are fixed in the identification section.\n')
+            file_id.write( '#\n')
+            file_id.write( '# You can consult the parameters of Trinity and their meaning in "https://github.com/trinityrnaseq/trinityrnaseq/wiki".\n')
+            file_id.write( '#\n')
+            file_id.write( '# There are two formats to set an option:\n')
+            file_id.write( '#\n')
+            file_id.write( '#    option = value                             <- if the option supports a single value\n')
+            file_id.write( '#\n')
+            file_id.write( '#    option = value-1, value-2, ..., value-n    <- if the option supports a values list\n')
+            file_id.write( '#\n')
+            file_id.write( '# In section "Trinity parameters", the key "other_parameters" allows you to input additional parameters in the format:\n')
+            file_id.write( '#\n')
+            file_id.write( '#    other_parameters = --parameter-1[=value-1][; --parameter-2[=value-2][; ...; --parameter-n[=value-n]]]\n')
+            file_id.write( '#\n')
+            file_id.write( '# parameter-i is a parameter name of Trinity and value-i a valid value of parameter-i, e.g.\n')
+            file_id.write( '#\n')
+            file_id.write( '#    other_parameters = --max_reads_per_graph=200000; --min_glue=2\n')
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information that identifies the experiment.'))
-            file_id.write( '{0}\n'.format('[identification]'))
-            file_id.write( '{0:<50} {1}\n'.format('experiment_id = {0}'.format(experiment_id), '# experiment identification'))
-            file_id.write( '{0:<50} {1}\n'.format('read_dataset_id = {0}'.format(read_dataset_id), '# read dataset identification'))
+            file_id.write( '# This section has the information that identifies the experiment.\n')
+            file_id.write( '[identification]\n')
+            file_id.write( '{0:<50} {1}\n'.format(f'experiment_id = {experiment_id}', '# experiment identification'))
+            file_id.write( '{0:<50} {1}\n'.format(f'read_dataset_id = {read_dataset_id}', '# read dataset identification'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information to set the Trinity parameters'))
-            file_id.write( '{0}\n'.format('[Trinity parameters]'))
-            file_id.write( '{0:<50} {1}\n'.format('ncpu = 4', '# number of CPUs for use'))
-            file_id.write( '{0:<50} {1}\n'.format('max_memory = 60', '# suggested maximum memory in GiB to use by Trinity where limiting can be enabled'))
-            file_id.write( '{0:<50} {1}\n'.format('kmer = 25', '# value or values list of kmer size: maximum, 32.'))
-            file_id.write( '{0:<50} {1}\n'.format('min_kmer_cov = 1', '# minimum count for Kmers to be assembled by Inchworm'))
-            file_id.write( '{0:<50} {1}\n'.format('bfly_heap_space_max = 4', '# java maximum heap space setting in GiB'))
-            file_id.write( '{0:<50} {1}\n'.format('bfly_calculate_cpu = YES', '# calculate CPUs based on 0.8 of max_memory divided by heap space setting for Butterfly: {0}'.format(get_bfly_calculate_cpu_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('normalized_reads = NO', '# use normalized reads: {0}'.format(get_normalized_reads_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('other_parameters = NONE', '# additional parameters to the previous ones or NONE'))
+            file_id.write( '# This section has the information to set the Trinity parameters\n')
+            file_id.write( '[Trinity parameters]\n')
+            file_id.write( '{0:<50} {1}\n'.format( 'ncpu = 4', '# number of CPUs for use'))
+            file_id.write( '{0:<50} {1}\n'.format( 'max_memory = 60', '# suggested maximum memory in GiB to use by Trinity where limiting can be enabled'))
+            file_id.write( '{0:<50} {1}\n'.format( 'kmer = 25', '# value or values list of kmer size: maximum, 32.'))
+            file_id.write( '{0:<50} {1}\n'.format( 'min_kmer_cov = 1', '# minimum count for Kmers to be assembled by Inchworm'))
+            file_id.write( '{0:<50} {1}\n'.format( 'bfly_heap_space_max = 4', '# java maximum heap space setting in GiB'))
+            file_id.write( '{0:<50} {1}\n'.format( 'bfly_calculate_cpu = YES', f'# calculate CPUs based on 0.8 of max_memory divided by heap space setting for Butterfly: {get_bfly_calculate_cpu_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format( 'normalized_reads = NO', f'# use normalized reads: {get_normalized_reads_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format( 'other_parameters = NONE', '# additional parameters to the previous ones or NONE'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the global information of all libraries.'))
-            file_id.write( '{0}\n'.format('[library]'))
-            file_id.write( '{0:<50} {1}\n'.format('format = FASTQ', '# format: {0}'.format(get_format_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('read_type = {0}'.format(read_type), '# read type: {0}'.format(get_read_type_code_list_text())))
+            file_id.write( '# This section has the global information of all libraries.\n')
+            file_id.write( '[library]\n')
+            file_id.write( '{0:<50} {1}\n'.format( 'format = FASTQ', f'# format: {get_format_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format(f'read_type = {read_type}', f'# read type: {get_read_type_code_list_text()}'))
             for i in range(len(file_1_list)):
                 file_id.write( '\n')
                 if i == 0:
-                    file_id.write( '{0}\n'.format('# This section has the information of the first library.'))
-                file_id.write( '{0}\n'.format('[library-{0}]'.format(i + 1)))
-                file_id.write( '{0:<50} {1}\n'.format('read_file_1 = {0}'.format(os.path.basename(file_1_list[i])), '# name of the read file in SE read type or the + strand read file in PE case'))
+                    file_id.write( '# This section has the information of the first library.\n')
+                file_id.write(f'[library-{i + 1}]\n')
+                file_id.write( '{0:<50} {1}\n'.format(f'read_file_1 = {os.path.basename(file_1_list[i])}', '# name of the read file in SE read type or the + strand read file in PE case'))
                 if read_type == 'SE':
-                    file_id.write( '{0:<50} {1}\n'.format('read_file_2 = NONE', '# name of the - strand reads file in PE read type or NONE in SE case'))
+                    file_id.write( '{0:<50} {1}\n'.format( 'read_file_2 = NONE', '# name of the - strand reads file in PE read type or NONE in SE case'))
                 elif read_type == 'PE':
-                    file_id.write( '{0:<50} {1}\n'.format('read_file_2 = {0}'.format(os.path.basename(file_2_list[i])), '# name of the - strand reads file in PE read type or NONE in SE case'))
+                    file_id.write( '{0:<50} {1}\n'.format(f'read_file_2 = {os.path.basename(file_2_list[i])}', '# name of the - strand reads file in PE read type or NONE in SE case'))
                 if i == 0:
                     file_id.write( '\n')
-                    file_id.write( '{0}\n'.format('# If there are more libraries, you have to repeat the section library-1 with the data of each file.'))
-                    file_id.write( '{0}\n'.format('# The section identification has to be library-n (n is an integer not repeated)'))
+                    file_id.write( '# If there are more libraries, you have to repeat the section library-1 with the data of each file.\n')
+                    file_id.write( '# The section identification has to be library-n (n is an integer not repeated)\n')
     except Exception as e:
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_trinity_config_file()))
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append(f'*** ERROR: The file {get_trinity_config_file()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -136,7 +137,7 @@ def run_trinity_process(cluster_name, log, function=None):
 
     # check the Trinity config file
     log.write(f'{xlib.get_separator()}\n')
-    log.write('Checking the {0} config file ...\n'.format(xlib.get_trinity_name()))
+    log.write(f'Checking the {xlib.get_trinity_name()} config file ...\n')
     (OK, error_list) = check_trinity_config_file(strict=True)
     if OK:
         log.write('The file is OK.\n')
@@ -181,18 +182,18 @@ def run_trinity_process(cluster_name, log, function=None):
     if OK:
         (master_state_code, master_state_name) = xec2.get_node_state(cluster_name)
         if master_state_code != 16:
-            log.write('*** ERROR: The cluster {0} is not running. Its state is {1} ({2}).\n'.format(cluster_name, master_state_code, master_state_name))
+            log.write(f'*** ERROR: The cluster {cluster_name} is not running. Its state is {master_state_code} ({master_state_name}).\n')
             OK = False
 
     # check Trinity is installed
     if OK:
-        (OK, error_list, is_installed) = xbioinfoapp.is_installed_bioconda_package(xlib.get_trinity_bioconda_code(), cluster_name, True, ssh_client)
+        (OK, error_list, is_installed) = xbioinfoapp.is_installed_anaconda_package(xlib.get_trinity_anaconda_code(), cluster_name, True, ssh_client)
         if OK:
             if not is_installed:
-                log.write('*** ERROR: {0} is not installed.\n'.format(xlib.get_trinity_name()))
+                log.write(f'*** ERROR: {xlib.get_trinity_name()} is not installed.\n')
                 OK = False
         else:
-            log.write('*** ERROR: The verification of {0} installation could not be performed.\n'.format(xlib.get_trinity_name()))
+            log.write(f'*** ERROR: The verification of {xlib.get_trinity_name()} installation could not be performed.\n')
 
     # warn that the requirements are OK 
     if OK:
@@ -203,30 +204,30 @@ def run_trinity_process(cluster_name, log, function=None):
 
         # get the kmer list
         kmer = trinity_option_dict['Trinity parameters']['kmer']
-        kmer_list = xlib.split_literal_to_integer_list(kmer)
+        kmer_value_list = xlib.split_literal_to_integer_list(kmer)
         
         # for each kmer value, do the tasks
         i = 1
-        for kmer_value in kmer_list:
+        for kmer_value in kmer_value_list:
 
             # determine the run directory in the cluster
             log.write(f'{xlib.get_separator()}\n')
-            log.write('Determining the run directory for kmer {0} in the cluster ...\n'.format(kmer_value))
+            log.write(f'Determining the run directory for kmer {kmer_value} in the cluster ...\n')
             if i > 1:
-                current_run_dir = '{0}-{1}'.format(xlib.get_cluster_current_run_dir(experiment_id, xlib.get_trinity_code()), i)
+                current_run_dir = f'{xlib.get_cluster_current_run_dir(experiment_id, xlib.get_trinity_code())}-{i}'
             else:
-                current_run_dir = '{0}'.format(xlib.get_cluster_current_run_dir(experiment_id, xlib.get_trinity_code()))
+                current_run_dir = xlib.get_cluster_current_run_dir(experiment_id, xlib.get_trinity_code())
             command = f'mkdir --parents {current_run_dir}'
             (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
             if OK:
-                log.write('The directory path is {0}.\n'.format(current_run_dir))
+                log.write(f'The directory path is {current_run_dir}.\n')
             else:
                 log.write(f'*** ERROR: Wrong command ---> {command}\n')
             i += 1
 
             # build the Trinity process script
             log.write(f'{xlib.get_separator()}\n')
-            log.write('Building the process script {0} ...\n'.format(get_trinity_process_script()))
+            log.write(f'Building the process script {get_trinity_process_script()} ...\n')
             (OK, error_list) = build_trinity_process_script(cluster_name, current_run_dir, kmer_value)
             if OK:
                 log.write('The file is built.\n')
@@ -236,8 +237,8 @@ def run_trinity_process(cluster_name, log, function=None):
 
             # upload the process script to the cluster
             log.write(f'{xlib.get_separator()}\n')
-            log.write('Uploading the process script {0} to the directory {1} of the master ...\n'.format(get_trinity_process_script(), current_run_dir))
-            cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_trinity_process_script()))
+            log.write(f'Uploading the process script {get_trinity_process_script()} to the directory {current_run_dir} ...\n')
+            cluster_path = f'{current_run_dir}/{os.path.basename(get_trinity_process_script())}'
             (OK, error_list) = xssh.put_file(sftp_client, get_trinity_process_script(), cluster_path)
             if OK:
                 log.write('The file id uploaded.\n')
@@ -248,8 +249,8 @@ def run_trinity_process(cluster_name, log, function=None):
 
             # set run permision to the process script in the cluster
             log.write(f'{xlib.get_separator()}\n')
-            log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_trinity_process_script())))
-            command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_trinity_process_script()))
+            log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_trinity_process_script())} ...\n')
+            command = f'chmod u+x {current_run_dir}/{os.path.basename(get_trinity_process_script())}'
             (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
             if OK:
                 log.write('The run permision is set on.\n')
@@ -258,7 +259,7 @@ def run_trinity_process(cluster_name, log, function=None):
 
             # build the process starter
             log.write(f'{xlib.get_separator()}\n')
-            log.write('Building the process starter {0} ...\n'.format(get_trinity_process_starter()))
+            log.write(f'Building the process starter {get_trinity_process_starter()} ...\n')
             (OK, error_list) = build_trinity_process_starter(current_run_dir)
             if OK:
                 log.write('The file is built.\n')
@@ -268,8 +269,8 @@ def run_trinity_process(cluster_name, log, function=None):
 
             # upload the process starter to the cluster
             log.write(f'{xlib.get_separator()}\n')
-            log.write('Uploading the process starter {0} to the directory {1} of the master ...\n'.format(get_trinity_process_starter(), current_run_dir))
-            cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_trinity_process_starter()))
+            log.write(f'Uploading the process starter {get_trinity_process_starter()} to the directory {current_run_dir} ...\n')
+            cluster_path = f'{current_run_dir}/{os.path.basename(get_trinity_process_starter())}'
             (OK, error_list) = xssh.put_file(sftp_client, get_trinity_process_starter(), cluster_path)
             if OK:
                 log.write('The file is uploaded.\n')
@@ -280,8 +281,8 @@ def run_trinity_process(cluster_name, log, function=None):
 
             # set run permision to the process starter in the cluster
             log.write(f'{xlib.get_separator()}\n')
-            log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_trinity_process_starter())))
-            command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_trinity_process_starter()))
+            log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_trinity_process_starter())} ...\n')
+            command = f'chmod u+x {current_run_dir}/{os.path.basename(get_trinity_process_starter())}'
             (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
             if OK:
                 log.write('The run permision is set on.\n')
@@ -290,7 +291,7 @@ def run_trinity_process(cluster_name, log, function=None):
 
             # submit the process
             log.write(f'{xlib.get_separator()}\n')
-            log.write('Submitting the process script {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_trinity_process_starter())))
+            log.write(f'Submitting the process script {current_run_dir}/{os.path.basename(get_trinity_process_starter())} ...\n')
             OK = xssh.submit_script(cluster_name, ssh_client, current_run_dir, os.path.basename(get_trinity_process_starter()), log)
 
     # close the SSH transport connection
@@ -337,6 +338,7 @@ def check_trinity_config_file(strict):
     try:
         trinity_option_dict = xlib.get_option_dict(get_trinity_config_file())
     except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append('*** ERROR: The option dictionary could not be built from the config file')
         OK = False
     else:
@@ -430,7 +432,7 @@ def check_trinity_config_file(strict):
                 error_list.append('*** ERROR: the key "bfly_calculate_cpu" is not found in the section "Trinity parameters".')
                 OK = False
             elif not xlib.check_code(bfly_calculate_cpu, get_bfly_calculate_cpu_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "bfly_calculate_cpu" has to be {0}.'.format(get_bfly_calculate_cpu_code_list_text()))
+                error_list.append(f'*** ERROR: the key "bfly_calculate_cpu" has to be {get_bfly_calculate_cpu_code_list_text()}.')
                 OK = False
 
             # check section "Trinity parameters" - key "normalized_reads"
@@ -439,7 +441,7 @@ def check_trinity_config_file(strict):
                 error_list.append('*** ERROR: the key "normalized_reads" is not found in the section "Trinity parameters".')
                 OK = False
             elif not xlib.check_code(normalized_reads, get_normalized_reads_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "normalized_reads" has to be {0}.'.format(get_normalized_reads_code_list_text()))
+                error_list.append(f'*** ERROR: the key "normalized_reads" has to be {get_normalized_reads_code_list_text()}.')
                 OK = False
 
             # check section "Trinity parameters" - key "other_parameters"
@@ -464,7 +466,7 @@ def check_trinity_config_file(strict):
                 error_list.append('*** ERROR: the key "format" is not found in the section "library".')
                 OK = False
             elif not xlib.check_code(format, get_format_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "format" has to be {0}.'.format(get_format_code_list_text()))
+                error_list.append(f'*** ERROR: the key "format" has to be {get_format_code_list_text()}.')
                 OK = False
 
             # check section "library" - key "read_type"
@@ -473,7 +475,7 @@ def check_trinity_config_file(strict):
                 error_list.append('*** ERROR: the key "read_type" is not found in the section "library".')
                 OK = False
             elif not xlib.check_code(read_type, get_read_type_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "read_type" has to be {0}.'.format(get_read_type_code_list_text()))
+                error_list.append(f'*** ERROR: the key "read_type" has to be {get_read_type_code_list_text()}.')
                 OK = False
 
         # check section "library-1"
@@ -488,7 +490,7 @@ def check_trinity_config_file(strict):
 
                 # check than the section identification is like library-n 
                 if not re.match('^library-[0-9]+$', section):
-                    error_list.append('*** ERROR: the section "{0}" has a wrong identification.'.format(section))
+                    error_list.append(f'*** ERROR: the section "{section}" has a wrong identification.')
                     OK = False
 
                 else:
@@ -496,18 +498,18 @@ def check_trinity_config_file(strict):
                     # check section "library-n" - key "read_file_1"
                     read_file_1 = trinity_option_dict.get(section, {}).get('read_file_1', not_found)
                     if read_file_1 == not_found:
-                        error_list.append('*** ERROR: the key "read_file_1" is not found in the section "{0}"'.format(section))
+                        error_list.append(f'*** ERROR: the key "read_file_1" is not found in the section "{section}"')
                         OK = False
 
                     # check section "library-n" - key "read_file_2"
                     read_file_2 = trinity_option_dict.get(section, {}).get('read_file_2', not_found)
                     if read_file_2 == not_found:
-                        error_list.append('*** ERROR: the key "read_file_2" is not found in the section "{0}"'.format(section))
+                        error_list.append(f'*** ERROR: the key "read_file_2" is not found in the section "{section}"')
                         OK = False
 
     # warn that the Trinity config file is not valid if there are any errors
     if not OK:
-        error_list.append('\nThe {0} config file is not valid. Please, correct this file or recreate it.'.format(xlib.get_trinity_name()))
+        error_list.append(f'\nThe {xlib.get_trinity_name()} config file is not valid. Please, correct this file or recreate it.')
 
     # return the control variable and the error list
     return (OK, error_list)
@@ -568,21 +570,22 @@ def build_trinity_process_script(cluster_name, current_run_dir, kmer_value):
         with open(get_trinity_process_script(), mode='w', encoding='iso-8859-1', newline='\n') as script_file_id:
             script_file_id.write( '#!/bin/bash\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('ulimit -s unlimited'))
+            script_file_id.write( 'ulimit -s unlimited\n')
             script_file_id.write( 'SEP="#########################################"\n')
             script_file_id.write( 'export HOST_IP=`curl --silent checkip.amazonaws.com`\n')
             script_file_id.write( 'export HOST_ADDRESS="ec2-${HOST_IP//./-}-compute-1.amazonaws.com"\n')
-            script_file_id.write( '{0}\n'.format('TRINITY_PATH={0}/{1}/envs/{2}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name(), xlib.get_trinity_bioconda_code())))
-            script_file_id.write( '{0}\n'.format('PATH=$TRINITY_PATH:$PATH'))
-            script_file_id.write( '{0}\n'.format('cd {0}/{1}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name())))
-            script_file_id.write( '{0}\n'.format('source activate {0}'.format(xlib.get_trinity_bioconda_code())))
+            script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
+            script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('STATUS_DIR={0}'.format(xlib.get_status_dir(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('SCRIPT_STATUS_OK={0}'.format(xlib.get_status_ok(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('SCRIPT_STATUS_WRONG={0}'.format(xlib.get_status_wrong(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('mkdir --parents $STATUS_DIR'))
-            script_file_id.write( '{0}\n'.format('if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi'))
-            script_file_id.write( '{0}\n'.format('if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi'))
+            script_file_id.write(f'MINICONDA3_BIN_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
+            script_file_id.write(f'export PATH=$MINICONDA3_BIN_PATH:$PATH\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
+            script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
+            script_file_id.write(f'SCRIPT_STATUS_WRONG={xlib.get_status_wrong(current_run_dir)}\n')
+            script_file_id.write( 'mkdir --parents $STATUS_DIR\n')
+            script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
+            script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function init\n')
             script_file_id.write( '{\n')
@@ -592,33 +595,35 @@ def build_trinity_process_script(cluster_name, current_run_dir, kmer_value):
             script_file_id.write( '    echo "Script started at $FORMATTED_INIT_DATETIME+00:00."\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write(f'    echo "CLUSTER: {cluster_name}"\n')
-            script_file_id.write(f'    echo "HOST_IP: $HOST_IP - HOST_ADDRESS: $HOST_ADDRESS"\n')
+            script_file_id.write( '    echo "HOST NAME: $HOSTNAME"\n')
+            script_file_id.write( '    echo "HOST IP: $HOST_IP"\n')
+            script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function run_trinity_process'))
+            script_file_id.write( 'function run_trinity_process\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    cd {0}'.format(current_run_dir)))
+            script_file_id.write(f'    source activate {xlib.get_trinity_anaconda_code()}\n')
+            script_file_id.write(f'    cd {current_run_dir}\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    Trinity --no_version_check --version'))
-            script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    /usr/bin/time \\'))
-            script_file_id.write( '{0}\n'.format('        --format="$SEP\\nElapsed real time (s): %e\\nCPU time in kernel mode (s): %S\\nCPU time in user mode (s): %U\\nPercentage of CPU: %P\\nMaximum resident set size(Kb): %M\\nAverage total memory use (Kb):%K" \\'))
-            script_file_id.write( '{0}\n'.format('        Trinity \\'))
-            script_file_id.write( '{0}\n'.format('            --no_version_check \\'))
-            script_file_id.write( '{0}\n'.format('            --CPU {0} \\'.format(ncpu)))
-            script_file_id.write( '{0}\n'.format('            --KMER_SIZE {0} \\'.format(kmer_value)))
-            script_file_id.write( '{0}\n'.format('            --seqType {0} \\'.format(format)))
+            script_file_id.write( '    Trinity --no_version_check --version\n')
+            script_file_id.write( '    /usr/bin/time \\\n')
+            script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
+            script_file_id.write( '        Trinity \\\n')
+            script_file_id.write( '            --no_version_check \\\n')
+            script_file_id.write(f'            --CPU {ncpu} \\\n')
+            # -- script_file_id.write(f'            --KMER_SIZE {kmer_value} \\\n')
+            script_file_id.write(f'            --seqType {format} \\\n')
             if read_type.upper() == 'PE':
-                script_file_id.write( '{0}\n'.format('            --left {0} \\'.format(files1)))
-                script_file_id.write( '{0}\n'.format('            --right {0} \\'.format(files2)))
+                script_file_id.write(f'            --left {files1} \\\n')
+                script_file_id.write(f'            --right {files2} \\\n')
             else:
-                script_file_id.write( '{0}\n'.format('            --single {0} \\'.format(files1)))
-            script_file_id.write( '{0}\n'.format('            --max_memory {0}G \\'.format(max_memory)))
-            script_file_id.write( '{0}\n'.format('            --bflyHeapSpaceMax {0}G \\'.format(bfly_heap_space_max)))
+                script_file_id.write(f'            --single {files1} \\\n')
+            script_file_id.write(f'            --max_memory {max_memory}G \\\n')
+            script_file_id.write(f'            --bflyHeapSpaceMax {bfly_heap_space_max}G \\\n')
             if bfly_calculate_cpu.upper() == 'YES':
-                script_file_id.write( '{0}\n'.format('            --bflyCalculateCPU \\'))
+                script_file_id.write( '            --bflyCalculateCPU \\\n')
             if normalized_reads.upper() == 'NO':
-                script_file_id.write( '{0}\n'.format('            --no_normalize_reads \\'))
+                script_file_id.write( '            --no_normalize_reads \\\n')
             if other_parameters.upper() != 'NONE':
                 parameter_list = [x.strip() for x in other_parameters.split(';')]
                 for parameter in parameter_list:
@@ -627,48 +632,78 @@ def build_trinity_process_script(cluster_name, current_run_dir, kmer_value):
                         mo = re.search(pattern, parameter)
                         parameter_name = mo.group(1).strip()
                         parameter_value = mo.group(2).strip()
-                        script_file_id.write( '{0}\n'.format('            --{0} {1} \\'.format(parameter_name, parameter_value)))
+                        script_file_id.write(f'            --{parameter_name} {parameter_value} \\\n')
                     else:
                         pattern = r'^--(.+)$'
                         mo = re.search(pattern, parameter)
                         parameter_name = mo.group(1).strip()
-                        script_file_id.write( '{0}\n'.format('            --{0} \\'.format(parameter_name)))
-            script_file_id.write( '{0}\n'.format('            --output {0}'.format(current_run_dir)))
-            script_file_id.write( '{0}\n'.format('    RC=$?'))
-            script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error Trinity $RC; fi'))
+                        script_file_id.write(f'            --{parameter_name} \\\n')
+            script_file_id.write(f'            --output {current_run_dir}\n')
+            script_file_id.write( '    RC=$?\n')
+            script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error Trinity $RC; fi\n')
+            script_file_id.write( '    conda deactivate\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function end'))
+            script_file_id.write( 'function end\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    END_DATETIME=`date --utc +%s`'))
-            script_file_id.write( '{0}\n'.format('    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`'))
-            script_file_id.write( '{0}\n'.format('    calculate_duration'))
+            script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
+            script_file_id.write( '    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
+            script_file_id.write( '    calculate_duration\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "Script ended OK at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."'))
+            script_file_id.write( '    echo "Script ended OK at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    RECIPIENT={0}'.format(xconfiguration.get_contact_data())))
-            script_file_id.write( '{0}\n'.format('    SUBJECT="{0}: {1} process"'.format(xlib.get_project_name(), xlib.get_trinity_name())))
-            script_file_id.write( '{0}\n'.format('    MESSAGE="{0}"'.format(xlib.get_mail_message_ok(xlib.get_trinity_name(), cluster_name))))
-            script_file_id.write( '    mail --append "Content-type: text/html;" --append "FROM:root@NGScloud2" --subject="$SUBJECT" "$RECIPIENT" <<< "$MESSAGE"\n')
-            script_file_id.write( '{0}\n'.format('    touch $SCRIPT_STATUS_OK'))
-            script_file_id.write( '{0}\n'.format('    exit 0'))
+            script_file_id.write( '    send_mail ok\n')
+            script_file_id.write( '    touch $SCRIPT_STATUS_OK\n')
+            script_file_id.write( '    exit 0\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function manage_error'))
+            script_file_id.write( 'function manage_error\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    END_DATETIME=`date --utc +%s`'))
-            script_file_id.write( '{0}\n'.format('    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`'))
-            script_file_id.write( '{0}\n'.format('    calculate_duration'))
+            script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
+            script_file_id.write( '    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
+            script_file_id.write( '    calculate_duration\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "ERROR: $1 returned error $2"'))
-            script_file_id.write( '{0}\n'.format('    echo "Script ended WRONG at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."'))
+            script_file_id.write( '    echo "ERROR: $1 returned error $2"\n')
+            script_file_id.write( '    echo "Script ended WRONG at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    RECIPIENT={0}'.format(xconfiguration.get_contact_data())))
-            script_file_id.write( '{0}\n'.format('    SUBJECT="{0}: {1} process"'.format(xlib.get_project_name(), xlib.get_trinity_name())))
-            script_file_id.write( '{0}\n'.format('    MESSAGE="{0}"'.format(xlib.get_mail_message_wrong(xlib.get_trinity_name(), cluster_name))))
-            script_file_id.write( '    mail --append "Content-type: text/html;" --append "FROM:root@NGScloud2" --subject="$SUBJECT" "$RECIPIENT" <<< "$MESSAGE"\n')
-            script_file_id.write( '{0}\n'.format('    touch $SCRIPT_STATUS_WRONG'))
-            script_file_id.write( '{0}\n'.format('    exit 3'))
+            script_file_id.write( '    send_mail wrong\n')
+            script_file_id.write( '    touch $SCRIPT_STATUS_WRONG\n')
+            script_file_id.write( '    exit 3\n')
+            script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            process_name = f'{xlib.get_trinity_name()} process'
+            mail_message_ok = xlib.get_mail_message_ok(process_name, cluster_name)
+            mail_message_wrong = xlib.get_mail_message_wrong(process_name, cluster_name)
+            script_file_id.write( 'function send_mail\n')
+            script_file_id.write( '{\n')
+            script_file_id.write(f'    SUBJECT="{xlib.get_project_name()}: {process_name}"\n')
+            script_file_id.write( '    if [ "$1" == "ok" ]; then\n')
+            script_file_id.write(f'        MESSAGE="{mail_message_ok}"\n')
+            script_file_id.write( '    elif [ "$1" == "wrong" ]; then\n')
+            script_file_id.write(f'        MESSAGE="{mail_message_wrong}"\n')
+            script_file_id.write( '    else\n')
+            script_file_id.write( '         MESSAGE=""\n')
+            script_file_id.write( '    fi\n')
+            script_file_id.write( '    DESTINATION_FILE=mail-destination.json\n')
+            script_file_id.write( '    echo "{" > $DESTINATION_FILE\n')
+            script_file_id.write(f'    echo "    \\\"ToAddresses\\\":  [\\\"{xconfiguration.get_contact_data()}\\\"]," >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "    \\\"CcAddresses\\\":  []," >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "    \\\"BccAddresses\\\":  []" >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "}" >> $DESTINATION_FILE\n')
+            script_file_id.write( '    MESSAGE_FILE=mail-message.json\n')
+            script_file_id.write( '    echo "{" > $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    \\\"Subject\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Data\\\":  \\\"$SUBJECT\\\"," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    }," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    \\\"Body\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Html\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "            \\\"Data\\\":  \\\"$MESSAGE\\\"," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "            \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        }" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    }" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "}" >> $MESSAGE_FILE\n')
+            script_file_id.write(f'    aws ses send-email --from {xconfiguration.get_contact_data()} --destination file://$DESTINATION_FILE --message file://$MESSAGE_FILE\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function calculate_duration\n')
@@ -681,10 +716,11 @@ def build_trinity_process_script(cluster_name, current_run_dir, kmer_value):
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
-            script_file_id.write( '{0}\n'.format('run_trinity_process'))
+            script_file_id.write( 'run_trinity_process\n')
             script_file_id.write( 'end\n')
     except Exception as e:
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_trinity_process_script()))
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append(f'*** ERROR: The file {get_trinity_process_script()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -706,11 +742,12 @@ def build_trinity_process_starter(current_run_dir):
         if not os.path.exists(os.path.dirname(get_trinity_process_starter())):
             os.makedirs(os.path.dirname(get_trinity_process_starter()))
         with open(get_trinity_process_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
-            file_id.write( '{0}\n'.format('#!/bin/bash'))
-            file_id.write( '{0}\n'.format('#-------------------------------------------------------------------------------'))
-            file_id.write( '{0}\n'.format('{0}/{1} &>{0}/{2}'.format(current_run_dir, os.path.basename(get_trinity_process_script()), xlib.get_cluster_log_file())))
+            file_id.write( '#!/bin/bash\n')
+            file_id.write( '#-------------------------------------------------------------------------------\n')
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_trinity_process_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_trinity_process_starter()))
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append(f'*** ERROR: The file {get_trinity_process_starter()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -718,19 +755,57 @@ def build_trinity_process_starter(current_run_dir):
 
 #-------------------------------------------------------------------------------
 
-def determine_trinity_cluster():
+def restart_trinity_process(cluster_name, experiment_id, result_dataset_id, log, function=None):
     '''
-    Determine the cluster to the current Trinity experiment.
+    Restart a Trinity process from the last step ended OK.
     '''
 
-    # initialize the template and cluster names
-    template_name = ''
-    cluster_name = ''
+    # initialize the control variable
+    OK = True
 
-    # ...
+    # warn that the log window does not have to be closed
+    if not isinstance(log, xlib.DevStdOut):
+        log.write('This process might take several minutes. Do not close this window, please wait!\n')
 
-    # return the template and cluster names
-    return (template_name, cluster_name)
+    # create the SSH client connection
+    if OK:
+        log.write(f'{xlib.get_separator()}\n')
+        log.write('Connecting the SSH client ...\n')
+        (OK, error_list, ssh_client) = xssh.create_ssh_client_connection(cluster_name)
+        if OK:
+            log.write('The SSH client is connected.\n')
+        else:
+            for error in error_list:
+                log.write(f'{error}\n')
+
+    # get the current run directory
+    if OK:
+        current_run_dir = xlib.get_cluster_experiment_result_dataset_dir(experiment_id, result_dataset_id)
+
+    # submit the script
+    if OK:
+        log.write(f'{xlib.get_separator()}\n')
+        log.write(f'Submitting the process script {current_run_dir}/{os.path.basename(get_trinity_process_starter())} ...\n')
+        OK = xssh.submit_script(cluster_name, ssh_client, current_run_dir, os.path.basename(get_trinity_process_starter()), log)
+
+    # close the SSH client connection
+    if OK:
+        log.write(f'{xlib.get_separator()}\n')
+        log.write('Closing the SSH client connection ...\n')
+        xssh.close_ssh_client_connection(ssh_client)
+        log.write('The connection is closed.\n')
+
+    # warn that the log window can be closed
+    if not isinstance(log, xlib.DevStdOut):
+        log.write(f'{xlib.get_separator()}\n')
+        log.write('You can close this window now.\n')
+
+    # execute final function
+    if function is not None:
+        function()
+
+    # return the control variable
+    return OK
 
 #-------------------------------------------------------------------------------
 
@@ -740,7 +815,7 @@ def get_trinity_config_file():
     '''
 
     # assign the Trinity config file path
-    trinity_config_file = '{0}/{1}-config.txt'.format(xlib.get_config_dir(), xlib.get_trinity_code())
+    trinity_config_file = f'{xlib.get_config_dir()}/{xlib.get_trinity_code()}-config.txt'
 
     # return the Trinity config file path
     return trinity_config_file
@@ -753,7 +828,7 @@ def get_trinity_process_script():
     '''
 
     # assign the Trinity script path
-    trinity_process_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_trinity_code())
+    trinity_process_script = f'{xlib.get_temp_dir()}/{xlib.get_trinity_code()}-process.sh'
 
     # return the Trinity script path
     return trinity_process_script
@@ -766,7 +841,7 @@ def get_trinity_process_starter():
     '''
 
     # assign the Trinity process starter path
-    trinity_process_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_trinity_code())
+    trinity_process_starter = f'{xlib.get_temp_dir()}/{xlib.get_trinity_code()}-process-starter.sh'
 
     # return the Trinity starter path
     return trinity_process_starter
@@ -784,7 +859,13 @@ def create_ggtrinity_config_file(experiment_id='exp001', alignment_dataset_id='s
     error_list = []
 
     # set the alignment software
-    if alignment_dataset_id.startswith(xlib.get_star_code()):
+    if alignment_dataset_id.startswith(xlib.get_bowtie2_code()):
+        alignment_software = xlib.get_bowtie2_code()
+    elif alignment_dataset_id.startswith(xlib.get_gsnap_code()):
+        alignment_software = xlib.get_gsnap_code()
+    elif alignment_dataset_id.startswith(xlib.get_hisat2_code()):
+        alignment_software = xlib.get_hisat2_code()
+    elif alignment_dataset_id.startswith(xlib.get_star_code()):
         alignment_software = xlib.get_star_code()
     elif alignment_dataset_id.startswith(xlib.get_tophat_code()):
         alignment_software = xlib.get_tophat_code()
@@ -794,36 +875,37 @@ def create_ggtrinity_config_file(experiment_id='exp001', alignment_dataset_id='s
         if not os.path.exists(os.path.dirname(get_ggtrinity_config_file())):
             os.makedirs(os.path.dirname(get_ggtrinity_config_file()))
         with open(get_ggtrinity_config_file(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
-            file_id.write( '{0}\n'.format('# You must review the information of this file and update the values with the corresponding ones to the current run.'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('# The read files have to be located in the cluster directory {0}/experiment_id/read_dataset_id'.format(xlib.get_cluster_read_dir())))
-            file_id.write( '{0}\n'.format('# The experiment_id and alignment_dataset_id names are fixed in the identification section.'))
-            file_id.write( '{0}\n'.format('# The alignment file has to be located in the cluster directory {0}/experiment_id/alignment_dataset_id'.format(xlib.get_cluster_result_dir())))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('# You can consult the parameters of Trinity in https://github.com/trinityrnaseq/trinityrnaseq/wiki.'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('# In section "Genome-guided Trinity parameters", the key "other_parameters" allows you to input additional parameters in the format:'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('#    other_parameters = --parameter-1[=value-1][; --parameter-2[=value-2][; ...; --parameter-n[=value-n]]]'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('# parameter-i is a parameter name of Trinity and value-i a valid value of parameter-i, e.g.'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('#    other_parameters = --max_reads_per_graph=200000; --min_glue=2'))
+            file_id.write( '# You must review the information of this file and update the values with the corresponding ones to the current run.\n')
+            file_id.write( '#\n')
+            file_id.write(f'# The read files have to be located in the cluster directory {xlib.get_cluster_read_dir()}/experiment_id/read_dataset_id\n')
+            file_id.write( '# The experiment_id and alignment_dataset_id names are fixed in the identification section.\n')
+            file_id.write(f'# The alignment file has to be located in the cluster directory {xlib.get_cluster_result_dir()}/experiment_id/alignment_dataset_id\n')
+            file_id.write( '#\n')
+            file_id.write( '# You can consult the parameters of Trinity in https://github.com/trinityrnaseq/trinityrnaseq/wiki\n')
+            file_id.write( '#\n')
+            file_id.write( '# In section "Genome-guided Trinity parameters", the key "other_parameters" allows you to input additional parameters in the format:\n')
+            file_id.write( '#\n')
+            file_id.write( '#    other_parameters = --parameter-1[=value-1][; --parameter-2[=value-2][; ...; --parameter-n[=value-n]]]\n')
+            file_id.write( '#\n')
+            file_id.write( '# parameter-i is a parameter name of Trinity and value-i a valid value of parameter-i, e.g.\n')
+            file_id.write( '#\n')
+            file_id.write( '#    other_parameters = --max_reads_per_graph=200000; --min_glue=2\n')
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information that identifies the experiment.'))
-            file_id.write( '{0}\n'.format('[identification]'))
-            file_id.write( '{0:<50} {1}\n'.format('experiment_id = {0}'.format(experiment_id), '# experiment identification'))
-            file_id.write( '{0:<50} {1}\n'.format('alignment_software = {0}'.format(alignment_software), '# alignment software: {0}'.format(get_alignment_software_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('alignment_dataset_id = {0}'.format(alignment_dataset_id), '# alignment dataset identification'))
+            file_id.write( '# This section has the information that identifies the experiment.\n')
+            file_id.write( '[identification]\n')
+            file_id.write( '{0:<50} {1}\n'.format(f'experiment_id = {experiment_id}', '# experiment identification'))
+            file_id.write( '{0:<50} {1}\n'.format(f'alignment_software = {alignment_software}', f'# alignment software: {get_alignment_software_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format(f'alignment_dataset_id = {alignment_dataset_id}', '# alignment dataset identification'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information to set the Genome-guided Trinity parameters'))
-            file_id.write( '{0}\n'.format('[Genome-guided Trinity parameters]'))
-            file_id.write( '{0:<50} {1}\n'.format('ncpu = 4', '# number of CPUs for use'))
-            file_id.write( '{0:<50} {1}\n'.format('max_memory = 10', '# suggested maximum memory in GiB to use by Trinity where limiting can be enabled'))
-            file_id.write( '{0:<50} {1}\n'.format('genome_guided_max_intron = 10000', '# maximum allowed intron length'))
-            file_id.write( '{0:<50} {1}\n'.format('other_parameters = NONE', '# additional parameters to the previous ones or NONE'))
+            file_id.write( '# This section has the information to set the Genome-guided Trinity parameters\n')
+            file_id.write( '[Genome-guided Trinity parameters]\n')
+            file_id.write( '{0:<50} {1}\n'.format( 'ncpu = 4', '# number of CPUs for use'))
+            file_id.write( '{0:<50} {1}\n'.format( 'max_memory = 10', '# suggested maximum memory in GiB to use by Trinity where limiting can be enabled'))
+            file_id.write( '{0:<50} {1}\n'.format( 'genome_guided_max_intron = 10000', '# maximum allowed intron length'))
+            file_id.write( '{0:<50} {1}\n'.format( 'other_parameters = NONE', '# additional parameters to the previous ones or NONE'))
     except Exception as e:
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_ggtrinity_config_file()))
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append(f'*** ERROR: The file {get_ggtrinity_config_file()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -851,7 +933,7 @@ def run_ggtrinity_process(cluster_name, log, function=None):
 
     # check the Genome-guided Trinity config file
     log.write(f'{xlib.get_separator()}\n')
-    log.write('Checking the {0} config file ...\n'.format(xlib.get_ggtrinity_name()))
+    log.write(f'Checking the {xlib.get_ggtrinity_name()} config file ...\n')
     (OK, error_list) = check_ggtrinity_config_file(strict=True)
     if OK:
         log.write('The file is OK.\n')
@@ -896,18 +978,18 @@ def run_ggtrinity_process(cluster_name, log, function=None):
     if OK:
         (master_state_code, master_state_name) = xec2.get_node_state(cluster_name)
         if master_state_code != 16:
-            log.write('*** ERROR: The cluster {0} is not running. Its state is {1} ({2}).\n'.format(cluster_name, master_state_code, master_state_name))
+            log.write(f'*** ERROR: The cluster {cluster_name} is not running. Its state is {master_state_code} ({master_state_name}).\n')
             OK = False
 
     # check Trinity is installed
     if OK:
-        (OK, error_list, is_installed) = xbioinfoapp.is_installed_bioconda_package(xlib.get_trinity_bioconda_code(), cluster_name, True, ssh_client)
+        (OK, error_list, is_installed) = xbioinfoapp.is_installed_anaconda_package(xlib.get_trinity_anaconda_code(), cluster_name, True, ssh_client)
         if OK:
             if not is_installed:
-                log.write('*** ERROR: {0} is not installed.\n'.format(xlib.get_ggtrinity_name()))
+                log.write(f'*** ERROR: {xlib.get_ggtrinity_name()} is not installed.\n')
                 OK = False
         else:
-            log.write('*** ERROR: The verification of {0} installation could not be performed.\n'.format(xlib.get_ggtrinity_name()))
+            log.write(f'*** ERROR: The verification of {xlib.get_ggtrinity_name()} installation could not be performed.\n')
 
     # warn that the requirements are OK 
     if OK:
@@ -921,14 +1003,14 @@ def run_ggtrinity_process(cluster_name, log, function=None):
         command = f'mkdir --parents {current_run_dir}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
-            log.write('The directory path is {0}.\n'.format(current_run_dir))
+            log.write(f'The directory path is {current_run_dir}.\n')
         else:
             log.write(f'*** ERROR: Wrong command ---> {command}\n')
 
     # build the Genome-guided Trinity process script
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process script {0} ...\n'.format(get_ggtrinity_process_script()))
+        log.write(f'Building the process script {get_ggtrinity_process_script()} ...\n')
         (OK, error_list) = build_ggtrinity_process_script(cluster_name, current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -938,8 +1020,8 @@ def run_ggtrinity_process(cluster_name, log, function=None):
     # upload the Genome-guided Trinity process script to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process script {0} to the directory {1} of the master ...\n'.format(get_ggtrinity_process_script(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_ggtrinity_process_script()))
+        log.write(f'Uploading the process script {get_ggtrinity_process_script()} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_ggtrinity_process_script())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_ggtrinity_process_script(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -950,8 +1032,8 @@ def run_ggtrinity_process(cluster_name, log, function=None):
     # set run permision to the Genome-guided Trinity process script in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_ggtrinity_process_script())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_ggtrinity_process_script()))
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_ggtrinity_process_script())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_ggtrinity_process_script())}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
@@ -961,7 +1043,7 @@ def run_ggtrinity_process(cluster_name, log, function=None):
     # build the Genome-guided Trinity process starter
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process starter {0} ...\n'.format(get_ggtrinity_process_starter()))
+        log.write(f'Building the process starter {get_ggtrinity_process_starter()} ...\n')
         (OK, error_list) = build_ggtrinity_process_starter(current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -971,8 +1053,8 @@ def run_ggtrinity_process(cluster_name, log, function=None):
     # upload the Genome-guided Trinity process starter to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process starter {0} to the directory {1} of the master ...\n'.format(get_ggtrinity_process_starter(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_ggtrinity_process_starter()))
+        log.write(f'Uploading the process starter {get_ggtrinity_process_starter()} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_ggtrinity_process_starter())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_ggtrinity_process_starter(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -983,8 +1065,8 @@ def run_ggtrinity_process(cluster_name, log, function=None):
     # set run permision to the Genome-guided Trinity process starter in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_ggtrinity_process_starter())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_ggtrinity_process_starter()))
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_ggtrinity_process_starter())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_ggtrinity_process_starter())}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
@@ -994,7 +1076,7 @@ def run_ggtrinity_process(cluster_name, log, function=None):
     # submit the Genome-guided Trinity process
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Submitting the process script {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_ggtrinity_process_starter())))
+        log.write(f'Submitting the process script {current_run_dir}/{os.path.basename(get_ggtrinity_process_starter())} ...\n')
         OK = xssh.submit_script(cluster_name, ssh_client, current_run_dir, os.path.basename(get_ggtrinity_process_starter()), log)
 
     # close the SSH transport connection
@@ -1041,6 +1123,7 @@ def check_ggtrinity_config_file(strict):
     try:
         ggtrinity_option_dict = xlib.get_option_dict(get_ggtrinity_config_file())
     except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append('*** ERROR: The option dictionary could not be built from the config file')
         OK = False
     else:
@@ -1066,19 +1149,19 @@ def check_ggtrinity_config_file(strict):
             # check section "identification" - key "alignment_software"
             alignment_software = ggtrinity_option_dict.get('identification', {}).get('alignment_software', not_found)
             if alignment_software == not_found:
-                error_list.append('*** ERROR: the key "alignment_software" is not found in the section "{0}".'.format(section))
+                error_list.append(f'*** ERROR: the key "alignment_software" is not found in the section "{section}".')
                 OK = False
             elif not xlib.check_code(alignment_software, get_alignment_software_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "alignment_software" has to be {0}.'.format(get_alignment_software_code_list_text()))
+                error_list.append(f'*** ERROR: the key "alignment_software" has to be {get_alignment_software_code_list_text()}.')
                 OK = False
 
             # check section "identification" - key "alignment_dataset_id"
             alignment_dataset_id = ggtrinity_option_dict.get('identification', {}).get('alignment_dataset_id', not_found)
             if alignment_dataset_id == not_found:
-                error_list.append('*** ERROR: the key "alignment_dataset_id" is not found in the section "{0}".'.format(section))
+                error_list.append(f'*** ERROR: the key "alignment_dataset_id" is not found in the section "{section}".')
                 OK = False
             elif not xlib.check_startswith(alignment_dataset_id, get_alignment_software_code_list(), case_sensitive=True):
-                error_list.append('*** ERROR: the key "alignment_dataset_id" has to start with {0}.'.format(get_alignment_software_code_list_text()))
+                error_list.append(f'*** ERROR: the key "alignment_dataset_id" has to start with {get_alignment_software_code_list_text()}.')
                 OK = False
 
         # check section "Genome-guided Trinity parameters"
@@ -1123,7 +1206,7 @@ def check_ggtrinity_config_file(strict):
 
     # warn that the Genome-guided Trinity config file is not valid if there are any errors
     if not OK:
-        error_list.append('\nThe {0} config file is not valid. Please, correct this file or recreate it.'.format(xlib.get_ggtrinity_name()))
+        error_list.append(f'\nThe {xlib.get_ggtrinity_name()} config file is not valid. Please, correct this file or recreate it.')
 
     # return the control variable and the error list
     return (OK, error_list)
@@ -1151,12 +1234,33 @@ def build_ggtrinity_process_script(cluster_name, current_run_dir):
     genome_guided_max_intron = ggtrinity_option_dict['Genome-guided Trinity parameters']['genome_guided_max_intron']
     other_parameters = ggtrinity_option_dict['Genome-guided Trinity parameters']['other_parameters']
 
-    # set the alignment file path
-    if alignment_software == xlib.get_star_code():
-        alignment_file = '{0}/starAligned.sortedByCoord.out.bam'.format(xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id))
+    # set the alignment file paths
+    if alignment_software == xlib.get_bowtie2_code():
+        sam_files = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id)}/alignment.sam'
+        bam_files = '$BAM_DIR/alignment.bam'
+    elif alignment_software == xlib.get_gsnap_code():
+        sam_files = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id)}/*-split.concordant_uniq'
+        bam_files = '$BAM_DIR/*-split.concordant_uniq.bam'
+    elif alignment_software == xlib.get_hisat2_code():
+        sam_files = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id)}/alignment.sam'
+        bam_files = '$BAM_DIR/alignment.bam'
+    elif alignment_software == xlib.get_star_code():
+        bam_files = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id)}/*-Aligned.sortedByCoord.out.bam'
     elif alignment_software == xlib.get_tophat_code():
-        alignment_file = '{0}/accepted_hits.bam'.format(xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id))
+        bam_files = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id)}/accepted_hits.bam'
 
+    # set the merged bam file path
+    if alignment_software == xlib.get_bowtie2_code():
+        merged_bam_file = bam_files
+    elif alignment_software == xlib.get_gsnap_code():
+        merged_bam_file = '$BAM_DIR/merged_bam_file.bam'
+    elif alignment_software == xlib.get_hisat2_code():
+        merged_bam_file = bam_files
+    elif alignment_software == xlib.get_star_code():
+        merged_bam_file = '$BAM_DIR/merged_bam_file.bam'
+    elif alignment_software == xlib.get_tophat_code():
+        merged_bam_file = bam_files
+ 
     # write the Genome-guided Trinity process script
     try:
         if not os.path.exists(os.path.dirname(get_ggtrinity_process_script())):
@@ -1164,21 +1268,28 @@ def build_ggtrinity_process_script(cluster_name, current_run_dir):
         with open(get_ggtrinity_process_script(), mode='w', encoding='iso-8859-1', newline='\n') as script_file_id:
             script_file_id.write( '#!/bin/bash\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('ulimit -s unlimited'))
+            script_file_id.write( 'ulimit -s unlimited\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'SEP="#########################################"\n')
             script_file_id.write( 'export HOST_IP=`curl --silent checkip.amazonaws.com`\n')
             script_file_id.write( 'export HOST_ADDRESS="ec2-${HOST_IP//./-}-compute-1.amazonaws.com"\n')
-            script_file_id.write( '{0}\n'.format('TRINITY_PATH={0}/{1}/envs/{2}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name(), xlib.get_trinity_bioconda_code())))
-            script_file_id.write( '{0}\n'.format('PATH=$TRINITY_PATH:$PATH'))
-            script_file_id.write( '{0}\n'.format('cd {0}/{1}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name())))
-            script_file_id.write( '{0}\n'.format('source activate {0}'.format(xlib.get_trinity_bioconda_code())))
+            script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
+            script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('STATUS_DIR={0}'.format(xlib.get_status_dir(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('SCRIPT_STATUS_OK={0}'.format(xlib.get_status_ok(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('SCRIPT_STATUS_WRONG={0}'.format(xlib.get_status_wrong(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('mkdir --parents $STATUS_DIR'))
-            script_file_id.write( '{0}\n'.format('if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi'))
-            script_file_id.write( '{0}\n'.format('if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi'))
+            script_file_id.write(f'MINICONDA3_BIN_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
+            script_file_id.write(f'export PATH=$MINICONDA3_BIN_PATH:$PATH\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
+            script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
+            script_file_id.write(f'SCRIPT_STATUS_WRONG={xlib.get_status_wrong(current_run_dir)}\n')
+            script_file_id.write( 'mkdir --parents $STATUS_DIR\n')
+            script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
+            script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write(f'BAM_DIR={current_run_dir}/BAM\n')
+            script_file_id.write( 'if [ ! -d "$BAM_DIR" ]; then mkdir --parents $BAM_DIR; fi\n')
+            script_file_id.write(f'MERGED_BAM_FILE={merged_bam_file}\n')
+            script_file_id.write(f'SORTED_BAM_FILE=$BAM_DIR/sorted_bam_file.bam\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function init\n')
             script_file_id.write( '{\n')
@@ -1188,24 +1299,108 @@ def build_ggtrinity_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "Script started at $FORMATTED_INIT_DATETIME+00:00."\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write(f'    echo "CLUSTER: {cluster_name}"\n')
-            script_file_id.write(f'    echo "HOST_IP: $HOST_IP - HOST_ADDRESS: $HOST_ADDRESS"\n')
+            script_file_id.write( '    echo "HOST NAME: $HOSTNAME"\n')
+            script_file_id.write( '    echo "HOST IP: $HOST_IP"\n')
+            script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function run_ggtrinity_process'))
+            if alignment_software in [xlib.get_gsnap_code(), xlib.get_hisat2_code()]:
+                script_file_id.write( 'function convert_sam2bam\n')
+                script_file_id.write( '{\n')
+                script_file_id.write(f'    cd {current_run_dir}\n')
+                script_file_id.write( '    STEP_STATUS=$STATUS_DIR/convert_sam2bam.ok\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "Converting SAM files to BAM format ..."\n')
+                script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+                script_file_id.write( '        echo "This step was previously run."\n')
+                script_file_id.write( '    else\n')
+                script_file_id.write(f'        source activate {xlib.get_samtools_anaconda_code()}\n')
+                script_file_id.write(f'        ls {sam_files} > sam-files.txt\n')
+                script_file_id.write( '        while read FILE_SAM; do\n')
+                if alignment_software == xlib.get_gsnap_code():
+                    script_file_id.write( '            FILE_BAM=$BAM_DIR/`basename $FILE_SAM`.bam\n')
+                else:
+                    script_file_id.write( '            FILE_BAM=$BAM_DIR/`basename $FILE_SAM | sed "s|.sam|.bam|g"`\n')
+                script_file_id.write( '            samtools view -b -S -o $FILE_BAM $FILE_SAM\n')
+                script_file_id.write( '            RC=$?\n')
+                script_file_id.write( '            if [ $RC -ne 0 ]; then manage_error samtools-view $RC; fi\n')
+                script_file_id.write( '        done < sam-files.txt\n')
+                script_file_id.write( '        conda deactivate\n')
+                script_file_id.write( '        echo "SAM files are converted."\n')
+                script_file_id.write( '        touch $STEP_STATUS\n')
+                script_file_id.write( '    fi\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            if alignment_software in [xlib.get_gsnap_code(), xlib.get_star_code()]:
+                script_file_id.write( 'function merge_bam_files\n')
+                script_file_id.write( '{\n')
+                script_file_id.write(f'    cd {current_run_dir}\n')
+                script_file_id.write( '    STEP_STATUS=$STATUS_DIR/merge_bam_files.ok\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "Merging BAM files ..."\n')
+                script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+                script_file_id.write( '        echo "This step was previously run."\n')
+                script_file_id.write( '    else\n')
+                script_file_id.write(f'        FILENUM=`ls -l {bam_files} | grep -v ^d | wc -l`\n')
+                script_file_id.write( '        echo "File number: $FILENUM"\n')
+                script_file_id.write( '        if [ "$FILENUM" -gt 1 ]; then\n')
+                script_file_id.write(f'            ls {bam_files} > bam-files.txt\n')
+                script_file_id.write( '            BAM_FILE_LIST=""\n')
+                script_file_id.write( '            while read BAM_FILE; do\n')
+                script_file_id.write( '                BAM_FILE_LIST=`echo "$BAM_FILE_LIST $BAM_FILE"`\n')
+                script_file_id.write( '            done < bam-files.txt\n')
+                script_file_id.write(f'            source activate {xlib.get_samtools_anaconda_code()}\n')
+                script_file_id.write( '            samtools merge $MERGED_BAM_FILE $BAM_FILE_LIST\n')
+                script_file_id.write( '            RC=$?\n')
+                script_file_id.write( '            if [ $RC -ne 0 ]; then manage_error samtools-merge $RC; fi\n')
+                script_file_id.write( '            conda deactivate\n')
+                script_file_id.write( '            echo "BAM files are merged."\n')
+                script_file_id.write( '        else\n')
+                script_file_id.write(f'           MERGED_BAM_FILE=`ls {bam_files}`\n')
+                script_file_id.write( '           echo "There only one BAM file. The merger is not done."\n')
+                script_file_id.write( '        fi\n')
+                script_file_id.write( '        touch $STEP_STATUS\n')
+                script_file_id.write( '    fi\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write( 'function sort_merged_bam_file\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    cd {0}'.format(current_run_dir)))
+            script_file_id.write(f'    cd {current_run_dir}\n')
+            script_file_id.write( '    STEP_STATUS=$STATUS_DIR/sort_merged_bam_file.ok\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    Trinity --no_version_check --version'))
+            script_file_id.write( '    echo "Sorting the [merged] BAM file ..."\n')
+            script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+            script_file_id.write( '        echo "This step was previously run."\n')
+            script_file_id.write( '    else\n')
+            script_file_id.write(f'        source activate {xlib.get_samtools_anaconda_code()}\n')
+            script_file_id.write( '        samtools sort -o $SORTED_BAM_FILE -O bam $MERGED_BAM_FILE\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error samtools-merger $RC; fi\n')
+            script_file_id.write( '        conda deactivate\n')
+            script_file_id.write( '        echo "BAM file is sorted."\n')
+            script_file_id.write( '        touch $STEP_STATUS\n')
+            script_file_id.write( '    fi\n')
+            script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write( 'function run_ggtrinity_process\n')
+            script_file_id.write( '{\n')
+            script_file_id.write(f'    cd {current_run_dir}\n')
+            script_file_id.write( '    STEP_STATUS=$STATUS_DIR/run_ggtrinity_process.ok\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "Assembling from genome-aligned reads ..."'))
-            script_file_id.write( '{0}\n'.format('    /usr/bin/time \\'))
-            script_file_id.write( '{0}\n'.format('        --format="$SEP\\nElapsed real time (s): %e\\nCPU time in kernel mode (s): %S\\nCPU time in user mode (s): %U\\nPercentage of CPU: %P\\nMaximum resident set size(Kb): %M\\nAverage total memory use (Kb):%K" \\'))
-            script_file_id.write( '{0}\n'.format('        Trinity \\'))
-            script_file_id.write( '{0}\n'.format('            --no_version_check \\'))
-            script_file_id.write( '{0}\n'.format('            --CPU {0} \\'.format(ncpu)))
-            script_file_id.write( '{0}\n'.format('            --max_memory {0}G \\'.format(max_memory)))
-            script_file_id.write( '{0}\n'.format('            --genome_guided_bam {0} \\'.format(alignment_file)))
-            script_file_id.write( '{0}\n'.format('            --genome_guided_max_intron {0} \\'.format(genome_guided_max_intron)))
+            script_file_id.write( '    echo "Assembling reads from BAM file ..."\n')
+            script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+            script_file_id.write( '        echo "This step was previously run."\n')
+            script_file_id.write( '    else\n')
+            script_file_id.write(f'        source activate {xlib.get_trinity_anaconda_code()}\n')
+            script_file_id.write( '        Trinity --no_version_check --version\n')
+            script_file_id.write( '        /usr/bin/time \\\n')
+            script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+            script_file_id.write( '            Trinity \\\n')
+            script_file_id.write( '                --no_version_check \\\n')
+            script_file_id.write(f'                --CPU {ncpu} \\\n')
+            script_file_id.write(f'                --max_memory {max_memory}G \\\n')
+            script_file_id.write( '                --genome_guided_bam $SORTED_BAM_FILE \\\n')
+            script_file_id.write(f'                --genome_guided_max_intron {genome_guided_max_intron} \\\n')
             if other_parameters.upper() != 'NONE':
                 parameter_list = [x.strip() for x in other_parameters.split(';')]
                 for parameter in parameter_list:
@@ -1214,48 +1409,81 @@ def build_ggtrinity_process_script(cluster_name, current_run_dir):
                         mo = re.search(pattern, parameter)
                         parameter_name = mo.group(1).strip()
                         parameter_value = mo.group(2).strip()
-                        script_file_id.write( '{0}\n'.format('            --{0} {1} \\'.format(parameter_name, parameter_value)))
+                        script_file_id.write(f'            --{parameter_name} {parameter_value} \\\n')
                     else:
                         pattern = r'^--(.+)$'
                         mo = re.search(pattern, parameter)
                         parameter_name = mo.group(1).strip()
-                        script_file_id.write( '{0}\n'.format('            --{0} \\'.format(parameter_name)))
-            script_file_id.write( '{0}\n'.format('            --output {0}'.format(current_run_dir)))
-            script_file_id.write( '{0}\n'.format('    RC=$?'))
-            script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error Trinity $RC; fi'))
+                        script_file_id.write(f'            --{parameter_name} \\\n')
+            script_file_id.write(f'                --output {current_run_dir}\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error Trinity $RC; fi\n')
+            script_file_id.write( '        conda deactivate\n')
+            script_file_id.write( '        echo "Reads are assembled."\n')
+            script_file_id.write( '        touch $STEP_STATUS\n')
+            script_file_id.write( '    fi\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function end'))
+            script_file_id.write( 'function end\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    END_DATETIME=`date --utc +%s`'))
-            script_file_id.write( '{0}\n'.format('    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`'))
-            script_file_id.write( '{0}\n'.format('    calculate_duration'))
+            script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
+            script_file_id.write( '    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
+            script_file_id.write( '    calculate_duration\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "Script ended OK at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."'))
+            script_file_id.write( '    echo "Script ended OK at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    RECIPIENT={0}'.format(xconfiguration.get_contact_data())))
-            script_file_id.write( '{0}\n'.format('    SUBJECT="{0}: {1} process"'.format(xlib.get_project_name(), xlib.get_ggtrinity_name())))
-            script_file_id.write( '{0}\n'.format('    MESSAGE="{0}"'.format(xlib.get_mail_message_ok(xlib.get_ggtrinity_name(), cluster_name))))
-            script_file_id.write( '    mail --append "Content-type: text/html;" --append "FROM:root@NGScloud2" --subject="$SUBJECT" "$RECIPIENT" <<< "$MESSAGE"\n')
-            script_file_id.write( '{0}\n'.format('    touch $SCRIPT_STATUS_OK'))
-            script_file_id.write( '{0}\n'.format('    exit 0'))
+            script_file_id.write( '    send_mail ok\n')
+            script_file_id.write( '    touch $SCRIPT_STATUS_OK\n')
+            script_file_id.write( '    exit 0\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function manage_error'))
+            script_file_id.write( 'function manage_error\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    END_DATETIME=`date --utc +%s`'))
-            script_file_id.write( '{0}\n'.format('    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`'))
-            script_file_id.write( '{0}\n'.format('    calculate_duration'))
+            script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
+            script_file_id.write( '    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
+            script_file_id.write( '    calculate_duration\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "ERROR: $1 returned error $2"'))
-            script_file_id.write( '{0}\n'.format('    echo "Script ended WRONG at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."'))
+            script_file_id.write( '    echo "ERROR: $1 returned error $2"\n')
+            script_file_id.write( '    echo "Script ended WRONG at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    RECIPIENT={0}'.format(xconfiguration.get_contact_data())))
-            script_file_id.write( '{0}\n'.format('    SUBJECT="{0}: {1} process"'.format(xlib.get_project_name(), xlib.get_ggtrinity_name())))
-            script_file_id.write( '{0}\n'.format('    MESSAGE="{0}"'.format(xlib.get_mail_message_wrong(xlib.get_ggtrinity_name(), cluster_name))))
-            script_file_id.write( '    mail --append "Content-type: text/html;" --append "FROM:root@NGScloud2" --subject="$SUBJECT" "$RECIPIENT" <<< "$MESSAGE"\n')
-            script_file_id.write( '{0}\n'.format('    touch $SCRIPT_STATUS_WRONG'))
-            script_file_id.write( '{0}\n'.format('    exit 3'))
+            script_file_id.write( '    send_mail wrong\n')
+            script_file_id.write( '    touch $SCRIPT_STATUS_WRONG\n')
+            script_file_id.write( '    exit 3\n')
+            script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            process_name = f'{xlib.get_ggtrinity_name()} process'
+            mail_message_ok = xlib.get_mail_message_ok(process_name, cluster_name)
+            mail_message_wrong = xlib.get_mail_message_wrong(process_name, cluster_name)
+            script_file_id.write( 'function send_mail\n')
+            script_file_id.write( '{\n')
+            script_file_id.write(f'    SUBJECT="{xlib.get_project_name()}: {process_name}"\n')
+            script_file_id.write( '    if [ "$1" == "ok" ]; then\n')
+            script_file_id.write(f'        MESSAGE="{mail_message_ok}"\n')
+            script_file_id.write( '    elif [ "$1" == "wrong" ]; then\n')
+            script_file_id.write(f'        MESSAGE="{mail_message_wrong}"\n')
+            script_file_id.write( '    else\n')
+            script_file_id.write( '         MESSAGE=""\n')
+            script_file_id.write( '    fi\n')
+            script_file_id.write( '    DESTINATION_FILE=mail-destination.json\n')
+            script_file_id.write( '    echo "{" > $DESTINATION_FILE\n')
+            script_file_id.write(f'    echo "    \\\"ToAddresses\\\":  [\\\"{xconfiguration.get_contact_data()}\\\"]," >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "    \\\"CcAddresses\\\":  []," >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "    \\\"BccAddresses\\\":  []" >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "}" >> $DESTINATION_FILE\n')
+            script_file_id.write( '    MESSAGE_FILE=mail-message.json\n')
+            script_file_id.write( '    echo "{" > $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    \\\"Subject\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Data\\\":  \\\"$SUBJECT\\\"," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    }," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    \\\"Body\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Html\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "            \\\"Data\\\":  \\\"$MESSAGE\\\"," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "            \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        }" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    }" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "}" >> $MESSAGE_FILE\n')
+            script_file_id.write(f'    aws ses send-email --from {xconfiguration.get_contact_data()} --destination file://$DESTINATION_FILE --message file://$MESSAGE_FILE\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function calculate_duration\n')
@@ -1268,10 +1496,16 @@ def build_ggtrinity_process_script(cluster_name, current_run_dir):
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
-            script_file_id.write( '{0}\n'.format('run_ggtrinity_process'))
+            if alignment_software in [xlib.get_gsnap_code(), xlib.get_hisat2_code()]:
+                script_file_id.write( 'convert_sam2bam\n')
+            if alignment_software in [xlib.get_gsnap_code(), xlib.get_star_code()]:
+                script_file_id.write( 'merge_bam_files\n')
+            script_file_id.write( 'sort_merged_bam_file\n')
+            script_file_id.write( 'run_ggtrinity_process\n')
             script_file_id.write( 'end\n')
     except Exception as e:
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_ggtrinity_process_script()))
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append(f'*** ERROR: The file {get_ggtrinity_process_script()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -1293,15 +1527,70 @@ def build_ggtrinity_process_starter(current_run_dir):
         if not os.path.exists(os.path.dirname(get_ggtrinity_process_starter())):
             os.makedirs(os.path.dirname(get_ggtrinity_process_starter()))
         with open(get_ggtrinity_process_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
-            file_id.write( '{0}\n'.format('#!/bin/bash'))
-            file_id.write( '{0}\n'.format('#-------------------------------------------------------------------------------'))
-            file_id.write( '{0}\n'.format('{0}/{1} &>{0}/{2}'.format(current_run_dir, os.path.basename(get_ggtrinity_process_script()), xlib.get_cluster_log_file())))
+            file_id.write( '#!/bin/bash\n')
+            file_id.write( '#-------------------------------------------------------------------------------\n')
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_ggtrinity_process_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_ggtrinity_process_starter()))
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append(f'*** ERROR: The file {get_ggtrinity_process_starter()} can not be created')
         OK = False
 
     # return the control variable and the error list
     return (OK, error_list)
+
+#-------------------------------------------------------------------------------
+
+def restart_ggtrinity_process(cluster_name, experiment_id, result_dataset_id, log, function=None):
+    '''
+    Restart a Genome-guided Trinity process from the last step ended OK.
+    '''
+
+    # initialize the control variable
+    OK = True
+
+    # warn that the log window does not have to be closed
+    if not isinstance(log, xlib.DevStdOut):
+        log.write('This process might take several minutes. Do not close this window, please wait!\n')
+
+    # create the SSH client connection
+    if OK:
+        log.write(f'{xlib.get_separator()}\n')
+        log.write('Connecting the SSH client ...\n')
+        (OK, error_list, ssh_client) = xssh.create_ssh_client_connection(cluster_name)
+        if OK:
+            log.write('The SSH client is connected.\n')
+        else:
+            for error in error_list:
+                log.write(f'{error}\n')
+
+    # get the current run directory
+    if OK:
+        current_run_dir = xlib.get_cluster_experiment_result_dataset_dir(experiment_id, result_dataset_id)
+
+    # submit the script
+    if OK:
+        log.write(f'{xlib.get_separator()}\n')
+        log.write(f'Submitting the process script {current_run_dir}/{os.path.basename(get_ggtrinity_process_starter())} ...\n')
+        OK = xssh.submit_script(cluster_name, ssh_client, current_run_dir, os.path.basename(get_ggtrinity_process_starter()), log)
+
+    # close the SSH client connection
+    if OK:
+        log.write(f'{xlib.get_separator()}\n')
+        log.write('Closing the SSH client connection ...\n')
+        xssh.close_ssh_client_connection(ssh_client)
+        log.write('The connection is closed.\n')
+
+    # warn that the log window can be closed
+    if not isinstance(log, xlib.DevStdOut):
+        log.write(f'{xlib.get_separator()}\n')
+        log.write('You can close this window now.\n')
+
+    # execute final function
+    if function is not None:
+        function()
+
+    # return the control variable
+    return OK
 
 #-------------------------------------------------------------------------------
 
@@ -1311,7 +1600,7 @@ def get_ggtrinity_config_file():
     '''
 
     # assign the Genome-guided Trinity config file path
-    ggtrinity_config_file = '{0}/{1}-config.txt'.format(xlib.get_config_dir(), xlib.get_ggtrinity_code())
+    ggtrinity_config_file = f'{xlib.get_config_dir()}/{xlib.get_ggtrinity_code()}-config.txt'
 
     # return the Genome-guided Trinity config file path
     return ggtrinity_config_file
@@ -1324,7 +1613,7 @@ def get_ggtrinity_process_script():
     '''
 
     # assign the Genome-guided Trinity script path
-    ggtrinity_process_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_ggtrinity_code())
+    ggtrinity_process_script = f'{xlib.get_temp_dir()}/{xlib.get_ggtrinity_code()}-process.sh'
 
     # return the Genome-guided Trinity script path
     return ggtrinity_process_script
@@ -1337,7 +1626,7 @@ def get_ggtrinity_process_starter():
     '''
 
     # assign the Genome-guided Trinity process starter path
-    ggtrinity_process_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_ggtrinity_code())
+    ggtrinity_process_starter = f'{xlib.get_temp_dir()}/{xlib.get_ggtrinity_code()}-process-starter.sh'
 
     # return the Genome-guided Trinity starter path
     return ggtrinity_process_starter
@@ -1359,54 +1648,55 @@ def create_insilico_read_normalization_config_file(experiment_id='exp001', read_
         if not os.path.exists(os.path.dirname(get_insilico_read_normalization_config_file())):
             os.makedirs(os.path.dirname(get_insilico_read_normalization_config_file()))
         with open(get_insilico_read_normalization_config_file(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
-            file_id.write( '{0}\n'.format('# You must review the information of this file and update the values with the corresponding ones to the current run.'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('# The read files have to be located in the cluster directory {0}/experiment_id/read_dataset_id'.format(xlib.get_cluster_read_dir())))
-            file_id.write( '{0}\n'.format('# The experiment_id and read_dataset_id names are fixed in the identification section.'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('# You can consult the parameters of insilico_read_normalization (Trinity package) and their meaning in https://github.com/trinityrnaseq/trinityrnaseq/wiki.'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('# In section "insilico_read_normalization parameters", the key "other_parameters" allows you to input additional parameters in the format:'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('#    other_parameters = --parameter-1[=value-1][; --parameter-2[=value-2][; ...; --parameter-n[=value-n]]]'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('# parameter-i is a parameter name of insilico_read_normalization and value-i a valid value of parameter-i, e.g.'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('#    other_parameters = --pairs_together; --PARALLEL_STATS'))
+            file_id.write( '# You must review the information of this file and update the values with the corresponding ones to the current run.\n')
+            file_id.write( '#\n')
+            file_id.write(f'# The read files have to be located in the cluster directory {xlib.get_cluster_read_dir()}/experiment_id/read_dataset_id\n')
+            file_id.write( '# The experiment_id and read_dataset_id names are fixed in the identification section.\n')
+            file_id.write( '#\n')
+            file_id.write( '# You can consult the parameters of insilico_read_normalization (Trinity package) and their meaning in "https://github.com/trinityrnaseq/trinityrnaseq/wiki".\n')
+            file_id.write( '#\n')
+            file_id.write( '# In section "insilico_read_normalization parameters", the key "other_parameters" allows you to input additional parameters in the format:\n')
+            file_id.write( '#\n')
+            file_id.write( '#    other_parameters = --parameter-1[=value-1][; --parameter-2[=value-2][; ...; --parameter-n[=value-n]]]\n')
+            file_id.write( '#\n')
+            file_id.write( '# parameter-i is a parameter name of insilico_read_normalization and value-i a valid value of parameter-i, e.g.\n')
+            file_id.write( '#\n')
+            file_id.write( '#    other_parameters = --pairs_together; --PARALLEL_STATS\n')
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information that identifies the experiment.'))
-            file_id.write( '{0}\n'.format('[identification]'))
-            file_id.write( '{0:<50} {1}\n'.format('experiment_id = {0}'.format(experiment_id), '# experiment identification'))
-            file_id.write( '{0:<50} {1}\n'.format('read_dataset_id = {0}'.format(read_dataset_id), '# read dataset identification'))
+            file_id.write( '# This section has the information that identifies the experiment.\n')
+            file_id.write( '[identification]\n')
+            file_id.write( '{0:<50} {1}\n'.format(f'experiment_id = {experiment_id}', '# experiment identification'))
+            file_id.write( '{0:<50} {1}\n'.format(f'read_dataset_id = {read_dataset_id}', '# read dataset identification'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information to set the insilico_read_normalization parameters'))
-            file_id.write( '{0}\n'.format('[insilico_read_normalization parameters]'))
-            file_id.write( '{0:<50} {1}\n'.format('kmer = 25', '# K-MER size'))
-            file_id.write( '{0:<50} {1}\n'.format('ncpu = 4', '# number of CPUs for use'))
-            file_id.write( '{0:<50} {1}\n'.format('jm = 10', '# maximum memory in GiB to use for k-mer counting by jellyfish'))
-            file_id.write( '{0:<50} {1}\n'.format('max_cov = 30', '# targeted maximum coverage for reads'))
-            file_id.write( '{0:<50} {1}\n'.format('other_parameters = NONE', '# additional parameters to the previous ones or NONE'))
+            file_id.write( '# This section has the information to set the insilico_read_normalization parameters\n')
+            file_id.write( '[insilico_read_normalization parameters]\n')
+            file_id.write( '{0:<50} {1}\n'.format( 'kmer = 25', '# K-MER size'))
+            file_id.write( '{0:<50} {1}\n'.format( 'ncpu = 4', '# number of CPUs for use'))
+            file_id.write( '{0:<50} {1}\n'.format( 'jm = 10', '# maximum memory in GiB to use for k-mer counting by jellyfish'))
+            file_id.write( '{0:<50} {1}\n'.format( 'max_cov = 30', '# targeted maximum coverage for reads'))
+            file_id.write( '{0:<50} {1}\n'.format( 'other_parameters = NONE', '# additional parameters to the previous ones or NONE'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the global information of all libraries.'))
-            file_id.write( '{0}\n'.format('[library]'))
-            file_id.write( '{0:<50} {1}\n'.format('format = FASTQ', '# format: {0}'.format(get_format_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('read_type = {0}'.format(read_type), '# read type: {0}'.format(get_read_type_code_list_text())))
+            file_id.write( '# This section has the global information of all libraries.\n')
+            file_id.write( '[library]\n')
+            file_id.write( '{0:<50} {1}\n'.format( 'format = FASTQ', f'# format: {get_format_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format(f'read_type = {read_type}', f'# read type: {get_read_type_code_list_text()}'))
             for i in range(len(file_1_list)):
                 file_id.write( '\n')
                 if i == 0:
-                    file_id.write( '{0}\n'.format('# This section has the information of the first library.'))
-                file_id.write( '{0}\n'.format('[library-{0}]'.format(i + 1)))
-                file_id.write( '{0:<50} {1}\n'.format('read_file_1 = {0}'.format(os.path.basename(file_1_list[i])), '# name of the read file in SE read type or the + strand read file in PE case'))
+                    file_id.write( '# This section has the information of the first library.\n')
+                file_id.write(f'[library-{i + 1}]\n')
+                file_id.write( '{0:<50} {1}\n'.format(f'read_file_1 = {os.path.basename(file_1_list[i])}', '# name of the read file in SE read type or the + strand read file in PE case'))
                 if read_type == 'SE':
-                    file_id.write( '{0:<50} {1}\n'.format('read_file_2 = NONE', '# name of the - strand reads file in PE read type or NONE in SE case'))
+                    file_id.write( '{0:<50} {1}\n'.format( 'read_file_2 = NONE', '# name of the - strand reads file in PE read type or NONE in SE case'))
                 elif read_type == 'PE':
-                    file_id.write( '{0:<50} {1}\n'.format('read_file_2 = {0}'.format(os.path.basename(file_2_list[i])), '# name of the - strand reads file in PE read type or NONE in SE case'))
+                    file_id.write( '{0:<50} {1}\n'.format(f'read_file_2 = {os.path.basename(file_2_list[i])}', '# name of the - strand reads file in PE read type or NONE in SE case'))
                 if i == 0:
                     file_id.write( '\n')
-                    file_id.write( '{0}\n'.format('# If there are more libraries, you have to repeat the section library-1 with the data of each file.'))
-                    file_id.write( '{0}\n'.format('# The section identification has to be library-n (n is an integer not repeated)'))
+                    file_id.write( '# If there are more libraries, you have to repeat the section library-1 with the data of each file.\n')
+                    file_id.write( '# The section identification has to be library-n (n is an integer not repeated)\n')
     except Exception as e:
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_insilico_read_normalization_config_file()))
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append(f'*** ERROR: The file {get_insilico_read_normalization_config_file()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -1434,7 +1724,7 @@ def run_insilico_read_normalization_process(cluster_name, log, function=None):
 
     # check the insilico_read_normalization config file
     log.write(f'{xlib.get_separator()}\n')
-    log.write('Checking the {0} config file ...\n'.format(xlib.get_insilico_read_normalization_name()))
+    log.write(f'Checking the {xlib.get_insilico_read_normalization_name()} config file ...\n')
     (OK, error_list) = check_insilico_read_normalization_config_file(strict=True)
     if OK:
         log.write('The file is OK.\n')
@@ -1479,18 +1769,18 @@ def run_insilico_read_normalization_process(cluster_name, log, function=None):
     if OK:
         (master_state_code, master_state_name) = xec2.get_node_state(cluster_name)
         if master_state_code != 16:
-            log.write('*** ERROR: The cluster {0} is not running. Its state is {1} ({2}).\n'.format(cluster_name, master_state_code, master_state_name))
+            log.write(f'*** ERROR: The cluster {cluster_name} is not running. Its state is {master_state_code} ({master_state_name}).\n')
             OK = False
 
     # check Trinity is installed
     if OK:
-        (OK, error_list, is_installed) = xbioinfoapp.is_installed_bioconda_package(xlib.get_trinity_bioconda_code(), cluster_name, True, ssh_client)
+        (OK, error_list, is_installed) = xbioinfoapp.is_installed_anaconda_package(xlib.get_trinity_anaconda_code(), cluster_name, True, ssh_client)
         if OK:
             if not is_installed:
-                log.write('*** ERROR: {0} is not installed.\n'.format(xlib.get_trinity_name()))
+                log.write(f'*** ERROR: {xlib.get_trinity_name()} is not installed.\n')
                 OK = False
         else:
-            log.write('*** ERROR: The verification of {0} installation could not be performed.\n'.format(xlib.get_trinity_name()))
+            log.write(f'*** ERROR: The verification of {xlib.get_trinity_name()} installation could not be performed.\n')
 
     # warn that the requirements are OK 
     if OK:
@@ -1500,18 +1790,18 @@ def run_insilico_read_normalization_process(cluster_name, log, function=None):
     if OK:
         log.write(f'{xlib.get_separator()}\n')
         log.write('Determining the run directory in the cluster ...\n')
-        current_run_dir = '{0}'.format(xlib.get_cluster_current_run_dir(experiment_id, xlib.get_insilico_read_normalization_code()))
+        current_run_dir = xlib.get_cluster_current_run_dir(experiment_id, xlib.get_insilico_read_normalization_code())
         command = f'mkdir --parents {current_run_dir}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
-            log.write('The directory path is {0}.\n'.format(current_run_dir))
+            log.write(f'The directory path is {current_run_dir}.\n')
         else:
             log.write(f'*** ERROR: Wrong command ---> {command}\n')
 
     # build the insilico_read_normalization process script
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process script {0} ...\n'.format(get_insilico_read_normalization_process_script()))
+        log.write(f'Building the process script {get_insilico_read_normalization_process_script()} ...\n')
         (OK, error_list) = build_insilico_read_normalization_process_script(cluster_name, current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -1521,8 +1811,8 @@ def run_insilico_read_normalization_process(cluster_name, log, function=None):
     # upload the insilico_read_normalization process script to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process script {0} to the directory {1} of the master ...\n'.format(get_insilico_read_normalization_process_script(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_insilico_read_normalization_process_script()))
+        log.write(f'Uploading the process script {get_insilico_read_normalization_process_script()} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_insilico_read_normalization_process_script())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_insilico_read_normalization_process_script(), cluster_path)
         if OK:
             log.write('The file id uploaded.\n')
@@ -1533,8 +1823,8 @@ def run_insilico_read_normalization_process(cluster_name, log, function=None):
     # set run permision to the insilico_read_normalization process script in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_insilico_read_normalization_process_script())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_insilico_read_normalization_process_script()))
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_insilico_read_normalization_process_script())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_insilico_read_normalization_process_script())}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set on.\n')
@@ -1544,7 +1834,7 @@ def run_insilico_read_normalization_process(cluster_name, log, function=None):
     # build the insilico_read_normalization process starter
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process starter {0} ...\n'.format(get_insilico_read_normalization_process_starter()))
+        log.write(f'Building the process starter {get_insilico_read_normalization_process_starter()} ...\n')
         (OK, error_list) = build_insilico_read_normalization_process_starter(current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -1554,8 +1844,8 @@ def run_insilico_read_normalization_process(cluster_name, log, function=None):
     # upload the insilico_read_normalization process starter to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process starter {0} to the directory {1} of the master ...\n'.format(get_insilico_read_normalization_process_starter(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_insilico_read_normalization_process_starter()))
+        log.write(f'Uploading the process starter {get_insilico_read_normalization_process_starter()} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_insilico_read_normalization_process_starter())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_insilico_read_normalization_process_starter(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -1566,8 +1856,8 @@ def run_insilico_read_normalization_process(cluster_name, log, function=None):
     # set run permision to the insilico_read_normalization process starter in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_insilico_read_normalization_process_starter())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_insilico_read_normalization_process_starter()))
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_insilico_read_normalization_process_starter())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_insilico_read_normalization_process_starter())}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set on.\n')
@@ -1577,7 +1867,7 @@ def run_insilico_read_normalization_process(cluster_name, log, function=None):
     # submit the insilico_read_normalization process
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Submitting the process script {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_insilico_read_normalization_process_starter())))
+        log.write(f'Submitting the process script {current_run_dir}/{os.path.basename(get_insilico_read_normalization_process_starter())} ...\n')
         OK = xssh.submit_script(cluster_name, ssh_client, current_run_dir, os.path.basename(get_insilico_read_normalization_process_starter()), log)
 
     # close the SSH transport connection
@@ -1624,6 +1914,7 @@ def check_insilico_read_normalization_config_file(strict):
     try:
         insilico_read_normalization_option_dict = xlib.get_option_dict(get_insilico_read_normalization_config_file())
     except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append('*** ERROR: The option dictionary could not be built from the config file')
         OK = False
     else:
@@ -1716,7 +2007,7 @@ def check_insilico_read_normalization_config_file(strict):
                 error_list.append('*** ERROR: the key "format" is not found in the section "library".')
                 OK = False
             elif not xlib.check_code(format, get_format_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "format" has to be {0}.'.format(get_format_code_list_text()))
+                error_list.append(f'*** ERROR: the key "format" has to be {get_format_code_list_text()}.')
                 OK = False
 
             # check section "library" - key "read_type"
@@ -1725,7 +2016,7 @@ def check_insilico_read_normalization_config_file(strict):
                 error_list.append('*** ERROR: the key "read_type" is not found in the section "library".')
                 OK = False
             elif not xlib.check_code(read_type, get_read_type_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "read_type" has to be {0}.'.format(get_read_type_code_list_text()))
+                error_list.append(f'*** ERROR: the key "read_type" has to be {get_read_type_code_list_text()}.')
                 OK = False
 
         # check section "library-1"
@@ -1740,7 +2031,7 @@ def check_insilico_read_normalization_config_file(strict):
 
                 # check than the section identification is like library-n 
                 if not re.match('^library-[0-9]+$', section):
-                    error_list.append('*** ERROR: the section "{0}" has a wrong identification.'.format(section))
+                    error_list.append(f'*** ERROR: the section "{section}" has a wrong identification.')
                     OK = False
 
                 else:
@@ -1748,18 +2039,18 @@ def check_insilico_read_normalization_config_file(strict):
                     # check section "library-n" - key "read_file_1"
                     read_file_1 = insilico_read_normalization_option_dict.get(section, {}).get('read_file_1', not_found)
                     if read_file_1 == not_found:
-                        error_list.append('*** ERROR: the key "read_file_1" is not found in the section "{0}"'.format(section))
+                        error_list.append(f'*** ERROR: the key "read_file_1" is not found in the section "{section}"')
                         OK = False
 
                     # check section "library-n" - key "read_file_2"
                     read_file_2 = insilico_read_normalization_option_dict.get(section, {}).get('read_file_2', not_found)
                     if read_file_2 == not_found:
-                        error_list.append('*** ERROR: the key "read_file_2" is not found in the section "{0}"'.format(section))
+                        error_list.append(f'*** ERROR: the key "read_file_2" is not found in the section "{section}"')
                         OK = False
 
     # warn that the insilico_read_normalization config file is not valid if there are any errors
     if not OK:
-        error_list.append('\nThe {0} config file is not valid. Please, correct this file or recreate it.'.format(xlib.get_insilico_read_normalization_name()))
+        error_list.append(f'\nThe {xlib.get_insilico_read_normalization_name()} config file is not valid. Please, correct this file or recreate it.')
 
     # return the control variable and the error list
     return (OK, error_list)
@@ -1796,18 +2087,21 @@ def build_insilico_read_normalization_process_script(cluster_name, current_run_d
     sections_list.sort()
 
     # build library files
-    read_file_1_list = []
-    read_file_2_list = []
+    files1 = ''
+    files2 = ''
     for section in sections_list:
         # if the section identification is like library-n
         if re.match('^library-[0-9]+$', section):
             read_file_1 = insilico_read_normalization_option_dict[section]['read_file_1']
             read_file_1 = xlib.get_cluster_read_file(experiment_id, read_dataset_id, read_file_1)
-            read_file_1_list.append(read_file_1)
+            files1 += read_file_1 + ','
             if read_type.upper() == 'PE':
                 read_file_2 = insilico_read_normalization_option_dict[section]['read_file_2']
                 read_file_2 = xlib.get_cluster_read_file(experiment_id, read_dataset_id, read_file_2)
-                read_file_2_list.append(read_file_2)
+                files2 += read_file_2 + ','
+    files1 = files1[:len(files1) - 1]
+    if read_type.upper() == 'PE':
+        files2 = files2[:len(files2) - 1]
 
     # set the output normalised read directory
     normalised_read_dir = xlib.get_cluster_experiment_read_dataset_dir(experiment_id, os.path.basename(current_run_dir))
@@ -1822,17 +2116,18 @@ def build_insilico_read_normalization_process_script(cluster_name, current_run_d
             script_file_id.write( 'SEP="#########################################"\n')
             script_file_id.write( 'export HOST_IP=`curl --silent checkip.amazonaws.com`\n')
             script_file_id.write( 'export HOST_ADDRESS="ec2-${HOST_IP//./-}-compute-1.amazonaws.com"\n')
-            script_file_id.write( '{0}\n'.format('TRINITY_PATH={0}/{1}/envs/{2}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name(), xlib.get_trinity_bioconda_code())))
-            script_file_id.write( '{0}\n'.format('PATH=$TRINITY_PATH:$PATH'))
-            script_file_id.write( '{0}\n'.format('cd {0}/{1}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name())))
-            script_file_id.write( '{0}\n'.format('source activate {0}'.format(xlib.get_trinity_bioconda_code())))
+            script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
+            script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('STATUS_DIR={0}'.format(xlib.get_status_dir(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('SCRIPT_STATUS_OK={0}'.format(xlib.get_status_ok(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('SCRIPT_STATUS_WRONG={0}'.format(xlib.get_status_wrong(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('mkdir --parents $STATUS_DIR'))
-            script_file_id.write( '{0}\n'.format('if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi'))
-            script_file_id.write( '{0}\n'.format('if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi'))
+            script_file_id.write(f'MINICONDA3_BIN_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
+            script_file_id.write(f'export PATH=$MINICONDA3_BIN_PATH:$PATH\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
+            script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
+            script_file_id.write(f'SCRIPT_STATUS_WRONG={xlib.get_status_wrong(current_run_dir)}\n')
+            script_file_id.write( 'mkdir --parents $STATUS_DIR\n')
+            script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
+            script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function init\n')
             script_file_id.write( '{\n')
@@ -1842,37 +2137,35 @@ def build_insilico_read_normalization_process_script(cluster_name, current_run_d
             script_file_id.write( '    echo "Script started at $FORMATTED_INIT_DATETIME+00:00."\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write(f'    echo "CLUSTER: {cluster_name}"\n')
-            script_file_id.write(f'    echo "HOST_IP: $HOST_IP - HOST_ADDRESS: $HOST_ADDRESS"\n')
+            script_file_id.write( '    echo "HOST NAME: $HOSTNAME"\n')
+            script_file_id.write( '    echo "HOST IP: $HOST_IP"\n')
+            script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function run_insilico_read_normalization_process'))
+            script_file_id.write( 'function run_insilico_read_normalization_process\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    cd {0}'.format(current_run_dir)))
+            script_file_id.write(f'    cd {current_run_dir}\n')
+            script_file_id.write( '    STEP_STATUS=$STATUS_DIR/run_insilico_read_normalization_process.ok\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    Trinity --version'))
-            script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    /usr/bin/time \\'))
-            script_file_id.write( '{0}\n'.format('        --format="$SEP\\nElapsed real time (s): %e\\nCPU time in kernel mode (s): %S\\nCPU time in user mode (s): %U\\nPercentage of CPU: %P\\nMaximum resident set size(Kb): %M\\nAverage total memory use (Kb):%K" \\'))
-            script_file_id.write( '{0}\n'.format('        insilico_read_normalization.pl \\'))
-            script_file_id.write( '{0}\n'.format('            --seqType {0} \\'.format(format)))
+            script_file_id.write( '    echo "Normalizing read files dataset ..."\n')
+            script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+            script_file_id.write( '        echo "This step was previously run."\n')
+            script_file_id.write( '    else\n')
+            script_file_id.write(f'        source activate {xlib.get_trinity_anaconda_code()}\n')
+            script_file_id.write( '        Trinity --no_version_check --version\n')
+            script_file_id.write( '        /usr/bin/time \\\n')
+            script_file_id.write(f'            --format="{xlib.get_time_output_format()}" \\\n')
+            script_file_id.write( '            insilico_read_normalization.pl \\\n')
+            script_file_id.write(f'                --CPU {ncpu} \\\n')
+            script_file_id.write(f'                --KMER_SIZE {kmer} \\\n')
+            script_file_id.write(f'                --seqType {format} \\\n')
             if read_type.upper() == 'PE':
-                if len(read_file_1_list) == 1:
-                    script_file_id.write( '{0}\n'.format('            --left {0} \\'.format(read_file_1_list[0])))
-                    script_file_id.write( '{0}\n'.format('            --right {0} \\'.format(read_file_2_list[0])))
-                else:
-                    for i in range(len(read_file_1_list)):
-                        script_file_id.write( '{0}\n'.format('            --left_list {0} \\'.format(read_file_1_list[i])))
-                        script_file_id.write( '{0}\n'.format('            --right_list {0} \\'.format(read_file_2_list[i])))
+                script_file_id.write(f'            --left {files1} \\\n')
+                script_file_id.write(f'            --right {files2} \\\n')
             else:
-                if len(read_file_1_list) == 1:
-                    script_file_id.write( '{0}\n'.format('            --single {0} \\'.format(read_file_1_list[0])))
-                else:
-                    for i in range(len(read_file_1_list)):
-                        script_file_id.write( '{0}\n'.format('            --single_list {0} \\'.format(read_file_1_list[0])))
-            script_file_id.write( '{0}\n'.format('            --KMER_SIZE {0} \\'.format(kmer)))
-            script_file_id.write( '{0}\n'.format('            --CPU {0} \\'.format(ncpu)))
-            script_file_id.write( '{0}\n'.format('            --JM {0}G \\'.format(jm)))
-            script_file_id.write( '{0}\n'.format('            --max_cov {0} \\'.format(max_cov)))
+                script_file_id.write(f'            --single {files1} \\\n')
+            script_file_id.write(f'                --JM {jm}G \\\n')
+            script_file_id.write(f'                --max_cov {max_cov} \\\n')
             if other_parameters.upper() != 'NONE':
                 parameter_list = [x.strip() for x in other_parameters.split(';')]
                 for parameter in parameter_list:
@@ -1881,48 +2174,100 @@ def build_insilico_read_normalization_process_script(cluster_name, current_run_d
                         mo = re.search(pattern, parameter)
                         parameter_name = mo.group(1).strip()
                         parameter_value = mo.group(2).strip()
-                        script_file_id.write( '{0}\n'.format('            --{0} {1} \\'.format(parameter_name, parameter_value)))
+                        script_file_id.write(f'                --{parameter_name} {parameter_value} \\\n')
                     else:
                         pattern = r'^--(.+)$'
                         mo = re.search(pattern, parameter)
                         parameter_name = mo.group(1).strip()
-                        script_file_id.write( '{0}\n'.format('            --{0} \\'.format(parameter_name)))
-            script_file_id.write( '{0}\n'.format('            --output {0}'.format(current_run_dir)))
-            script_file_id.write( '{0}\n'.format('    RC=$?'))
-            script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error insilico_read_normalization.pl $RC; fi'))
+                        script_file_id.write(f'                --{parameter_name} \\\n')
+            script_file_id.write(f'                --output {current_run_dir}\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error insilico_read_normalization.pl $RC; fi\n')
+            script_file_id.write( '        conda deactivate\n')
+            script_file_id.write( '        echo "Files are normalized."\n')
+            script_file_id.write( '        touch $STEP_STATUS\n')
+            script_file_id.write( '    fi\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function end'))
+            script_file_id.write( 'function move_normalized_reads\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    END_DATETIME=`date --utc +%s`'))
-            script_file_id.write( '{0}\n'.format('    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`'))
-            script_file_id.write( '{0}\n'.format('    calculate_duration'))
+            script_file_id.write(f'    cd {current_run_dir}\n')
+            script_file_id.write( '    STEP_STATUS=$STATUS_DIR/move_normalized_reads.ok\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "Script ended OK at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."'))
-            script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    RECIPIENT={0}'.format(xconfiguration.get_contact_data())))
-            script_file_id.write( '{0}\n'.format('    SUBJECT="{0}: {1} process"'.format(xlib.get_project_name(), xlib.get_insilico_read_normalization_name())))
-            script_file_id.write( '{0}\n'.format('    MESSAGE="{0}"'.format(xlib.get_mail_message_ok(xlib.get_insilico_read_normalization_name(), cluster_name))))
-            script_file_id.write( '    mail --append "Content-type: text/html;" --append "FROM:root@NGScloud2" --subject="$SUBJECT" "$RECIPIENT" <<< "$MESSAGE"\n')
-            script_file_id.write( '{0}\n'.format('    touch $SCRIPT_STATUS_OK'))
-            script_file_id.write( '{0}\n'.format('    exit 0'))
+            script_file_id.write( '    echo "Moving normalized files to read dataset ..."\n')
+            script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+            script_file_id.write( '        echo "This step was previously run."\n')
+            script_file_id.write( '    else\n')
+            script_file_id.write(f'        mkdir --parents {normalised_read_dir}\n')
+            script_file_id.write(f'        rm left.norm.fq right.norm.fq\n')
+            script_file_id.write(f'        mv *.fq {normalised_read_dir}\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then mv $RC; fi\n')
+            script_file_id.write( '        echo "Files are moved."\n')
+            script_file_id.write( '        touch $STEP_STATUS\n')
+            script_file_id.write( '    fi\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function manage_error'))
+            script_file_id.write( 'function end\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    END_DATETIME=`date --utc +%s`'))
-            script_file_id.write( '{0}\n'.format('    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`'))
-            script_file_id.write( '{0}\n'.format('    calculate_duration'))
+            script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
+            script_file_id.write( '    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
+            script_file_id.write( '    calculate_duration\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "ERROR: $1 returned error $2"'))
-            script_file_id.write( '{0}\n'.format('    echo "Script ended WRONG at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."'))
+            script_file_id.write( '    echo "Script ended OK at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    RECIPIENT={0}'.format(xconfiguration.get_contact_data())))
-            script_file_id.write( '{0}\n'.format('    SUBJECT="{0}: {1} process"'.format(xlib.get_project_name(), xlib.get_insilico_read_normalization_name())))
-            script_file_id.write( '{0}\n'.format('    MESSAGE="{0}"'.format(xlib.get_mail_message_wrong(xlib.get_insilico_read_normalization_name(), cluster_name))))
-            script_file_id.write( '    mail --append "Content-type: text/html;" --append "FROM:root@NGScloud2" --subject="$SUBJECT" "$RECIPIENT" <<< "$MESSAGE"\n')
-            script_file_id.write( '{0}\n'.format('    touch $SCRIPT_STATUS_WRONG'))
-            script_file_id.write( '{0}\n'.format('    exit 3'))
+            script_file_id.write( '    send_mail ok\n')
+            script_file_id.write( '    touch $SCRIPT_STATUS_OK\n')
+            script_file_id.write( '    exit 0\n')
+            script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write( 'function manage_error\n')
+            script_file_id.write( '{\n')
+            script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
+            script_file_id.write( '    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
+            script_file_id.write( '    calculate_duration\n')
+            script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write( '    echo "ERROR: $1 returned error $2"\n')
+            script_file_id.write( '    echo "Script ended WRONG at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
+            script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write( '    send_mail wrong\n')
+            script_file_id.write( '    touch $SCRIPT_STATUS_WRONG\n')
+            script_file_id.write( '    exit 3\n')
+            script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            process_name = f'{xlib.get_insilico_read_normalization_name()} process'
+            mail_message_ok = xlib.get_mail_message_ok(process_name, cluster_name)
+            mail_message_wrong = xlib.get_mail_message_wrong(process_name, cluster_name)
+            script_file_id.write( 'function send_mail\n')
+            script_file_id.write( '{\n')
+            script_file_id.write(f'    SUBJECT="{xlib.get_project_name()}: {process_name}"\n')
+            script_file_id.write( '    if [ "$1" == "ok" ]; then\n')
+            script_file_id.write(f'        MESSAGE="{mail_message_ok}"\n')
+            script_file_id.write( '    elif [ "$1" == "wrong" ]; then\n')
+            script_file_id.write(f'        MESSAGE="{mail_message_wrong}"\n')
+            script_file_id.write( '    else\n')
+            script_file_id.write( '         MESSAGE=""\n')
+            script_file_id.write( '    fi\n')
+            script_file_id.write( '    DESTINATION_FILE=mail-destination.json\n')
+            script_file_id.write( '    echo "{" > $DESTINATION_FILE\n')
+            script_file_id.write(f'    echo "    \\\"ToAddresses\\\":  [\\\"{xconfiguration.get_contact_data()}\\\"]," >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "    \\\"CcAddresses\\\":  []," >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "    \\\"BccAddresses\\\":  []" >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "}" >> $DESTINATION_FILE\n')
+            script_file_id.write( '    MESSAGE_FILE=mail-message.json\n')
+            script_file_id.write( '    echo "{" > $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    \\\"Subject\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Data\\\":  \\\"$SUBJECT\\\"," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    }," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    \\\"Body\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Html\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "            \\\"Data\\\":  \\\"$MESSAGE\\\"," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "            \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        }" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    }" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "}" >> $MESSAGE_FILE\n')
+            script_file_id.write(f'    aws ses send-email --from {xconfiguration.get_contact_data()} --destination file://$DESTINATION_FILE --message file://$MESSAGE_FILE\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function calculate_duration\n')
@@ -1935,10 +2280,12 @@ def build_insilico_read_normalization_process_script(cluster_name, current_run_d
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
-            script_file_id.write( '{0}\n'.format('run_insilico_read_normalization_process'))
+            script_file_id.write( 'run_insilico_read_normalization_process\n')
+            script_file_id.write( 'move_normalized_reads\n')
             script_file_id.write( 'end\n')
     except Exception as e:
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_insilico_read_normalization_process_script()))
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append(f'*** ERROR: The file {get_insilico_read_normalization_process_script()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -1960,15 +2307,70 @@ def build_insilico_read_normalization_process_starter(current_run_dir):
         if not os.path.exists(os.path.dirname(get_insilico_read_normalization_process_starter())):
             os.makedirs(os.path.dirname(get_insilico_read_normalization_process_starter()))
         with open(get_insilico_read_normalization_process_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
-            file_id.write( '{0}\n'.format('#!/bin/bash'))
-            file_id.write( '{0}\n'.format('#-------------------------------------------------------------------------------'))
-            file_id.write( '{0}\n'.format('{0}/{1} &>{0}/{2}'.format(current_run_dir, os.path.basename(get_insilico_read_normalization_process_script()), xlib.get_cluster_log_file())))
+            file_id.write( '#!/bin/bash\n')
+            file_id.write( '#-------------------------------------------------------------------------------\n')
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_insilico_read_normalization_process_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_insilico_read_normalization_process_starter()))
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append(f'*** ERROR: The file {get_insilico_read_normalization_process_starter()} can not be created')
         OK = False
 
     # return the control variable and the error list
     return (OK, error_list)
+
+#-------------------------------------------------------------------------------
+
+def restart_insilico_read_normalization_process(cluster_name, experiment_id, result_dataset_id, log, function=None):
+    '''
+    Restart a insilico_read_normalization process from the last step ended OK.
+    '''
+
+    # initialize the control variable
+    OK = True
+
+    # warn that the log window does not have to be closed
+    if not isinstance(log, xlib.DevStdOut):
+        log.write('This process might take several minutes. Do not close this window, please wait!\n')
+
+    # create the SSH client connection
+    if OK:
+        log.write(f'{xlib.get_separator()}\n')
+        log.write('Connecting the SSH client ...\n')
+        (OK, error_list, ssh_client) = xssh.create_ssh_client_connection(cluster_name)
+        if OK:
+            log.write('The SSH client is connected.\n')
+        else:
+            for error in error_list:
+                log.write(f'{error}\n')
+
+    # get the current run directory
+    if OK:
+        current_run_dir = xlib.get_cluster_experiment_result_dataset_dir(experiment_id, result_dataset_id)
+
+    # submit the script
+    if OK:
+        log.write(f'{xlib.get_separator()}\n')
+        log.write(f'Submitting the process script {current_run_dir}/{os.path.basename(get_insilico_read_normalization_process_starter())} ...\n')
+        OK = xssh.submit_script(cluster_name, ssh_client, current_run_dir, os.path.basename(get_insilico_read_normalization_process_starter()), log)
+
+    # close the SSH client connection
+    if OK:
+        log.write(f'{xlib.get_separator()}\n')
+        log.write('Closing the SSH client connection ...\n')
+        xssh.close_ssh_client_connection(ssh_client)
+        log.write('The connection is closed.\n')
+
+    # warn that the log window can be closed
+    if not isinstance(log, xlib.DevStdOut):
+        log.write(f'{xlib.get_separator()}\n')
+        log.write('You can close this window now.\n')
+
+    # execute final function
+    if function is not None:
+        function()
+
+    # return the control variable
+    return OK
 
 #-------------------------------------------------------------------------------
 
@@ -1978,7 +2380,7 @@ def get_insilico_read_normalization_config_file():
     '''
 
     # assign the insilico_read_normalization config file path
-    insilico_read_normalization_config_file = '{0}/{1}-config.txt'.format(xlib.get_config_dir(), xlib.get_insilico_read_normalization_code())
+    insilico_read_normalization_config_file = f'{xlib.get_config_dir()}/{xlib.get_insilico_read_normalization_code()}-config.txt'
 
     # return the insilico_read_normalization config file path
     return insilico_read_normalization_config_file
@@ -1991,7 +2393,7 @@ def get_insilico_read_normalization_process_script():
     '''
 
     # assign the insilico_read_normalization script path
-    insilico_read_normalization_process_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_insilico_read_normalization_code())
+    insilico_read_normalization_process_script = f'{xlib.get_temp_dir()}/{xlib.get_insilico_read_normalization_code()}-process.sh'
 
     # return the insilico_read_normalization script path
     return insilico_read_normalization_process_script
@@ -2004,7 +2406,7 @@ def get_insilico_read_normalization_process_starter():
     '''
 
     # assign the insilico_read_normalization process starter path
-    insilico_read_normalization_process_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_insilico_read_normalization_code())
+    insilico_read_normalization_process_starter = f'{xlib.get_temp_dir()}/{xlib.get_insilico_read_normalization_code()}-process-starter.sh'
 
     # return the insilico_read_normalization starter path
     return insilico_read_normalization_process_starter
@@ -2052,7 +2454,7 @@ def get_alignment_software_code_list():
     Get the code list of "alignment_software".
     '''
 
-    return [xlib.get_star_code(), xlib.get_tophat_code()]
+    return [xlib.get_bowtie2_code(), xlib.get_gsnap_code(), xlib.get_hisat2_code(), xlib.get_star_code(), xlib.get_tophat_code()]
 
 #-------------------------------------------------------------------------------
     
@@ -2061,7 +2463,7 @@ def get_alignment_software_code_list_text():
     Get the code list of "alignment_software" as text.
     '''
 
-    return '{0} ({1}) or {2} ({3})'.format(xlib.get_star_code(), xlib.get_star_name(), xlib.get_tophat_code(), xlib.get_tophat_name())
+    return f'{xlib.get_bowtie2_code()} ({xlib.get_bowtie2_name()}) or {xlib.get_gsnap_code()} ({xlib.get_gsnap_name()}) or {xlib.get_hisat2_code()} ({xlib.get_hisat2_name()}) or {xlib.get_star_code()} ({xlib.get_star_name()}) or {xlib.get_tophat_code()} ({xlib.get_tophat_name()})'
 
 #-------------------------------------------------------------------------------
     

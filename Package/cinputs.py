@@ -128,7 +128,7 @@ def input_access_key_id(default_access_key_id):
     # input and check the access key identification
     while access_key_id == '':
         if default_access_key_id != '':
-            access_key_id = input('Enter the AWS access key id [{0}]: '.format(default_access_key_id))
+            access_key_id = input(f'Enter the AWS access key id [{default_access_key_id}]: ')
             if access_key_id == '':
                 access_key_id = default_access_key_id
         else:
@@ -150,7 +150,7 @@ def input_secret_access_key(default_secret_access_key):
     # input and check the secret access key
     while secret_access_key == '':
         if default_secret_access_key != '':
-            secret_access_key = input('Enter the AWS secret access key [{0}]: '.format(default_secret_access_key[:5] + '*****' + default_secret_access_key[len(default_secret_access_key)-5:]))
+            secret_access_key = input(f'Enter the AWS secret access key [{default_secret_access_key[:5] + "*****" + default_secret_access_key[len(default_secret_access_key)-5:]}]: ')
             if secret_access_key == '':
                 secret_access_key = default_secret_access_key
         else:
@@ -172,7 +172,7 @@ def input_user_id(default_user_id):
     # input and check the user identification
     while user_id == '':
         if default_user_id != '':
-            user_id = input('Enter the AWS user id [{0}]: '.format(default_user_id))
+            user_id = input(f'Enter the AWS user id [{default_user_id}]: ')
             if user_id == '':
                 user_id = default_user_id
         else:
@@ -194,11 +194,11 @@ def input_email(default_email):
     # input and check the contact e-mail address
     while email == '':
         if default_email != '':
-            email = input('Enter the contact e-mail [{0}]: '.format(default_email))
+            email = input(f'Enter the contact e-mail [{default_email}]: ')
             if email == '':
                 email = default_email
             elif not xlib.is_email_address_valid(email):
-                print('*** ERROR: {0} is not a valid e-mail address.'.format(email))
+                print(f'*** ERROR: {email} is not a valid e-mail address.')
                 email = ''
         else:
             email = input('Enter the contact e-mail: ')
@@ -232,24 +232,25 @@ def input_region_name(default_region_name, help):
 
     # print the available region names
     if OK and help:
-        print('Available region names: {0} ...'.format(str(available_region_names_list).strip('[]').replace('\'','')))
+        available_region_names_list_test = str(available_region_names_list).strip('[]').replace('\'','')
+        print(f'Available region names: {available_region_names_list_test} ...')
 
     # input and check the region name
     if OK:
         while region_name == '':
             if help:
                 if default_region_name != '':
-                    region_name = input('... Enter the region name [{0}]: '.format(default_region_name))
+                    region_name = input(f'... Enter the region name [{default_region_name}]: ')
                 else:
                     region_name = input('... Enter the region name: ')
                 if region_name == '':
                     region_name = default_region_name
                 elif region_name not in available_region_names_list:
-                    print('*** ERROR: {0} is not available.'.format(region_name))
+                    print(f'*** ERROR: {region_name} is not available.')
                     region_name = ''
             else:
                 if default_region_name != '':
-                    region_name = input('Enter the region name [{0}]: '.format(default_region_name))
+                    region_name = input(f'Enter the region name [{default_region_name}]: ')
                 else:
                     region_name = input('Enter the region name: ')
                 if region_name == '':
@@ -284,24 +285,25 @@ def input_zone_name(region_name, default_zone_name, help):
 
     # print the available zone names
     if OK and help:
-        print('Available zone names: {0} ... '.format(str(available_zone_names_list).strip('[]').replace('\'','')))
+        available_zone_names_list_test = str(available_zone_names_list).strip('[]').replace('\'','')
+        print(f'Available region names: {available_zone_names_list_test} ...')
 
     # input and check the zone name
     if OK:
         while zone_name == '':
             if help:
                 if default_zone_name != '':
-                    zone_name = input('... Enter the zone name [{0}]: '.format(default_zone_name))
+                    zone_name = input(f'... Enter the zone name [{default_zone_name}]: ')
                 else:
                     zone_name = input('... Enter the zone name: ')
                 if zone_name == '':
                     zone_name = default_zone_name
                 elif zone_name not in available_zone_names_list:
-                    print('*** ERROR: {0} is not available.'.format(zone_name))
+                    print(f'*** ERROR: {zone_name} is not available.')
                     zone_name = ''
             else:
                 if default_zone_name != '':
-                    zone_name = input('Enter the zone name [{0}]: '.format(default_zone_name))
+                    zone_name = input(f'Enter the zone name [{default_zone_name}]: ')
                 else:
                     zone_name = input('Enter the zone name: ')
                 if zone_name == '':
@@ -329,14 +331,14 @@ def input_instance_type(cluster_mode, help):
         for key in sorted(instance_type_dict.keys()):
             instance_type_list.append(instance_type_dict[key]['id'])
 
-    # print the defined templates
+    # print instance types
     if help:
         # set data width
         id_width = 12
         vcpu_width = 4
         memory_width = 12
         use_width = 17
-        # set line template
+        # set line
         line = '{0:' + str(id_width) + '} {1:' + str(vcpu_width) + '} {2:' + str(memory_width) + '} {3:' + str(use_width) + '}'
         # print header
         print('Available instance types:')
@@ -353,7 +355,7 @@ def input_instance_type(cluster_mode, help):
         if help:
             instance_type = input('... Enter the instance type: ')
             if instance_type not in instance_type_list:
-                print('*** ERROR: {0} is not available.'.format(instance_type))
+                print(f'*** ERROR: {instance_type} is not available.')
                 instance_type = ''
         else:
             instance_type = input('Enter the instance type: ')
@@ -387,20 +389,21 @@ def input_cluster_name(volume_creator_included, help):
 
     # print the running clusters
     if OK and help:
-        print('Running clusters: {0} ...'.format(str(clusters_running_list).strip('[]').replace('\'','')))
+        clusters_running_list_text = str(clusters_running_list).strip('[]').replace('\'','')
+        print(f'Running clusters: {clusters_running_list_text} ...')
 
     # input and check the cluster name
     if OK:
         while cluster_name == '':
             if help:
                 if default_cluster_name != '':
-                    cluster_name = input('... Enter the cluster name [{0}]: '.format(default_cluster_name))
+                    cluster_name = input(f'... Enter the cluster name [{default_cluster_name}]: ')
                 else:
                     cluster_name = input('... Enter the cluster name: ')
                 if cluster_name == '':
                     cluster_name = default_cluster_name
                 elif cluster_name not in clusters_running_list:
-                    print('*** ERROR: {0} is not running.'.format(cluster_name))
+                    print(f'*** ERROR: {cluster_name} is not running.')
                     cluster_name = ''
             else:
                 cluster_name = input('Enter the cluster name: ')
@@ -433,7 +436,8 @@ def input_node_name(cluster_name, new, is_master_valid, help):
     # print the running nodes
     if OK:
         if help:
-            print('Running nodes: {0} ...'.format(str(valid_node_name_list).strip('[]').replace('\'','')))
+            valid_node_name_list_text = str(valid_node_name_list).strip('[]').replace('\'','')
+            print(f'Running nodes: {valid_node_name_list_text} ...')
 
     # input and check the node name
     if OK:
@@ -447,13 +451,13 @@ def input_node_name(cluster_name, new, is_master_valid, help):
                 print(f'*** ERROR: {node_name} is not a node name valid.')
                 node_name = ''
             elif not node_name.isalnum() or not node_name[0].isalpha():
-                print('*** ERROR: {0} is not an alphanumeric string or the first character is not alphabetic'.format(node_name))
+                print(f'*** ERROR: {node_name} is not an alphanumeric string or the first character is not alphabetic')
                 node_name = ''
             elif new and node_name in running_node_name_list:
-                print('*** ERROR: {0} is already running..'.format(node_name))
+                print(f'*** ERROR: {node_name} is already running..')
                 node_name = ''
             elif not new and node_name not in running_node_name_list:
-                print('*** ERROR: {0} is not running.'.format(node_name))
+                print(f'*** ERROR: {node_name} is not running.')
                 node_name = ''
 
     # return the node name
@@ -483,7 +487,8 @@ def input_volume_name(text, zone_name, type, allowed_none, help):
 
     # print the available volumes
     if OK and help:
-        print('Available volume names: {0} ...'.format(str(volume_name_list).strip('[]').replace('\'','')))
+        volume_name_list_text = str(volume_name_list).strip('[]').replace('\'','')
+        print(f'Available volume names: {volume_name_list_text} ...')
 
     # input and check the volume name
     if OK:
@@ -524,11 +529,11 @@ def input_device_file(node_name, volume_name):
 
     # input and check the device file
     while device_file == '':
-        device_file = input('Enter the device file of {0} where {1} is going to be attached [{2}]: '.format(node_name, volume_name, default_device_file))
+        device_file = input(f'Enter the device file of {node_name} where {volume_name} is going to be attached [{default_device_file}]: ')
         if device_file == '':
             device_file = default_device_file
         elif not xlib.is_device_file(device_file, device_file_pattern):
-            print('***ERROR: The device file has to have a pattern {0}'.format(device_file_pattern))
+            print(f'***ERROR: The device file has to have a pattern {device_file_pattern}')
             device_file = ''
 
    # return the defice file
@@ -542,27 +547,53 @@ def input_local_dir(files_type):
     '''
 
     # initialize the local directory path
-    local_dir = ''
+    local_dir_path = ''
 
     # set the input message text
     if files_type == 'reference':
-        message_text = 'Enter the local directory where the reference files are: '
+        message_text = 'Enter the local directory path where the reference files are: '
     if files_type == 'database':
-        message_text = 'Enter the local directory where the built database files are: '
+        message_text = 'Enter the local directory path where the built database files are: '
     elif files_type == 'read':
-        message_text = 'Enter the local directory where the read files are: '
+        message_text = 'Enter the local directory path where the read files are: '
     elif files_type == 'result':
-        message_text = 'Enter the local directory where the result files will be download: '
+        message_text = 'Enter the local directory path where the result files will be download: '
 
     # input and check the local directory path
-    while local_dir == '':
-        local_dir = input(message_text)
-        if not os.path.isdir(local_dir):
-            print('***ERROR: The directory {0} does not exist.'.format(local_dir))
-            local_dir = ''
+    while local_dir_path == '':
+        local_dir_path = input(message_text)
+        if not os.path.isdir(local_dir_path):
+            print(f'***ERROR: The directory {local_dir_path} does not exist.')
+            local_dir_path = ''
 
    # return the local directory path
-    return local_dir
+    return local_dir_path
+
+#-------------------------------------------------------------------------------
+
+def input_local_file_path(file_type):
+    '''
+    Input a local file path.
+    '''
+
+    # initialize the local file path
+    local_file_path = ''
+
+    # set the input message text
+    if file_type == 'RADdesigner-conditions':
+        message_text = 'Enter the local file path with RADdesigner conditions: '
+    elif file_type == 'RADdesigner-samples':
+        message_text = 'Enter the local file path with RADdesigner samples: '
+
+    # input and check the local file path
+    while local_file_path == '':
+        local_file_path = input(message_text)
+        if not os.path.isfile(local_file_path):
+            print(f'***ERROR: The file {local_file_path} does not exist.')
+            local_file_path = ''
+
+   # return the local file path
+    return local_file_path
 
 #-------------------------------------------------------------------------------
 
@@ -584,7 +615,7 @@ def input_cluster_directory(files_type):
     while directoy_path == '':
         directoy_path = input(message_text)
         if not xlib.is_valid_path(directoy_path):
-            print('***ERROR: The directory {0} is not valid.'.format(directoy_path))
+            print(f'***ERROR: The directory {directoy_path} is not valid.')
             directoy_path = ''
 
    # return the directory path
@@ -602,9 +633,9 @@ def input_mount_path(node_name):
 
     # input and check the mount path
     while mount_path == '':
-        mount_path = input('Enter the mount path in {0}: '.format(node_name))
+        mount_path = input(f'Enter the mount path in {node_name}: ')
         if not xlib.is_absolute_path(mount_path, 'linux'):
-            print('***ERROR: {0} is not an absolute path.'.format(mount_path))
+            print(f'***ERROR: {mount_path} is not an absolute path.')
             mount_path = ''
 
    # return the mount path
@@ -614,7 +645,7 @@ def input_mount_path(node_name):
 
 def input_mounting_point():
     '''
-    Input a mounting point of a volume in the cluster templates.
+    Input a mounting point of a volume in the cluster.
     '''
 
     # get mounting points list
@@ -622,7 +653,8 @@ def input_mounting_point():
 
     # print the available volumes
     if help:
-        print('Available mounting points: {0} ...'.format(str(mounting_points_list).strip('[]').replace('\'','')))
+        mounting_points_list_text = str(mounting_points_list).strip('[]').replace('\'','')
+        print(f'Available mounting points: {mounting_points_list_text} ...')
 
     # initialize the mounting poing
     mounting_point = ''
@@ -631,7 +663,7 @@ def input_mounting_point():
     while mounting_point == '':
         mounting_point = input('... Enter the mounting point: ')
         if mounting_point not in mounting_points_list:
-            print('*** ERROR: {0} is not valid.'.format(mounting_point))
+            print(f'*** ERROR: {mounting_point} is not valid.')
             mounting_point = ''
 
    # return the mounting point
@@ -655,7 +687,7 @@ def input_reference_dataset_id(ssh_client, allowed_none, help):
 
     # get the reference dataset identifications
     if help:
-        command = 'ls {0}'.format(xlib.get_cluster_reference_dir())
+        command = f'ls {xlib.get_cluster_reference_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
@@ -666,7 +698,8 @@ def input_reference_dataset_id(ssh_client, allowed_none, help):
     # print the reference identifications in the clusters
     if OK and help:
         if reference_dataset_id_list != []:
-            print('Reference dataset ids existing in the cluster: {0} ...'.format(str(reference_dataset_id_list).strip('[]').replace('\'','')))
+            reference_dataset_id_list_text = str().strip('[]').replace('\'','')
+            print(f'Reference dataset ids existing in the cluster: {reference_dataset_id_list_text} ...')
         else:
             OK = False
 
@@ -681,7 +714,7 @@ def input_reference_dataset_id(ssh_client, allowed_none, help):
                 else:
                     reference_dataset_id = input('... Enter the reference dataset id: ')
                 if reference_dataset_id not in reference_dataset_id_list:
-                    print('*** ERROR: {0} does not exist.'.format(reference_dataset_id))
+                    print(f'*** ERROR: {reference_dataset_id} does not exist.')
                     reference_dataset_id = ''
             else:
                 reference_dataset_id = input('Enter the reference dataset id: ')
@@ -710,7 +743,7 @@ def input_reference_file(ssh_client, reference_dataset_id, help):
 
     # get the reference files of the reference dataset identification
     if help:
-        command = 'find {0} -maxdepth 1 -type f'.format(xlib.get_cluster_reference_dataset_dir(reference_dataset_id))
+        command = f'find {xlib.get_cluster_reference_dataset_dir(reference_dataset_id)} -maxdepth 1 -type f'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
@@ -721,7 +754,8 @@ def input_reference_file(ssh_client, reference_dataset_id, help):
     # print the files in the clusters
     if OK and help:
         if file_list != []:
-            print('Files existing in the reference dataset: {0} ...'.format(str(file_list).strip('[]').replace('\'','')))
+            file_list_text = str(file_list).strip('[]').replace('\'','')
+            print(f'Files existing in the reference dataset: {file_list_text} ...')
         else:
             OK = False
 
@@ -731,7 +765,7 @@ def input_reference_file(ssh_client, reference_dataset_id, help):
             if help:
                 reference_file = input('... Enter the reference file: ')
                 if reference_file not in file_list:
-                    print('*** ERROR: {0} does not exist.'.format(reference_file))
+                    print(f'*** ERROR: {reference_file} does not exist.')
                     reference_file = ''
             else:
                 reference_file = input('Enter the reference file: ')
@@ -760,7 +794,7 @@ def input_transcriptome_file(ssh_client, reference_dataset_id, help):
 
     # get the files of the reference dataset identification
     if help:
-        command = 'find {0} -maxdepth 1 -type f'.format(xlib.get_cluster_reference_dataset_dir(reference_dataset_id))
+        command = f'find {xlib.get_cluster_reference_dataset_dir(reference_dataset_id)} -maxdepth 1 -type f'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
@@ -771,7 +805,8 @@ def input_transcriptome_file(ssh_client, reference_dataset_id, help):
     # print the files in the clusters
     if OK and help:
         if file_list != []:
-            print('Files existing in the reference dataset: {0} ...'.format(str(file_list).strip('[]').replace('\'','')))
+            file_list_text = str(file_list).strip('[]').replace('\'','')
+            print(f'Files existing in the reference dataset: {file_list_text} ...')
         else:
             OK = False
 
@@ -781,7 +816,7 @@ def input_transcriptome_file(ssh_client, reference_dataset_id, help):
             if help:
                 transcriptome_file = input('... Enter the transcriptome file: ')
                 if transcriptome_file not in file_list:
-                    print('*** ERROR: {0} does not exist.'.format(transcriptome_file))
+                    print(f'*** ERROR: {transcriptome_file} does not exist.')
                     transcriptome_file = ''
             else:
                 transcriptome_file = input('Enter the transcriptome file: ')
@@ -810,7 +845,7 @@ def input_gtf_file(ssh_client, reference_dataset_id, help):
 
     # get the GTF files of the reference dataset identification
     if help:
-        command = 'find {0} -maxdepth 1 -type f'.format(xlib.get_cluster_reference_dataset_dir(reference_dataset_id))
+        command = f'find {xlib.get_cluster_reference_dataset_dir(reference_dataset_id)} -maxdepth 1 -type f'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
@@ -821,7 +856,8 @@ def input_gtf_file(ssh_client, reference_dataset_id, help):
     # print the GTF files in the clusters
     if OK and help:
         if gtf_file_list != []:
-            print('GTF files existing in the reference dataset: {0} ...'.format(str(gtf_file_list).strip('[]').replace('\'','')))
+            gtf_file_list_text = str(gtf_file_list).strip('[]').replace('\'','')
+            print(f'GTF files existing in the reference dataset: {gtf_file_list_text} ...')
         else:
             OK = False
 
@@ -831,7 +867,7 @@ def input_gtf_file(ssh_client, reference_dataset_id, help):
             if help:
                 gtf_file = input('... Enter the GTF file: ')
                 if gtf_file not in gtf_file_list:
-                    print('*** ERROR: {0} does not exist.'.format(gtf_file))
+                    print(f'*** ERROR: {gtf_file} does not exist.')
                     gtf_file = ''
             else:
                 gtf_file = input('Enter the GTF file: ')
@@ -860,7 +896,7 @@ def input_reference_file2(ssh_client, reference_dataset_id, type, allowed_none, 
 
     # get the splice site files of the reference dataset identification
     if help:
-        command = 'find {0} -maxdepth 1 -type f'.format(xlib.get_cluster_reference_dataset_dir(reference_dataset_id))
+        command = f'find {xlib.get_cluster_reference_dataset_dir(reference_dataset_id)} -maxdepth 1 -type f'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
@@ -871,7 +907,8 @@ def input_reference_file2(ssh_client, reference_dataset_id, type, allowed_none, 
     # print the GTF files in the clusters
     if OK and help:
         if file_list != []:
-            print('Files existing in the reference dataset: {0} ...'.format(str(file_list).strip('[]').replace('\'','')))
+            file_list_text = str(file_list).strip('[]').replace('\'','')
+            print(f'Files existing in the reference dataset: {file_list_text} ...')
         else:
             OK = False
 
@@ -882,19 +919,19 @@ def input_reference_file2(ssh_client, reference_dataset_id, type, allowed_none, 
         while additional_reference_file == '':
             if help:
                 if allowed_none:
-                    additional_reference_file = input('... Enter the {0} file or NONE: '.format(type))
+                    additional_reference_file = input(f'... Enter the {type} file or NONE: ')
                 else:
-                    additional_reference_file = input('... Enter the {0} file: '.format(type))
+                    additional_reference_file = input(f'... Enter the {type} file: ')
                 if additional_reference_file not in file_list:
-                    print('*** ERROR: {0} does not exist.'.format(additional_reference_file))
+                    print(f'*** ERROR: {additional_reference_file} does not exist.')
                     additional_reference_file = ''
             else:
                 if allowed_none:
-                    additional_reference_file = input('Enter the {0} file or NONE: '.format(type))
+                    additional_reference_file = input(f'Enter the {type} file or NONE: ')
                 else:
-                    additional_reference_file = input('Enter the {0} file: '.format(type))
+                    additional_reference_file = input(f'Enter the {type} file: ')
                 if not additional_reference_file.isidentifier():
-                    print('*** ERROR: The {0} file has some non-alphanumeric characters.'.format(type))
+                    print(f'*** ERROR: The {type} file has some non-alphanumeric characters.')
                     additional_reference_file = ''
 
     # return the GTF dataset identification
@@ -918,7 +955,7 @@ def input_database_dataset_id(ssh_client, help):
 
     # get the database dataset identifications
     if help:
-        command = 'ls {0}'.format(xlib.get_cluster_database_dir())
+        command = f'ls {xlib.get_cluster_database_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
@@ -929,7 +966,8 @@ def input_database_dataset_id(ssh_client, help):
     # print the database identifications in the clusters
     if OK and help:
         if database_dataset_id_list != []:
-            print('Database ids existing in the cluster: {0} ...'.format(str(database_dataset_id_list).strip('[]').replace('\'','')))
+            database_dataset_id_list_text = str(database_dataset_id_list).strip('[]').replace('\'','')
+            print(f'Database ids existing in the cluster: {database_dataset_id_list_text} ...')
         else:
             OK = False
 
@@ -939,7 +977,7 @@ def input_database_dataset_id(ssh_client, help):
             if help:
                 database_dataset_id = input('... Enter the database id: ')
                 if database_dataset_id not in database_dataset_id_list:
-                    print('*** ERROR: {0} does not exist.'.format(database_dataset_id))
+                    print(f'*** ERROR: {database_dataset_id} does not exist.')
                     database_dataset_id = ''
             else:
                 database_dataset_id = input('Enter the database id: ')
@@ -968,7 +1006,7 @@ def input_protein_database_name(ssh_client, database_dataset_id, help):
 
     # get the list of the database file names
     if help:
-        command = 'ls {0}/*phr'.format(xlib.get_cluster_database_dataset_dir(database_dataset_id))
+        command = f'ls {xlib.get_cluster_database_dataset_dir(database_dataset_id)}/*phr'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
@@ -993,7 +1031,8 @@ def input_protein_database_name(ssh_client, database_dataset_id, help):
 
     # print the database name in the dataset
     if OK and help:
-        print('Protein databases existing in the dataset: {0} ...'.format(str(protein_database_name_list).strip('[]').replace('\'','')))
+        protein_database_name_list_text = str(protein_database_name_list).strip('[]').replace('\'','')
+        print(f'Protein databases existing in the dataset: {protein_database_name_list_text} ...')
 
     # input and check the protein database name
     if OK:
@@ -1001,7 +1040,7 @@ def input_protein_database_name(ssh_client, database_dataset_id, help):
             if help:
                 protein_database_name = input('... Enter the protein database: ')
                 if protein_database_name not in protein_database_name_list:
-                    print('*** ERROR: {0} does not exist.'.format(protein_database_name))
+                    print(f'*** ERROR: {protein_database_name} does not exist.')
                     protein_database_name = ''
             else:
                 protein_database_name = input('Enter the protein database: ')
@@ -1027,7 +1066,7 @@ def input_experiment_id(ssh_client, help):
 
     # get the experiment/process identifications
     if help:
-        command = 'ls {0}'.format(xlib.get_cluster_result_dir())
+        command = f'ls {xlib.get_cluster_result_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
@@ -1038,7 +1077,8 @@ def input_experiment_id(ssh_client, help):
     # print the experiment/process identifications in the clusters
     if OK and help:
         if experiment_id_list != []:
-            print('Experiment/process ids existing in the cluster: {0} ...'.format(str(experiment_id_list).strip('[]').replace('\'','')))
+            experiment_id_list_text = str(experiment_id_list).strip('[]').replace('\'','')
+            print(f'Experiment/process ids existing in the cluster: {experiment_id_list_text} ...')
         else:
             OK = False
 
@@ -1048,7 +1088,7 @@ def input_experiment_id(ssh_client, help):
             if help:
                 experiment_id = input('... Enter the experiment/process id: ')
                 if experiment_id not in experiment_id_list:
-                    print('*** ERROR: {0} does not exist.'.format(experiment_id))
+                    print(f'*** ERROR: {experiment_id} does not exist.')
                     experiment_id = ''
             else:
                 experiment_id = input('Enter the experiment/process id: ')
@@ -1077,7 +1117,7 @@ def input_read_dataset_id(ssh_client, experiment_id, help):
 
     # get the read dataset identifications of the experiment
     if help:
-        command = 'ls {0}/{1}'.format(xlib.get_cluster_read_dir(), experiment_id)
+        command = f'ls {xlib.get_cluster_read_dir()}/{experiment_id}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
@@ -1086,7 +1126,8 @@ def input_read_dataset_id(ssh_client, experiment_id, help):
     # print the read dataset identifications in the experiment
     if OK and help:
         if read_dataset_id_list != []:
-            print('Read dataset ids existing in the experiment: {0} ...'.format(str(read_dataset_id_list).strip('[]').replace('\'','')))
+            read_dataset_id_list_text = str(read_dataset_id_list).strip('[]').replace('\'','')
+            print(f'Read dataset ids existing in the experiment: {read_dataset_id_list_text} ...')
         else:
             OK = False
 
@@ -1096,7 +1137,7 @@ def input_read_dataset_id(ssh_client, experiment_id, help):
             if help:
                 read_dataset_id = input('... Enter the read dataset id: ')
                 if read_dataset_id not in read_dataset_id_list:
-                    print('*** ERROR: {0} does not exist.'.format(read_dataset_id))
+                    print(f'*** ERROR: {read_dataset_id} does not exist.')
                     read_dataset_id = ''
             else:
                 read_dataset_id = input('Enter the read dataset id: ')
@@ -1118,7 +1159,7 @@ def input_read_type():
     while read_type == '':
         read_type = input('Read type (SE/PE)?: ').upper()
         if read_type not in ['SE', 'PE']:
-            print('*** ERROR: {0} is not SE or PE.'.format(read_type))
+            print(f'*** ERROR: {read_type} is not SE or PE.')
             read_type = ''
 
     # return the read type
@@ -1143,9 +1184,9 @@ def input_result_dataset_id(ssh_client, experiment_id, type, app_list, status, h
     # get the result dataset identifications of the experiment
     if help:
         if status == 'uncompressed':
-            command = 'cd {0}/{1}; for list in `ls`; do ls -ld $list | grep -v ^- > /dev/null && echo $list; done;'.format(xlib.get_cluster_result_dir(), experiment_id)
+            command = f'cd {xlib.get_cluster_result_dir()}/{experiment_id}; for list in `ls`; do ls -ld $list | grep -v ^- > /dev/null && echo $list; done;'
         elif status == 'compressed':
-            command = 'cd {0}/{1}; for list in `ls`; do ls -ld $list | grep -v ^d > /dev/null && echo $list; done;'.format(xlib.get_cluster_result_dir(), experiment_id)
+            command = f'cd {xlib.get_cluster_result_dir()}/{experiment_id}; for list in `ls`; do ls -ld $list | grep -v ^d > /dev/null && echo $list; done;'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
@@ -1157,7 +1198,8 @@ def input_result_dataset_id(ssh_client, experiment_id, type, app_list, status, h
     # print the result dataset identifications in the clusters
     if OK and help:
         if result_dataset_id_list != []:
-            print('{0} dataset ids existing in the experiment: {1} ...'.format(type, str(result_dataset_id_list).strip('[]').replace('\'','')))
+            result_dataset_id_list_text = str(result_dataset_id_list).strip('[]').replace('\'','')
+            print(f'{type} dataset ids existing in the experiment: {result_dataset_id_list_text} ...')
         else:
             OK = False
 
@@ -1165,12 +1207,12 @@ def input_result_dataset_id(ssh_client, experiment_id, type, app_list, status, h
     if OK:
         while result_dataset_id == '':
             if help:
-                result_dataset_id = input('... Enter the {0} dataset id: '.format(type))
+                result_dataset_id = input(f'... Enter the {type} dataset id: ')
                 if result_dataset_id not in result_dataset_id_list:
-                    print('*** ERROR: {0} does not exist.'.format(result_dataset_id))
+                    print(f'*** ERROR: {result_dataset_id} does not exist.')
                     result_dataset_id = ''
             else:
-                result_dataset_id = input('Enter the {0} dataset id: '.format(type))
+                result_dataset_id = input(f'Enter the {type} dataset id: ')
 
     # return the result dataset identification
     return result_dataset_id
@@ -1194,9 +1236,9 @@ def input_result_dataset_id_list(ssh_client, experiment_id, type, app_list, stat
     # get the result dataset identifications of the experiment
     if help:
         if status == 'uncompressed':
-            command = 'cd {0}/{1}; for list in `ls`; do ls -ld $list | grep -v ^- > /dev/null && echo $list; done;'.format(xlib.get_cluster_result_dir(), experiment_id)
+            command = f'cd {xlib.get_cluster_result_dir()}/{experiment_id}; for list in `ls`; do ls -ld $list | grep -v ^- > /dev/null && echo $list; done;'
         elif status == 'compressed':
-            command = 'cd {0}/{1}; for list in `ls`; do ls -ld $list | grep -v ^d > /dev/null && echo $list; done;'.format(xlib.get_cluster_result_dir(), experiment_id)
+            command = f'cd {xlib.get_cluster_result_dir()}/{experiment_id}; for list in `ls`; do ls -ld $list | grep -v ^d > /dev/null && echo $list; done;'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
@@ -1208,7 +1250,8 @@ def input_result_dataset_id_list(ssh_client, experiment_id, type, app_list, stat
     # print the result dataset identifications in the clusters
     if OK and help:
         if all_result_dataset_id_list != []:
-            print('{0} dataset ids existing in the experiment: {1} ...'.format(type, str(all_result_dataset_id_list).strip('[]').replace('\'','')))
+            all_result_dataset_id_list_text = str(all_result_dataset_id_list).strip('[]').replace('\'','')
+            print(f'{type} dataset ids existing in the experiment: {all_result_dataset_id_list_text} ...')
         else:
             OK = False
 
@@ -1217,17 +1260,17 @@ def input_result_dataset_id_list(ssh_client, experiment_id, type, app_list, stat
         result_dataset_id = ''
         while result_dataset_id.upper() != 'END':
             if help:
-                result_dataset_id = input('... Enter the {0} dataset id or END to finish: '.format(type))
+                result_dataset_id = input(f'... Enter the {type} dataset id or END to finish: ')
                 if result_dataset_id.upper() != 'END' and result_dataset_id not in all_result_dataset_id_list:
-                    print('*** ERROR: {0} does not exist.'.format(result_dataset_id))
+                    print(f'*** ERROR: {result_dataset_id} does not exist.')
                     result_dataset_id = ''
             else:
-                result_dataset_id = input('Enter the {0} dataset id or END to finish: '.format(type))
+                result_dataset_id = input(f'Enter the {type} dataset id or END to finish: ')
             if result_dataset_id != '' and result_dataset_id.upper() != 'END':
                 if result_dataset_id not in selected_result_dataset_id_list:
                     selected_result_dataset_id_list.append(result_dataset_id)
                 else:
-                    print('*** ERROR: {0} is already entered.'.format(result_dataset_id))
+                    print(f'*** ERROR: {result_dataset_id} is already entered.')
 
     # sort the list with selected result dataset identifications
     if OK:
@@ -1249,7 +1292,8 @@ def input_assembly_type(help):
 
     # print the assembly types
     if help:
-        print('Available assembly types: {0} ...'.format(str(assembly_type_list).strip('[]').replace('\'','')))
+        assembly_type_list_text = str(assembly_type_list).strip('[]').replace('\'','')
+        print(f'Available assembly types: {assembly_type_list_text} ...')
 
     # initialize the assembly type
     assembly_type = ''
@@ -1259,7 +1303,7 @@ def input_assembly_type(help):
         if help:
             assembly_type = input('... Enter the assembly type: ')
             if assembly_type not in assembly_type_list:
-                print('*** ERROR: {0} is not valid.'.format(assembly_type))
+                print(f'*** ERROR: {assembly_type} is not valid.')
                 assembly_type = ''
         else:
             assembly_type = input('Enter the assembly type: ')
@@ -1286,7 +1330,8 @@ def input_enzyme(enzyme_number, restriction_enzyme_dict, allowed_ambiguity_codes
 
     # print the enzime identifications
     if help:
-        print('Available restriction enzyme ids: {0} ...'.format(str(enzyme_id_list).strip('[]').replace('\'','')))
+        enzyme_id_list_text = str(enzyme_id_list).strip('[]').replace('\'','')
+        print(f'Available restriction enzyme ids: {enzyme_id_list_text} ...')
 
     # initialize the enzyme value
     enzyme = ''
@@ -1294,9 +1339,9 @@ def input_enzyme(enzyme_number, restriction_enzyme_dict, allowed_ambiguity_codes
     # input and check the mounting poing
     while enzyme == '':
         if help:
-            enzyme = input('... Enter the id of {0} restriction enzyme or a restriction site sequence ("*" is the cut point): '.format(enzyme_ordinal))
+            enzyme = input(f'... Enter the id of {enzyme_ordinal} restriction enzyme or a restriction site sequence ("*" is the cut point): ')
             if enzyme not in enzyme_id_list and not xlib.is_valid_sequence(seq=enzyme, allowed_ambiguity_codes=allowed_ambiguity_codes, other_allowed_characters_list=[], cut_tag_check=True):
-                print('*** ERROR: {0} is not valid.'.format(enzyme))
+                print(f'*** ERROR: {enzyme} is not valid.')
                 enzyme = ''
         else:
             enzyme = input('Enter the enzyme: ')
@@ -1317,14 +1362,14 @@ def input_files_pattern(default_file_pattern):
     # input and check the file pattern
     while file_pattern == '':
         if default_file_pattern != '':
-            file_pattern = input('Enter a file pattern [{0}]: '.format(default_file_pattern))
+            file_pattern = input(f'Enter a file pattern [{default_file_pattern}]: ')
             if file_pattern == '':
                 file_pattern = default_file_pattern
         else:
             file_pattern = input('Enter a file pattern: ')
         try:
             re.compile(file_pattern)
-        except Exception as e:
+        except:
             print('Invalid pattern. It has to be a valid regular expression.')
             file_pattern = ''
 
@@ -1344,11 +1389,11 @@ def input_file_pairing_specific_chars(file_order, default_specific_chars):
     # input and check the file specific characters
     while specific_chars == '':
         if default_specific_chars != '':
-            specific_chars = input('Enter file #{0} specific chars [{1}]: '.format(file_order, default_specific_chars))
+            specific_chars = input(f'Enter file #{file_order} specific chars [{default_specific_chars}]: ')
             if specific_chars == '':
                 specific_chars = default_specific_chars
         else:
-            specific_chars = input('Enter file #{0} specific chars: '.format(file_order))
+            specific_chars = input(f'Enter file #{file_order} specific chars: ')
 
    # return the specific characters
     return specific_chars
@@ -1365,7 +1410,8 @@ def input_assembly_origin(help):
 
     # print the assembly origins
     if help:
-        print('Available assembly origins: {0} ...'.format(str(assembly_origin_list).strip('[]').replace('\'','')))
+        assembly_origin_list_text = str(assembly_origin_list).strip('[]').replace('\'','')
+        print(f'Available assembly origins: {assembly_origin_list_text} ...')
 
     # initialize the assembly origin
     assembly_origin = ''
@@ -1375,7 +1421,7 @@ def input_assembly_origin(help):
         if help:
             assembly_origin = input('... Enter the assembly origin: ')
             if assembly_origin not in assembly_origin_list:
-                print('*** ERROR: {0} is not valid.'.format(assembly_origin))
+                print(f'*** ERROR: {assembly_origin} is not valid.')
                 assembly_origin = ''
         else:
             assembly_origin = input('Enter the assembly origin: ')
@@ -1405,13 +1451,15 @@ def input_database_list(candidate_database_list, last_database):
 
         # input a candidate database
         if order_number == 1:
-            print('All candidate databases: {0} ...'.format(str(candidate_database_list).strip('[]').replace('\'','')))
-            print('(if {0} is selected, it has to be the last)'.format(last_database))
-            database = input('Enter the database {0}: '.format(order_number))
+            candidate_database_list_text = str(candidate_database_list).strip('[]').replace('\'','')
+            print(f'All candidate databases: {candidate_database_list_text} ...')
+            print(f'(if {last_database} is selected, it has to be the last)')
+            database = input(f'Enter the database {order_number}: ')
         else:
-            print('Remaining candidate databases: {0} ...'.format(str(candidate_database_list).strip('[]').replace('\'','')))
-            print('(if {0} is selected, it has to be the last)'.format(last_database))
-            database = input('Enter the database {0} or END to finish: '.format(order_number))
+            candidate_database_list_text = str(candidate_database_list).strip('[]').replace('\'','')
+            print(f'Remaining candidate databases: {candidate_database_list_text} ...')
+            print(f'(if {last_database} is selected, it has to be the last)')
+            database = input(f'Enter the database {order_number} or END to finish: ')
         if database != '' and database.upper() != 'END':
             if database in candidate_database_list:
                 selected_database_list.append(database)
@@ -1420,7 +1468,7 @@ def input_database_list(candidate_database_list, last_database):
                 if database == last_database:
                     database = 'END'
             else:
-                print('*** ERROR: {0} is not in candidate database list.'.format(database))
+                print(f'*** ERROR: {database} is not in candidate database list.')
         elif database.upper() == 'END' and order_number == 1:
             database = ''
             print('*** ERROR: You have to input at least one database.')
@@ -1465,20 +1513,20 @@ def input_batch_job_id(ssh_client, help):
         state_width = 15
         start_date_width = 10
         start_time_width = 10
-        # set line template
-        line_template = '{0:' + str(job_id_width) + '} {1:' + str(job_name_width) + '} {2:' + str(state_width) + '} {3:' + str(start_date_width) + '} {4:' + str(start_time_width) + '}'
+        # set line
+        line = '{0:' + str(job_id_width) + '} {1:' + str(job_name_width) + '} {2:' + str(state_width) + '} {3:' + str(start_date_width) + '} {4:' + str(start_time_width) + '}'
         # print header
         print('Batch jobs:')
         print()
-        print(line_template.format('Job id', 'Job name', 'State', 'Start date', 'Start time'))
-        print(line_template.format('=' * job_id_width, '=' * job_name_width, '=' * state_width, '=' * start_date_width, '=' * start_time_width))
+        print(line.format('Job id', 'Job name', 'State', 'Start date', 'Start time'))
+        print(line.format('=' * job_id_width, '=' * job_name_width, '=' * state_width, '=' * start_date_width, '=' * start_time_width))
         # print detail lines
         for job_id in batch_job_id_list:
             job_name = batch_job_dict[job_id]['job_name']
             state = batch_job_dict[job_id]['state']
             start_date = batch_job_dict[job_id]['start_date']
             start_time = batch_job_dict[job_id]['start_time']
-            print(line_template.format(job_id, job_name, state, start_date, start_time))
+            print(line.format(job_id, job_name, state, start_date, start_time))
         print()
 
     # input and check the batch job identification
@@ -1487,7 +1535,7 @@ def input_batch_job_id(ssh_client, help):
             if help:
                 batch_job_id = input('... Enter the batch job id: ')
                 if batch_job_id not in batch_job_id_list:
-                    print('*** ERROR: {0} is not an id of a batch job.'.format(batch_job_id))
+                    print(f'*** ERROR: {batch_job_id} is not an id of a batch job.')
                     batch_job_id = ''
             else:
                 batch_job_id = input('Enter the batch job id: ')
@@ -1503,7 +1551,7 @@ def input_bioinfoapp_version(name):
     '''
 
     # warm about the use of a previous version
-    print ('{0} is designed to use the last version of {1} and its parameters. The use of some parameter in some previous versions could cause a malfunction.'.format(xlib.get_project_name(), name))
+    print (f'{xlib.get_project_name()} is designed to use the last version of {name} and its parameters. The use of some parameter in some previous versions could cause a malfunction.')
 
     # input and check the version
     version = input('Version (last or especific identification) [last]?: ')
@@ -1531,7 +1579,8 @@ def input_submission_log_file():
 
     # print the submission log file list in the local computer
     if submission_log_file_list != []:
-        print('Submission log files: {0} ...'.format(str(submission_log_file_list).strip('[]').replace('\'','')))
+        submission_log_file_list_text = str(submission_log_file_list).strip('[]').replace('\'','')
+        print(f'Submission log files: {submission_log_file_list_text} ...')
     else:
         OK = False
 
@@ -1540,7 +1589,7 @@ def input_submission_log_file():
         while submission_log_file == '':
             submission_log_file = input('... Enter the submission log file: ')
             if submission_log_file not in submission_log_file_list:
-                print('*** ERROR: {0} does not exist.'.format(submission_log_file))
+                print(f'*** ERROR: {submission_log_file} does not exist.')
                 submission_log_file = ''
 
     # return the submission log file

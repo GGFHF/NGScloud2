@@ -70,7 +70,7 @@ def create_gzip_config_file(action='compress', dataset_type='read', experiment_i
             os.makedirs(os.path.dirname(get_gzip_config_file(dataset_type)))
         with open(get_gzip_config_file(dataset_type), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '{0}\n'.format('# This section has the information identifies the dataset.'))
-            file_id.write( '{0}\n'.format('[identification]'))
+            file_id.write( '[identification]\n')
             value = 'NONE' if dataset_type == 'reference' else experiment_id
             comment = 'It has to be always NONE' if dataset_type == 'reference' else 'experiment identification'
             file_id.write( '{0:<50} {1}\n'.format('experiment_id = {0}'.format(value), '# {0}'.format(comment)))
@@ -91,8 +91,9 @@ def create_gzip_config_file(action='compress', dataset_type='read', experiment_i
                     if i == 0:
                         file_id.write( '\n')
                         file_id.write( '{0}\n'.format('# If there are more files, you have to repeat the section file-1 with the data of each file.'))
-                        file_id.write( '{0}\n'.format('# The section identification has to be library-n (n is an integer not repeated)'))
+                        file_id.write( '# The section identification has to be library-n (n is an integer not repeated)\n')
     except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append('*** ERROR: The file {0} can not be recreated'.format(get_gzip_config_file(dataset_type)))
         OK = False
 
@@ -177,7 +178,7 @@ def run_gzip_process(cluster_name, dataset_type, log, function=None):
     if OK:
         (master_state_code, master_state_name) = xec2.get_node_state(cluster_name)
         if master_state_code != 16:
-            log.write('*** ERROR: The cluster {0} is not running. Its state is {1} ({2}).\n'.format(cluster_name, master_state_code, master_state_name))
+            log.write(f'*** ERROR: The cluster {cluster_name} is not running. Its state is {master_state_code} ({master_state_name}).\n')
             OK = False
 
     # warn that the requirements are OK 
@@ -197,7 +198,7 @@ def run_gzip_process(cluster_name, dataset_type, log, function=None):
         command = f'mkdir --parents {current_run_dir}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
-            log.write('The directory path is {0}.\n'.format(current_run_dir))
+            log.write(f'The directory path is {current_run_dir}.\n')
         else:
             log.write(f'*** ERROR: Wrong command ---> {command}\n')
 
@@ -214,7 +215,7 @@ def run_gzip_process(cluster_name, dataset_type, log, function=None):
     # upload the gzip process script to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process script {0} to the directory {1} of the master ...\n'.format(gzip_process_script, current_run_dir))
+        log.write('Uploading the process script {0} to the directory {1} ...\n'.format(gzip_process_script, current_run_dir))
         cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(gzip_process_script))
         (OK, error_list) = xssh.put_file(sftp_client, gzip_process_script, cluster_path)
         if OK:
@@ -247,7 +248,7 @@ def run_gzip_process(cluster_name, dataset_type, log, function=None):
     # upload the gzip process starter to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process starter {0} to the directory {1} of the master ...\n'.format(gzip_process_starter, current_run_dir))
+        log.write('Uploading the process starter {0} to the directory {1} ...\n'.format(gzip_process_starter, current_run_dir))
         cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(gzip_process_starter))
         (OK, error_list) = xssh.put_file(sftp_client, gzip_process_starter, cluster_path)
         if OK:
@@ -317,7 +318,8 @@ def check_gzip_config_file(dataset_type, strict):
     try:
         gzip_option_dict = xlib.get_option_dict(get_gzip_config_file(dataset_type))
     except Exception as e:
-        error_list.append('*** ERROR: The syntax is WRONG.')
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append('*** ERROR: The option dictionary could not be built from the config file')
         OK = False
     else:
 
@@ -393,7 +395,7 @@ def check_gzip_config_file(dataset_type, strict):
 
                     # check than the section identification is like file-n 
                     if not re.match('^file-[0-9]+$', section):
-                        error_list.append('*** ERROR: the section "{0}" has a wrong identification.'.format(section))
+                        error_list.append(f'*** ERROR: the section "{section}" has a wrong identification.')
                         OK = False
 
                     else:
@@ -482,13 +484,15 @@ def build_gzip_process_script(cluster_name, dataset_type, current_run_dir):
             script_file_id.write( 'SEP="#########################################"\n')
             script_file_id.write( 'export HOST_IP=`curl --silent checkip.amazonaws.com`\n')
             script_file_id.write( 'export HOST_ADDRESS="ec2-${HOST_IP//./-}-compute-1.amazonaws.com"\n')
+            script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
+            script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('STATUS_DIR={0}'.format(xlib.get_status_dir(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('SCRIPT_STATUS_OK={0}'.format(xlib.get_status_ok(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('SCRIPT_STATUS_WRONG={0}'.format(xlib.get_status_wrong(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('mkdir --parents $STATUS_DIR'))
-            script_file_id.write( '{0}\n'.format('if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi'))
-            script_file_id.write( '{0}\n'.format('if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi'))
+            script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
+            script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
+            script_file_id.write(f'SCRIPT_STATUS_WRONG={xlib.get_status_wrong(current_run_dir)}\n')
+            script_file_id.write( 'mkdir --parents $STATUS_DIR\n')
+            script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
+            script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function init\n')
             script_file_id.write( '{\n')
@@ -498,76 +502,107 @@ def build_gzip_process_script(cluster_name, dataset_type, current_run_dir):
             script_file_id.write( '    echo "Script started at $FORMATTED_INIT_DATETIME+00:00."\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write(f'    echo "CLUSTER: {cluster_name}"\n')
-            script_file_id.write(f'    echo "HOST_IP: $HOST_IP - HOST_ADDRESS: $HOST_ADDRESS"\n')
+            script_file_id.write( '    echo "HOST NAME: $HOSTNAME"\n')
+            script_file_id.write( '    echo "HOST IP: $HOST_IP"\n')
+            script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( '{0}\n'.format('function run_gzip_process'))
             script_file_id.write( '{\n')
             if dataset_type_2 in ['reference', 'database', 'read', 'result']:
-                script_file_id.write( '{0}\n'.format('    cd {0}'.format(current_run_dir)))
+                script_file_id.write(f'    cd {current_run_dir}\n')
                 for i in range(len(dataset_subdirectory_list)):
                     script_file_id.write( '    echo "$SEP"\n')
                     script_file_id.write( '{0}\n'.format('    echo "Compressing/decompressing {0}/{1}/{2} ..."'.format(dataset_dir, dataset_subdirectory_list[i], file_name_list[i])))
-                    script_file_id.write( '{0}\n'.format('    /usr/bin/time \\'))
+                    script_file_id.write( '    /usr/bin/time \\\n')
                     script_file_id.write( '{0}\n'.format('        --format="Elapsed real time (s): %e\\nCPU time in kernel mode (s): %S\\nCPU time in user mode (s): %U\\nPercentage of CPU: %P\\nMaximum resident set size(Kb): %M\\nAverage total memory use (Kb):%K" \\'))
                     if action == 'compress':
                         script_file_id.write( '{0}\n'.format('        gzip {0}/{1}/{2}'.format(dataset_dir, dataset_subdirectory_list[i], file_name_list[i])))
                     elif action == 'decompress':
                         script_file_id.write( '{0}\n'.format('        gzip --decompress {0}/{1}/{2}'.format(dataset_dir, dataset_subdirectory_list[i], file_name_list[i])))
-                    script_file_id.write( '{0}\n'.format('    RC=$?'))
+                    script_file_id.write( '    RC=$?\n')
                     script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error gzip $RC; fi'))
             elif dataset_type_2 == 'whole-result':
-                script_file_id.write( '{0}\n'.format('    cd {0}'.format(current_run_dir)))
+                script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
                 script_file_id.write( '{0}\n'.format('    echo "Compressing/decompressing {0} ..."'.format(dataset_dir)))
-                script_file_id.write( '{0}\n'.format('    /usr/bin/time \\'))
+                script_file_id.write( '    /usr/bin/time \\\n')
                 script_file_id.write( '{0}\n'.format('        --format="Elapsed real time (s): %e\\nCPU time in kernel mode (s): %S\\nCPU time in user mode (s): %U\\nPercentage of CPU: %P\\nMaximum resident set size(Kb): %M\\nAverage total memory use (Kb):%K" \\'))
                 if action == 'compress':
                     script_file_id.write( '{0}\n'.format('        tar --create --gzip --verbose --file={0}.tar.gz {0}'.format(dataset_dir)))
                 elif action == 'decompress':
                     script_file_id.write( '{0}\n'.format('        tar --extract --gzip --verbose --file={0} --directory=/'.format(dataset_dir)))
-                script_file_id.write( '{0}\n'.format('    RC=$?'))
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error tar $RC; fi'))
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error tar $RC; fi\n')
                 script_file_id.write( '    echo "$SEP"\n')
                 script_file_id.write( '{0}\n'.format('    echo "Removing {0} ..."'.format(dataset_dir)))
-                script_file_id.write( '{0}\n'.format('    /usr/bin/time \\'))
+                script_file_id.write( '    /usr/bin/time \\\n')
                 script_file_id.write( '{0}\n'.format('        --format="Elapsed real time (s): %e\\nCPU time in kernel mode (s): %S\\nCPU time in user mode (s): %U\\nPercentage of CPU: %P\\nMaximum resident set size(Kb): %M\\nAverage total memory use (Kb):%K" \\'))
                 script_file_id.write( '{0}\n'.format('        rm -rf {0}'.format(dataset_dir)))
-                script_file_id.write( '{0}\n'.format('    RC=$?'))
+                script_file_id.write( '    RC=$?\n')
                 script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error rm $RC; fi'))
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function end'))
+            script_file_id.write( 'function end\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    END_DATETIME=`date --utc +%s`'))
-            script_file_id.write( '{0}\n'.format('    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`'))
-            script_file_id.write( '{0}\n'.format('    calculate_duration'))
+            script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
+            script_file_id.write( '    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
+            script_file_id.write( '    calculate_duration\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "Script ended OK at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."'))
+            script_file_id.write( '    echo "Script ended OK at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    RECIPIENT={0}'.format(xconfiguration.get_contact_data())))
-            script_file_id.write( '{0}\n'.format('    SUBJECT="{0}: {1} process"'.format(xlib.get_project_name(), xlib.get_gzip_name())))
-            script_file_id.write( '{0}\n'.format('    MESSAGE="{0}"'.format(xlib.get_mail_message_ok(xlib.get_gzip_name(), cluster_name))))
-            script_file_id.write( '    mail --append "Content-type: text/html;" --append "FROM:root@NGScloud2" --subject="$SUBJECT" "$RECIPIENT" <<< "$MESSAGE"\n')
-            script_file_id.write( '{0}\n'.format('    touch $SCRIPT_STATUS_OK'))
-            script_file_id.write( '{0}\n'.format('    exit 0'))
+            script_file_id.write( '    send_mail ok\n')
+            script_file_id.write( '    touch $SCRIPT_STATUS_OK\n')
+            script_file_id.write( '    exit 0\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function manage_error'))
+            script_file_id.write( 'function manage_error\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    END_DATETIME=`date --utc +%s`'))
-            script_file_id.write( '{0}\n'.format('    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`'))
-            script_file_id.write( '{0}\n'.format('    calculate_duration'))
+            script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
+            script_file_id.write( '    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
+            script_file_id.write( '    calculate_duration\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "ERROR: $1 returned error $2"'))
-            script_file_id.write( '{0}\n'.format('    echo "Script ended WRONG at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."'))
+            script_file_id.write( '    echo "ERROR: $1 returned error $2"\n')
+            script_file_id.write( '    echo "Script ended WRONG at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    RECIPIENT={0}'.format(xconfiguration.get_contact_data())))
-            script_file_id.write( '{0}\n'.format('    SUBJECT="{0}: {1} process"'.format(xlib.get_project_name(), xlib.get_gzip_name())))
-            script_file_id.write( '{0}\n'.format('    MESSAGE="{0}"'.format(xlib.get_mail_message_wrong(xlib.get_gzip_name(), cluster_name))))
-            script_file_id.write( '    mail --append "Content-type: text/html;" --append "FROM:root@NGScloud2" --subject="$SUBJECT" "$RECIPIENT" <<< "$MESSAGE"\n')
-            script_file_id.write( '{0}\n'.format('    touch $SCRIPT_STATUS_WRONG'))
-            script_file_id.write( '{0}\n'.format('    exit 3'))
+            script_file_id.write( '    send_mail wrong\n')
+            script_file_id.write( '    touch $SCRIPT_STATUS_WRONG\n')
+            script_file_id.write( '    exit 3\n')
+            script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            process_name = f'{xlib.get_gzip_name()} process'
+            mail_message_ok = xlib.get_mail_message_ok(process_name, cluster_name)
+            mail_message_wrong = xlib.get_mail_message_wrong(process_name, cluster_name)
+            script_file_id.write( 'function send_mail\n')
+            script_file_id.write( '{\n')
+            script_file_id.write(f'    SUBJECT="{xlib.get_project_name()}: {process_name}"\n')
+            script_file_id.write( '    if [ "$1" == "ok" ]; then\n')
+            script_file_id.write(f'        MESSAGE="{mail_message_ok}"\n')
+            script_file_id.write( '    elif [ "$1" == "wrong" ]; then\n')
+            script_file_id.write(f'        MESSAGE="{mail_message_wrong}"\n')
+            script_file_id.write( '    else\n')
+            script_file_id.write( '         MESSAGE=""\n')
+            script_file_id.write( '    fi\n')
+            script_file_id.write( '    DESTINATION_FILE=mail-destination.json\n')
+            script_file_id.write( '    echo "{" > $DESTINATION_FILE\n')
+            script_file_id.write(f'    echo "    \\\"ToAddresses\\\":  [\\\"{xconfiguration.get_contact_data()}\\\"]," >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "    \\\"CcAddresses\\\":  []," >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "    \\\"BccAddresses\\\":  []" >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "}" >> $DESTINATION_FILE\n')
+            script_file_id.write( '    MESSAGE_FILE=mail-message.json\n')
+            script_file_id.write( '    echo "{" > $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    \\\"Subject\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Data\\\":  \\\"$SUBJECT\\\"," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    }," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    \\\"Body\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Html\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "            \\\"Data\\\":  \\\"$MESSAGE\\\"," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "            \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        }" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    }" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "}" >> $MESSAGE_FILE\n')
+            script_file_id.write(f'    aws ses send-email --from {xconfiguration.get_contact_data()} --destination file://$DESTINATION_FILE --message file://$MESSAGE_FILE\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function calculate_duration\n')
@@ -583,6 +618,7 @@ def build_gzip_process_script(cluster_name, dataset_type, current_run_dir):
             script_file_id.write( '{0}\n'.format('run_gzip_process'))
             script_file_id.write( 'end\n')
     except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append('*** ERROR: The file {0} can not be created'.format(get_gzip_process_script(dataset_type_2)))
         OK = False
 
@@ -608,10 +644,11 @@ def build_gzip_process_starter(dataset_type, current_run_dir):
         if not os.path.exists(os.path.dirname(get_gzip_process_starter(dataset_type))):
             os.makedirs(os.path.dirname(get_gzip_process_starter(dataset_type)))
         with open(get_gzip_process_starter(dataset_type), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
-            file_id.write( '{0}\n'.format('#!/bin/bash'))
-            file_id.write( '{0}\n'.format('#-------------------------------------------------------------------------------'))
-            file_id.write( '{0}\n'.format('{0}/{1} &>{0}/{2}'.format(current_run_dir, os.path.basename(get_gzip_process_script(dataset_type)), log_file)))
+            file_id.write( '#!/bin/bash\n')
+            file_id.write( '#-------------------------------------------------------------------------------\n')
+            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_gzip_process_script(dataset_type)), log_file)))
     except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append('*** ERROR: The file {0} can not be created'.format(get_gzip_process_starter(dataset_type)))
         OK = False
 

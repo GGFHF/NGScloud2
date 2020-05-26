@@ -57,9 +57,9 @@ def create_result_transfer_config_file(experiment_id='exp001', result_dataset_id
             file_id.write( '{0}\n'.format('# You must review the information of this file and update the values with the corresponding ones to the current transfer.'))
             file_id.write( '{0}\n'.format('# The files will be copied from the cluster directory {0}/experiment_id/result_dataset_id.'.format(xlib.get_cluster_result_dir())))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information identifies the experiment.'))
-            file_id.write( '{0}\n'.format('[identification]'))
-            file_id.write( '{0:<50} {1}\n'.format('experiment_id = {0}'.format(experiment_id), '# experiment identification'))
+            file_id.write( '# This section has the information identifies the experiment.\n')
+            file_id.write( '[identification]\n')
+            file_id.write( '{0:<50} {1}\n'.format(f'experiment_id = {experiment_id}', '# experiment identification'))
             file_id.write( '{0:<50} {1}\n'.format('result_dataset_id = {0}'.format(result_dataset_id), '# run identification'))
             file_id.write( '{0:<50} {1}\n'.format('status = {0}'.format(status), '# result dataset status (it has to be always {0})'.format(status)))
             file_id.write( '{0:<50} {1}\n'.format('local_dir = {0}'.format(local_dir), '# local path where the file will be download'))
@@ -74,7 +74,7 @@ def create_result_transfer_config_file(experiment_id='exp001', result_dataset_id
                     if i == 0:
                         file_id.write( '\n')
                         file_id.write( '{0}\n'.format('# If there are more files, you have to repeat the section file-1 with the data of each file.'))
-                        file_id.write( '{0}\n'.format('# The section identification has to be library-n (n is an integer not repeated)'))
+                        file_id.write( '# The section identification has to be library-n (n is an integer not repeated)\n')
     except Exception as e:
         error_list.append('*** ERROR: The file {0} can not be created'.format(result_transfer_config_file))
         OK = False
@@ -234,7 +234,8 @@ def check_result_transfer_config_file(strict):
     try:
         result_transfer_options_dict = xlib.get_option_dict(result_transfer_config_file)
     except Exception as e:
-        error_list.append('*** ERROR: The syntax is WRONG.')
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append('*** ERROR: The option dictionary could not be built from the config file')
         OK = False
     else:
 
@@ -300,7 +301,7 @@ def check_result_transfer_config_file(strict):
 
                     # check than the section identification is like file-n 
                     if not re.match('^file-[0-9]+$', section):
-                        error_list.append('*** ERROR: the section "{0}" has a wrong identification.'.format(section))
+                        error_list.append(f'*** ERROR: the section "{section}" has a wrong identification.')
                         OK = False
 
                     else:
@@ -357,7 +358,7 @@ def get_result_dataset_dict(cluster_name, experiment_id, status, passed_connecti
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] != 'RC=0':
             error_list.append('*** ERROR: There is not any volume mounted in the result directory.\n')
-            error_list.append('You have to link a volume in the mounting point {0} for the template {1}.\n'.format(cluster_result_dir, cluster_name))
+            error_list.append('You have to link a volume in the mounting point {0} for the cluster {1}.\n'.format(cluster_result_dir, cluster_name))
             OK = False
 
     # get the dictionary of the result datasets

@@ -52,25 +52,25 @@ def create_cutadapt_config_file(experiment_id='exp001', read_dataset_id=xlib.get
         if not os.path.exists(os.path.dirname(get_cutadapt_config_file())):
             os.makedirs(os.path.dirname(get_cutadapt_config_file()))
         with open(get_cutadapt_config_file(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
-            file_id.write( '{0}\n'.format('# You must review the information of this file and update the values with the corresponding ones to the current run.'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('# The read files have to be located in the cluster directory {0}/experiment_id/read_dataset_id'.format(xlib.get_cluster_read_dir())))
+            file_id.write( '# You must review the information of this file and update the values with the corresponding ones to the current run.\n')
+            file_id.write( '#\n')
+            file_id.write(f'# The read files have to be located in the cluster directory {xlib.get_cluster_read_dir()}/experiment_id/read_dataset_id\n')
             file_id.write( '{0}\n'.format('# The experiment_id and read_dataset_id are fixed in the identification section.'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('# You can consult the parameters of cutadapt and their meaning in https://pachterlab.github.io/kallisto/.'))
-            file_id.write( '{0}\n'.format('#'))
+            file_id.write( '#\n')
+            file_id.write( '{0}\n'.format('# You can consult the parameters of cutadapt and their meaning in "https://pachterlab.github.io/kallisto/".'))
+            file_id.write( '#\n')
             file_id.write( '{0}\n'.format('# In section "cutadapt parameters", the key "other_parameters" allows you to input additional parameters in the format:'))
-            file_id.write( '{0}\n'.format('#'))
-            file_id.write( '{0}\n'.format('#    other_parameters = --parameter-1[=value-1][; --parameter-2[=value-2][; ...; --parameter-n[=value-n]]]'))
-            file_id.write( '{0}\n'.format('#'))
+            file_id.write( '#\n')
+            file_id.write( '#    other_parameters = --parameter-1[=value-1][; --parameter-2[=value-2][; ...; --parameter-n[=value-n]]]\n')
+            file_id.write( '#\n')
             file_id.write( '{0}\n'.format('# parameter-i is a parameter name of Cufflinks and value-i a valid value of parameter-i, e.g.'))
-            file_id.write( '{0}\n'.format('#'))
+            file_id.write( '#\n')
             file_id.write( '{0}\n'.format('#    other_parameters = --bias; --bootstrap-samples=0'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information identifies the experiment.'))
-            file_id.write( '{0}\n'.format('[identification]'))
-            file_id.write( '{0:<50} {1}\n'.format('experiment_id = {0}'.format(experiment_id), '# experiment identification'))
-            file_id.write( '{0:<50} {1}\n'.format('read_dataset_id = {0}'.format(read_dataset_id), '# read dataset identification'))
+            file_id.write( '# This section has the information identifies the experiment.\n')
+            file_id.write( '[identification]\n')
+            file_id.write( '{0:<50} {1}\n'.format(f'experiment_id = {experiment_id}', '# experiment identification'))
+            file_id.write( '{0:<50} {1}\n'.format(f'read_dataset_id = {read_dataset_id}', '# read dataset identification'))
             file_id.write( '\n')
             file_id.write( '\n')
             file_id.write( '{0}\n'.format('# This section has the information to set the cutadapt parameters'))
@@ -87,25 +87,26 @@ def create_cutadapt_config_file(experiment_id='exp001', read_dataset_id=xlib.get
             file_id.write( '{0:<50} {1}\n'.format('anywhere_pe = NONE', "# PE: sequence of an adapter that may be ligated to the 5' or 3' end of the second read or NONE; SE: always NONE"))
             file_id.write( '{0:<50} {1}\n'.format('other_parameters = NONE', '# quant step - additional parameters to the previous ones or NONE'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the global information of all libraries.'))
-            file_id.write( '{0}\n'.format('[library]'))
-            file_id.write( '{0:<50} {1}\n'.format('format = FASTQ', '# format: {0}'.format(get_format_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('read_type = {0}'.format(read_type), '# read type: {0}'.format(get_read_type_code_list_text())))
+            file_id.write( '# This section has the global information of all libraries.\n')
+            file_id.write( '[library]\n')
+            file_id.write( '{0:<50} {1}\n'.format( 'format = FASTQ', f'# format: {get_format_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format(f'read_type = {read_type}', f'# read type: {get_read_type_code_list_text()}'))
             for i in range(len(file_1_list)):
                 file_id.write( '\n')
                 if i == 0:
-                    file_id.write( '{0}\n'.format('# This section has the information of the first library.'))
-                file_id.write( '{0}\n'.format('[library-{0}]'.format(i + 1)))
-                file_id.write( '{0:<50} {1}\n'.format('read_file_1 = {0}'.format(os.path.basename(file_1_list[i])), '# name of the read file in SE read type or the + strand read file in PE case'))
+                    file_id.write( '# This section has the information of the first library.\n')
+                file_id.write(f'[library-{i + 1}]\n')
+                file_id.write( '{0:<50} {1}\n'.format(f'read_file_1 = {os.path.basename(file_1_list[i])}', '# name of the read file in SE read type or the + strand read file in PE case'))
                 if read_type == 'SE':
-                    file_id.write( '{0:<50} {1}\n'.format('read_file_2 = NONE', '# name of the - strand reads file in PE read type or NONE in SE case'))
+                    file_id.write( '{0:<50} {1}\n'.format( 'read_file_2 = NONE', '# name of the - strand reads file in PE read type or NONE in SE case'))
                 elif read_type == 'PE':
-                    file_id.write( '{0:<50} {1}\n'.format('read_file_2 = {0}'.format(os.path.basename(file_2_list[i])), '# name of the - strand reads file in PE read type or NONE in SE case'))
+                    file_id.write( '{0:<50} {1}\n'.format(f'read_file_2 = {os.path.basename(file_2_list[i])}', '# name of the - strand reads file in PE read type or NONE in SE case'))
                 if i == 0:
                     file_id.write( '\n')
-                    file_id.write( '{0}\n'.format('# If there are more libraries, you have to repeat the section library-1 with the data of each file.'))
-                    file_id.write( '{0}\n'.format('# The section identification has to be library-n (n is an integer not repeated)'))
+                    file_id.write( '# If there are more libraries, you have to repeat the section library-1 with the data of each file.\n')
+                    file_id.write( '# The section identification has to be library-n (n is an integer not repeated)\n')
     except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append('*** ERROR: The file {0} can not be recreated'.format(get_cutadapt_config_file()))
         OK = False
 
@@ -180,12 +181,12 @@ def run_cutadapt_process(cluster_name, log, function=None):
     if OK:
         (master_state_code, master_state_name) = xec2.get_node_state(cluster_name)
         if master_state_code != 16:
-            log.write('*** ERROR: The cluster {0} is not running. Its state is {1} ({2}).\n'.format(cluster_name, master_state_code, master_state_name))
+            log.write(f'*** ERROR: The cluster {cluster_name} is not running. Its state is {master_state_code} ({master_state_name}).\n')
             OK = False
 
     # check cutadapt is installed
     if OK:
-        (OK, error_list, is_installed) = xbioinfoapp.is_installed_bioconda_package(xlib.get_cutadapt_bioconda_code(), cluster_name, True, ssh_client)
+        (OK, error_list, is_installed) = xbioinfoapp.is_installed_anaconda_package(xlib.get_cutadapt_anaconda_code(), cluster_name, True, ssh_client)
         if OK:
             if not is_installed:
                 log.write('*** ERROR: {0} is not installed.\n'.format(xlib.get_cutadapt_name()))
@@ -205,7 +206,7 @@ def run_cutadapt_process(cluster_name, log, function=None):
         command = f'mkdir --parents {current_run_dir}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
-            log.write('The directory path is {0}.\n'.format(current_run_dir))
+            log.write(f'The directory path is {current_run_dir}.\n')
         else:
             log.write(f'*** ERROR: Wrong command ---> {command}\n')
 
@@ -222,7 +223,7 @@ def run_cutadapt_process(cluster_name, log, function=None):
     # upload the cutadapt process script to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process script {0} to the directory {1} of the master ...\n'.format(get_cutadapt_process_script(), current_run_dir))
+        log.write('Uploading the process script {0} to the directory {1} ...\n'.format(get_cutadapt_process_script(), current_run_dir))
         cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_cutadapt_process_script()))
         (OK, error_list) = xssh.put_file(sftp_client, get_cutadapt_process_script(), cluster_path)
         if OK:
@@ -255,7 +256,7 @@ def run_cutadapt_process(cluster_name, log, function=None):
     # upload the cutadapt process starter to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process starter {0} to the directory {1} of the master ...\n'.format(get_cutadapt_process_starter(), current_run_dir))
+        log.write('Uploading the process starter {0} to the directory {1} ...\n'.format(get_cutadapt_process_starter(), current_run_dir))
         cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_cutadapt_process_starter()))
         (OK, error_list) = xssh.put_file(sftp_client, get_cutadapt_process_starter(), cluster_path)
         if OK:
@@ -325,7 +326,8 @@ def check_cutadapt_config_file(strict):
     try:
         cutadapt_option_dict = xlib.get_option_dict(get_cutadapt_config_file())
     except Exception as e:
-        error_list.append('*** ERROR: The syntax is WRONG.')
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append('*** ERROR: The option dictionary could not be built from the config file')
         OK = False
     else:
 
@@ -438,7 +440,7 @@ def check_cutadapt_config_file(strict):
                 error_list.append('*** ERROR: the key "format" is not found in the section "library".')
                 OK = False
             elif not xlib.check_code(format, get_format_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "format" has to be {0}.'.format(get_format_code_list_text()))
+                error_list.append(f'*** ERROR: the key "format" has to be {get_format_code_list_text()}.')
                 OK = False
 
             # check section "library" - key "read_type"
@@ -448,7 +450,7 @@ def check_cutadapt_config_file(strict):
                 error_list.append('*** ERROR: the key "read_type" is not found in the section "library".')
                 OK = False
             elif not xlib.check_code(read_type, get_read_type_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "read_type" has to be {0}.'.format(get_read_type_code_list_text()))
+                error_list.append(f'*** ERROR: the key "read_type" has to be {get_read_type_code_list_text()}.')
                 OK = False
             else:
                 is_ok_read_type = True
@@ -480,7 +482,7 @@ def check_cutadapt_config_file(strict):
 
                 # check than the section identification is like library-n 
                 if not re.match('^library-[0-9]+$', section):
-                    error_list.append('*** ERROR: the section "{0}" has a wrong identification.'.format(section))
+                    error_list.append(f'*** ERROR: the section "{section}" has a wrong identification.')
                     OK = False
 
                 else:
@@ -488,13 +490,13 @@ def check_cutadapt_config_file(strict):
                     # check section "library-n" - key "read_file_1"
                     read_file_1 = cutadapt_option_dict.get(section, {}).get('read_file_1', not_found)
                     if read_file_1 == not_found:
-                        error_list.append('*** ERROR: the key "read_file_1" is not found in the section "{0}"'.format(section))
+                        error_list.append(f'*** ERROR: the key "read_file_1" is not found in the section "{section}"')
                         OK = False
 
                     # check section "library-n" - key "read_file_2"
                     read_file_2 = cutadapt_option_dict.get(section, {}).get('read_file_2', not_found)
                     if read_file_2 == not_found:
-                        error_list.append('*** ERROR: the key "read_file_2" is not found in the section "{0}"'.format(section))
+                        error_list.append(f'*** ERROR: the key "read_file_2" is not found in the section "{section}"')
                         OK = False
 
     # warn that the results config file is not valid if there are any errors
@@ -565,15 +567,18 @@ def build_cutadapt_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'SEP="#########################################"\n')
             script_file_id.write( 'export HOST_IP=`curl --silent checkip.amazonaws.com`\n')
             script_file_id.write( 'export HOST_ADDRESS="ec2-${HOST_IP//./-}-compute-1.amazonaws.com"\n')
-            script_file_id.write( '{0}\n'.format('CUTADAPT_PATH={0}/{1}/envs/{2}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name(), xlib.get_cutadapt_bioconda_code())))
+            script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
+            script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write( '{0}\n'.format('CUTADAPT_PATH={0}/{1}/envs/{2}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name(), xlib.get_cutadapt_anaconda_code())))
             script_file_id.write( '{0}\n'.format('export PATH=$CUTADAPT_PATH:$PATH'))
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('STATUS_DIR={0}'.format(xlib.get_status_dir(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('SCRIPT_STATUS_OK={0}'.format(xlib.get_status_ok(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('SCRIPT_STATUS_WRONG={0}'.format(xlib.get_status_wrong(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('mkdir --parents $STATUS_DIR'))
-            script_file_id.write( '{0}\n'.format('if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi'))
-            script_file_id.write( '{0}\n'.format('if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi'))
+            script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
+            script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
+            script_file_id.write(f'SCRIPT_STATUS_WRONG={xlib.get_status_wrong(current_run_dir)}\n')
+            script_file_id.write( 'mkdir --parents $STATUS_DIR\n')
+            script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
+            script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function init\n')
             script_file_id.write( '{\n')
@@ -583,19 +588,21 @@ def build_cutadapt_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "Script started at $FORMATTED_INIT_DATETIME+00:00."\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write(f'    echo "CLUSTER: {cluster_name}"\n')
-            script_file_id.write(f'    echo "HOST_IP: $HOST_IP - HOST_ADDRESS: $HOST_ADDRESS"\n')
+            script_file_id.write( '    echo "HOST NAME: $HOSTNAME"\n')
+            script_file_id.write( '    echo "HOST IP: $HOST_IP"\n')
+            script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( '{0}\n'.format('function run_cutadapt_process'))
             script_file_id.write( '{\n')
             script_file_id.write( '{0}\n'.format('    mkdir --parents {0}'.format(output_read_dir)))
-            script_file_id.write( '{0}\n'.format('    cd {0}'.format(current_run_dir)))
+            script_file_id.write(f'    cd {current_run_dir}\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write( '{0}\n'.format('    echo "cutadapt v`cutadapt --version`"'))
             for i in range(len(read_file_1_list)):
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    /usr/bin/time \\'))
-                script_file_id.write( '{0}\n'.format('        --format="$SEP\\nElapsed real time (s): %e\\nCPU time in kernel mode (s): %S\\nCPU time in user mode (s): %U\\nPercentage of CPU: %P\\nMaximum resident set size(Kb): %M\\nAverage total memory use (Kb):%K" \\'))
+                script_file_id.write( '    /usr/bin/time \\\n')
+                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
                 script_file_id.write( '{0}\n'.format('        cutadapt \\'))
                 script_file_id.write( '{0}\n'.format('            --cores={0} \\'.format(cores)))
                 script_file_id.write( '{0}\n'.format('            --adapter={0} \\'.format(adapter)))
@@ -617,12 +624,12 @@ def build_cutadapt_process_script(cluster_name, current_run_dir):
                             mo = re.search(pattern, parameter_list[i])
                             parameter_name = mo.group(1).strip()
                             parameter_value = mo.group(2).strip()
-                            script_file_id.write( '{0}\n'.format('            --{0}={1} \\'.format(parameter_name, parameter_value)))
+                            script_file_id.write(f'            --{parameter_name}={parameter_value} \\\n')
                         else:
                             pattern = r'^--(.+)$'
                             mo = re.search(pattern, parameter_list[i])
                             parameter_name = mo.group(1).strip()
-                            script_file_id.write( '{0}\n'.format('            --{0} \\'.format(parameter_name)))
+                            script_file_id.write(f'            --{parameter_name} \\\n')
                 if read_type.upper() == 'SE':
                     script_file_id.write( '{0}\n'.format('            --output={0}/{1} \\'.format(output_read_dir, os.path.basename(read_file_1_list[i]))))
                     script_file_id.write( '{0}\n'.format('            {0}'.format(read_file_1_list[i])))
@@ -631,41 +638,70 @@ def build_cutadapt_process_script(cluster_name, current_run_dir):
                     script_file_id.write( '{0}\n'.format('            --paired-output={0}/{1} \\'.format(output_read_dir, os.path.basename(read_file_2_list[i]))))
                     script_file_id.write( '{0}\n'.format('            {0} \\'.format(read_file_1_list[i])))
                     script_file_id.write( '{0}\n'.format('            {0}'.format(read_file_2_list[i])))
-                script_file_id.write( '{0}\n'.format('    RC=$?'))
+                script_file_id.write( '    RC=$?\n')
                 script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error cutadapt $RC; fi'))
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function end'))
+            script_file_id.write( 'function end\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    END_DATETIME=`date --utc +%s`'))
-            script_file_id.write( '{0}\n'.format('    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`'))
-            script_file_id.write( '{0}\n'.format('    calculate_duration'))
+            script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
+            script_file_id.write( '    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
+            script_file_id.write( '    calculate_duration\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "Script ended OK at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."'))
+            script_file_id.write( '    echo "Script ended OK at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    RECIPIENT={0}'.format(xconfiguration.get_contact_data())))
-            script_file_id.write( '{0}\n'.format('    SUBJECT="{0}: {1} process"'.format(xlib.get_project_name(), xlib.get_cutadapt_name())))
-            script_file_id.write( '{0}\n'.format('    MESSAGE="{0}"'.format(xlib.get_mail_message_ok(xlib.get_cutadapt_name(), cluster_name))))
-            script_file_id.write( '    mail --append "Content-type: text/html;" --append "FROM:root@NGScloud2" --subject="$SUBJECT" "$RECIPIENT" <<< "$MESSAGE"\n')
-            script_file_id.write( '{0}\n'.format('    touch $SCRIPT_STATUS_OK'))
-            script_file_id.write( '{0}\n'.format('    exit 0'))
+            script_file_id.write( '    send_mail ok\n')
+            script_file_id.write( '    touch $SCRIPT_STATUS_OK\n')
+            script_file_id.write( '    exit 0\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function manage_error'))
+            script_file_id.write( 'function manage_error\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    END_DATETIME=`date --utc +%s`'))
-            script_file_id.write( '{0}\n'.format('    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`'))
-            script_file_id.write( '{0}\n'.format('    calculate_duration'))
+            script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
+            script_file_id.write( '    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
+            script_file_id.write( '    calculate_duration\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "ERROR: $1 returned error $2"'))
-            script_file_id.write( '{0}\n'.format('    echo "Script ended WRONG at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."'))
+            script_file_id.write( '    echo "ERROR: $1 returned error $2"\n')
+            script_file_id.write( '    echo "Script ended WRONG at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    RECIPIENT={0}'.format(xconfiguration.get_contact_data())))
-            script_file_id.write( '{0}\n'.format('    SUBJECT="{0}: {1} process"'.format(xlib.get_project_name(), xlib.get_cutadapt_name())))
-            script_file_id.write( '{0}\n'.format('    MESSAGE="{0}"'.format(xlib.get_mail_message_wrong(xlib.get_cutadapt_name(), cluster_name))))
-            script_file_id.write( '    mail --append "Content-type: text/html;" --append "FROM:root@NGScloud2" --subject="$SUBJECT" "$RECIPIENT" <<< "$MESSAGE"\n')
-            script_file_id.write( '{0}\n'.format('    touch $SCRIPT_STATUS_WRONG'))
-            script_file_id.write( '{0}\n'.format('    exit 3'))
+            script_file_id.write( '    send_mail wrong\n')
+            script_file_id.write( '    touch $SCRIPT_STATUS_WRONG\n')
+            script_file_id.write( '    exit 3\n')
+            script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            process_name = f'{xlib.get_cutadapt_name()} process'
+            mail_message_ok = xlib.get_mail_message_ok(process_name, cluster_name)
+            mail_message_wrong = xlib.get_mail_message_wrong(process_name, cluster_name)
+            script_file_id.write( 'function send_mail\n')
+            script_file_id.write( '{\n')
+            script_file_id.write(f'    SUBJECT="{xlib.get_project_name()}: {process_name}"\n')
+            script_file_id.write( '    if [ "$1" == "ok" ]; then\n')
+            script_file_id.write(f'        MESSAGE="{mail_message_ok}"\n')
+            script_file_id.write( '    elif [ "$1" == "wrong" ]; then\n')
+            script_file_id.write(f'        MESSAGE="{mail_message_wrong}"\n')
+            script_file_id.write( '    else\n')
+            script_file_id.write( '         MESSAGE=""\n')
+            script_file_id.write( '    fi\n')
+            script_file_id.write( '    DESTINATION_FILE=mail-destination.json\n')
+            script_file_id.write( '    echo "{" > $DESTINATION_FILE\n')
+            script_file_id.write(f'    echo "    \\\"ToAddresses\\\":  [\\\"{xconfiguration.get_contact_data()}\\\"]," >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "    \\\"CcAddresses\\\":  []," >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "    \\\"BccAddresses\\\":  []" >> $DESTINATION_FILE\n')
+            script_file_id.write( '    echo "}" >> $DESTINATION_FILE\n')
+            script_file_id.write( '    MESSAGE_FILE=mail-message.json\n')
+            script_file_id.write( '    echo "{" > $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    \\\"Subject\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Data\\\":  \\\"$SUBJECT\\\"," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    }," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    \\\"Body\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        \\\"Html\\\": {" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "            \\\"Data\\\":  \\\"$MESSAGE\\\"," >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "            \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "        }" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "    }" >> $MESSAGE_FILE\n')
+            script_file_id.write( '    echo "}" >> $MESSAGE_FILE\n')
+            script_file_id.write(f'    aws ses send-email --from {xconfiguration.get_contact_data()} --destination file://$DESTINATION_FILE --message file://$MESSAGE_FILE\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function calculate_duration\n')
@@ -681,6 +717,7 @@ def build_cutadapt_process_script(cluster_name, current_run_dir):
             script_file_id.write( '{0}\n'.format('run_cutadapt_process'))
             script_file_id.write( 'end\n')
     except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append('*** ERROR: The file {0} can not be created'.format(get_cutadapt_process_script()))
         OK = False
 
@@ -703,10 +740,11 @@ def build_cutadapt_process_starter(current_run_dir):
         if not os.path.exists(os.path.dirname(get_cutadapt_process_starter())):
             os.makedirs(os.path.dirname(get_cutadapt_process_starter()))
         with open(get_cutadapt_process_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
-            file_id.write( '{0}\n'.format('#!/bin/bash'))
-            file_id.write( '{0}\n'.format('#-------------------------------------------------------------------------------'))
-            file_id.write( '{0}\n'.format('{0}/{1} &>{0}/{2}'.format(current_run_dir, os.path.basename(get_cutadapt_process_script()), xlib.get_cluster_log_file())))
+            file_id.write( '#!/bin/bash\n')
+            file_id.write( '#-------------------------------------------------------------------------------\n')
+            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_cutadapt_process_script()), xlib.get_cluster_log_file())))
     except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append('*** ERROR: The file {0} can not be created'.format(get_cutadapt_process_starter()))
         OK = False
 

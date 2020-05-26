@@ -34,6 +34,7 @@ import tkinter.ttk
 
 import gdialogs
 import xbioinfoapp
+import xbowtie2
 import xbusco
 import xcdhit
 import xcufflinks
@@ -43,6 +44,7 @@ import xdatabase
 import xddradseqtools
 import xdetonate
 import xec2
+import xexpress
 import xfastqc
 import xgmap
 import xhisat2
@@ -52,6 +54,7 @@ import xkallisto
 import xlib
 import xngshelper
 import xquast
+import xraddesigner
 import xread
 import xreference
 import xresult
@@ -92,84 +95,134 @@ class FormInstallBioinfoApp(tkinter.Frame):
         self.main.update()
 
         # set the software name
-        if self.app_code == xlib.get_bedtools_code():
+        if self.app_code == xlib.get_bcftools_code():
+            self.app_name = xlib.get_bcftools_name()
+
+        elif self.app_code == xlib.get_bedtools_code():
             self.app_name = xlib.get_bedtools_name()
+
         elif self.app_code == xlib.get_blastplus_code():
             self.app_name = xlib.get_blastplus_name()
+
         elif self.app_code == xlib.get_bowtie2_code():
             self.app_name = xlib.get_bowtie2_name()
+
         elif self.app_code == xlib.get_busco_code():
             self.app_name = xlib.get_busco_name()
+
         elif self.app_code == xlib.get_cd_hit_code():
             self.app_name = xlib.get_cd_hit_name()
+
         elif self.app_code == xlib.get_cufflinks_code():
             self.app_name = xlib.get_cufflinks_name()
+
         elif self.app_code == xlib.get_cutadapt_code():
             self.app_name = xlib.get_cutadapt_name()
+
         elif self.app_code == xlib.get_ddradseqtools_code():
             self.app_name = xlib.get_ddradseqtools_name()
+
         elif self.app_code == xlib.get_detonate_code():
             self.app_name = xlib.get_detonate_name()
+
         elif self.app_code == xlib.get_emboss_code():
             self.app_name = xlib.get_emboss_name()
+
         elif self.app_code == xlib.get_entrez_direct_code():
             self.app_name = xlib.get_entrez_direct_name()
+
+        elif self.app_code == xlib.get_express_code():
+            self.app_name = xlib.get_express_name()
+
         elif self.app_code == xlib.get_fastqc_code():
             self.app_name = xlib.get_fastqc_name()
+
         elif self.app_code == xlib.get_gmap_gsnap_code():
             self.app_name = xlib.get_gmap_gsnap_name()
+
         elif self.app_code == xlib.get_hisat2_code():
             self.app_name = xlib.get_hisat2_name()
+
         elif self.app_code == xlib.get_htseq_code():
             self.app_name = xlib.get_htseq_name()
+
         elif self.app_code == xlib.get_ipyrad_code():
             self.app_name = xlib.get_ipyrad_name()
+
         elif self.app_code == xlib.get_kallisto_code():
             self.app_name = xlib.get_kallisto_name()
+
         elif self.app_code == xlib.get_miniconda3_code():
             self.app_name = xlib.get_miniconda3_name()
+
         elif self.app_code == xlib.get_ngshelper_code():
             self.app_name = xlib.get_ngshelper_name()
+
         elif self.app_code == xlib.get_quast_code():
             self.app_name = xlib.get_quast_name()
+
         elif self.app_code == xlib.get_r_code():
             self.app_name = xlib.get_r_name()
+
+        elif self.app_code == xlib.get_raddesigner_code():
+            self.app_name = xlib.get_raddesigner_name()
+
         elif self.app_code == xlib.get_rnaquast_code():
             self.app_name = xlib.get_rnaquast_name()
+
         elif self.app_code == xlib.get_rsem_code():
             self.app_name = xlib.get_rsem_name()
+
         elif self.app_code == xlib.get_samtools_code():
             self.app_name = xlib.get_samtools_name()
+
         elif self.app_code == xlib.get_soapdenovo2_code():
             self.app_name = xlib.get_soapdenovo2_name()
+
         elif self.app_code == xlib.get_soapdenovotrans_code():
             self.app_name = xlib.get_soapdenovotrans_name()
+
         elif self.app_code == xlib.get_star_code():
             self.app_name = xlib.get_star_name()
+
         elif self.app_code == xlib.get_starcode_code():
             self.app_name = xlib.get_starcode_name()
+
         elif self.app_code == xlib.get_toa_code():
             self.app_name = xlib.get_toa_name()
+
         elif self.app_code == xlib.get_tophat_code():
             self.app_name = xlib.get_tophat_name()
+
         elif self.app_code == xlib.get_transabyss_code():
             self.app_name = xlib.get_transabyss_name()
+
         elif self.app_code == xlib.get_transdecoder_code():
             self.app_name = xlib.get_transdecoder_name()
+
         elif self.app_code == xlib.get_transrate_code():
             self.app_name = xlib.get_transrate_name()
+
         elif self.app_code == xlib.get_trimmomatic_code():
             self.app_name = xlib.get_trimmomatic_name()
+
         elif self.app_code == xlib.get_trinity_code():
             self.app_name = xlib.get_trinity_name()
+
+        elif self.app_code == xlib.get_vcftools_code():
+            self.app_name = xlib.get_vcftools_name()
+
+        elif self.app_code == xlib.get_vcftools_perl_libraries_code():
+            self.app_name = xlib.get_vcftools_perl_libraries_name()
+
         elif self.app_code == xlib.get_vsearch_code():
             self.app_name = xlib.get_vsearch_name()
 
         # get the version and download URL of the BioInfo application
-        (self.bioinfoapp_version, self.bioinfoapp__url) = xconfiguration.get_bioinfo_app_data(self.app_name)
+        (self.bioinfoapp_version, self.bioinfoapp__url, self.bioinfoapp_channel) = xconfiguration.get_bioinfo_app_data(self.app_name)
 
         # assign the text of the "head"
-        self.head = '{0} - Install software'.format(self.app_name)
+        self.head = f'{self.app_name} - Install software'
 
         # create the wrappers to track changes in the inputs
         self.wrapper_cluster_name = tkinter.StringVar()
@@ -269,7 +322,7 @@ class FormInstallBioinfoApp(tkinter.Frame):
         if running_cluster_list == []:
             self.combobox_cluster_name['values'] = []
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -360,25 +413,25 @@ class FormInstallBioinfoApp(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the specific version
         if OK:
             if self.bioinfoapp_version == 'any' and self.wrapper_version_type.get() == 'specific':
-                message = '{0} is designed to use the last version of {1} and its parameters. The use of some parameter in some previous versions could cause a malfunction..\n\nAre you sure to continue?'.format(xlib.get_project_name(), self.app_name)
-                OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'{xlib.get_project_name()} is designed to use the last version of {self.app_name} and its parameters. The use of some parameter in some previous versions could cause a malfunction..\n\nAre you sure to continue?'
+                OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the software installation
         if OK:
             if self.app_code == xlib.get_miniconda3_code():
-                message = '{0} (Bioconda infrastructure) is going to be installed in the cluster {1}. All Bioconda packages previously installed will be lost and they have to be reinstalled.\n\nAre you sure to continue?'.format(self.app_name, self.wrapper_cluster_name.get())
+                message = f'{self.app_name} (Bioconda infrastructure) is going to be installed in the cluster {self.wrapper_cluster_name.get()}. All Bioconda packages previously installed will be lost and they have to be reinstalled.\n\nAre you sure to continue?'
             elif self.app_code == xlib.get_r_code():
-                message = '{0} and analysis packages are going to be installed in the cluster {1}. The previous version will be lost, if it exists.\n\nAre you sure to continue?'.format(self.app_name, self.wrapper_cluster_name.get())
-            elif self.app_code in [xlib.get_ddradseqtools_code(), xlib.get_ngshelper_code(), xlib.get_rnaquast_code(), xlib.get_transrate_code()]:
-                message = '{0} software is going to be installed in the cluster {1}. The previous version will be lost, if it exists.\n\nAre you sure to continue?'.format(self.app_name, self.wrapper_cluster_name.get())
+                message = f'{self.app_name} and analysis packages are going to be installed in the cluster {self.wrapper_cluster_name.get()}. The previous version will be lost, if it exists.\n\nAre you sure to continue?'
+            elif self.app_code in [xlib.get_ddradseqtools_code(), xlib.get_ngshelper_code(), xlib.get_raddesigner_code(), xlib.get_toa_code(), xlib.get_transrate_code()]:
+                message = f'{self.app_name} software is going to be installed in the cluster {self.wrapper_cluster_name.get()}. The previous version will be lost, if it exists.\n\nAre you sure to continue?'
             else:
-                message = 'The {0} Bioconda package is going to be installed in the cluster {1}. The previous version will be lost, if it exists.\n\nAre you sure to continue?'.format(self.app_name, self.wrapper_cluster_name.get())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {self.app_name} (channel {self.bioinfoapp_channel}) is going to be installed in the cluster {self.wrapper_cluster_name.get()}. The previous version will be lost, if it exists.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # install the software
         if OK:
@@ -388,54 +441,61 @@ class FormInstallBioinfoApp(tkinter.Frame):
             else:
                 version = self.wrapper_version_id.get()
 
-            # install the BEDTools software
-            if self.app_code == xlib.get_bedtools_code():
-                package_list = [(xlib.get_bedtools_bioconda_code(), version)]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+            # install the BCFTools software
+            if self.app_code == xlib.get_bcftools_code():
+                package_list = [(xlib.get_bcftools_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+
+            # install the BEDTools software
+            elif self.app_code == xlib.get_bedtools_code():
+                package_list = [(xlib.get_bedtools_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
+                threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the BLAST+ software
             elif self.app_code == xlib.get_blastplus_code():
-                package_list = [(xlib.get_blastplus_bioconda_code(), version)]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_blastplus_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the Bowtie2 software
             elif self.app_code == xlib.get_bowtie2_code():
-                package_list = [(xlib.get_bowtie2_bioconda_code(), version)]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_bowtie2_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the BUSCO software
             elif self.app_code == xlib.get_busco_code():
-                package_list = [(xlib.get_busco_bioconda_code(), version)]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_busco_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the CD-HIT software
             elif self.app_code == xlib.get_cd_hit_code():
-                package_list = [(xlib.get_cd_hit_bioconda_code(), version)]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_cd_hit_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the Cufflinks software
             elif self.app_code == xlib.get_cufflinks_code():
-                package_list = [(xlib.get_cufflinks_bioconda_code(), version)]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_cufflinks_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the cutadapt software
             elif self.app_code == xlib.get_cutadapt_code():
-                package_list = [(xlib.get_cutadapt_bioconda_code(), version)]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_cutadapt_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the ddRADseqTools software
             elif self.app_code == xlib.get_ddradseqtools_code():
@@ -445,66 +505,73 @@ class FormInstallBioinfoApp(tkinter.Frame):
 
             # install the DETONATE software
             elif self.app_code == xlib.get_detonate_code():
-                package_list = [(xlib.get_detonate_bioconda_code(), version), (xlib.get_bowtie2_bioconda_code(), 'last')]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_detonate_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_bowtie2_anaconda_code(), 'last', self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the EMBOSS software
             elif self.app_code == xlib.get_emboss_code():
-                package_list = [(xlib.get_emboss_bioconda_code(), version)]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_emboss_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the Entrez Direct software
             elif self.app_code == xlib.get_entrez_direct_code():
-                package_list = [(xlib.get_entrez_direct_bioconda_code(), version)]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_entrez_direct_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+
+            # install the eXpress software
+            elif self.app_code == xlib.get_express_code():
+                package_list = [(xlib.get_express_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
+                threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the FastQC software
             elif self.app_code == xlib.get_fastqc_code():
-                package_list = [(xlib.get_fastqc_bioconda_code(), version)]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_fastqc_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the GMAP-GSNAP software
             elif self.app_code == xlib.get_gmap_gsnap_code():
-                package_list = [(xlib.get_gmap_gsnap_bioconda_code(), version)]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_gmap_gsnap_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the HISAT2 software
             elif self.app_code == xlib.get_hisat2_code():
-                package_list = [(xlib.get_hisat2_bioconda_code(), version)]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_hisat2_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the HTSeq software
             elif self.app_code == xlib.get_htseq_code():
-                package_list = [(xlib.get_htseq_bioconda_code(), version)]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_htseq_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the ipyrad software
             elif self.app_code == xlib.get_ipyrad_code():
-                package_list = [xlib.get_ipyrad_conda_code()]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_conda_package_list.__name__)
+                package_list = [(xlib.get_ipyrad_conda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_conda_package_list, args=(self.app_code, self.app_name, 2, xlib.get_ipyrad_conda_code(), package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the kallisto software
             elif self.app_code == xlib.get_kallisto_code():
-                package_list = [(xlib.get_kallisto_bioconda_code(), version)]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_kallisto_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the Miniconda3 software
             elif self.app_code == xlib.get_miniconda3_code():
@@ -520,10 +587,10 @@ class FormInstallBioinfoApp(tkinter.Frame):
 
             # install the QUAST software
             elif self.app_code == xlib.get_quast_code():
-                package_list = [(xlib.get_quast_bioconda_code(), version)]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_quast_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install R and analysis packages
             elif self.app_code == xlib.get_r_code():
@@ -531,54 +598,60 @@ class FormInstallBioinfoApp(tkinter.Frame):
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_r, args=(self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
+            # install the RADdesigner software
+            elif self.app_code == xlib.get_raddesigner_code():
+                dialog_log = gdialogs.DialogLog(self, self.head, xraddesigner.install_raddesigner.__name__)
+                threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
+                threading.Thread(target=xraddesigner.install_raddesigner, args=(self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+
             # install the rnaQUAST software
             elif self.app_code == xlib.get_rnaquast_code():
-                package_list = [(xlib.get_rnaquast_bioconda_code(), version)]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_rnaquast_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the RSEM software
             elif self.app_code == xlib.get_rsem_code():
-                package_list = [(xlib.get_rsem_bioconda_code(), version)]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_rsem_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the SAMtools software
             if self.app_code == xlib.get_samtools_code():
-                package_list = [(xlib.get_samtools_bioconda_code(), version)]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_samtools_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_tabix_anaconda_code(), 'last', self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the SOAPdenovo2 software
             elif self.app_code == xlib.get_soapdenovo2_code():
-                package_list = [(xlib.get_soapdenovo2_bioconda_code(), version)]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_soapdenovo2_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the SOAPdenovo-Trans software
             elif self.app_code == xlib.get_soapdenovotrans_code():
-                package_list = [(xlib.get_soapdenovotrans_bioconda_code(), version)]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_soapdenovotrans_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the STAR software
             elif self.app_code == xlib.get_star_code():
-                package_list = [(xlib.get_star_bioconda_code(), version), (xlib.get_bowtie2_bioconda_code(), 'last')]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_star_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_bowtie2_anaconda_code(), 'last', self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the starcode software
             elif self.app_code == xlib.get_starcode_code():
-                package_list = [(xlib.get_starcode_bioconda_code(), version)]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_starcode_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the TOA software
             elif self.app_code == xlib.get_toa_code():
@@ -588,55 +661,69 @@ class FormInstallBioinfoApp(tkinter.Frame):
 
             # install the TopHat software
             elif self.app_code == xlib.get_tophat_code():
-                package_list = [(xlib.get_tophat_bioconda_code(), version)]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_tophat_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the Trans-ABySS software
             elif self.app_code == xlib.get_transabyss_code():
-                package_list = [(xlib.get_transabyss_bioconda_code(), version)]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_transabyss_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the TransDecoder software
             elif self.app_code == xlib.get_transdecoder_code():
-                package_list = [(xlib.get_transdecoder_bioconda_code(), version)]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_transdecoder_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the Transrate software
             elif self.app_code == xlib.get_transrate_code():
                 dialog_log = gdialogs.DialogLog(self, self.head, xtransrate.install_transrate.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xtransrate.install_transrate, args=(self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
-                # -- package_list = [(xlib.get_transrate_bioconda_code(), version)]
-                # -- dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                # -- package_list = [(xlib.get_transrate_anaconda_code(), version, self.bioinfoapp_channel)]
+                # -- dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 # -- threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                # -- threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                # -- threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the Trimmomatic software
             elif self.app_code == xlib.get_trimmomatic_code():
-                package_list = [(xlib.get_trimmomatic_bioconda_code(), version)]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_trimmomatic_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the Trinity software
             elif self.app_code == xlib.get_trinity_code():
-                package_list = [(xlib.get_trinity_bioconda_code(), version), (xlib.get_bowtie2_bioconda_code(),'last')]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_trinity_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_bowtie2_anaconda_code() ,'last', self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+
+            # install the VCFtools software
+            elif self.app_code == xlib.get_vcftools_code():
+                package_list = [(xlib.get_vcftools_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
+                threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+
+            # install the VCFtools Perl libraries software
+            elif self.app_code == xlib.get_vcftools_perl_libraries_code():
+                package_list = [(xlib.get_vcftools_perl_libraries_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
+                threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the vsearch software
             elif self.app_code == xlib.get_vsearch_code():
-                package_list = [(xlib.get_vsearch_bioconda_code(), version)]
-                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_bioconda_package_list.__name__)
+                package_list = [(xlib.get_vsearch_anaconda_code(), version, self.bioinfoapp_channel)]
+                dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xbioinfoapp.install_bioconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+                threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
         # close the form
         if OK:
@@ -648,6 +735,688 @@ class FormInstallBioinfoApp(tkinter.Frame):
         '''
         Close "FormInstallBioinfoApp".
         '''
+
+        # clear the label of the current process name
+        self.main.label_process['text'] = ''
+
+        # close the current form
+        self.main.close_current_form()
+
+    #---------------
+
+#-------------------------------------------------------------------------------
+
+class FormRecreateBowtie2ConfigFile(tkinter.Frame):
+
+    #---------------
+
+    def __init__(self, parent, main):
+        '''
+        Execute actions correspending to the creation of a "FormRecreateBowtie2ConfigFile" instance.
+        '''
+
+        # save initial parameters in instance variables
+        self.parent = parent
+        self.main = main
+
+        # call the init method of the parent class
+        tkinter.Frame.__init__(self, self.parent)
+
+        # set cursor to show busy status
+        self.main.config(cursor='watch')
+        self.main.update()
+
+        # assign the text of the "head"
+        self.head = f'{xlib.get_bowtie2_name()} - Recreate config file'
+
+        # initialize the SSH client connection and previous cluster name
+        self.ssh_client = None
+        self.cluster_name_ant = None
+
+        # create the wrappers to track changes in inputs
+        self.wrapper_cluster_name = tkinter.StringVar()
+        self.wrapper_cluster_name.trace('w', self.check_inputs)
+        self.wrapper_reference_dataset = tkinter.StringVar()
+        self.wrapper_reference_dataset.trace('w', self.check_inputs)
+        self.wrapper_reference_file = tkinter.StringVar()
+        self.wrapper_reference_file.trace('w', self.check_inputs)
+        self.wrapper_experiment_id = tkinter.StringVar()
+        self.wrapper_experiment_id.trace('w', self.check_inputs)
+        self.wrapper_assembly_dataset = tkinter.StringVar()
+        self.wrapper_assembly_dataset.trace('w', self.check_inputs)
+        self.wrapper_assembly_type = tkinter.StringVar()
+        self.wrapper_assembly_type.trace('w', self.check_inputs)
+        self.wrapper_read_dataset = tkinter.StringVar()
+        self.wrapper_read_dataset.trace('w', self.check_inputs)
+        self.wrapper_file_pattern = tkinter.StringVar()
+        self.wrapper_file_pattern.trace('w', self.check_inputs)
+        self.wrapper_read_type = tkinter.StringVar()
+        self.wrapper_read_type.trace('w', self.check_inputs)
+        self.wrapper_specific_chars_1 = tkinter.StringVar()
+        self.wrapper_specific_chars_1.trace('w', self.check_inputs)
+        self.wrapper_specific_chars_2 = tkinter.StringVar()
+        self.wrapper_specific_chars_2.trace('w', self.check_inputs)
+
+        # build the graphical user interface
+        self.build_gui()
+
+        # load initial data in inputs
+        self.initialize_inputs()
+
+        # set cursor to show normal status
+        self.main.config(cursor='')
+        self.main.update()
+
+    #---------------
+
+    def build_gui(self):
+        '''
+        Build the graphical user interface of "FormRecreateBowtie2ConfigFile".
+        '''
+
+        # assign the text to the label of the current process name
+        self.main.label_process['text'] = self.head
+
+        # create "label_cluster_name" and register it with the grid geometry manager
+        self.label_cluster_name = tkinter.Label(self, text='Cluster name')
+        self.label_cluster_name.grid(row=0, column=0, padx=(15,5), pady=(30,5), sticky='e')
+
+        # create "combobox_cluster_name" and register it with the grid geometry manager
+        self.combobox_cluster_name = tkinter.ttk.Combobox(self, width=20, height=4, state='readonly', textvariable=self.wrapper_cluster_name)
+        self.combobox_cluster_name.grid(row=0, column=1, padx=(5,5), pady=(30,5), sticky='w')
+
+        # create "label_reference_dataset" and register it with the grid geometry manager
+        self.label_reference_dataset = tkinter.Label(self, text='Reference dataset')
+        self.label_reference_dataset.grid(row=1, column=0, padx=(15,5), pady=(15,5), sticky='e')
+
+        # create "combobox_reference_dataset" and register it with the grid geometry manager
+        self.combobox_reference_dataset = tkinter.ttk.Combobox(self, width=45, height=4, state='readonly', textvariable=self.wrapper_reference_dataset)
+        self.combobox_reference_dataset.grid(row=1, column=1, padx=(5,5), pady=(15,5), sticky='w')
+
+        # create "label_reference_file" and register it with the grid geometry manager
+        self.label_reference_file = tkinter.Label(self, text='Reference file')
+        self.label_reference_file.grid(row=2, column=0, padx=(15,5), pady=(15,5), sticky='e')
+
+        # create "combobox_reference_file" and register it with the grid geometry manager
+        self.combobox_reference_file = tkinter.ttk.Combobox(self, width=45, height=4, state='readonly', textvariable=self.wrapper_reference_file)
+        self.combobox_reference_file.grid(row=2, column=1, padx=(5,5), pady=(15,5), sticky='w')
+
+        # create "label_experiment_id" and register it with the grid geometry manager
+        self.label_experiment_id = tkinter.Label(self, text='Experiment id.')
+        self.label_experiment_id.grid(row=3, column=0, padx=(15,5), pady=(15,5), sticky='e')
+
+        # create "combobox_experiment_id" and register it with the grid geometry manager
+        self.combobox_experiment_id = tkinter.ttk.Combobox(self, width=30, height=4, state='readonly', textvariable=self.wrapper_experiment_id)
+        self.combobox_experiment_id.grid(row=3, column=1, padx=(5,5), pady=(15,5), sticky='w')
+
+        # create "label_assembly_dataset" and register it with the grid geometry manager
+        self.label_assembly_dataset = tkinter.Label(self, text='Assembly dataset')
+        self.label_assembly_dataset.grid(row=4, column=0, padx=(15,5), pady=(15,5), sticky='e')
+
+        # create "combobox_assembly_dataset" and register it with the grid geometry manager
+        self.combobox_assembly_dataset = tkinter.ttk.Combobox(self, width=45, height=4, state='readonly', textvariable=self.wrapper_assembly_dataset)
+        self.combobox_assembly_dataset.grid(row=4, column=1, padx=(5,5), pady=(15,5), sticky='w')
+
+        # create "label_assembly_type" and register it with the grid geometry manager
+        self.label_assembly_type = tkinter.Label(self, text='Assembly type')
+        self.label_assembly_type.grid(row=5, column=0, padx=(15,5), pady=(15,5), sticky='e')
+
+        # create "combobox_assembly_type" and register it with the grid geometry manager
+        self.combobox_assembly_type = tkinter.ttk.Combobox(self, width=20, height=4, state='readonly', textvariable=self.wrapper_assembly_type)
+        self.combobox_assembly_type.grid(row=5, column=1, padx=(5,5), pady=(15,5), sticky='w')
+
+        # create "label_read_dataset" and register it with the grid geometry manager
+        self.label_read_dataset = tkinter.Label(self, text='Read dataset')
+        self.label_read_dataset.grid(row=6, column=0, padx=(15,5), pady=(15,5), sticky='e')
+
+        # create "combobox_read_dataset" and register it with the grid geometry manager
+        self.combobox_read_dataset = tkinter.ttk.Combobox(self, width=45, height=4, state='readonly', textvariable=self.wrapper_read_dataset)
+        self.combobox_read_dataset.grid(row=6, column=1, padx=(5,5), pady=(15,5), sticky='w')
+
+        # create "label_file_pattern" and register it with the grid geometry manager
+        self.label_file_pattern = tkinter.Label(self, text='File pattern')
+        self.label_file_pattern.grid(row=7, column=0, padx=(15,5), pady=(15,5), sticky='e')
+
+        # create "entry_file_pattern" and register it with the grid geometry manager
+        self.entry_file_pattern = tkinter.Entry(self, textvariable=self.wrapper_file_pattern, width=30, validatecommand=self.check_inputs)
+        self.entry_file_pattern.grid(row=7, column=1, padx=(5,5), pady=(15,5), sticky='w')
+
+        # create "label_file_pattern_warning" and register it with the grid geometry manager
+        self.label_file_pattern_warning = tkinter.Label(self, text='')
+        self.label_file_pattern_warning.grid(row=7, column=2, columnspan=3, padx=(5,5), pady=(15,5), sticky='w')
+
+        # create "label_read_type" and register it with the grid geometry manager
+        self.label_read_type = tkinter.Label(self, text='Read type')
+        self.label_read_type.grid(row=8, column=0, padx=(15,5), pady=(15,5), sticky='e')
+
+        # create "combobox_read_type" and register it with the grid geometry manager
+        self.combobox_read_type = tkinter.ttk.Combobox(self, width=15, height=4, state='readonly', textvariable=self.wrapper_read_type)
+        self.combobox_read_type.grid(row=8, column=1, padx=(5,5), pady=(15,5), sticky='w')
+
+        # create "label_specific_chars_1" and register it with the grid geometry manager
+        self.label_specific_chars_1 = tkinter.Label(self, text='File #1 specific chars')
+        self.label_specific_chars_1.grid(row=9, column=0, padx=(15,5), pady=(15,5), sticky='e')
+
+        # create "entry_specific_chars_1" and register it with the grid geometry manager
+        self.entry_specific_chars_1 = tkinter.Entry(self, textvariable=self.wrapper_specific_chars_1, width=30, validatecommand=self.check_inputs)
+        self.entry_specific_chars_1.grid(row=9, column=1, padx=(5,5), pady=(15,5), sticky='w')
+
+        # create "label_specific_chars_2" and register it with the grid geometry manager
+        self.label_specific_chars_2 = tkinter.Label(self, text='File #2 specific chars')
+        self.label_specific_chars_2.grid(row=10, column=0, padx=(15,5), pady=(15,5), sticky='e')
+
+        # create "entry_specific_chars_2" and register it with the grid geometry manager
+        self.entry_specific_chars_2 = tkinter.Entry(self, textvariable=self.wrapper_specific_chars_2, width=30, validatecommand=self.check_inputs)
+        self.entry_specific_chars_2.grid(row=10, column=1, padx=(5,5), pady=(15,5), sticky='w')
+
+        # create "label_fit" and register it with the grid geometry manager
+        self.label_fit = tkinter.Label(self, text=' '*(35+xlib.get_os_size_fix()))
+        self.label_fit.grid(row=11, column=2, padx=(0,0), pady=(15,5), sticky='e')
+
+        # create "button_execute" and register it with the grid geometry manager
+        self.button_execute = tkinter.ttk.Button(self, text='Execute', command=self.execute, state='disabled')
+        self.button_execute.grid(row=11, column=3, padx=(0,5), pady=(15,5), sticky='e')
+
+        # create "button_close" and register it with the grid geometry manager
+        self.button_close = tkinter.ttk.Button(self, text='Close', command=self.close)
+        self.button_close.grid(row=11, column=4, padx=(5,5), pady=(15,5), sticky='w')
+
+        # link a handler to events
+        self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
+        self.combobox_reference_dataset.bind('<<ComboboxSelected>>', self.combobox_reference_dataset_selected_item)
+        self.combobox_reference_file.bind('<<ComboboxSelected>>', self.combobox_reference_file_selected_item)
+        self.combobox_experiment_id.bind('<<ComboboxSelected>>', self.combobox_experiment_id_selected_item)
+        self.combobox_assembly_dataset.bind('<<ComboboxSelected>>', self.combobox_assembly_dataset_selected_item)
+        self.combobox_assembly_type.bind('<<ComboboxSelected>>', self.combobox_assembly_type_selected_item)
+        self.combobox_read_dataset.bind('<<ComboboxSelected>>', self.combobox_read_dataset_selected_item)
+        self.combobox_read_type.bind('<<ComboboxSelected>>', self.combobox_read_type_selected_item)
+
+    #---------------
+
+    def initialize_inputs(self):
+        '''
+        Load initial data in inputs.
+        '''
+
+        # load initial data in inputs
+        self.combobox_reference_dataset['values'] = []
+        self.wrapper_reference_dataset.set('')
+        self.combobox_reference_file['values'] = []
+        self.wrapper_reference_file.set('')
+        self.combobox_experiment_id['values'] = []
+        self.wrapper_experiment_id.set('')
+        self.combobox_assembly_dataset['values'] = []
+        self.wrapper_assembly_dataset.set('')
+        self.assembly_dataset_id = None
+        self.combobox_assembly_type['values'] = []
+        self.wrapper_assembly_type.set('')
+        self.combobox_assembly_type['state'] = 'disabled'
+        self.combobox_read_dataset['values'] = []
+        self.wrapper_read_dataset.set('')
+        self.read_dataset_id = None
+        self.wrapper_file_pattern.set('.*fastq')
+        self.read_type = None
+        self.wrapper_specific_chars_1.set('')
+        self.entry_specific_chars_1['state'] = 'disabled'
+        self.wrapper_specific_chars_2.set('')
+        self.entry_specific_chars_2['state'] = 'disabled'
+
+        # populate data in comboboxes
+        self.populate_combobox_cluster_name()
+        self.populate_combobox_read_type()
+
+    #---------------
+
+    def populate_combobox_cluster_name(self):
+        '''
+        Populate data in "combobox_cluster_name".
+        '''
+
+        # clear the value selected in the combobox
+        self.wrapper_cluster_name.set('')
+
+        # check if there are some running clusters
+        running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
+        if running_cluster_list == []:
+            message = 'There is not any running cluster.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+            return
+
+        # load the names of clusters which are running in the combobox
+        self.combobox_cluster_name['values'] = running_cluster_list
+
+        # if there is only one cluster running, set its cluster name by default
+        if len(running_cluster_list) == 1:
+            self.wrapper_cluster_name.set(running_cluster_list[0])
+            self.combobox_cluster_name['state'] = 'disabled'
+            self.combobox_cluster_name_selected_item()
+
+    #---------------
+
+    def populate_combobox_reference_dataset(self):
+        '''
+        Populate data in "combobox_reference_dataset".
+        '''
+
+        # clear the value selected in the combobox
+        self.wrapper_reference_dataset.set('')
+
+        # get the list of the reference dataset names
+        (OK, error_list, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
+
+        # load the reference dataset names in the combobox
+        self.combobox_reference_dataset['values'] = ['NONE'] + sorted(reference_dataset_name_list)
+
+    #---------------
+
+    def populate_combobox_reference_file(self):
+        '''
+        Populate data in "combobox_reference_file".
+        '''
+
+        # clear the value selected in the combobox
+        self.wrapper_reference_file.set('')
+
+        # get the list of the reference dataset names
+        (OK, error_list, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+
+        # load the reference dataset names in the combobox
+        self.combobox_reference_file['values'] = sorted(reference_file_name_list)
+
+    #---------------
+
+    def populate_combobox_experiment_id(self):
+        '''
+        Populate data in "combobox_experiment_id".
+        '''
+
+        # clear the value selected in the combobox
+        self.wrapper_experiment_id.set('')
+
+        # initialize the experiment identification list
+        experiment_id_list = []
+
+        # get the experiment identifications
+        command = f'ls {xlib.get_cluster_read_dir()}'
+        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        if OK:
+            for line in stdout:
+                line = line.rstrip('\n')
+                if line != 'lost+found':
+                    experiment_id_list.append(line)
+
+        # check if there are any experimment identifications
+        if experiment_id_list == []:
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+            return
+
+        # load the experiment identifications in the combobox
+        self.combobox_experiment_id['values'] = sorted(experiment_id_list)
+
+    #---------------
+
+    def populate_combobox_assembly_dataset(self):
+        '''
+        Populate data in "combobox_assembly_dataset".
+        '''
+
+        # clear the value selected in the combobox
+        self.wrapper_assembly_dataset.set('')
+
+        # get the list of the assembly_dataset dataset names
+        app_list = [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(), xlib.get_transcript_filter_code()]
+        (OK, error_list, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+
+        # load the assembly dataset names in the combobox
+        self.combobox_assembly_dataset['values'] = sorted(assembly_dataset_name_list)
+
+    #---------------
+
+    def populate_combobox_read_dataset(self):
+        '''
+        Populate data in "combobox_read_dataset".
+        '''
+
+        # clear the value selected in the combobox
+        self.wrapper_read_dataset.set('')
+
+        # get the list of the read dataset names
+        (OK, error_list, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
+
+        # load the list of the read dataset names in the combobox
+        self.combobox_read_dataset['values'] = read_dataset_name_list
+
+    #---------------
+
+    def populate_combobox_read_type(self):
+        '''
+        Populate data in "combobox_read_type".
+        '''
+
+        # clear the value selected in the combobox
+        self.wrapper_read_type.set('')
+
+        # load the list of the read dataset names in the combobox
+        self.combobox_read_type['values'] =['Single-end', 'Paired-end']
+
+    #---------------
+
+    def combobox_cluster_name_selected_item(self, event=None):
+        '''
+        Process the event when an item of "combobox_cluster_name" has been selected
+        '''
+
+        # set cursor to show busy status
+        self.main.config(cursor='watch')
+        self.main.update()
+
+        # check if the cluster name selected is different to the previous cluster name
+        if self.wrapper_cluster_name.get() != self.cluster_name_ant:
+
+            # close SSH client connection
+            if self.cluster_name_ant is not None:
+                xssh.close_ssh_client_connection(self.ssh_client)
+
+            # create the SSH client connection
+            (OK, error_list, self.ssh_client) = xssh.create_ssh_client_connection(self.wrapper_cluster_name.get())
+            if not OK:
+                message = ''
+                for error in error_list:
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+                self.close()
+
+            # save current cluster name as previous cluster name
+            self.cluster_name_ant = self.wrapper_cluster_name.get()
+
+        # load data in "combobox_reference_dataset"
+        self.populate_combobox_reference_dataset()
+
+        # clear data in "combobox_reference_file"
+        self.combobox_reference_file['values'] = []
+        self.wrapper_reference_file.set('')
+
+        # load data in "combobox_experiment_id"
+        self.populate_combobox_experiment_id()
+
+        # clear data in "combobox_read_dataset"
+        self.combobox_read_dataset['values'] = []
+        self.wrapper_read_dataset.set('')
+
+        # set cursor to show normal status
+        self.main.config(cursor='')
+        self.main.update()
+
+    #---------------
+
+    def combobox_reference_dataset_selected_item(self, event=None):
+        '''
+        Process the event when an item of "combobox_reference_dataset" has been selected
+        '''
+
+        # set cursor to show busy status
+        self.main.config(cursor='watch')
+        self.main.update()
+
+        # load data in "combobox_reference_file"
+        if self.wrapper_reference_dataset.get() == 'NONE':
+            self.combobox_reference_file['values'] = ['NONE']
+            self.wrapper_reference_file.set('NONE')
+        else:
+            self.populate_combobox_reference_file()
+
+        # load data in "combobox_assembly_dataset" if an item is selected in the "combobox_experiment_id"
+        if self.assembly_dataset_id != None:
+            if self.wrapper_reference_dataset.get() == 'NONE':
+                self.populate_combobox_assembly_dataset()
+            else:
+                self.combobox_assembly_dataset['values'] = ['NONE']
+                self.wrapper_assembly_dataset.set('NONE')
+                self.assembly_dataset_id = 'NONE'
+                self.combobox_assembly_type['values'] = ['NONE']
+                self.wrapper_assembly_type.set('NONE')
+
+        # set cursor to show normal status
+        self.main.config(cursor='')
+        self.main.update()
+
+    #---------------
+
+    def combobox_reference_file_selected_item(self, event=None):
+        '''
+        Process the event when an item of "combobox_reference_file" has been selected
+        '''
+
+        pass
+
+    #---------------
+
+    def combobox_experiment_id_selected_item(self, event=None):
+        '''
+        Process the event when an item of "combobox_experiment_id" has been selected
+        '''
+
+        # set cursor to show busy status
+        self.main.config(cursor='watch')
+        self.main.update()
+
+        # load data in "combobox_assembly_dataset"
+        if self.wrapper_reference_dataset.get() == 'NONE':
+            self.populate_combobox_assembly_dataset()
+        else:
+            self.combobox_assembly_dataset['values'] = ['NONE']
+            self.wrapper_assembly_dataset.set('NONE')
+            self.assembly_dataset_id = 'NONE'
+            self.combobox_assembly_type['values'] = ['NONE']
+            self.wrapper_assembly_type.set('NONE')
+
+        # load data in "combobox_read_dataset"
+        self.populate_combobox_read_dataset()
+
+        # set cursor to show normal status
+        self.main.config(cursor='')
+        self.main.update()
+
+    #---------------
+
+    def combobox_assembly_dataset_selected_item(self, event=None):
+        '''
+        Process the event when an item of "combobox_assembly_dataset" has been selected
+        '''
+
+        # get the assembly_dataset dataset identification
+        (OK, error_list, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+
+        # load data in "combobox_assembly_type"
+        if self.assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()):
+            self.combobox_assembly_type['values'] = ['CONTIGS', 'SCAFFOLDS']
+            self.wrapper_assembly_type.set('')
+            self.combobox_assembly_type['state'] = 'readonly'
+        elif self.assembly_dataset_id.startswith(xlib.get_transabyss_code()) or self.assembly_dataset_id.startswith(xlib.get_trinity_code()) or self.assembly_dataset_id.startswith(xlib.get_ggtrinity_code()) or self.assembly_dataset_id.startswith(xlib.get_cd_hit_est_code()) or self.assembly_dataset_id.startswith(xlib.get_transcript_filter_code()):
+            self.combobox_assembly_type['values'] = ['NONE']
+            self.wrapper_assembly_type.set('NONE')
+            self.combobox_assembly_type['state'] = 'disabled'
+
+    #---------------
+
+    def combobox_assembly_type_selected_item(self, event=None):
+        '''
+        Process the event when an item of "combobox_assembly_type" has been selected
+        '''
+
+        pass
+
+    #---------------
+
+    def combobox_read_dataset_selected_item(self, event=None):
+        '''
+        Process the event when an item of "combobox_read_dataset" has been selected
+        '''
+
+        # get the read dataset identification
+        (OK, error_list, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+
+    #---------------
+
+    def combobox_read_type_selected_item(self, event=None):
+        '''
+        Process the event when an item of "combobox_read_type" has been selected
+        '''
+
+        # get the read type code
+        if self.wrapper_read_type.get() == 'Single-end':
+            self.read_type = 'SE'
+        elif self.wrapper_read_type.get() == 'Paired-end':
+            self.read_type = 'PE'
+
+        # enable or disable the specific chars entries
+        if self.wrapper_read_type.get() == 'Single-end':
+            self.wrapper_specific_chars_1.set('')
+            self.entry_specific_chars_1['state'] = 'disabled'
+            self.wrapper_specific_chars_2.set('')
+            self.entry_specific_chars_2['state'] = 'disabled'
+        elif self.wrapper_read_type.get() == 'Paired-end':
+            self.wrapper_specific_chars_1.set('1.fastq')
+            self.entry_specific_chars_1['state'] = 'normal'
+            self.wrapper_specific_chars_2.set('2.fastq')
+            self.entry_specific_chars_2['state'] = 'normal'
+
+    #---------------
+
+    def check_inputs(self, *args):
+        '''
+        Check the content of each input of "FormRecreateBowtie2ConfigFile" and do the actions linked to its value
+        '''
+
+        # initialize the control variable
+        OK = True
+
+        # check the content of "entry_file_pattern"
+        if not self.check_entry_file_pattern():
+            OK = False
+
+        # check if "button_execute" has to be enabled or disabled
+        if self.wrapper_cluster_name.get() != '' and self.wrapper_reference_dataset.get() != '' and self.wrapper_reference_file.get() != '' and self.wrapper_experiment_id.get() != '' and self.wrapper_assembly_dataset.get() != '' and self.wrapper_assembly_type.get() != '' and self.wrapper_read_dataset.get() != '' and self.wrapper_file_pattern.get() != '' and (self.read_type == 'SE' or self.read_type == 'PE' and self.wrapper_specific_chars_1.get() != '' and  self.wrapper_specific_chars_2.get() != ''):
+            self.button_execute['state'] = 'enable'
+        else:
+            self.button_execute['state'] = 'disabled'
+
+        # return the control variable
+        return OK
+
+    #---------------
+
+    def check_entry_file_pattern(self):
+        '''
+        Check the content of "entry_file_pattern"
+        '''
+
+        # initialize the control variable
+        OK = True
+
+        # check that "entry_file_pattern" value is a valid pattern of regular expression
+        try:
+            re.compile(self.wrapper_file_pattern.get())
+        except Exception as e:
+            self.label_file_pattern_warning['text'] = 'It is not a valid pattern of regular expression.'
+            self.label_file_pattern_warning['foreground'] = 'red'
+            OK = False
+        else:
+            self.label_file_pattern_warning['text'] = 'It is a pattern of regular expression.'
+            self.label_file_pattern_warning['foreground'] = 'black'
+
+        # return the control variable
+        return OK
+
+    #---------------
+
+    def execute(self):
+        '''
+        Execute the creation of the config file.
+        '''
+
+        # check inputs
+        OK = self.check_inputs()
+        if not OK:
+            message = 'Some input values are not OK.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+
+        # build the cluster read directory path
+        if OK:
+            cluster_read_dir = f'{xlib.get_cluster_read_dir()}/{self.wrapper_experiment_id.get()}/{self.read_dataset_id}'
+
+        # get the selected file list
+        if OK:
+            selected_file_list = []
+            command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
+            (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+            if OK:
+                for line in stdout:
+                    selected_file_list.append(line.rstrip('\n'))
+            else:
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+            if selected_file_list == []:
+                message = f'WARNING: There are not files in the cluster directory {cluster_read_dir} with the pattern {self.wrapper_file_pattern.get()}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+
+        # get the paired file list when the read type is paired-end
+        if OK:
+            if self.read_type == 'PE':
+                (file_1_list, file_2_list, unpaired_file_list) = xlib.pair_files(selected_file_list, self.wrapper_specific_chars_1.get(), self.wrapper_specific_chars_2.get())
+                if unpaired_file_list != []:
+                    message = f'ERROR: There are unpaired files: {unpaired_file_list}'
+                    tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+                    OK = False
+
+        # confirm the creation of the Bowtie2 config file
+        if OK:
+            message = f'The file {xbowtie2.get_bowtie2_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
+
+        # recreate the Bowtie2 config file
+        if OK:
+            if self.read_type == 'SE':
+                (OK, error_list) = xbowtie2.create_bowtie2_config_file(self.wrapper_experiment_id.get(), self.wrapper_reference_dataset.get(), self.wrapper_reference_file.get(), self.assembly_dataset_id, self.wrapper_assembly_type.get(), self.read_dataset_id, self.read_type, selected_file_list, None)
+            elif self.read_type == 'PE':
+                (OK, error_list) = xbowtie2.create_bowtie2_config_file(self.wrapper_experiment_id.get(), self.wrapper_reference_dataset.get(), self.wrapper_reference_file.get(), self.assembly_dataset_id, self.wrapper_assembly_type.get(), self.read_dataset_id, self.read_type, file_1_list, file_2_list)
+            if not OK:
+                message = ''
+                for error in error_list:
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+
+        # edit the Bowtie2 config file
+        if OK:
+
+            # edit the config file using "DialogEditor" 
+            dialog_editor = gdialogs.DialogEditor(self, xbowtie2.get_bowtie2_config_file())
+            self.wait_window(dialog_editor)
+
+            # check the config file
+            (OK, error_list) = xbowtie2.check_bowtie2_config_file(strict=False)
+            if OK:
+                message = f'The {xlib.get_bowtie2_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
+            else:
+                message = 'Detected errors:\n\n'
+                for error in error_list:
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+
+        # close the form
+        self.close()
+
+    #---------------
+
+    def close(self):
+        '''
+        Close "FormRecreateBowtie2ConfigFile".
+        '''
+        # close SSH client connection
+        if self.cluster_name_ant is not None:
+            xssh.close_ssh_client_connection(self.ssh_client)
 
         # clear the label of the current process name
         self.main.label_process['text'] = ''
@@ -680,7 +1449,7 @@ class FormRecreateBuscoConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_busco_name())
+        self.head = f'{xlib.get_busco_name()} - Recreate config file'
 
         # initialize the SSH client connection and previous cluster name
         self.ssh_client = None
@@ -800,7 +1569,7 @@ class FormRecreateBuscoConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -826,7 +1595,7 @@ class FormRecreateBuscoConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_read_dir())
+        command = f'ls {xlib.get_cluster_read_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -836,8 +1605,8 @@ class FormRecreateBuscoConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -883,8 +1652,8 @@ class FormRecreateBuscoConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -978,12 +1747,12 @@ class FormRecreateBuscoConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the creation of the BUSCO config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xbusco.get_busco_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xbusco.get_busco_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the BUSCO config file
         if OK:
@@ -991,8 +1760,8 @@ class FormRecreateBuscoConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the BUSCO config file
         if OK:
@@ -1004,13 +1773,13 @@ class FormRecreateBuscoConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xbusco.check_busco_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_busco_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_busco_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -1056,7 +1825,7 @@ class FormRecreateCdHitEstConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_cd_hit_est_name())
+        self.head = f'{xlib.get_cd_hit_est_name()} - Recreate config file'
 
         # initialize the SSH client connection and previous cluster name
         self.ssh_client = None
@@ -1176,7 +1945,7 @@ class FormRecreateCdHitEstConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -1202,7 +1971,7 @@ class FormRecreateCdHitEstConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_result_dir())
+        command = f'ls {xlib.get_cluster_result_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -1212,8 +1981,8 @@ class FormRecreateCdHitEstConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -1259,8 +2028,8 @@ class FormRecreateCdHitEstConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -1354,12 +2123,12 @@ class FormRecreateCdHitEstConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the creation of the CD-HIT-EST config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xcdhit.get_cd_hit_est_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xcdhit.get_cd_hit_est_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the CD-HIT-EST config file
         if OK:
@@ -1367,8 +2136,8 @@ class FormRecreateCdHitEstConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the CD-HIT-EST config file
         if OK:
@@ -1380,13 +2149,13 @@ class FormRecreateCdHitEstConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xcdhit.check_cd_hit_est_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_cd_hit_est_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_cd_hit_est_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -1432,7 +2201,7 @@ class FormRecreateCuffdiffConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_cuffdiff_name())
+        self.head = f'{xlib.get_cuffdiff_name()} - Recreate config file'
 
         # initialize the SSH client connection and previous cluster name
         self.ssh_client = None
@@ -1552,7 +2321,7 @@ class FormRecreateCuffdiffConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -1578,7 +2347,7 @@ class FormRecreateCuffdiffConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_read_dir())
+        command = f'ls {xlib.get_cluster_read_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -1588,8 +2357,8 @@ class FormRecreateCuffdiffConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -1652,8 +2421,8 @@ class FormRecreateCuffdiffConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -1737,12 +2506,12 @@ class FormRecreateCuffdiffConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the creation of the Cuffdiff config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xcufflinks.get_cuffdiff_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xcufflinks.get_cuffdiff_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the Cuffdiff config file
         if OK:
@@ -1750,8 +2519,8 @@ class FormRecreateCuffdiffConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the Cuffdiff config file
         if OK:
@@ -1763,13 +2532,13 @@ class FormRecreateCuffdiffConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xcufflinks.check_cuffdiff_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_cuffdiff_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_cuffdiff_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -1815,7 +2584,7 @@ class FormRecreateCufflinksCuffmergeConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_cufflinks_cuffmerge_name())
+        self.head = f'{xlib.get_cufflinks_cuffmerge_name()} - Recreate config file'
 
         # initialize the selected alignment dataset list
         self.selected_alignment_dataset_list = []
@@ -1983,7 +2752,7 @@ class FormRecreateCufflinksCuffmergeConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -2073,7 +2842,7 @@ class FormRecreateCufflinksCuffmergeConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_read_dir())
+        command = f'ls {xlib.get_cluster_read_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -2083,8 +2852,8 @@ class FormRecreateCufflinksCuffmergeConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -2114,8 +2883,8 @@ class FormRecreateCufflinksCuffmergeConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -2300,12 +3069,12 @@ class FormRecreateCufflinksCuffmergeConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the creation of the Cufflinks-Cuffmerge config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xcufflinks.get_cufflinks_cuffmerge_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xcufflinks.get_cufflinks_cuffmerge_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the Cufflinks-Cuffmerge config file
         if OK:
@@ -2313,8 +3082,8 @@ class FormRecreateCufflinksCuffmergeConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the Cufflinks-Cuffmerge config file
         if OK:
@@ -2326,13 +3095,13 @@ class FormRecreateCufflinksCuffmergeConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xcufflinks.check_cufflinks_cuffmerge_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_cufflinks_cuffmerge_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_cufflinks_cuffmerge_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -2378,7 +3147,7 @@ class FormRecreateCuffquantConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_cuffquant_name())
+        self.head = f'{xlib.get_cuffquant_name()} - Recreate config file'
 
         # initialize the selected alignment dataset list
         self.selected_alignment_dataset_list = []
@@ -2534,7 +3303,7 @@ class FormRecreateCuffquantConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -2592,7 +3361,7 @@ class FormRecreateCuffquantConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_read_dir())
+        command = f'ls {xlib.get_cluster_read_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -2602,8 +3371,8 @@ class FormRecreateCuffquantConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -2649,8 +3418,8 @@ class FormRecreateCuffquantConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -2816,12 +3585,12 @@ class FormRecreateCuffquantConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the creation of the Cuffquant config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xcufflinks.get_cuffquant_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xcufflinks.get_cuffquant_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the Cuffquant config file
         if OK:
@@ -2829,8 +3598,8 @@ class FormRecreateCuffquantConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the Cuffquant config file
         if OK:
@@ -2842,13 +3611,13 @@ class FormRecreateCuffquantConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xcufflinks.check_cuffquant_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_cuffquant_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_cuffquant_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -2894,7 +3663,7 @@ class FormRecreateCutadaptConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_cutadapt_name())
+        self.head = f'{xlib.get_cutadapt_name()} - Recreate config file'
 
         # initialize the SSH client connection and previous cluster name
         self.ssh_client = None
@@ -3052,7 +3821,7 @@ class FormRecreateCutadaptConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -3078,7 +3847,7 @@ class FormRecreateCutadaptConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_read_dir())
+        command = f'ls {xlib.get_cluster_read_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -3088,8 +3857,8 @@ class FormRecreateCutadaptConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -3147,8 +3916,8 @@ class FormRecreateCutadaptConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -3276,40 +4045,40 @@ class FormRecreateCutadaptConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # build the cluster read directory path
         if OK:
-            cluster_read_dir = '{0}/{1}/{2}'.format(xlib.get_cluster_read_dir(), self.wrapper_experiment_id.get(), self.read_dataset_id)
+            cluster_read_dir = f'{xlib.get_cluster_read_dir()}/{self.wrapper_experiment_id.get()}/{self.read_dataset_id}'
 
         # get the selected file list
         if OK:
             selected_file_list = []
-            command = 'cd {0}; find . -type f -regex "./{1}"'.format(cluster_read_dir, self.wrapper_file_pattern.get())
+            command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
             (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             if selected_file_list == []:
-                message = 'WARNING: There are not files in the cluster directory {0} with the pattern {1}'.format(cluster_read_dir, self.wrapper_file_pattern.get())
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'WARNING: There are not files in the cluster directory {cluster_read_dir} with the pattern {self.wrapper_file_pattern.get()}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the paired file list when the read type is paired-end
         if OK:
             if self.read_type == 'PE':
                 (file_1_list, file_2_list, unpaired_file_list) = xlib.pair_files(selected_file_list, self.wrapper_specific_chars_1.get(), self.wrapper_specific_chars_2.get())
                 if unpaired_file_list != []:
-                    message = 'ERROR: There are unpaired files: {0}'.format(unpaired_file_list)
-                    tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'ERROR: There are unpaired files: {unpaired_file_list}'
+                    tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                     OK = False
 
         # confirm the creation of the cutadapt config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xcutadapt.get_cutadapt_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xcutadapt.get_cutadapt_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the cutadapt config file
         if OK:
@@ -3320,8 +4089,8 @@ class FormRecreateCutadaptConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the cutadapt config file
         if OK:
@@ -3333,13 +4102,13 @@ class FormRecreateCutadaptConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xcutadapt.check_cutadapt_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_cutadapt_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_cutadapt_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -3385,7 +4154,7 @@ class FormRecreateDdRadSeqSimulationConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_ddradseq_simulation_name())
+        self.head = f'{xlib.get_ddradseq_simulation_name()} - Recreate config file'
 
         # initialize the enzyme identification list
         self.enzyme_id_list = []
@@ -3533,7 +4302,7 @@ class FormRecreateDdRadSeqSimulationConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -3626,8 +4395,8 @@ class FormRecreateDdRadSeqSimulationConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -3645,8 +4414,8 @@ class FormRecreateDdRadSeqSimulationConfigFile(tkinter.Frame):
         if not OK:
             message = ''
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             self.close()
 
         # get the list of enzyme identification and restriction site seq
@@ -3809,7 +4578,7 @@ class FormRecreateDdRadSeqSimulationConfigFile(tkinter.Frame):
         OK = self.check_inputs() and self.check_enzyme(self.combobox_enzyme1.get(), self.label_enzyme1_warning)  and self.check_enzyme(self.combobox_enzyme2.get(), self.label_enzyme2_warning)
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # check that enzyme 1 has to be different from enzyme 2
         if OK:
@@ -3832,12 +4601,12 @@ class FormRecreateDdRadSeqSimulationConfigFile(tkinter.Frame):
             if enzyme1_seq.upper() == enzyme2_seq.upper():
                 OK = False
                 message = 'Both enzymes have the same sequence. A ddRADseq experiment has to be performed with two different enzymes.'
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the creation of the ddRADseq simulation config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xddradseqtools.get_ddradseq_simulation_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xddradseqtools.get_ddradseq_simulation_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the ddRADseq simulation config file
         if OK:
@@ -3845,8 +4614,8 @@ class FormRecreateDdRadSeqSimulationConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the ddRADseq simulation config file
         if OK:
@@ -3858,13 +4627,13 @@ class FormRecreateDdRadSeqSimulationConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xddradseqtools.check_ddradseq_simulation_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_ddradseq_simulation_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_ddradseq_simulation_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -3874,6 +4643,430 @@ class FormRecreateDdRadSeqSimulationConfigFile(tkinter.Frame):
     def close(self):
         '''
         Close "FormRecreateDdRadSeqSimulationConfigFile".
+        '''
+        # close SSH client connection
+        if self.cluster_name_ant is not None:
+            xssh.close_ssh_client_connection(self.ssh_client)
+
+        # clear the label of the current process name
+        self.main.label_process['text'] = ''
+
+        # close the current form
+        self.main.close_current_form()
+
+    #---------------
+
+#-------------------------------------------------------------------------------
+
+class FormRecreateExpressConfigFile(tkinter.Frame):
+
+    #---------------
+
+    def __init__(self, parent, main):
+        '''
+        Execute actions correspending to the creation of a "FormRecreateExpressConfigFile" instance.
+        '''
+
+        # save initial parameters in instance variables
+        self.parent = parent
+        self.main = main
+
+        # call the init method of the parent class
+        tkinter.Frame.__init__(self, self.parent)
+
+        # set cursor to show busy status
+        self.main.config(cursor='watch')
+        self.main.update()
+
+        # assign the text of the "head"
+        self.head = f'{xlib.get_express_name()} - Recreate config file'
+
+        # initialize the SSH client connection and previous cluster name
+        self.ssh_client = None
+        self.cluster_name_ant = None
+
+        # create the wrappers to track changes in inputs
+        self.wrapper_cluster_name = tkinter.StringVar()
+        self.wrapper_cluster_name.trace('w', self.check_inputs)
+        self.wrapper_experiment_id = tkinter.StringVar()
+        self.wrapper_experiment_id.trace('w', self.check_inputs)
+        self.wrapper_assembly_dataset = tkinter.StringVar()
+        self.wrapper_assembly_dataset.trace('w', self.check_inputs)
+        self.wrapper_assembly_type = tkinter.StringVar()
+        self.wrapper_assembly_type.trace('w', self.check_inputs)
+        self.wrapper_alignment_dataset = tkinter.StringVar()
+        self.wrapper_alignment_dataset.trace('w', self.check_inputs)
+
+        # build the graphical user interface
+        self.build_gui()
+
+        # load initial data in inputs
+        self.initialize_inputs()
+
+        # set cursor to show normal status
+        self.main.config(cursor='')
+        self.main.update()
+
+    #---------------
+
+    def build_gui(self):
+        '''
+        Build the graphical user interface of "FormRecreateExpressConfigFile".
+        '''
+
+        # assign the text to the label of the current process name
+        self.main.label_process['text'] = self.head
+
+        # create "label_cluster_name" and register it with the grid geometry manager
+        self.label_cluster_name = tkinter.Label(self, text='Cluster name')
+        self.label_cluster_name.grid(row=0, column=0, padx=(15,5), pady=(75,5), sticky='e')
+
+        # create "combobox_cluster_name" and register it with the grid geometry manager
+        self.combobox_cluster_name = tkinter.ttk.Combobox(self, width=20, height=4, state='readonly', textvariable=self.wrapper_cluster_name)
+        self.combobox_cluster_name.grid(row=0, column=1, padx=(5,5), pady=(75,5), sticky='w')
+
+        # create "label_experiment_id" and register it with the grid geometry manager
+        self.label_experiment_id = tkinter.Label(self, text='Experiment id.')
+        self.label_experiment_id.grid(row=1, column=0, padx=(15,5), pady=(45,5), sticky='e')
+
+        # create "combobox_experiment_id" and register it with the grid geometry manager
+        self.combobox_experiment_id = tkinter.ttk.Combobox(self, width=30, height=4, state='readonly', textvariable=self.wrapper_experiment_id)
+        self.combobox_experiment_id.grid(row=1, column=1, padx=(5,5), pady=(45,5), sticky='w')
+
+        # create "label_assembly_dataset" and register it with the grid geometry manager
+        self.label_assembly_dataset = tkinter.Label(self, text='Assembly dataset')
+        self.label_assembly_dataset.grid(row=2, column=0, padx=(15,5), pady=(45,5), sticky='e')
+
+        # create "combobox_assembly_dataset" and register it with the grid geometry manager
+        self.combobox_assembly_dataset = tkinter.ttk.Combobox(self, width=45, height=4, state='readonly', textvariable=self.wrapper_assembly_dataset)
+        self.combobox_assembly_dataset.grid(row=2, column=1, padx=(5,5), pady=(45,5), sticky='w')
+
+        # create "label_assembly_type" and register it with the grid geometry manager
+        self.label_assembly_type = tkinter.Label(self, text='Assembly type')
+        self.label_assembly_type.grid(row=3, column=0, padx=(15,5), pady=(45,5), sticky='e')
+
+        # create "combobox_assembly_type" and register it with the grid geometry manager
+        self.combobox_assembly_type = tkinter.ttk.Combobox(self, width=20, height=4, state='readonly', textvariable=self.wrapper_assembly_type)
+        self.combobox_assembly_type.grid(row=3, column=1, padx=(5,5), pady=(45,5), sticky='w')
+
+        # create "label_alignment_dataset" and register it with the grid geometry manager
+        self.label_alignment_dataset = tkinter.Label(self, text='Alignment dataset')
+        self.label_alignment_dataset.grid(row=4, column=0, padx=(15,5), pady=(45,5), sticky='e')
+
+        # create "combobox_alignment_dataset" and register it with the grid geometry manager
+        self.combobox_alignment_dataset = tkinter.ttk.Combobox(self, width=45, height=4, state='readonly', textvariable=self.wrapper_alignment_dataset)
+        self.combobox_alignment_dataset.grid(row=4, column=1, padx=(5,5), pady=(45,5), sticky='w')
+
+        # create "label_fit" and register it with the grid geometry manager
+        self.label_fit = tkinter.Label(self, text=' '*(35+xlib.get_os_size_fix()))
+        self.label_fit.grid(row=5, column=2, padx=(0,0), pady=(45,5), sticky='e')
+
+        # create "button_execute" and register it with the grid geometry manager
+        self.button_execute = tkinter.ttk.Button(self, text='Execute', command=self.execute, state='disabled')
+        self.button_execute.grid(row=5, column=3, padx=(0,5), pady=(45,5), sticky='e')
+
+        # create "button_close" and register it with the grid geometry manager
+        self.button_close = tkinter.ttk.Button(self, text='Close', command=self.close)
+        self.button_close.grid(row=5, column=4, padx=(5,5), pady=(45,5), sticky='w')
+
+        # link a handler to events
+        self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
+        self.combobox_experiment_id.bind('<<ComboboxSelected>>', self.combobox_experiment_id_selected_item)
+        self.combobox_assembly_dataset.bind('<<ComboboxSelected>>', self.combobox_assembly_dataset_selected_item)
+        self.combobox_assembly_type.bind('<<ComboboxSelected>>', self.combobox_assembly_type_selected_item)
+        self.combobox_alignment_dataset.bind('<<ComboboxSelected>>', self.combobox_alignment_dataset_selected_item)
+
+    #---------------
+
+    def initialize_inputs(self):
+        '''
+        Load initial data in inputs.
+        '''
+
+        # load initial data in inputs
+        self.combobox_experiment_id['values'] = []
+        self.wrapper_experiment_id.set('')
+        self.combobox_assembly_dataset['values'] = []
+        self.wrapper_assembly_dataset.set('')
+        self.assembly_dataset_id = None
+        self.combobox_assembly_type['values'] = []
+        self.wrapper_assembly_type.set('')
+        self.combobox_assembly_type['state'] = 'disabled'
+        self.combobox_alignment_dataset['values'] = []
+        self.wrapper_alignment_dataset.set('')
+        self.alignment_dataset_id = None
+
+        # populate data in comboboxes
+        self.populate_combobox_cluster_name()
+
+    #---------------
+
+    def populate_combobox_cluster_name(self):
+        '''
+        Populate data in "combobox_cluster_name".
+        '''
+
+        # clear the value selected in the combobox
+        self.wrapper_cluster_name.set('')
+
+        # check if there are some running clusters
+        running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
+        if running_cluster_list == []:
+            message = 'There is not any running cluster.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+            return
+
+        # load the names of clusters which are running in the combobox
+        self.combobox_cluster_name['values'] = running_cluster_list
+
+        # if there is only one cluster running, set its cluster name by default
+        if len(running_cluster_list) == 1:
+            self.wrapper_cluster_name.set(running_cluster_list[0])
+            self.combobox_cluster_name['state'] = 'disabled'
+            self.combobox_cluster_name_selected_item()
+
+    #---------------
+
+    def populate_combobox_experiment_id(self):
+        '''
+        Populate data in "combobox_experiment_id".
+        '''
+
+        # clear the value selected in the combobox
+        self.wrapper_experiment_id.set('')
+
+        # initialize the experiment identification list
+        experiment_id_list = []
+
+        # get the experiment identifications
+        command = f'ls {xlib.get_cluster_read_dir()}'
+        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        if OK:
+            for line in stdout:
+                line = line.rstrip('\n')
+                if line != 'lost+found':
+                    experiment_id_list.append(line)
+
+        # check if there are any experimment identifications
+        if experiment_id_list == []:
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+            return
+
+        # load the experiment identifications in the combobox
+        self.combobox_experiment_id['values'] = sorted(experiment_id_list)
+
+    #---------------
+
+    def populate_combobox_assembly_dataset(self):
+        '''
+        Populate data in "combobox_assembly_dataset".
+        '''
+
+        # clear the value selected in the combobox
+        self.wrapper_assembly_dataset.set('')
+
+        # get the list of the assembly dataset names
+        app_list = [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(), xlib.get_transcript_filter_code()]
+        (OK, error_list, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+
+        # load the assembly dataset names in the combobox
+        self.combobox_assembly_dataset['values'] = sorted(assembly_dataset_name_list)
+
+    #---------------
+
+    def populate_combobox_alignment_dataset(self):
+        '''
+        Populate data in "combobox_alignment_dataset".
+        '''
+
+        # clear the value selected in the combobox
+        self.wrapper_alignment_dataset.set('')
+
+        # get the list of the alignment dataset names
+        app_list = [xlib.get_bowtie2_code()]
+        (OK, error_list, alignment_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+
+        # load the alignment dataset names in the combobox
+        self.combobox_alignment_dataset['values'] = sorted(alignment_dataset_name_list)
+
+    #---------------
+
+    def combobox_cluster_name_selected_item(self, event=None):
+        '''
+        Process the event when an item of "combobox_cluster_name" has been selected
+        '''
+
+        # set cursor to show busy status
+        self.main.config(cursor='watch')
+        self.main.update()
+
+        # check if the cluster name selected is different to the previous cluster name
+        if self.wrapper_cluster_name.get() != self.cluster_name_ant:
+
+            # close SSH client connection
+            if self.cluster_name_ant is not None:
+                xssh.close_ssh_client_connection(self.ssh_client)
+
+            # create the SSH client connection
+            (OK, error_list, self.ssh_client) = xssh.create_ssh_client_connection(self.wrapper_cluster_name.get())
+            if not OK:
+                message = ''
+                for error in error_list:
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+                self.close()
+
+            # save current cluster name as previous cluster name
+            self.cluster_name_ant = self.wrapper_cluster_name.get()
+
+        # load data in "combobox_experiment_id"
+        self.populate_combobox_experiment_id()
+
+        # clear data in "combobox_assembly_dataset"
+        self.combobox_assembly_dataset['values'] = []
+        self.wrapper_assembly_dataset.set('')
+
+        # clear data in "combobox_alignment_dataset"
+        self.combobox_alignment_dataset['values'] = []
+        self.wrapper_alignment_dataset.set('')
+
+        # set cursor to show normal status
+        self.main.config(cursor='')
+        self.main.update()
+
+    #---------------
+
+    def combobox_experiment_id_selected_item(self, event=None):
+        '''
+        Process the event when an item of "combobox_experiment_id" has been selected
+        '''
+
+        # set cursor to show busy status
+        self.main.config(cursor='watch')
+        self.main.update()
+
+        # load data in "combobox_assembly_dataset"
+        self.populate_combobox_assembly_dataset()
+
+        # load data in "combobox_alignment_dataset"
+        self.populate_combobox_alignment_dataset()
+
+        # set cursor to show normal status
+        self.main.config(cursor='')
+        self.main.update()
+
+    #---------------
+
+    def combobox_assembly_dataset_selected_item(self, event=None):
+        '''
+        Process the event when an item of "combobox_assembly_dataset" has been selected
+        '''
+
+        # get the assembly dataset identification
+        (OK, error_list, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+
+        # load data in "combobox_assembly_type"
+        if self.assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()):
+            self.combobox_assembly_type['values'] = ['CONTIGS', 'SCAFFOLDS']
+            self.wrapper_assembly_type.set('')
+            self.combobox_assembly_type['state'] = 'readonly'
+        elif self.assembly_dataset_id.startswith(xlib.get_transabyss_code()) or self.assembly_dataset_id.startswith(xlib.get_trinity_code()) or self.assembly_dataset_id.startswith(xlib.get_ggtrinity_code()) or self.assembly_dataset_id.startswith(xlib.get_cd_hit_est_code()) or self.assembly_dataset_id.startswith(xlib.get_transcript_filter_code()):
+            self.combobox_assembly_type['values'] = ['NONE']
+            self.wrapper_assembly_type.set('NONE')
+            self.combobox_assembly_type['state'] = 'disabled'
+
+    #---------------
+
+    def combobox_assembly_type_selected_item(self, event=None):
+        '''
+        Process the event when an item of "combobox_assembly_type" has been selected
+        '''
+
+        pass
+
+    #---------------
+
+    def combobox_alignment_dataset_selected_item(self, event=None):
+        '''
+        Process the event when an item of "combobox_alignment_dataset" has been selected
+        '''
+
+        # get the alignment dataset identification
+        (OK, error_list, self.alignment_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_alignment_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+
+    #---------------
+
+    def check_inputs(self, *args):
+        '''
+        Check the content of each input of "FormRecreateExpressConfigFile" and do the actions linked to its value
+        '''
+
+        # initialize the control variable
+        OK = True
+
+        # check if "button_execute" has to be enabled or disabled
+        if self.wrapper_cluster_name.get() != '' and self.wrapper_experiment_id.get() != ''  and self.wrapper_assembly_dataset.get() != '' and self.wrapper_assembly_type != '' and self.wrapper_alignment_dataset.get() != '':
+            self.button_execute['state'] = 'enable'
+        else:
+            self.button_execute['state'] = 'disabled'
+
+        # return the control variable
+        return OK
+
+    #---------------
+
+    def execute(self):
+        '''
+        Execute the creation of the config file.
+        '''
+
+        # check inputs
+        OK = self.check_inputs()
+        if not OK:
+            message = 'Some input values are not OK.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+
+        # confirm the creation of the Express config file
+        if OK:
+            message = f'The file {xexpress.get_express_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
+
+        # recreate the Express config file
+        if OK:
+            (OK, error_list) = xexpress.create_express_config_file(self.wrapper_experiment_id.get(), self.assembly_dataset_id, self.wrapper_assembly_type.get(), self.alignment_dataset_id)
+            if not OK:
+                message = ''
+                for error in error_list:
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+
+        # edit the Express config file
+        if OK:
+
+            # edit the config file using "DialogEditor" 
+            dialog_editor = gdialogs.DialogEditor(self, xexpress.get_express_config_file())
+            self.wait_window(dialog_editor)
+
+            # check the config file
+            (OK, error_list) = xexpress.check_express_config_file(strict=False)
+            if OK:
+                message = f'The {xlib.get_express_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
+            else:
+                message = 'Detected errors:\n\n'
+                for error in error_list:
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+
+        # close the form
+        self.close()
+
+    #---------------
+
+    def close(self):
+        '''
+        Close "FormRecreateExpressConfigFile".
         '''
         # close SSH client connection
         if self.cluster_name_ant is not None:
@@ -3910,7 +5103,7 @@ class FormRecreateFastQCConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_fastqc_name())
+        self.head = f'{xlib.get_fastqc_name()} - Recreate config file'
 
         # initialize the read dataset identification
         self.read_dataset_id = None
@@ -4033,7 +5226,7 @@ class FormRecreateFastQCConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -4059,7 +5252,7 @@ class FormRecreateFastQCConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_read_dir())
+        command = f'ls {xlib.get_cluster_read_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -4069,8 +5262,8 @@ class FormRecreateFastQCConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -4115,8 +5308,8 @@ class FormRecreateFastQCConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -4219,32 +5412,32 @@ class FormRecreateFastQCConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # build the cluster read directory path
         if OK:
-            cluster_read_dir = '{0}/{1}/{2}'.format(xlib.get_cluster_read_dir(), self.wrapper_experiment_id.get(), self.read_dataset_id)
+            cluster_read_dir = f'{xlib.get_cluster_read_dir()}/{self.wrapper_experiment_id.get()}/{self.read_dataset_id}'
 
         # get the selected file list
         if OK:
             selected_file_list = []
-            command = 'cd {0}; find . -type f -regex "./{1}"'.format(cluster_read_dir, self.wrapper_file_pattern.get())
+            command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
             (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             if selected_file_list == []:
-                message = 'WARNING: There are not files in the cluster directory {0} with the pattern {1}'.format(cluster_read_dir, self.wrapper_file_pattern.get())
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'WARNING: There are not files in the cluster directory {cluster_read_dir} with the pattern {self.wrapper_file_pattern.get()}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 OK = False
 
         # confirm the creation of the FastQC config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xfastqc.get_fastqc_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xfastqc.get_fastqc_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the FastQC config file
         if OK:
@@ -4252,8 +5445,8 @@ class FormRecreateFastQCConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the FastQC config file corresponding to the environment
         if OK:
@@ -4265,13 +5458,13 @@ class FormRecreateFastQCConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xfastqc.check_fastqc_config_file(strict=False)
             if OK:
-                message = 'The {0} transfer config file is OK.'.format(xlib.get_fastqc_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_fastqc_name()} transfer config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -4317,7 +5510,7 @@ class FormRecreateGgTrinityConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_ggtrinity_name())
+        self.head = f'{xlib.get_ggtrinity_name()} - Recreate config file'
 
         # initialize the SSH client connection and previous cluster name
         self.ssh_client = None
@@ -4423,7 +5616,7 @@ class FormRecreateGgTrinityConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -4449,7 +5642,7 @@ class FormRecreateGgTrinityConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_read_dir())
+        command = f'ls {xlib.get_cluster_read_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -4459,8 +5652,8 @@ class FormRecreateGgTrinityConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -4477,7 +5670,7 @@ class FormRecreateGgTrinityConfigFile(tkinter.Frame):
         self.wrapper_alignment_dataset.set('')
 
         # get the list of the alignment dataset names
-        app_list = [xlib.get_star_code(), xlib.get_tophat_code()]
+        app_list = [xlib.get_bowtie2_code(), xlib.get_gsnap_code(), xlib.get_hisat2_code(), xlib.get_star_code(), xlib.get_tophat_code()]
         (OK, error_list, alignment_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # load the alignment dataset names in the combobox
@@ -4506,8 +5699,8 @@ class FormRecreateGgTrinityConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -4578,12 +5771,12 @@ class FormRecreateGgTrinityConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the creation of the Genome-guided Trinity config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xtrinity.get_ggtrinity_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xtrinity.get_ggtrinity_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the Cuffdiff config file
         if OK:
@@ -4591,8 +5784,8 @@ class FormRecreateGgTrinityConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the Genome-guided Trinity config file
         if OK:
@@ -4604,13 +5797,13 @@ class FormRecreateGgTrinityConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xtrinity.check_ggtrinity_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_cuffdiff_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_ggtrinity_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -4656,7 +5849,7 @@ class FormRecreateGmapConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_gmap_name())
+        self.head = f'{xlib.get_gmap_name()} - Recreate config file'
 
         # initialize the SSH client connection and previous cluster name
         self.ssh_client = None
@@ -4802,7 +5995,7 @@ class FormRecreateGmapConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -4860,7 +6053,7 @@ class FormRecreateGmapConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_result_dir())
+        command = f'ls {xlib.get_cluster_result_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -4870,8 +6063,8 @@ class FormRecreateGmapConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -4917,8 +6110,8 @@ class FormRecreateGmapConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -5038,12 +6231,12 @@ class FormRecreateGmapConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the creation of the GMAP config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xgmap.get_gmap_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xgmap.get_gmap_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the GMAP config file
         if OK:
@@ -5051,8 +6244,8 @@ class FormRecreateGmapConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the GMAP config file
         if OK:
@@ -5064,13 +6257,13 @@ class FormRecreateGmapConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xgmap.check_gmap_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_gmap_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_gmap_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -5116,7 +6309,7 @@ class FormRecreateGsnapConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_gsnap_name())
+        self.head = f'{xlib.get_gsnap_name()} - Recreate config file'
 
         # initialize the SSH client connection and previous cluster name
         self.ssh_client = None
@@ -5328,7 +6521,7 @@ class FormRecreateGsnapConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -5386,7 +6579,7 @@ class FormRecreateGsnapConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_read_dir())
+        command = f'ls {xlib.get_cluster_read_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -5396,8 +6589,8 @@ class FormRecreateGsnapConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -5472,8 +6665,8 @@ class FormRecreateGsnapConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -5517,7 +6710,6 @@ class FormRecreateGsnapConfigFile(tkinter.Frame):
 
         # load data in "combobox_assembly_dataset" if an item is selected in the "combobox_experiment_id"
         if self.assembly_dataset_id != None:
-            print()
             if self.wrapper_reference_dataset.get() == 'NONE':
                 self.populate_combobox_assembly_dataset()
             else:
@@ -5690,40 +6882,40 @@ class FormRecreateGsnapConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # build the cluster read directory path
         if OK:
-            cluster_read_dir = '{0}/{1}/{2}'.format(xlib.get_cluster_read_dir(), self.wrapper_experiment_id.get(), self.read_dataset_id)
+            cluster_read_dir = f'{xlib.get_cluster_read_dir()}/{self.wrapper_experiment_id.get()}/{self.read_dataset_id}'
 
         # get the selected file list
         if OK:
             selected_file_list = []
-            command = 'cd {0}; find . -type f -regex "./{1}"'.format(cluster_read_dir, self.wrapper_file_pattern.get())
+            command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
             (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             if selected_file_list == []:
-                message = 'WARNING: There are not files in the cluster directory {0} with the pattern {1}'.format(cluster_read_dir, self.wrapper_file_pattern.get())
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'WARNING: There are not files in the cluster directory {cluster_read_dir} with the pattern {self.wrapper_file_pattern.get()}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the paired file list when the read type is paired-end
         if OK:
             if self.read_type == 'PE':
                 (file_1_list, file_2_list, unpaired_file_list) = xlib.pair_files(selected_file_list, self.wrapper_specific_chars_1.get(), self.wrapper_specific_chars_2.get())
                 if unpaired_file_list != []:
-                    message = 'ERROR: There are unpaired files: {0}'.format(unpaired_file_list)
-                    tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'ERROR: There are unpaired files: {unpaired_file_list}'
+                    tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                     OK = False
 
         # confirm the creation of the GSNAP config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xgmap.get_gsnap_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xgmap.get_gsnap_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the GSNAP config file
         if OK:
@@ -5734,8 +6926,8 @@ class FormRecreateGsnapConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the GSNAP config file
         if OK:
@@ -5747,13 +6939,13 @@ class FormRecreateGsnapConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xgmap.check_gsnap_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_gsnap_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_gsnap_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -5799,7 +6991,7 @@ class FormRecreateHisat2ConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_hisat2_name())
+        self.head = f'{xlib.get_hisat2_name()} - Recreate config file'
 
         # initialize the SSH client connection and previous cluster name
         self.ssh_client = None
@@ -6009,7 +7201,7 @@ class FormRecreateHisat2ConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -6099,7 +7291,7 @@ class FormRecreateHisat2ConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_read_dir())
+        command = f'ls {xlib.get_cluster_read_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -6109,8 +7301,8 @@ class FormRecreateHisat2ConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -6168,8 +7360,8 @@ class FormRecreateHisat2ConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -6364,40 +7556,40 @@ class FormRecreateHisat2ConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # build the cluster read directory path
         if OK:
-            cluster_read_dir = '{0}/{1}/{2}'.format(xlib.get_cluster_read_dir(), self.wrapper_experiment_id.get(), self.read_dataset_id)
+            cluster_read_dir = f'{xlib.get_cluster_read_dir()}/{self.wrapper_experiment_id.get()}/{self.read_dataset_id}'
 
         # get the selected file list
         if OK:
             selected_file_list = []
-            command = 'cd {0}; find . -type f -regex "./{1}"'.format(cluster_read_dir, self.wrapper_file_pattern.get())
+            command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
             (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             if selected_file_list == []:
-                message = 'WARNING: There are not files in the cluster directory {0} with the pattern {1}'.format(cluster_read_dir, self.wrapper_file_pattern.get())
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'WARNING: There are not files in the cluster directory {cluster_read_dir} with the pattern {self.wrapper_file_pattern.get()}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the paired file list when the read type is paired-end
         if OK:
             if self.read_type == 'PE':
                 (file_1_list, file_2_list, unpaired_file_list) = xlib.pair_files(selected_file_list, self.wrapper_specific_chars_1.get(), self.wrapper_specific_chars_2.get())
                 if unpaired_file_list != []:
-                    message = 'ERROR: There are unpaired files: {0}'.format(unpaired_file_list)
-                    tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'ERROR: There are unpaired files: {unpaired_file_list}'
+                    tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                     OK = False
 
         # confirm the creation of the HISAT2 config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xhisat2.get_hisat2_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xhisat2.get_hisat2_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the HISAT2 config file
         if OK:
@@ -6408,8 +7600,8 @@ class FormRecreateHisat2ConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the HISAT2 config file
         if OK:
@@ -6421,13 +7613,13 @@ class FormRecreateHisat2ConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xgmap.check_hisat2_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_hisat2_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_hisat2_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -6473,7 +7665,7 @@ class FormRecreateHtseqCountConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_htseq_count_name())
+        self.head = f'{xlib.get_htseq_count_name()} - Recreate config file'
 
         # initialize the selected alignment dataset list
         self.selected_alignment_dataset_list = []
@@ -6615,7 +7807,7 @@ class FormRecreateHtseqCountConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -6673,7 +7865,7 @@ class FormRecreateHtseqCountConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_read_dir())
+        command = f'ls {xlib.get_cluster_read_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -6683,8 +7875,8 @@ class FormRecreateHtseqCountConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -6714,8 +7906,8 @@ class FormRecreateHtseqCountConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -6868,12 +8060,12 @@ class FormRecreateHtseqCountConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the creation of the htseq-count config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xhtseq.get_htseq_count_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xhtseq.get_htseq_count_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the htseq-count config file
         if OK:
@@ -6881,8 +8073,8 @@ class FormRecreateHtseqCountConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the htseq-count config file
         if OK:
@@ -6894,13 +8086,13 @@ class FormRecreateHtseqCountConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xhtseq.check_htseq_count_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_htseq_count_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_htseq_count_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -6946,7 +8138,7 @@ class FormRecreateInsilicoReadNormalizationConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_insilico_read_normalization_name())
+        self.head = f'{xlib.get_insilico_read_normalization_name()} - Recreate config file'
 
         # initialize the SSH client connection and previous cluster name
         self.ssh_client = None
@@ -7104,7 +8296,7 @@ class FormRecreateInsilicoReadNormalizationConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -7130,7 +8322,7 @@ class FormRecreateInsilicoReadNormalizationConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_read_dir())
+        command = f'ls {xlib.get_cluster_read_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -7140,8 +8332,8 @@ class FormRecreateInsilicoReadNormalizationConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -7199,8 +8391,8 @@ class FormRecreateInsilicoReadNormalizationConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -7328,40 +8520,40 @@ class FormRecreateInsilicoReadNormalizationConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # build the cluster read directory path
         if OK:
-            cluster_read_dir = '{0}/{1}/{2}'.format(xlib.get_cluster_read_dir(), self.wrapper_experiment_id.get(), self.read_dataset_id)
+            cluster_read_dir = f'{xlib.get_cluster_read_dir()}/{self.wrapper_experiment_id.get()}/{self.read_dataset_id}'
 
         # get the selected file list
         if OK:
             selected_file_list = []
-            command = 'cd {0}; find . -type f -regex "./{1}"'.format(cluster_read_dir, self.wrapper_file_pattern.get())
+            command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
             (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             if selected_file_list == []:
-                message = 'WARNING: There are not files in the cluster directory {0} with the pattern {1}'.format(cluster_read_dir, self.wrapper_file_pattern.get())
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'WARNING: There are not files in the cluster directory {cluster_read_dir} with the pattern {self.wrapper_file_pattern.get()}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the paired file list when the read type is paired-end
         if OK:
             if self.read_type == 'PE':
                 (file_1_list, file_2_list, unpaired_file_list) = xlib.pair_files(selected_file_list, self.wrapper_specific_chars_1.get(), self.wrapper_specific_chars_2.get())
                 if unpaired_file_list != []:
-                    message = 'ERROR: There are unpaired files: {0}'.format(unpaired_file_list)
-                    tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'ERROR: There are unpaired files: {unpaired_file_list}'
+                    tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                     OK = False
 
         # confirm the creation of the insilico_read_normalization config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xtrinity.get_insilico_read_normalization_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xtrinity.get_insilico_read_normalization_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the insilico_read_normalization config file
         if OK:
@@ -7372,8 +8564,8 @@ class FormRecreateInsilicoReadNormalizationConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the insilico_read_normalization config file
         if OK:
@@ -7385,13 +8577,13 @@ class FormRecreateInsilicoReadNormalizationConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xtrinity.check_insilico_read_normalization_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_insilico_read_normalization_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_insilico_read_normalization_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -7437,7 +8629,7 @@ class FormRecreateIpyradConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_ipyrad_name())
+        self.head = f'{xlib.get_ipyrad_name()} - Recreate config file'
 
         # initialize the enzyme identification list
         self.enzyme_id_list = []
@@ -7653,7 +8845,7 @@ class FormRecreateIpyradConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -7763,7 +8955,7 @@ class FormRecreateIpyradConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_read_dir())
+        command = f'ls {xlib.get_cluster_read_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -7773,8 +8965,8 @@ class FormRecreateIpyradConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -7819,8 +9011,8 @@ class FormRecreateIpyradConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -7831,8 +9023,8 @@ class FormRecreateIpyradConfigFile(tkinter.Frame):
         if not OK:
             message = ''
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             self.close()
 
         # load data in "combobox_assembly_method"
@@ -8116,7 +9308,7 @@ class FormRecreateIpyradConfigFile(tkinter.Frame):
             OK = self.check_inputs() and self.check_enzyme(self.combobox_enzyme1.get(), self.label_enzyme1_warning)
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # check that enzyme 1 has to be different from enzyme 2 when the method is DDRAD or PAIRDDRAD
         if OK:
@@ -8140,31 +9332,31 @@ class FormRecreateIpyradConfigFile(tkinter.Frame):
                 if enzyme1_seq.upper() == enzyme2_seq.upper():
                     OK = False
                     message = 'Both enzymes have the same sequence. A ddRADseq experiment has to be performed with two different enzymes.'
-                    tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # build the cluster read directory path
         if OK:
-            cluster_read_dir = '{0}/{1}/{2}'.format(xlib.get_cluster_read_dir(), self.wrapper_experiment_id.get(), self.read_dataset_id)
+            cluster_read_dir = f'{xlib.get_cluster_read_dir()}/{self.wrapper_experiment_id.get()}/{self.read_dataset_id}'
 
         # get the selected file list
         if OK:
             selected_file_list = []
-            command = 'cd {0}; find . -type f -regex "./{1}"'.format(cluster_read_dir, self.wrapper_file_pattern.get())
+            command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
             (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             if selected_file_list == []:
-                message = 'WARNING: There are not files in the cluster directory {0} with the pattern {1}'.format(cluster_read_dir, self.wrapper_file_pattern.get())
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'WARNING: There are not files in the cluster directory {cluster_read_dir} with the pattern {self.wrapper_file_pattern.get()}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the creation of the ipyrad config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xipyrad.get_ipyrad_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xipyrad.get_ipyrad_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the ipyrad config file
         if OK:
@@ -8172,8 +9364,8 @@ class FormRecreateIpyradConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the ipyrad config file
         if OK:
@@ -8185,13 +9377,13 @@ class FormRecreateIpyradConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xipyrad.check_ipyrad_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_ipyrad_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_ipyrad_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -8237,7 +9429,7 @@ class FormRecreateKallistoConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_kallisto_name())
+        self.head = f'{xlib.get_kallisto_name()} - Recreate config file'
 
         # initialize the SSH client connection and previous cluster name
         self.ssh_client = None
@@ -8449,7 +9641,7 @@ class FormRecreateKallistoConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -8507,7 +9699,7 @@ class FormRecreateKallistoConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_read_dir())
+        command = f'ls {xlib.get_cluster_read_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -8517,8 +9709,8 @@ class FormRecreateKallistoConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -8593,8 +9785,8 @@ class FormRecreateKallistoConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -8796,40 +9988,40 @@ class FormRecreateKallistoConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # build the cluster read directory path
         if OK:
-            cluster_read_dir = '{0}/{1}/{2}'.format(xlib.get_cluster_read_dir(), self.wrapper_experiment_id.get(), self.read_dataset_id)
+            cluster_read_dir = f'{xlib.get_cluster_read_dir()}/{self.wrapper_experiment_id.get()}/{self.read_dataset_id}'
 
         # get the selected file list
         if OK:
             selected_file_list = []
-            command = 'cd {0}; find . -type f -regex "./{1}"'.format(cluster_read_dir, self.wrapper_file_pattern.get())
+            command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
             (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             if selected_file_list == []:
-                message = 'WARNING: There are not files in the cluster directory {0} with the pattern {1}'.format(cluster_read_dir, self.wrapper_file_pattern.get())
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'WARNING: There are not files in the cluster directory {cluster_read_dir} with the pattern {self.wrapper_file_pattern.get()}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the paired file list when the read type is paired-end
         if OK:
             if self.read_type == 'PE':
                 (file_1_list, file_2_list, unpaired_file_list) = xlib.pair_files(selected_file_list, self.wrapper_specific_chars_1.get(), self.wrapper_specific_chars_2.get())
                 if unpaired_file_list != []:
-                    message = 'ERROR: There are unpaired files: {0}'.format(unpaired_file_list)
-                    tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'ERROR: There are unpaired files: {unpaired_file_list}'
+                    tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                     OK = False
 
         # confirm the creation of the kallisto config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xkallisto.get_kallisto_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xkallisto.get_kallisto_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the kallisto config file
         if OK:
@@ -8840,8 +10032,8 @@ class FormRecreateKallistoConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the kallisto config file
         if OK:
@@ -8853,13 +10045,13 @@ class FormRecreateKallistoConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xkallisto.check_kallisto_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_kallisto_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_kallisto_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -8905,7 +10097,7 @@ class FormRecreateQuastConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_quast_name())
+        self.head = f'{xlib.get_quast_name()} - Recreate config file'
 
         # initialize the SSH client connection and previous cluster name
         self.ssh_client = None
@@ -9051,7 +10243,7 @@ class FormRecreateQuastConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -9109,7 +10301,7 @@ class FormRecreateQuastConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_result_dir())
+        command = f'ls {xlib.get_cluster_result_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -9119,8 +10311,8 @@ class FormRecreateQuastConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -9166,8 +10358,8 @@ class FormRecreateQuastConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -9291,12 +10483,12 @@ class FormRecreateQuastConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the creation of the QUAST config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xquast.get_quast_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xquast.get_quast_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the QUAST config file
         if OK:
@@ -9304,8 +10496,8 @@ class FormRecreateQuastConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the QUAST config file
         if OK:
@@ -9317,13 +10509,13 @@ class FormRecreateQuastConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xquast.check_quast_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_quast_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_quast_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -9333,6 +10525,351 @@ class FormRecreateQuastConfigFile(tkinter.Frame):
     def close(self):
         '''
         Close "FormRecreateQuastConfigFile".
+        '''
+        # close SSH client connection
+        if self.cluster_name_ant is not None:
+            xssh.close_ssh_client_connection(self.ssh_client)
+
+        # clear the label of the current process name
+        self.main.label_process['text'] = ''
+
+        # close the current form
+        self.main.close_current_form()
+
+    #---------------
+
+#-------------------------------------------------------------------------------
+
+class FormRecreateRADdesignerConfigFile(tkinter.Frame):
+
+    #---------------
+
+    def __init__(self, parent, main):
+        '''
+        Execute actions correspending to the creation of a "FormRecreateRADdesignerConfigFile" instance.
+        '''
+
+        # save initial parameters in instance variables
+        self.parent = parent
+        self.main = main
+
+        # call the init method of the parent class
+        tkinter.Frame.__init__(self, self.parent)
+
+        # set cursor to show busy status
+        self.main.config(cursor='watch')
+        self.main.update()
+
+        # assign the text of the "head"
+        self.head = f'{xlib.get_raddesigner_name()} - Recreate config file'
+
+        # initialize the read dataset identification
+        self.vcf_location_dataset_id = None
+
+        # initialize the SSH client connection and previous cluster name
+        self.ssh_client = None
+        self.cluster_name_ant = None
+
+        # create the wrappers to track changes in inputs
+        self.wrapper_cluster_name = tkinter.StringVar()
+        self.wrapper_cluster_name.trace('w', self.check_inputs)
+        self.wrapper_experiment_id = tkinter.StringVar()
+        self.wrapper_experiment_id.trace('w', self.check_inputs)
+        self.wrapper_vcf_location_dataset = tkinter.StringVar()
+        self.wrapper_vcf_location_dataset.trace('w', self.check_inputs)
+
+        # build the graphical user interface
+        self.build_gui()
+
+        # load initial data in inputs
+        self.initialize_inputs()
+
+        # set cursor to show normal status
+        self.main.config(cursor='')
+        self.main.update()
+
+    #---------------
+
+    def build_gui(self):
+        '''
+        Build the graphical user interface of "FormRecreateRADdesignerConfigFile".
+        '''
+
+        # assign the text to the label of the current process name
+        self.main.label_process['text'] = self.head
+
+        # create "label_cluster_name" and register it with the grid geometry manager
+        self.label_cluster_name = tkinter.Label(self, text='Cluster name')
+        self.label_cluster_name.grid(row=0, column=0, padx=(15,5), pady=(75,5), sticky='e')
+
+        # create "combobox_cluster_name" and register it with the grid geometry manager
+        self.combobox_cluster_name = tkinter.ttk.Combobox(self, width=20, height=4, state='readonly', textvariable=self.wrapper_cluster_name)
+        self.combobox_cluster_name.grid(row=0, column=1, padx=(5,5), pady=(75,5), sticky='w')
+
+        # create "label_experiment_id" and register it with the grid geometry manager
+        self.label_experiment_id = tkinter.Label(self, text='Experiment id.')
+        self.label_experiment_id.grid(row=1, column=0, padx=(15,5), pady=(45,5), sticky='e')
+
+        # create "combobox_experiment_id" and register it with the grid geometry manager
+        self.combobox_experiment_id = tkinter.ttk.Combobox(self, width=30, height=4, state='readonly', textvariable=self.wrapper_experiment_id)
+        self.combobox_experiment_id.grid(row=1, column=1, padx=(5,5), pady=(45,5), sticky='w')
+
+        # create "label_vcf_location_dataset" and register it with the grid geometry manager
+        self.label_vcf_location_dataset = tkinter.Label(self, text='VCF location dataset')
+        self.label_vcf_location_dataset.grid(row=2, column=0, padx=(15,5), pady=(45,5), sticky='e')
+
+        # create "combobox_vcf_location_dataset" and register it with the grid geometry manager
+        self.combobox_vcf_location_dataset = tkinter.ttk.Combobox(self, width=45, height=4, state='readonly', textvariable=self.wrapper_vcf_location_dataset)
+        self.combobox_vcf_location_dataset.grid(row=2, column=1, padx=(5,5), pady=(45,5), sticky='w')
+
+        # create "label_fit" and register it with the grid geometry manager
+        self.label_fit = tkinter.Label(self, text=' '*(35+xlib.get_os_size_fix()))
+        self.label_fit.grid(row=3, column=2, padx=(0,0), pady=(45,5), sticky='e')
+
+        # create "button_execute" and register it with the grid geometry manager
+        self.button_execute = tkinter.ttk.Button(self, text='Execute', command=self.execute, state='disabled')
+        self.button_execute.grid(row=3, column=3, padx=(0,5), pady=(45,5), sticky='e')
+
+        # create "button_close" and register it with the grid geometry manager
+        self.button_close = tkinter.ttk.Button(self, text='Close', command=self.close)
+        self.button_close.grid(row=3, column=4, padx=(5,5), pady=(45,5), sticky='w')
+
+        # link a handler to events
+        self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
+        self.combobox_experiment_id.bind('<<ComboboxSelected>>', self.combobox_experiment_id_selected_item)
+        self.combobox_vcf_location_dataset.bind('<<ComboboxSelected>>', self.combobox_vcf_location_dataset_selected_item)
+
+    #---------------
+
+    def initialize_inputs(self):
+        '''
+        Load initial data in inputs.
+        '''
+
+        # load initial data in inputs
+        self.combobox_experiment_id['values'] = []
+        self.wrapper_experiment_id.set('')
+        self.combobox_vcf_location_dataset['values'] = []
+        self.wrapper_vcf_location_dataset.set('')
+
+        # populate data in comboboxes
+        self.populate_combobox_cluster_name()
+
+    #---------------
+
+    def populate_combobox_cluster_name(self):
+        '''
+        Populate data in "combobox_cluster_name".
+        '''
+
+        # clear the value selected in the combobox
+        self.wrapper_cluster_name.set('')
+
+        # check if there are some running clusters
+        running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
+        if running_cluster_list == []:
+            message = 'There is not any running cluster.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+            return
+
+        # load the names of clusters which are running in the combobox
+        self.combobox_cluster_name['values'] = running_cluster_list
+
+        # if there is only one cluster running, set its cluster name by default
+        if len(running_cluster_list) == 1:
+            self.wrapper_cluster_name.set(running_cluster_list[0])
+            self.combobox_cluster_name['state'] = 'disabled'
+            self.combobox_cluster_name_selected_item()
+
+    #---------------
+
+    def populate_combobox_experiment_id(self):
+        '''
+        Populate data in "combobox_experiment_id".
+        '''
+
+        # clear the value selected in the combobox
+        self.wrapper_experiment_id.set('')
+
+        # initialize the experiment identifications list
+        experiment_id_list = []
+
+        # get the experiment identifications
+        command = f'ls {xlib.get_cluster_result_dir()}'
+        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        if OK:
+            for line in stdout:
+                line = line.rstrip('\n')
+                if line != 'lost+found':
+                    experiment_id_list.append(line)
+
+        # check if there are any experimment identifications
+        if experiment_id_list == []:
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+            return
+
+        # load the experiment identifications in the combobox
+        self.combobox_experiment_id['values'] = sorted(experiment_id_list)
+
+    #---------------
+
+    def populate_combobox_vcf_location_dataset(self):
+        '''
+        Populate data in "combobox_vcf_location_dataset".
+        '''
+
+        # clear the value selected in the combobox
+        self.wrapper_vcf_location_dataset.set('')
+
+        # get the list of the read dataset names
+        app_list = [xlib.get_ipyrad_code()]
+        (OK, error_list, vcf_location_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+
+        # load the list of the read dataset names in the combobox
+        self.combobox_vcf_location_dataset['values'] = vcf_location_dataset_name_list
+
+    #---------------
+
+    def combobox_cluster_name_selected_item(self, event=None):
+        '''
+        Process the event when an item of "combobox_cluster_name" has been selected
+        '''
+
+        # set cursor to show busy status
+        self.main.config(cursor='watch')
+        self.main.update()
+
+        # check if the cluster name selected is different to the previous cluster name
+        if self.wrapper_cluster_name.get() != self.cluster_name_ant:
+
+            # close SSH client connection
+            if self.cluster_name_ant is not None:
+                xssh.close_ssh_client_connection(self.ssh_client)
+
+            # create the SSH client connection
+            (OK, error_list, self.ssh_client) = xssh.create_ssh_client_connection(self.wrapper_cluster_name.get())
+            if not OK:
+                message = ''
+                for error in error_list:
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+                self.close()
+
+            # save current cluster name as previous cluster name
+            self.cluster_name_ant = self.wrapper_cluster_name.get()
+
+        # load data in "combobox_experiment_id"
+        self.populate_combobox_experiment_id()
+
+        # clear data in "combobox_vcf_location_dataset"
+        self.combobox_vcf_location_dataset['values'] = []
+        self.wrapper_vcf_location_dataset.set('')
+
+        # set cursor to show normal status
+        self.main.config(cursor='')
+        self.main.update()
+
+    #---------------
+
+    def combobox_experiment_id_selected_item(self, event=None):
+        '''
+        Process the event when an item of "combobox_experiment_id" has been selected
+        '''
+
+        # set cursor to show busy status
+        self.main.config(cursor='watch')
+        self.main.update()
+
+        # load data in "combobox_run_set"
+        self.populate_combobox_vcf_location_dataset()
+
+        # set cursor to show normal status
+        self.main.config(cursor='')
+        self.main.update()
+
+    #---------------
+
+    def combobox_vcf_location_dataset_selected_item(self, event=None):
+        '''
+        Process the event when an item of "combobox_read_type" has been selected
+        '''
+
+        # get the read dataset identification
+        (OK, error_list, self.vcf_location_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_vcf_location_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+
+    #---------------
+
+    def check_inputs(self, *args):
+        '''
+        check the content of each input of "FormRecreateRADdesignerConfigFile" and do the actions linked to its value
+        '''
+
+        # initialize the control variable
+        OK = True
+
+        # check if "button_execute" has to be enabled or disabled
+        if self.wrapper_cluster_name.get() != '' and self.wrapper_experiment_id.get() != '' and self.wrapper_vcf_location_dataset.get() != '':
+            self.button_execute['state'] = 'enable'
+        else:
+            self.button_execute['state'] = 'disabled'
+
+        # return the control variable
+        return OK
+
+    #---------------
+
+    def execute(self):
+        '''
+        Execute the creation of the config file.
+        '''
+
+        # check inputs
+        OK = self.check_inputs()
+        if not OK:
+            message = 'Some input values are not OK.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+
+        # confirm the creation of the RADdesigner config file
+        if OK:
+            message = f'The file {xraddesigner.get_raddesigner_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
+
+        # recreate the RADdesigner config file
+        if OK:
+            (OK, error_list) = xraddesigner.create_raddesigner_config_file(self.wrapper_experiment_id.get(), self.vcf_location_dataset_id)
+            if not OK:
+                message = ''
+                for error in error_list:
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+
+        # edit the RADdesigner config file corresponding to the environment
+        if OK:
+            
+            # edit the config file using "DialogEditor" 
+            dialog_editor = gdialogs.DialogEditor(self, xraddesigner.get_raddesigner_config_file())
+            self.wait_window(dialog_editor)
+            
+            # check the config file
+            (OK, error_list) = xraddesigner.check_raddesigner_config_file(strict=False)
+            if OK:
+                message = f'The {xlib.get_raddesigner_name()} transfer config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
+            else:
+                message = 'Detected errors:\n\n'
+                for error in error_list:
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+
+        # close the form
+        self.close()
+
+    #---------------
+
+    def close(self):
+        '''
+        Close "FormRecreateRADdesignerConfigFile".
         '''
         # close SSH client connection
         if self.cluster_name_ant is not None:
@@ -9369,7 +10906,7 @@ class FormRecreateRefEvalConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_ref_eval_name())
+        self.head = f'{xlib.get_ref_eval_name()} - Recreate config file'
 
         # initialize the SSH client connection and previous cluster name
         self.ssh_client = None
@@ -9581,7 +11118,7 @@ class FormRecreateRefEvalConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -9639,7 +11176,7 @@ class FormRecreateRefEvalConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_read_dir())
+        command = f'ls {xlib.get_cluster_read_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -9649,8 +11186,8 @@ class FormRecreateRefEvalConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -9725,8 +11262,8 @@ class FormRecreateRefEvalConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -9928,40 +11465,40 @@ class FormRecreateRefEvalConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # build the cluster read directory path
         if OK:
-            cluster_read_dir = '{0}/{1}/{2}'.format(xlib.get_cluster_read_dir(), self.wrapper_experiment_id.get(), self.read_dataset_id)
+            cluster_read_dir = f'{xlib.get_cluster_read_dir()}/{self.wrapper_experiment_id.get()}/{self.read_dataset_id}'
 
         # get the selected file list
         if OK:
             selected_file_list = []
-            command = 'cd {0}; find . -type f -regex "./{1}"'.format(cluster_read_dir, self.wrapper_file_pattern.get())
+            command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
             (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             if selected_file_list == []:
-                message = 'WARNING: There are not files in the cluster directory {0} with the pattern {1}'.format(cluster_read_dir, self.wrapper_file_pattern.get())
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'WARNING: There are not files in the cluster directory {cluster_read_dir} with the pattern {self.wrapper_file_pattern.get()}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the paired file list when the read type is paired-end
         if OK:
             if self.read_type == 'PE':
                 (file_1_list, file_2_list, unpaired_file_list) = xlib.pair_files(selected_file_list, self.wrapper_specific_chars_1.get(), self.wrapper_specific_chars_2.get())
                 if unpaired_file_list != []:
-                    message = 'ERROR: There are unpaired files: {0}'.format(unpaired_file_list)
-                    tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'ERROR: There are unpaired files: {unpaired_file_list}'
+                    tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                     OK = False
 
         # confirm the creation of the REF-EVAL config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xdetonate.get_ref_eval_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xdetonate.get_ref_eval_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the REF-EVAL config file
         if OK:
@@ -9972,8 +11509,8 @@ class FormRecreateRefEvalConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the REF-EVAL config file
         if OK:
@@ -9985,13 +11522,13 @@ class FormRecreateRefEvalConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xdetonate.check_ref_eval_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_ref_eval_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_ref_eval_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -10037,7 +11574,7 @@ class FormRecreateRnaQuastConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_rnaquast_name())
+        self.head = f'{xlib.get_rnaquast_name()} - Recreate config file'
 
         # initialize the SSH client connection and previous cluster name
         self.ssh_client = None
@@ -10249,7 +11786,7 @@ class FormRecreateRnaQuastConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -10307,7 +11844,7 @@ class FormRecreateRnaQuastConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_read_dir())
+        command = f'ls {xlib.get_cluster_read_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -10317,8 +11854,8 @@ class FormRecreateRnaQuastConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -10393,8 +11930,8 @@ class FormRecreateRnaQuastConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -10596,40 +12133,40 @@ class FormRecreateRnaQuastConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # build the cluster read directory path
         if OK:
-            cluster_read_dir = '{0}/{1}/{2}'.format(xlib.get_cluster_read_dir(), self.wrapper_experiment_id.get(), self.read_dataset_id)
+            cluster_read_dir = f'{xlib.get_cluster_read_dir()}/{self.wrapper_experiment_id.get()}/{self.read_dataset_id}'
 
         # get the selected file list
         if OK:
             selected_file_list = []
-            command = 'cd {0}; find . -type f -regex "./{1}"'.format(cluster_read_dir, self.wrapper_file_pattern.get())
+            command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
             (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             if selected_file_list == []:
-                message = 'WARNING: There are not files in the cluster directory {0} with the pattern {1}'.format(cluster_read_dir, self.wrapper_file_pattern.get())
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'WARNING: There are not files in the cluster directory {cluster_read_dir} with the pattern {self.wrapper_file_pattern.get()}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the paired file list when the read type is paired-end
         if OK:
             if self.read_type == 'PE':
                 (file_1_list, file_2_list, unpaired_file_list) = xlib.pair_files(selected_file_list, self.wrapper_specific_chars_1.get(), self.wrapper_specific_chars_2.get())
                 if unpaired_file_list != []:
-                    message = 'ERROR: There are unpaired files: {0}'.format(unpaired_file_list)
-                    tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'ERROR: There are unpaired files: {unpaired_file_list}'
+                    tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                     OK = False
 
         # confirm the creation of the rnaQUAST config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xrnaquast.get_rnaquast_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xrnaquast.get_rnaquast_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the rnaQUAST config file
         if OK:
@@ -10640,8 +12177,8 @@ class FormRecreateRnaQuastConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the rnaQUAST config file
         if OK:
@@ -10653,13 +12190,13 @@ class FormRecreateRnaQuastConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xrnaquast.check_rnaquast_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_rnaquast_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_rnaquast_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -10705,7 +12242,7 @@ class FormRecreateRsemEvalConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_rsem_eval_name())
+        self.head = f'{xlib.get_rsem_eval_name()} - Recreate config file'
 
         # initialize the SSH client connection and previous cluster name
         self.ssh_client = None
@@ -10891,7 +12428,7 @@ class FormRecreateRsemEvalConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -10917,7 +12454,7 @@ class FormRecreateRsemEvalConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_read_dir())
+        command = f'ls {xlib.get_cluster_read_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -10927,8 +12464,8 @@ class FormRecreateRsemEvalConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -11003,8 +12540,8 @@ class FormRecreateRsemEvalConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -11168,40 +12705,40 @@ class FormRecreateRsemEvalConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # build the cluster read directory path
         if OK:
-            cluster_read_dir = '{0}/{1}/{2}'.format(xlib.get_cluster_read_dir(), self.wrapper_experiment_id.get(), self.read_dataset_id)
+            cluster_read_dir = f'{xlib.get_cluster_read_dir()}/{self.wrapper_experiment_id.get()}/{self.read_dataset_id}'
 
         # get the selected file list
         if OK:
             selected_file_list = []
-            command = 'cd {0}; find . -type f -regex "./{1}"'.format(cluster_read_dir, self.wrapper_file_pattern.get())
+            command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
             (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             if selected_file_list == []:
-                message = 'WARNING: There are not files in the cluster directory {0} with the pattern {1}'.format(cluster_read_dir, self.wrapper_file_pattern.get())
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'WARNING: There are not files in the cluster directory {cluster_read_dir} with the pattern {self.wrapper_file_pattern.get()}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the paired file list when the read type is paired-end
         if OK:
             if self.read_type == 'PE':
                 (file_1_list, file_2_list, unpaired_file_list) = xlib.pair_files(selected_file_list, self.wrapper_specific_chars_1.get(), self.wrapper_specific_chars_2.get())
                 if unpaired_file_list != []:
-                    message = 'ERROR: There are unpaired files: {0}'.format(unpaired_file_list)
-                    tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'ERROR: There are unpaired files: {unpaired_file_list}'
+                    tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                     OK = False
 
         # confirm the creation of the RSEM-EVAL config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xdetonate.get_rsem_eval_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xdetonate.get_rsem_eval_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the RSEM-EVAL config file
         if OK:
@@ -11212,8 +12749,8 @@ class FormRecreateRsemEvalConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the RSEM-EVAL config file
         if OK:
@@ -11225,13 +12762,13 @@ class FormRecreateRsemEvalConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xdetonate.check_rsem_eval_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_rsem_eval_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_rsem_eval_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -11277,7 +12814,7 @@ class FormRecreateRSiteSearchConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_rsitesearch_name())
+        self.head = f'{xlib.get_rsitesearch_name()} - Recreate config file'
 
         # initialize the enzyme identification list
         self.enzyme_id_list = []
@@ -11425,7 +12962,7 @@ class FormRecreateRSiteSearchConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -11518,8 +13055,8 @@ class FormRecreateRSiteSearchConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -11537,8 +13074,8 @@ class FormRecreateRSiteSearchConfigFile(tkinter.Frame):
         if not OK:
             message = ''
             for error in error_list:
-                message = '{0}{1}\n'.format(message, error) 
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             self.close()
 
         # get the list of enzyme identification and restriction site seq
@@ -11701,7 +13238,7 @@ class FormRecreateRSiteSearchConfigFile(tkinter.Frame):
         OK = self.check_inputs() and self.check_enzyme(self.combobox_enzyme1.get(), self.label_enzyme1_warning)  and self.check_enzyme(self.combobox_enzyme2.get(), self.label_enzyme2_warning)
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # check if enzyme 1 is different or not to enzyme 2
         if OK:
@@ -11725,12 +13262,12 @@ class FormRecreateRSiteSearchConfigFile(tkinter.Frame):
                 message = 'Both enzymes have the same sequence. An enzyme analysis of a RAD-seq experiment will be performed.'
             else:
                 message = 'Both enzymes have different sequences. An enzyme analysis of a ddRADseq experiment will be performed.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the creation of the rsitesearch config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xddradseqtools.get_rsitesearch_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xddradseqtools.get_rsitesearch_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the rsitesearch config file
         if OK:
@@ -11738,8 +13275,8 @@ class FormRecreateRSiteSearchConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the rsitesearch config file
         if OK:
@@ -11751,13 +13288,13 @@ class FormRecreateRSiteSearchConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xddradseqtools.check_rsitesearch_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_rsitesearch_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_rsitesearch_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -11803,7 +13340,7 @@ class FormRecreateSoapdenovo2ConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_soapdenovo2_name())
+        self.head = f'{xlib.get_soapdenovo2_name()} - Recreate config file'
 
         # initialize the SSH client connection and previous cluster name
         self.ssh_client = None
@@ -11961,7 +13498,7 @@ class FormRecreateSoapdenovo2ConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -11987,7 +13524,7 @@ class FormRecreateSoapdenovo2ConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_read_dir())
+        command = f'ls {xlib.get_cluster_read_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -11997,8 +13534,8 @@ class FormRecreateSoapdenovo2ConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -12056,8 +13593,8 @@ class FormRecreateSoapdenovo2ConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -12185,40 +13722,40 @@ class FormRecreateSoapdenovo2ConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # build the cluster read directory path
         if OK:
-            cluster_read_dir = '{0}/{1}/{2}'.format(xlib.get_cluster_read_dir(), self.wrapper_experiment_id.get(), self.read_dataset_id)
+            cluster_read_dir = f'{xlib.get_cluster_read_dir()}/{self.wrapper_experiment_id.get()}/{self.read_dataset_id}'
 
         # get the selected file list
         if OK:
             selected_file_list = []
-            command = 'cd {0}; find . -type f -regex "./{1}"'.format(cluster_read_dir, self.wrapper_file_pattern.get())
+            command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
             (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             if selected_file_list == []:
-                message = 'WARNING: There are not files in the cluster directory {0} with the pattern {1}'.format(cluster_read_dir, self.wrapper_file_pattern.get())
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'WARNING: There are not files in the cluster directory {cluster_read_dir} with the pattern {self.wrapper_file_pattern.get()}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the paired file list when the read type is paired-end
         if OK:
             if self.read_type == 'PE':
                 (file_1_list, file_2_list, unpaired_file_list) = xlib.pair_files(selected_file_list, self.wrapper_specific_chars_1.get(), self.wrapper_specific_chars_2.get())
                 if unpaired_file_list != []:
-                    message = 'ERROR: There are unpaired files: {0}'.format(unpaired_file_list)
-                    tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'ERROR: There are unpaired files: {unpaired_file_list}'
+                    tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                     OK = False
 
         # confirm the creation of the SOAPdenovo2 config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xsoapdenovo2.get_soapdenovo2_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xsoapdenovo2.get_soapdenovo2_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the SOAPdenovo2 config file
         if OK:
@@ -12229,8 +13766,8 @@ class FormRecreateSoapdenovo2ConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the SOAPdenovo2 config file
         if OK:
@@ -12242,13 +13779,13 @@ class FormRecreateSoapdenovo2ConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xsoapdenovo2.check_soapdenovo2_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_soapdenovo2_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_soapdenovo2_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -12294,7 +13831,7 @@ class FormRecreateSoapdenovoTransConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_soapdenovotrans_name())
+        self.head = f'{xlib.get_soapdenovotrans_name()} - Recreate config file'
 
         # initialize the SSH client connection and previous cluster name
         self.ssh_client = None
@@ -12452,7 +13989,7 @@ class FormRecreateSoapdenovoTransConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -12478,7 +14015,7 @@ class FormRecreateSoapdenovoTransConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_read_dir())
+        command = f'ls {xlib.get_cluster_read_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -12488,8 +14025,8 @@ class FormRecreateSoapdenovoTransConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -12547,8 +14084,8 @@ class FormRecreateSoapdenovoTransConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -12676,40 +14213,40 @@ class FormRecreateSoapdenovoTransConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # build the cluster read directory path
         if OK:
-            cluster_read_dir = '{0}/{1}/{2}'.format(xlib.get_cluster_read_dir(), self.wrapper_experiment_id.get(), self.read_dataset_id)
+            cluster_read_dir = f'{xlib.get_cluster_read_dir()}/{self.wrapper_experiment_id.get()}/{self.read_dataset_id}'
 
         # get the selected file list
         if OK:
             selected_file_list = []
-            command = 'cd {0}; find . -type f -regex "./{1}"'.format(cluster_read_dir, self.wrapper_file_pattern.get())
+            command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
             (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             if selected_file_list == []:
-                message = 'WARNING: There are not files in the cluster directory {0} with the pattern {1}'.format(cluster_read_dir, self.wrapper_file_pattern.get())
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'WARNING: There are not files in the cluster directory {cluster_read_dir} with the pattern {self.wrapper_file_pattern.get()}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the paired file list when the read type is paired-end
         if OK:
             if self.read_type == 'PE':
                 (file_1_list, file_2_list, unpaired_file_list) = xlib.pair_files(selected_file_list, self.wrapper_specific_chars_1.get(), self.wrapper_specific_chars_2.get())
                 if unpaired_file_list != []:
-                    message = 'ERROR: There are unpaired files: {0}'.format(unpaired_file_list)
-                    tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'ERROR: There are unpaired files: {unpaired_file_list}'
+                    tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                     OK = False
 
         # confirm the creation of the SOAPdenovo-Trans config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xsoapdenovotrans.get_soapdenovotrans_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xsoapdenovotrans.get_soapdenovotrans_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the SOAPdenovo-Trans config file
         if OK:
@@ -12720,8 +14257,8 @@ class FormRecreateSoapdenovoTransConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the SOAPdenovo-Trans config file
         if OK:
@@ -12733,13 +14270,13 @@ class FormRecreateSoapdenovoTransConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xsoapdenovotrans.check_soapdenovotrans_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_soapdenovotrans_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_soapdenovotrans_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -12785,7 +14322,7 @@ class FormRecreateSTARConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_star_name())
+        self.head = f'{xlib.get_star_name()} - Recreate config file'
 
         # initialize the SSH client connection and previous cluster name
         self.ssh_client = None
@@ -12982,7 +14519,7 @@ class FormRecreateSTARConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -13056,7 +14593,7 @@ class FormRecreateSTARConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_read_dir())
+        command = f'ls {xlib.get_cluster_read_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -13066,8 +14603,8 @@ class FormRecreateSTARConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -13125,8 +14662,8 @@ class FormRecreateSTARConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -13304,40 +14841,40 @@ class FormRecreateSTARConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # build the cluster read directory path
         if OK:
-            cluster_read_dir = '{0}/{1}/{2}'.format(xlib.get_cluster_read_dir(), self.wrapper_experiment_id.get(), self.read_dataset_id)
+            cluster_read_dir = f'{xlib.get_cluster_read_dir()}/{self.wrapper_experiment_id.get()}/{self.read_dataset_id}'
 
         # get the selected file list
         if OK:
             selected_file_list = []
-            command = 'cd {0}; find . -type f -regex "./{1}"'.format(cluster_read_dir, self.wrapper_file_pattern.get())
+            command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
             (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             if selected_file_list == []:
-                message = 'WARNING: There are not files in the cluster directory {0} with the pattern {1}'.format(cluster_read_dir, self.wrapper_file_pattern.get())
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'WARNING: There are not files in the cluster directory {cluster_read_dir} with the pattern {self.wrapper_file_pattern.get()}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the paired file list when the read type is paired-end
         if OK:
             if self.read_type == 'PE':
                 (file_1_list, file_2_list, unpaired_file_list) = xlib.pair_files(selected_file_list, self.wrapper_specific_chars_1.get(), self.wrapper_specific_chars_2.get())
                 if unpaired_file_list != []:
-                    message = 'ERROR: There are unpaired files: {0}'.format(unpaired_file_list)
-                    tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'ERROR: There are unpaired files: {unpaired_file_list}'
+                    tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                     OK = False
 
         # confirm the creation of the STAR config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xstar.get_star_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xstar.get_star_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the STAR config file
         if OK:
@@ -13348,8 +14885,8 @@ class FormRecreateSTARConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the STAR config file
         if OK:
@@ -13361,13 +14898,13 @@ class FormRecreateSTARConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xstar.check_star_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_star_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_star_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -13413,7 +14950,7 @@ class FormRecreateStarcodeConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_starcode_name())
+        self.head = f'{xlib.get_starcode_name()} - Recreate config file'
 
         # initialize the SSH client connection and previous cluster name
         self.ssh_client = None
@@ -13571,7 +15108,7 @@ class FormRecreateStarcodeConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -13597,7 +15134,7 @@ class FormRecreateStarcodeConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_read_dir())
+        command = f'ls {xlib.get_cluster_read_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -13607,8 +15144,8 @@ class FormRecreateStarcodeConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -13666,8 +15203,8 @@ class FormRecreateStarcodeConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -13795,40 +15332,40 @@ class FormRecreateStarcodeConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # build the cluster read directory path
         if OK:
-            cluster_read_dir = '{0}/{1}/{2}'.format(xlib.get_cluster_read_dir(), self.wrapper_experiment_id.get(), self.read_dataset_id)
+            cluster_read_dir = f'{xlib.get_cluster_read_dir()}/{self.wrapper_experiment_id.get()}/{self.read_dataset_id}'
 
         # get the selected file list
         if OK:
             selected_file_list = []
-            command = 'cd {0}; find . -type f -regex "./{1}"'.format(cluster_read_dir, self.wrapper_file_pattern.get())
+            command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
             (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             if selected_file_list == []:
-                message = 'WARNING: There are not files in the cluster directory {0} with the pattern {1}'.format(cluster_read_dir, self.wrapper_file_pattern.get())
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'WARNING: There are not files in the cluster directory {cluster_read_dir} with the pattern {self.wrapper_file_pattern.get()}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the paired file list when the read type is paired-end
         if OK:
             if self.read_type == 'PE':
                 (file_1_list, file_2_list, unpaired_file_list) = xlib.pair_files(selected_file_list, self.wrapper_specific_chars_1.get(), self.wrapper_specific_chars_2.get())
                 if unpaired_file_list != []:
-                    message = 'ERROR: There are unpaired files: {0}'.format(unpaired_file_list)
-                    tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'ERROR: There are unpaired files: {unpaired_file_list}'
+                    tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                     OK = False
 
         # confirm the creation of the starcode config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xstarcode.get_starcode_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xstarcode.get_starcode_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the starcode config file
         if OK:
@@ -13839,8 +15376,8 @@ class FormRecreateStarcodeConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the starcode config file
         if OK:
@@ -13852,13 +15389,13 @@ class FormRecreateStarcodeConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xstarcode.check_starcode_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_starcode_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_starcode_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -13904,7 +15441,7 @@ class FormRecreateTopHatConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_tophat_name())
+        self.head = f'{xlib.get_tophat_name()} - Recreate config file'
 
         # initialize the SSH client connection and previous cluster name
         self.ssh_client = None
@@ -14101,7 +15638,7 @@ class FormRecreateTopHatConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -14175,7 +15712,7 @@ class FormRecreateTopHatConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_read_dir())
+        command = f'ls {xlib.get_cluster_read_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -14185,8 +15722,8 @@ class FormRecreateTopHatConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -14244,8 +15781,8 @@ class FormRecreateTopHatConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -14423,40 +15960,40 @@ class FormRecreateTopHatConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # build the cluster read directory path
         if OK:
-            cluster_read_dir = '{0}/{1}/{2}'.format(xlib.get_cluster_read_dir(), self.wrapper_experiment_id.get(), self.read_dataset_id)
+            cluster_read_dir = f'{xlib.get_cluster_read_dir()}/{self.wrapper_experiment_id.get()}/{self.read_dataset_id}'
 
         # get the selected file list
         if OK:
             selected_file_list = []
-            command = 'cd {0}; find . -type f -regex "./{1}"'.format(cluster_read_dir, self.wrapper_file_pattern.get())
+            command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
             (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             if selected_file_list == []:
-                message = 'WARNING: There are not files in the cluster directory {0} with the pattern {1}'.format(cluster_read_dir, self.wrapper_file_pattern.get())
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'WARNING: There are not files in the cluster directory {cluster_read_dir} with the pattern {self.wrapper_file_pattern.get()}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the paired file list when the read type is paired-end
         if OK:
             if self.read_type == 'PE':
                 (file_1_list, file_2_list, unpaired_file_list) = xlib.pair_files(selected_file_list, self.wrapper_specific_chars_1.get(), self.wrapper_specific_chars_2.get())
                 if unpaired_file_list != []:
-                    message = 'ERROR: There are unpaired files: {0}'.format(unpaired_file_list)
-                    tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'ERROR: There are unpaired files: {unpaired_file_list}'
+                    tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                     OK = False
 
         # confirm the creation of the TopHat config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xtophat.get_tophat_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xtophat.get_tophat_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the TopHat config file
         if OK:
@@ -14467,8 +16004,8 @@ class FormRecreateTopHatConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the TopHat config file
         if OK:
@@ -14480,13 +16017,13 @@ class FormRecreateTopHatConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xtophat.check_tophat_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_tophat_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_tophat_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -14532,7 +16069,7 @@ class FormRecreateTransAbyssConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_transabyss_name())
+        self.head = f'{xlib.get_transabyss_name()} - Recreate config file'
 
         # initialize the SSH client connection and previous cluster name
         self.ssh_client = None
@@ -14690,7 +16227,7 @@ class FormRecreateTransAbyssConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -14716,7 +16253,7 @@ class FormRecreateTransAbyssConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_read_dir())
+        command = f'ls {xlib.get_cluster_read_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -14726,8 +16263,8 @@ class FormRecreateTransAbyssConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -14785,8 +16322,8 @@ class FormRecreateTransAbyssConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -14914,40 +16451,40 @@ class FormRecreateTransAbyssConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # build the cluster read directory path
         if OK:
-            cluster_read_dir = '{0}/{1}/{2}'.format(xlib.get_cluster_read_dir(), self.wrapper_experiment_id.get(), self.read_dataset_id)
+            cluster_read_dir = f'{xlib.get_cluster_read_dir()}/{self.wrapper_experiment_id.get()}/{self.read_dataset_id}'
 
         # get the selected file list
         if OK:
             selected_file_list = []
-            command = 'cd {0}; find . -type f -regex "./{1}"'.format(cluster_read_dir, self.wrapper_file_pattern.get())
+            command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
             (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             if selected_file_list == []:
-                message = 'WARNING: There are not files in the cluster directory {0} with the pattern {1}'.format(cluster_read_dir, self.wrapper_file_pattern.get())
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'WARNING: There are not files in the cluster directory {cluster_read_dir} with the pattern {self.wrapper_file_pattern.get()}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the paired file list when the read type is paired-end
         if OK:
             if self.read_type == 'PE':
                 (file_1_list, file_2_list, unpaired_file_list) = xlib.pair_files(selected_file_list, self.wrapper_specific_chars_1.get(), self.wrapper_specific_chars_2.get())
                 if unpaired_file_list != []:
-                    message = 'ERROR: There are unpaired files: {0}'.format(unpaired_file_list)
-                    tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'ERROR: There are unpaired files: {unpaired_file_list}'
+                    tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                     OK = False
 
         # confirm the creation of the Trans-ABySS config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xtransabyss.get_transabyss_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xtransabyss.get_transabyss_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the Trans-ABySS config file
         if OK:
@@ -14958,8 +16495,8 @@ class FormRecreateTransAbyssConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the Trans-ABySS config file
         if OK:
@@ -14971,13 +16508,13 @@ class FormRecreateTransAbyssConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xtransabyss.check_transabyss_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_transabyss_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_transabyss_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -15023,7 +16560,7 @@ class FormRecreateTranscriptFilterConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_transcript_filter_name())
+        self.head = f'{xlib.get_transcript_filter_name()} - Recreate config file'
 
         # initialize the SSH client connection and previous cluster name
         self.ssh_client = None
@@ -15129,7 +16666,7 @@ class FormRecreateTranscriptFilterConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -15155,7 +16692,7 @@ class FormRecreateTranscriptFilterConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_result_dir())
+        command = f'ls {xlib.get_cluster_result_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -15165,8 +16702,8 @@ class FormRecreateTranscriptFilterConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -15212,8 +16749,8 @@ class FormRecreateTranscriptFilterConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -15288,12 +16825,12 @@ class FormRecreateTranscriptFilterConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the creation of the transcript-filter config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xngshelper.get_transcript_filter_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xngshelper.get_transcript_filter_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the transcript-filter config file
         if OK:
@@ -15301,8 +16838,8 @@ class FormRecreateTranscriptFilterConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the transcript-filter config file
         if OK:
@@ -15314,13 +16851,13 @@ class FormRecreateTranscriptFilterConfigFile(tkinter.Frame):
             # check the transcript-filter config file
             (OK, error_list) = xngshelper.check_transcript_filter_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_transcript_filter_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_transcript_filter_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -15366,7 +16903,7 @@ class FormRecreateTranscriptomeBlastxConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_transcriptome_blastx_name())
+        self.head = f'{xlib.get_transcriptome_blastx_name()} - Recreate config file'
 
         # initialize the SSH client connection and previous cluster name
         self.ssh_client = None
@@ -15512,7 +17049,7 @@ class FormRecreateTranscriptomeBlastxConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -15582,7 +17119,7 @@ class FormRecreateTranscriptomeBlastxConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_result_dir())
+        command = f'ls {xlib.get_cluster_result_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -15592,8 +17129,8 @@ class FormRecreateTranscriptomeBlastxConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -15639,8 +17176,8 @@ class FormRecreateTranscriptomeBlastxConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -15760,12 +17297,12 @@ class FormRecreateTranscriptomeBlastxConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the creation of the transcriptome-blastx config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xngshelper.get_transcriptome_blastx_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xngshelper.get_transcriptome_blastx_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the transcriptome-blastx config file
         if OK:
@@ -15773,8 +17310,8 @@ class FormRecreateTranscriptomeBlastxConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the transcriptome-blastx config file
         if OK:
@@ -15786,13 +17323,13 @@ class FormRecreateTranscriptomeBlastxConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xngshelper.check_transcriptome_blastx_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_transcriptome_blastx_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_transcriptome_blastx_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -15838,7 +17375,7 @@ class FormRecreateTransrateConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_transrate_name())
+        self.head = f'{xlib.get_transrate_name()} - Recreate config file'
 
         # initialize the SSH client connection and previous cluster name
         self.ssh_client = None
@@ -16050,7 +17587,7 @@ class FormRecreateTransrateConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -16108,7 +17645,7 @@ class FormRecreateTransrateConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_read_dir())
+        command = f'ls {xlib.get_cluster_read_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -16118,8 +17655,8 @@ class FormRecreateTransrateConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -16194,8 +17731,8 @@ class FormRecreateTransrateConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -16397,40 +17934,40 @@ class FormRecreateTransrateConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # build the cluster read directory path
         if OK:
-            cluster_read_dir = '{0}/{1}/{2}'.format(xlib.get_cluster_read_dir(), self.wrapper_experiment_id.get(), self.read_dataset_id)
+            cluster_read_dir = f'{xlib.get_cluster_read_dir()}/{self.wrapper_experiment_id.get()}/{self.read_dataset_id}'
 
         # get the selected file list
         if OK:
             selected_file_list = []
-            command = 'cd {0}; find . -type f -regex "./{1}"'.format(cluster_read_dir, self.wrapper_file_pattern.get())
+            command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
             (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             if selected_file_list == []:
-                message = 'WARNING: There are not files in the cluster directory {0} with the pattern {1}'.format(cluster_read_dir, self.wrapper_file_pattern.get())
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'WARNING: There are not files in the cluster directory {cluster_read_dir} with the pattern {self.wrapper_file_pattern.get()}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the paired file list when the read type is paired-end
         if OK:
             if self.read_type == 'PE':
                 (file_1_list, file_2_list, unpaired_file_list) = xlib.pair_files(selected_file_list, self.wrapper_specific_chars_1.get(), self.wrapper_specific_chars_2.get())
                 if unpaired_file_list != []:
-                    message = 'ERROR: There are unpaired files: {0}'.format(unpaired_file_list)
-                    tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'ERROR: There are unpaired files: {unpaired_file_list}'
+                    tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                     OK = False
 
         # confirm the creation of the Transrate config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xtransrate.get_transrate_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xtransrate.get_transrate_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the Transrate config file
         if OK:
@@ -16441,8 +17978,8 @@ class FormRecreateTransrateConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the Transrate config file
         if OK:
@@ -16454,13 +17991,13 @@ class FormRecreateTransrateConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xtransrate.check_transrate_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_transrate_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_transrate_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -16506,7 +18043,7 @@ class FormRecreateTrimmomaticConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_trimmomatic_name())
+        self.head = f'{xlib.get_trimmomatic_name()} - Recreate config file'
 
         # initialize the SSH client connection and previous cluster name
         self.ssh_client = None
@@ -16664,7 +18201,7 @@ class FormRecreateTrimmomaticConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -16690,7 +18227,7 @@ class FormRecreateTrimmomaticConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_read_dir())
+        command = f'ls {xlib.get_cluster_read_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -16700,8 +18237,8 @@ class FormRecreateTrimmomaticConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -16759,8 +18296,8 @@ class FormRecreateTrimmomaticConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -16888,40 +18425,40 @@ class FormRecreateTrimmomaticConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # build the cluster read directory path
         if OK:
-            cluster_read_dir = '{0}/{1}/{2}'.format(xlib.get_cluster_read_dir(), self.wrapper_experiment_id.get(), self.read_dataset_id)
+            cluster_read_dir = f'{xlib.get_cluster_read_dir()}/{self.wrapper_experiment_id.get()}/{self.read_dataset_id}'
 
         # get the selected file list
         if OK:
             selected_file_list = []
-            command = 'cd {0}; find . -type f -regex "./{1}"'.format(cluster_read_dir, self.wrapper_file_pattern.get())
+            command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
             (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             if selected_file_list == []:
-                message = 'WARNING: There are not files in the cluster directory {0} with the pattern {1}'.format(cluster_read_dir, self.wrapper_file_pattern.get())
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'WARNING: There are not files in the cluster directory {cluster_read_dir} with the pattern {self.wrapper_file_pattern.get()}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the paired file list when the read type is paired-end
         if OK:
             if self.read_type == 'PE':
                 (file_1_list, file_2_list, unpaired_file_list) = xlib.pair_files(selected_file_list, self.wrapper_specific_chars_1.get(), self.wrapper_specific_chars_2.get())
                 if unpaired_file_list != []:
-                    message = 'ERROR: There are unpaired files: {0}'.format(unpaired_file_list)
-                    tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'ERROR: There are unpaired files: {unpaired_file_list}'
+                    tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                     OK = False
 
         # confirm the creation of the Trimmomatic config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xtrimmomatic.get_trimmomatic_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xtrimmomatic.get_trimmomatic_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the Trimmomatic config file
         if OK:
@@ -16932,8 +18469,8 @@ class FormRecreateTrimmomaticConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the Trimmomatic config file
         if OK:
@@ -16945,13 +18482,13 @@ class FormRecreateTrimmomaticConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xtrimmomatic.check_trimmomatic_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_trimmomatic_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_trimmomatic_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -16997,7 +18534,7 @@ class FormRecreateTrinityConfigFile(tkinter.Frame):
         self.main.update()
 
         # assign the text of the "head"
-        self.head = '{0} - Recreate config file'.format(xlib.get_trinity_name())
+        self.head = f'{xlib.get_trinity_name()} - Recreate config file'
 
         # initialize the SSH client connection and previous cluster name
         self.ssh_client = None
@@ -17155,7 +18692,7 @@ class FormRecreateTrinityConfigFile(tkinter.Frame):
         running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
         if running_cluster_list == []:
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -17181,7 +18718,7 @@ class FormRecreateTrinityConfigFile(tkinter.Frame):
         experiment_id_list = []
 
         # get the experiment identifications
-        command = 'ls {0}'.format(xlib.get_cluster_read_dir())
+        command = f'ls {xlib.get_cluster_read_dir()}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
@@ -17191,8 +18728,8 @@ class FormRecreateTrinityConfigFile(tkinter.Frame):
 
         # check if there are any experimment identifications
         if experiment_id_list == []:
-            message = 'The cluster {0} does not have experiment data.'.format(self.wrapper_cluster_name.get())
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the experiment identifications in the combobox
@@ -17250,8 +18787,8 @@ class FormRecreateTrinityConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                 self.close()
 
             # save current cluster name as previous cluster name
@@ -17379,40 +18916,40 @@ class FormRecreateTrinityConfigFile(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # build the cluster read directory path
         if OK:
-            cluster_read_dir = '{0}/{1}/{2}'.format(xlib.get_cluster_read_dir(), self.wrapper_experiment_id.get(), self.read_dataset_id)
+            cluster_read_dir = f'{xlib.get_cluster_read_dir()}/{self.wrapper_experiment_id.get()}/{self.read_dataset_id}'
 
         # get the selected file list
         if OK:
             selected_file_list = []
-            command = 'cd {0}; find . -type f -regex "./{1}"'.format(cluster_read_dir, self.wrapper_file_pattern.get())
+            command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
             (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
             else:
-                message = '*** ERROR: Wrong command ---> {0}'.format(command)
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'*** ERROR: Wrong command ---> {command}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             if selected_file_list == []:
-                message = 'WARNING: There are not files in the cluster directory {0} with the pattern {1}'.format(cluster_read_dir, self.wrapper_file_pattern.get())
-                tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'WARNING: There are not files in the cluster directory {cluster_read_dir} with the pattern {self.wrapper_file_pattern.get()}'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # get the paired file list when the read type is paired-end
         if OK:
             if self.read_type == 'PE':
                 (file_1_list, file_2_list, unpaired_file_list) = xlib.pair_files(selected_file_list, self.wrapper_specific_chars_1.get(), self.wrapper_specific_chars_2.get())
                 if unpaired_file_list != []:
-                    message = 'ERROR: There are unpaired files: {0}'.format(unpaired_file_list)
-                    tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'ERROR: There are unpaired files: {unpaired_file_list}'
+                    tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
                     OK = False
 
         # confirm the creation of the Trinity config file
         if OK:
-            message = 'The file {0} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'.format(xtrinity.get_trinity_config_file())
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The file {xtrinity.get_trinity_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # recreate the Trinity config file
         if OK:
@@ -17423,8 +18960,8 @@ class FormRecreateTrinityConfigFile(tkinter.Frame):
             if not OK:
                 message = ''
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # edit the Trinity config file
         if OK:
@@ -17436,13 +18973,13 @@ class FormRecreateTrinityConfigFile(tkinter.Frame):
             # check the config file
             (OK, error_list) = xtrinity.check_trinity_config_file(strict=False)
             if OK:
-                message = 'The {0} config file is OK.'.format(xlib.get_trinity_name())
-                tkinter.messagebox.showinfo('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                message = f'The {xlib.get_trinity_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
                 for error in error_list:
-                    message = '{0}{1}\n'.format(message, error) 
-                tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # close the form
         self.close()
@@ -17452,6 +18989,442 @@ class FormRecreateTrinityConfigFile(tkinter.Frame):
     def close(self):
         '''
         Close "FormRecreateTrinityConfigFile".
+        '''
+        # close SSH client connection
+        if self.cluster_name_ant is not None:
+            xssh.close_ssh_client_connection(self.ssh_client)
+
+        # clear the label of the current process name
+        self.main.label_process['text'] = ''
+
+        # close the current form
+        self.main.close_current_form()
+
+    #---------------
+
+#-------------------------------------------------------------------------------
+
+class FormRecreateVariantCallingConfigFile(tkinter.Frame):
+
+    #---------------
+
+    def __init__(self, parent, main):
+        '''
+        Execute actions correspending to the creation of a "FormRecreateVariantCallingConfigFile" instance.
+        '''
+
+        # save initial parameters in instance variables
+        self.parent = parent
+        self.main = main
+
+        # call the init method of the parent class
+        tkinter.Frame.__init__(self, self.parent)
+
+        # set cursor to show busy status
+        self.main.config(cursor='watch')
+        self.main.update()
+
+        # assign the text of the "head"
+        self.head = f'{xlib.get_variant_calling_name()} - Recreate config file'
+
+        # initialize the SSH client connection and previous cluster name
+        self.ssh_client = None
+        self.cluster_name_ant = None
+
+        # create the wrappers to track changes in inputs
+        self.wrapper_cluster_name = tkinter.StringVar()
+        self.wrapper_cluster_name.trace('w', self.check_inputs)
+        self.wrapper_reference_dataset = tkinter.StringVar()
+        self.wrapper_reference_dataset.trace('w', self.check_inputs)
+        self.wrapper_reference_file = tkinter.StringVar()
+        self.wrapper_reference_file.trace('w', self.check_inputs)
+        self.wrapper_experiment_id = tkinter.StringVar()
+        self.wrapper_experiment_id.trace('w', self.check_inputs)
+        self.wrapper_alignment_dataset = tkinter.StringVar()
+        self.wrapper_alignment_dataset.trace('w', self.check_inputs)
+
+        # build the graphical user interface
+        self.build_gui()
+
+        # load initial data in inputs
+        self.initialize_inputs()
+
+        # set cursor to show normal status
+        self.main.config(cursor='')
+        self.main.update()
+
+    #---------------
+
+    def build_gui(self):
+        '''
+        Build the graphical user interface of "FormRecreateVariantCallingConfigFile".
+        '''
+
+        # assign the text to the label of the current process name
+        self.main.label_process['text'] = self.head
+
+        # create "label_cluster_name" and register it with the grid geometry manager
+        self.label_cluster_name = tkinter.Label(self, text='Cluster name')
+        self.label_cluster_name.grid(row=0, column=0, padx=(15,5), pady=(75,5), sticky='e')
+
+        # create "combobox_cluster_name" and register it with the grid geometry manager
+        self.combobox_cluster_name = tkinter.ttk.Combobox(self, width=20, height=4, state='readonly', textvariable=self.wrapper_cluster_name)
+        self.combobox_cluster_name.grid(row=0, column=1, padx=(5,5), pady=(75,5), sticky='w')
+
+        # create "label_reference_dataset" and register it with the grid geometry manager
+        self.label_reference_dataset = tkinter.Label(self, text='Reference dataset')
+        self.label_reference_dataset.grid(row=1, column=0, padx=(15,5), pady=(45,5), sticky='e')
+
+        # create "combobox_reference_dataset" and register it with the grid geometry manager
+        self.combobox_reference_dataset = tkinter.ttk.Combobox(self, width=45, height=4, state='readonly', textvariable=self.wrapper_reference_dataset)
+        self.combobox_reference_dataset.grid(row=1, column=1, padx=(5,5), pady=(45,5), sticky='w')
+
+        # create "label_reference_file" and register it with the grid geometry manager
+        self.label_reference_file = tkinter.Label(self, text='Reference file')
+        self.label_reference_file.grid(row=2, column=0, padx=(15,5), pady=(45,5), sticky='e')
+
+        # create "combobox_reference_file" and register it with the grid geometry manager
+        self.combobox_reference_file = tkinter.ttk.Combobox(self, width=45, height=4, state='readonly', textvariable=self.wrapper_reference_file)
+        self.combobox_reference_file.grid(row=2, column=1, padx=(5,5), pady=(45,5), sticky='w')
+
+        # create "label_experiment_id" and register it with the grid geometry manager
+        self.label_experiment_id = tkinter.Label(self, text='Experiment id.')
+        self.label_experiment_id.grid(row=3, column=0, padx=(15,5), pady=(45,5), sticky='e')
+
+        # create "combobox_experiment_id" and register it with the grid geometry manager
+        self.combobox_experiment_id = tkinter.ttk.Combobox(self, width=30, height=4, state='readonly', textvariable=self.wrapper_experiment_id)
+        self.combobox_experiment_id.grid(row=3, column=1, padx=(5,5), pady=(45,5), sticky='w')
+
+        # create "label_alignment_dataset" and register it with the grid geometry manager
+        self.label_alignment_dataset = tkinter.Label(self, text='Alignment dataset')
+        self.label_alignment_dataset.grid(row=4, column=0, padx=(15,5), pady=(45,5), sticky='e')
+
+        # create "combobox_alignment_dataset" and register it with the grid geometry manager
+        self.combobox_alignment_dataset = tkinter.ttk.Combobox(self, width=45, height=4, state='readonly', textvariable=self.wrapper_alignment_dataset)
+        self.combobox_alignment_dataset.grid(row=4, column=1, padx=(5,5), pady=(45,5), sticky='w')
+
+        # create "label_fit" and register it with the grid geometry manager
+        self.label_fit = tkinter.Label(self, text=' '*(35+xlib.get_os_size_fix()))
+        self.label_fit.grid(row=5, column=2, padx=(0,0), pady=(45,5), sticky='e')
+
+        # create "button_execute" and register it with the grid geometry manager
+        self.button_execute = tkinter.ttk.Button(self, text='Execute', command=self.execute, state='disabled')
+        self.button_execute.grid(row=5, column=3, padx=(0,5), pady=(45,5), sticky='e')
+
+        # create "button_close" and register it with the grid geometry manager
+        self.button_close = tkinter.ttk.Button(self, text='Close', command=self.close)
+        self.button_close.grid(row=5, column=4, padx=(5,5), pady=(45,5), sticky='w')
+
+        # link a handler to events
+        self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
+        self.combobox_reference_dataset.bind('<<ComboboxSelected>>', self.combobox_reference_dataset_selected_item)
+        self.combobox_reference_file.bind('<<ComboboxSelected>>', self.combobox_reference_file_selected_item)
+        self.combobox_experiment_id.bind('<<ComboboxSelected>>', self.combobox_experiment_id_selected_item)
+        self.combobox_alignment_dataset.bind('<<ComboboxSelected>>', self.combobox_alignment_dataset_selected_item)
+
+    #---------------
+
+    def initialize_inputs(self):
+        '''
+        Load initial data in inputs.
+        '''
+
+        # load initial data in inputs
+        self.combobox_reference_dataset['values'] = []
+        self.wrapper_reference_dataset.set('')
+        self.combobox_reference_file['values'] = []
+        self.wrapper_reference_file.set('')
+        self.combobox_experiment_id['values'] = []
+        self.wrapper_experiment_id.set('')
+        self.combobox_alignment_dataset['values'] = []
+        self.wrapper_alignment_dataset.set('')
+        self.alignment_dataset_id = None
+
+        # populate data in comboboxes
+        self.populate_combobox_cluster_name()
+
+    #---------------
+
+    def populate_combobox_cluster_name(self):
+        '''
+        Populate data in "combobox_cluster_name".
+        '''
+
+        # clear the value selected in the combobox
+        self.wrapper_cluster_name.set('')
+
+        # check if there are some running clusters
+        running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
+        if running_cluster_list == []:
+            message = 'There is not any running cluster.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+            return
+
+        # load the names of clusters which are running in the combobox
+        self.combobox_cluster_name['values'] = running_cluster_list
+
+        # if there is only one cluster running, set its cluster name by default
+        if len(running_cluster_list) == 1:
+            self.wrapper_cluster_name.set(running_cluster_list[0])
+            self.combobox_cluster_name['state'] = 'disabled'
+            self.combobox_cluster_name_selected_item()
+
+    #---------------
+
+    def populate_combobox_reference_dataset(self):
+        '''
+        Populate data in "combobox_reference_dataset".
+        '''
+
+        # clear the value selected in the combobox
+        self.wrapper_reference_dataset.set('')
+
+        # get the list of the reference dataset names
+        (OK, error_list, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
+
+        # load the reference dataset names in the combobox
+        self.combobox_reference_dataset['values'] = sorted(reference_dataset_name_list)
+
+    #---------------
+
+    def populate_combobox_reference_file(self):
+        '''
+        Populate data in "combobox_reference_file".
+        '''
+
+        # clear the value selected in the combobox
+        self.wrapper_reference_file.set('')
+
+        # get the list of the reference file names
+        (OK, error_list, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+
+        # load the reference file names in the combobox
+        self.combobox_reference_file['values'] = sorted(reference_file_name_list)
+
+    #---------------
+
+    def populate_combobox_experiment_id(self):
+        '''
+        Populate data in "combobox_experiment_id".
+        '''
+
+        # clear the value selected in the combobox
+        self.wrapper_experiment_id.set('')
+
+        # initialize the experiment identification list
+        experiment_id_list = []
+
+        # get the experiment identifications
+        command = f'ls {xlib.get_cluster_result_dir()}'
+        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        if OK:
+            for line in stdout:
+                line = line.rstrip('\n')
+                if line != 'lost+found':
+                    experiment_id_list.append(line)
+
+        # check if there are any experimment identifications
+        if experiment_id_list == []:
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+            return
+
+        # load the experiment identifications in the combobox
+        self.combobox_experiment_id['values'] = sorted(experiment_id_list)
+
+    #---------------
+
+    def populate_combobox_alignment_dataset(self):
+        '''
+        Populate data in "combobox_alignment_dataset".
+        '''
+
+        # clear the value selected in the combobox
+        self.wrapper_alignment_dataset.set('')
+
+        # get the list of the alignment dataset names
+        app_list = [xlib.get_bowtie2_code(), xlib.get_gsnap_code(), xlib.get_hisat2_code(), xlib.get_star_code(), xlib.get_tophat_code()]
+        (OK, error_list, alignment_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+
+        # load the alignment dataset names in the combobox
+        self.combobox_alignment_dataset['values'] = sorted(alignment_dataset_name_list)
+
+    #---------------
+
+    def combobox_cluster_name_selected_item(self, event=None):
+        '''
+        Process the event when an item of "combobox_cluster_name" has been selected
+        '''
+
+        # set cursor to show busy status
+        self.main.config(cursor='watch')
+        self.main.update()
+
+        # check if the cluster name selected is different to the previous cluster name
+        if self.wrapper_cluster_name.get() != self.cluster_name_ant:
+
+            # close SSH client connection
+            if self.cluster_name_ant is not None:
+                xssh.close_ssh_client_connection(self.ssh_client)
+
+            # create the SSH client connection
+            (OK, error_list, self.ssh_client) = xssh.create_ssh_client_connection(self.wrapper_cluster_name.get())
+            if not OK:
+                message = ''
+                for error in error_list:
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+                self.close()
+
+            # save current cluster name as previous cluster name
+            self.cluster_name_ant = self.wrapper_cluster_name.get()
+
+        # load data in "combobox_reference_dataset"
+        self.populate_combobox_reference_dataset()
+
+        # clear data in "combobox_reference_file"
+        self.combobox_reference_file['values'] = []
+        self.wrapper_reference_file.set('')
+
+        # load data in "combobox_experiment_id"
+        self.populate_combobox_experiment_id()
+
+        # clear data in "combobox_alignment_dataset"
+        self.combobox_alignment_dataset['values'] = []
+        self.wrapper_alignment_dataset.set('')
+
+        # set cursor to show normal status
+        self.main.config(cursor='')
+        self.main.update()
+
+    #---------------
+
+    def combobox_reference_dataset_selected_item(self, event=None):
+        '''
+        Process the event when an item of "combobox_reference_dataset" has been selected
+        '''
+
+        # set cursor to show busy status
+        self.main.config(cursor='watch')
+        self.main.update()
+
+        # load data in "combobox_reference_file"
+        self.populate_combobox_reference_file()
+
+        # set cursor to show normal status
+        self.main.config(cursor='')
+        self.main.update()
+
+    #---------------
+
+    def combobox_reference_file_selected_item(self, event=None):
+        '''
+        Process the event when an item of "combobox_reference_file" has been selected
+        '''
+
+        pass
+
+    #---------------
+
+    def combobox_experiment_id_selected_item(self, event=None):
+        '''
+        Process the event when an item of "combobox_experiment_id" has been selected
+        '''
+
+        # set cursor to show busy status
+        self.main.config(cursor='watch')
+        self.main.update()
+
+        # load data in "combobox_alignment_dataset"
+        self.populate_combobox_alignment_dataset()
+
+        # set cursor to show normal status
+        self.main.config(cursor='')
+        self.main.update()
+
+    #---------------
+
+    def combobox_alignment_dataset_selected_item(self, event=None):
+        '''
+        Process the event when an item of "combobox_alignment_dataset" has been selected
+        '''
+
+        # get the alignment dataset identification
+        (OK, error_list, self.alignment_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_alignment_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+
+
+    #---------------
+
+    def check_inputs(self, *args):
+        '''
+        Check the content of each input of "FormRecreateVariantCallingConfigFile" and do the actions linked to its value
+        '''
+
+        # initialize the control variable
+        OK = True
+
+        # check if "button_execute" has to be enabled or disabled
+        if self.wrapper_cluster_name.get() != '' and self.wrapper_reference_dataset.get() != '' and self.wrapper_reference_file.get() != '' and self.wrapper_experiment_id.get() != ''  and self.wrapper_alignment_dataset.get() != '':
+            self.button_execute['state'] = 'enable'
+        else:
+            self.button_execute['state'] = 'disabled'
+
+        # return the control variable
+        return OK
+
+    #---------------
+
+    def execute(self):
+        '''
+        Execute the creation of the config file.
+        '''
+
+        # check inputs
+        OK = self.check_inputs()
+        if not OK:
+            message = 'Some input values are not OK.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+
+        # confirm the creation of the Variant calling config file
+        if OK:
+            message = f'The file {xddradseqtools.get_variant_calling_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
+
+        # recreate the Variant calling config file
+        if OK:
+            (OK, error_list) = xddradseqtools.create_variant_calling_config_file(self.wrapper_reference_dataset.get(), self.wrapper_reference_file.get(), self.wrapper_experiment_id.get(), self.alignment_dataset_id)
+            if not OK:
+                message = ''
+                for error in error_list:
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+
+        # edit the Variant calling config file
+        if OK:
+
+            # edit the config file using "DialogEditor" 
+            dialog_editor = gdialogs.DialogEditor(self, xddradseqtools.get_variant_calling_config_file())
+            self.wait_window(dialog_editor)
+
+            # check the config file
+            (OK, error_list) = xddradseqtools.check_variant_calling_config_file(strict=False)
+            if OK:
+                message = f'The {xlib.get_variant_calling_name()} config file is OK.'
+                tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
+            else:
+                message = 'Detected errors:\n\n'
+                for error in error_list:
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+
+        # close the form
+        self.close()
+
+    #---------------
+
+    def close(self):
+        '''
+        Close "FormRecreateVariantCallingConfigFile".
         '''
         # close SSH client connection
         if self.cluster_name_ant is not None:
@@ -17489,73 +19462,116 @@ class FormRunBioinfoProcess(tkinter.Frame):
         self.main.update()
 
         # set the name
-        if self.app == xlib.get_busco_code():
+        if self.app == xlib.get_bowtie2_code():
+            self.name = xlib.get_bowtie2_name()
+
+        elif self.app == xlib.get_busco_code():
             self.name = xlib.get_busco_name()
+
         elif self.app == xlib.get_cd_hit_est_code():
             self.name = xlib.get_cd_hit_est_name()
+
         elif self.app == xlib.get_cuffdiff_code():
             self.name = xlib.get_cuffdiff_name()
+
         elif self.app == xlib.get_cufflinks_cuffmerge_code():
             self.name = xlib.get_cufflinks_cuffmerge_name()
+
         elif self.app == xlib.get_cuffquant_code():
             self.name = xlib.get_cuffquant_name()
+
         elif self.app == xlib.get_cutadapt_code():
             self.name = xlib.get_cutadapt_name()
+
         elif self.app == xlib.get_ddradseq_simulation_code():
             self.name = xlib.get_ddradseq_simulation_name()
+
+        elif self.app == xlib.get_express_code():
+            self.name = xlib.get_express_name()
+
         elif self.app == xlib.get_fastqc_code():
             self.name = xlib.get_fastqc_name()
+
         elif self.app == xlib.get_ggtrinity_code():
             self.name = xlib.get_ggtrinity_name()
+
         elif self.app == xlib.get_gmap_code():
             self.name = xlib.get_gmap_name()
+
         elif self.app == xlib.get_gsnap_code():
             self.name = xlib.get_gsnap_name()
+
         elif self.app == xlib.get_hisat2_code():
             self.name = xlib.get_hisat2_name()
+
         elif self.app == xlib.get_htseq_count_code():
             self.name = xlib.get_htseq_count_name()
+
         elif self.app == xlib.get_insilico_read_normalization_code():
             self.name = xlib.get_insilico_read_normalization_name()
+
         elif self.app == xlib.get_ipyrad_code():
             self.name = xlib.get_ipyrad_name()
+
         elif self.app == xlib.get_kallisto_code():
             self.name = xlib.get_kallisto_name()
+
         elif self.app == xlib.get_quast_code():
             self.name = xlib.get_quast_name()
+
+        elif self.app == xlib.get_raddesigner_code():
+            self.name = xlib.get_raddesigner_name()
+
         elif self.app == xlib.get_ref_eval_code():
             self.name = xlib.get_ref_eval_name()
+
         elif self.app == xlib.get_rnaquast_code():
             self.name = xlib.get_rnaquast_name()
+
         elif self.app == xlib.get_rsem_eval_code():
             self.name = xlib.get_rsem_eval_name()
+
         elif self.app == xlib.get_rsitesearch_code():
             self.name = xlib.get_rsitesearch_name()
+
         elif self.app == xlib.get_soapdenovo2_code():
             self.name = xlib.get_soapdenovo2_name()
+
         elif self.app == xlib.get_soapdenovotrans_code():
             self.name = xlib.get_soapdenovotrans_name()
+
         elif self.app == xlib.get_star_code():
             self.name = xlib.get_star_name()
+
         elif self.app == xlib.get_starcode_code():
             self.name = xlib.get_starcode_name()
+
         elif self.app == xlib.get_tophat_code():
             self.name = xlib.get_tophat_name()
+
         elif self.app == xlib.get_transabyss_code():
             self.name = xlib.get_transabyss_name()
+
         elif self.app == xlib.get_transcript_filter_code():
             self.name = xlib.get_transcript_filter_name()
+
         elif self.app == xlib.get_transcriptome_blastx_code():
             self.name = xlib.get_transcriptome_blastx_name()
+
         elif self.app == xlib.get_transrate_code():
             self.name = xlib.get_transrate_name()
+
         elif self.app == xlib.get_trimmomatic_code():
             self.name = xlib.get_trimmomatic_name()
+
         elif self.app == xlib.get_trinity_code():
             self.name = xlib.get_trinity_name()
 
+        elif self.app == xlib.get_variant_calling_code():
+            self.name = xlib.get_variant_calling_name()
+
         # assign the text of the "head"
-        self.head = '{0} - Run process'.format(self.name)
+        self.head = f'{self.name} - Run process'
 
         # create the wrappers to track changes in the inputs
         self.wrapper_cluster_name = tkinter.StringVar()
@@ -17629,7 +19645,7 @@ class FormRunBioinfoProcess(tkinter.Frame):
         if running_cluster_list == []:
             self.combobox_cluster_name['values'] = []
             message = 'There is not any running cluster.'
-            tkinter.messagebox.showwarning('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
             return
 
         # load the names of clusters which are running in the combobox
@@ -17660,11 +19676,34 @@ class FormRunBioinfoProcess(tkinter.Frame):
         # initialize the control variable
         OK = True
 
+        # check the content of "combobox_cluster_name"
+        if self.app == xlib.get_transcriptome_blastx_code():
+            OK = self.check_combobox_cluster_name()
+
         # check if "button_execute" has to be enabled or disabled
         if self.wrapper_cluster_name.get() != '':
             self.button_execute['state'] = 'enable'
         else:
             self.button_execute['state'] = 'disabled'
+
+        # return the control variable
+        return OK
+
+    #---------------
+
+    def check_combobox_cluster_name(self):
+        '''
+        Check the content of "combobox_cluster_name"
+        '''
+
+        # initialize the control variable
+        OK = True
+
+        # check the cluster mode
+        if self.wrapper_cluster_name.get() != '' and xec2.get_cluster_mode(self.wrapper_cluster_name.get()) != xconfiguration.get_cluster_mode_starcluster():
+            message = f'This option is only available for clusters started in mode {xconfiguration.get_cluster_mode_starcluster()}.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+            OK = False
 
         # return the control variable
         return OK
@@ -17680,18 +19719,24 @@ class FormRunBioinfoProcess(tkinter.Frame):
         OK = self.check_inputs()
         if not OK:
             message = 'Some input values are not OK.'
-            tkinter.messagebox.showerror('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # confirm the process run
         if OK:
-            message = 'The {0} process is going to be run.\n\nAre you sure to continue?'.format(self.name)
-            OK = tkinter.messagebox.askyesno('{0} - {1}'.format(xlib.get_project_name(), self.head), message)
+            message = f'The {self.name} process is going to be run.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # execute the process
         if OK:
 
+            # execute the process when it is a Bowtie2 process
+            if self.app == xlib.get_bowtie2_code():
+                dialog_log = gdialogs.DialogLog(self, self.head, xbowtie2.run_bowtie2_process.__name__)
+                threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
+                threading.Thread(target=xbowtie2.run_bowtie2_process, args=(self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+
             # execute the process when it is a BUSCO process
-            if self.app == xlib.get_busco_code():
+            elif self.app == xlib.get_busco_code():
                 dialog_log = gdialogs.DialogLog(self, self.head, xbusco.run_busco_process.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbusco.run_busco_process, args=(self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
@@ -17731,6 +19776,12 @@ class FormRunBioinfoProcess(tkinter.Frame):
                 dialog_log = gdialogs.DialogLog(self, self.head, xddradseqtools.run_ddradseq_simulation_process.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xddradseqtools.run_ddradseq_simulation_process, args=(self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+
+            # execute the process when it is a eXpress process
+            elif self.app == xlib.get_express_code():
+                dialog_log = gdialogs.DialogLog(self, self.head, xexpress.run_express_process.__name__)
+                threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
+                threading.Thread(target=xexpress.run_express_process, args=(self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # execute the process when it is a FastQC process
             elif self.app == xlib.get_fastqc_code():
@@ -17792,6 +19843,12 @@ class FormRunBioinfoProcess(tkinter.Frame):
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xquast.run_quast_process, args=(self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
+            # execute the process when it is a RADdesigner process
+            elif self.app == xlib.get_raddesigner_code():
+                dialog_log = gdialogs.DialogLog(self, self.head, xraddesigner.run_raddesigner_process.__name__)
+                threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
+                threading.Thread(target=xraddesigner.run_raddesigner_process, args=(self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+
             # execute the process when it is a REF-EVAL process
             elif self.app == xlib.get_ref_eval_code():
                 dialog_log = gdialogs.DialogLog(self, self.head, xdetonate.run_ref_eval_process.__name__)
@@ -17816,17 +19873,17 @@ class FormRunBioinfoProcess(tkinter.Frame):
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xddradseqtools.run_rsitesearch_process, args=(self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
-            # execute the process when it is a SOAPdenovo-Trans process
-            elif self.app == xlib.get_soapdenovotrans_code():
-                dialog_log = gdialogs.DialogLog(self, self.head, xsoapdenovotrans.run_soapdenovotrans_process.__name__)
-                threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
-                threading.Thread(target=xsoapdenovotrans.run_soapdenovotrans_process, args=(self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
-
             # execute the process when it is a SOAPdenovo2 process
             elif self.app == xlib.get_soapdenovo2_code():
                 dialog_log = gdialogs.DialogLog(self, self.head, xsoapdenovo2.run_soapdenovo2_process.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xsoapdenovo2.run_soapdenovo2_process, args=(self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+
+            # execute the process when it is a SOAPdenovo-Trans process
+            elif self.app == xlib.get_soapdenovotrans_code():
+                dialog_log = gdialogs.DialogLog(self, self.head, xsoapdenovotrans.run_soapdenovotrans_process.__name__)
+                threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
+                threading.Thread(target=xsoapdenovotrans.run_soapdenovotrans_process, args=(self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # execute the process when it is a STAR process
             elif self.app == xlib.get_star_code():
@@ -17882,6 +19939,12 @@ class FormRunBioinfoProcess(tkinter.Frame):
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xtrinity.run_trinity_process, args=(self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
+            # execute the process when it is a Variant calling process
+            elif self.app == xlib.get_variant_calling_code():
+                dialog_log = gdialogs.DialogLog(self, self.head, xddradseqtools.run_variant_calling_process.__name__)
+                threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
+                threading.Thread(target=xddradseqtools.run_variant_calling_process, args=(self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+
         # close the form
         if OK:
             self.close()
@@ -17892,6 +19955,410 @@ class FormRunBioinfoProcess(tkinter.Frame):
         '''
         Close "FormRunBioinfoProcess".
         '''
+
+        # clear the label of the current process name
+        self.main.label_process['text'] = ''
+
+        # close the current form
+        self.main.close_current_form()
+
+    #---------------
+
+#-------------------------------------------------------------------------------
+
+class FormRestartBioinfoProcess(tkinter.Frame):
+
+    #---------------
+
+    def __init__(self, parent, main, app):
+        '''
+        Execute actions correspending to the creation of a "FormRestartBioinfoProcess" instance.
+        '''
+
+        # save initial parameters in instance variables
+        self.parent = parent
+        self.main = main
+        self.app = app
+
+        # call the init method of the parent class
+        tkinter.Frame.__init__(self, self.parent)
+
+        # set cursor to show busy status
+        self.main.config(cursor='watch')
+        self.main.update()
+
+        # set the name
+        if self.app == xlib.get_ddradseq_simulation_code():
+            self.name = xlib.get_ddradseq_simulation_name()
+
+        elif self.app == xlib.get_ggtrinity_code():
+            self.name = xlib.get_ggtrinity_name()
+
+        elif self.app == xlib.get_insilico_read_normalization_code():
+            self.name = xlib.get_insilico_read_normalization_name()
+
+        elif self.app == xlib.get_raddesigner_code():
+            self.name = xlib.get_raddesigner_name()
+
+        elif self.app == xlib.get_soapdenovo2_code():
+            self.name = xlib.get_soapdenovo2_name()
+
+        elif self.app == xlib.get_soapdenovotrans_code():
+            self.name = xlib.get_soapdenovotrans_name()
+
+        elif self.app == xlib.get_trinity_code():
+            self.name = xlib.get_trinity_name()
+
+        elif self.app == xlib.get_variant_calling_code():
+            self.name = xlib.get_variant_calling_name()
+
+        # assign the text of the "head"
+        self.head = f'{self.name} - Restart process'
+
+        # initialize the SSH client connection and previous cluster name
+        self.ssh_client = None
+        self.cluster_name_ant = None
+
+        # create the wrappers to track changes in the inputs
+        self.wrapper_cluster_name = tkinter.StringVar()
+        self.wrapper_cluster_name.trace('w', self.check_inputs)
+        self.wrapper_experiment_id = tkinter.StringVar()
+        self.wrapper_experiment_id.trace('w', self.check_inputs)
+        self.wrapper_result_dataset = tkinter.StringVar()
+        self.wrapper_result_dataset.trace('w', self.check_inputs)
+
+        # build the graphical user interface
+        self.build_gui()
+
+        # load initial data in inputs
+        self.initialize_inputs()
+
+        # set cursor to show normal status
+        self.main.config(cursor='')
+        self.main.update()
+
+    #---------------
+
+    def build_gui(self):
+        '''
+        Build the graphical user interface of "FormRestartBioinfoProcess".
+        '''
+
+        # assign the text to the label of the current process name
+        self.main.label_process['text'] = self.head
+
+        # create "label_cluster_name" and register it with the grid geometry manager
+        self.label_cluster_name = tkinter.Label(self, text='Cluster name')
+        self.label_cluster_name.grid(row=0, column=0, padx=(15,5), pady=(75,5), sticky='e')
+
+        # create "combobox_cluster_name" and register it with the grid geometry manager
+        self.combobox_cluster_name = tkinter.ttk.Combobox(self, width=40, height=4, state='readonly', textvariable=self.wrapper_cluster_name)
+        self.combobox_cluster_name.grid(row=0, column=1, padx=(5,5), pady=(75,5), sticky='w')
+
+        # create "label_experiment_id" and register it with the grid geometry manager
+        self.label_experiment_id = tkinter.Label(self, text='Experiment/process')
+        self.label_experiment_id.grid(row=1, column=0, padx=(15,5), pady=(45,5), sticky='e')
+
+        # create "combobox_experiment_id" and register it with the grid geometry manager
+        self.combobox_experiment_id = tkinter.ttk.Combobox(self, width=30, height=4, state='readonly', textvariable=self.wrapper_experiment_id)
+        self.combobox_experiment_id.grid(row=1, column=1, padx=(5,5), pady=(45,5), sticky='w')
+
+        # create "label_result_dataset" and register it with the grid geometry manager
+        self.label_result_dataset = tkinter.Label(self, text='Result dataset')
+        self.label_result_dataset.grid(row=2, column=0, padx=(15,5), pady=(45,5), sticky='e')
+
+        # create "combobox_result_dataset" and register it with the grid geometry manager
+        self.combobox_result_dataset = tkinter.ttk.Combobox(self, width=45, height=4, state='readonly', textvariable=self.wrapper_result_dataset)
+        self.combobox_result_dataset.grid(row=2, column=1, padx=(5,5), pady=(45,5), sticky='w')
+
+        # create "label_fit" and register it with the grid geometry manager
+        self.label_fit = tkinter.Label(self, text=' '*(35+xlib.get_os_size_fix()))
+        self.label_fit.grid(row=3, column=2, padx=(0,0), pady=(45,5), sticky='e')
+
+        # create "button_execute" and register it with the grid geometry manager
+        self.button_execute = tkinter.ttk.Button(self, text='Execute', command=self.execute, state='disabled')
+        self.button_execute.grid(row=3, column=3, padx=(5,5), pady=(45,5), sticky='e')
+
+        # create "button_close" and register it with the grid geometry manager
+        self.button_close = tkinter.ttk.Button(self, text='Close', command=self.close)
+        self.button_close.grid(row=3, column=4, padx=(5,5), pady=(45,5), sticky='w')
+
+        # link a handler to events
+        self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
+        self.combobox_experiment_id.bind('<<ComboboxSelected>>', self.combobox_experiment_id_selected_item)
+        self.combobox_result_dataset.bind('<<ComboboxSelected>>', self.combobox_result_dataset_selected_item)
+
+    #---------------
+
+    def initialize_inputs(self):
+        '''
+        Load initial data in inputs.
+        '''
+
+        # load initial data in inputs
+        self.combobox_experiment_id['values'] = []
+        self.wrapper_experiment_id.set('')
+        self.combobox_result_dataset['values'] = []
+        self.wrapper_result_dataset.set('')
+        self.result_dataset_id = None
+
+        # populate data in comboboxes
+        self.populate_combobox_cluster_name()
+
+    #---------------
+
+    def populate_combobox_cluster_name(self):
+        '''
+        Populate data in "combobox_cluster_name".
+        '''
+
+        # clear the value selected in the combobox
+        self.wrapper_cluster_name.set('')
+
+        # check if there are some running clusters
+        running_cluster_list = xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False)
+        if running_cluster_list == []:
+            self.combobox_cluster_name['values'] = []
+            message = 'There is not any running cluster.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+            return
+
+        # load the names of clusters which are running in the combobox
+        self.combobox_cluster_name['values'] = running_cluster_list
+
+        # if there is only one cluster running, set its cluster name by default
+        if len(running_cluster_list) == 1:
+            self.wrapper_cluster_name.set(running_cluster_list[0])
+            self.combobox_cluster_name['state'] = 'disabled'
+            self.combobox_cluster_name_selected_item()
+
+    #---------------
+
+    def populate_combobox_experiment_id(self):
+        '''
+        Populate data in "combobox_experiment_id".
+        '''
+
+        # clear the value selected in the combobox
+        self.wrapper_experiment_id.set('')
+
+        # initialize the experiment identification list
+        experiment_id_list = []
+
+        # get the experiment identifications
+        command = f'ls {xlib.get_cluster_result_dir()}'
+        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        if OK:
+            for line in stdout:
+                line = line.rstrip('\n')
+                if line != 'lost+found':
+                    experiment_id_list.append(line)
+
+        # check if there are any experimment identifications
+        if experiment_id_list == []:
+            message = f'The cluster {self.wrapper_cluster_name.get()} does not have experiment data.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+            return
+
+        # load the experiment identifications in the combobox
+        if self.app in [xlib.get_ddradseq_simulation_code()]:
+            if xlib.get_design_dataset_name() in experiment_id_list:
+                experiment_id_list = [xlib.get_design_dataset_name()]
+            else:
+                experiment_id_list = []
+        else:
+            if xlib.get_design_dataset_name() in experiment_id_list:
+                experiment_id_list.remove(xlib.get_design_dataset_name())
+        self.combobox_experiment_id['values'] = sorted(experiment_id_list)
+
+    #---------------
+
+    def populate_combobox_result_dataset(self):
+        '''
+        Populate data in "combobox_result_dataset".
+        '''
+
+        # clear the value selected in the combobox
+        self.wrapper_result_dataset.set('')
+
+        # get the list of the assembly dataset names
+        app_list = [self.app]
+        (OK, error_list, result_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+
+        # load the assembly dataset names in the combobox
+        self.combobox_result_dataset['values'] = sorted(result_dataset_name_list)
+
+    #---------------
+
+    def combobox_cluster_name_selected_item(self, event=None):
+        '''
+        Process the event when an item of "combobox_cluster_name" has been selected
+        '''
+
+        # set cursor to show busy status
+        self.main.config(cursor='watch')
+        self.main.update()
+
+        # check if the cluster name selected is different to the previous cluster name
+        if self.wrapper_cluster_name.get() != self.cluster_name_ant:
+
+            # close SSH client connection
+            if self.cluster_name_ant is not None:
+                xssh.close_ssh_client_connection(self.ssh_client)
+
+            # create the SSH client connection
+            (OK, error_list, self.ssh_client) = xssh.create_ssh_client_connection(self.wrapper_cluster_name.get())
+            if not OK:
+                message = ''
+                for error in error_list:
+                    message = f'{message}{error}\n'
+                tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+                self.close()
+
+            # save current cluster name as previous cluster name
+            self.cluster_name_ant = self.wrapper_cluster_name.get()
+
+        # load data in "combobox_experiment_id"
+        self.populate_combobox_experiment_id()
+
+        # clear data in "combobox_result_dataset"
+        self.combobox_result_dataset['values'] = []
+        self.wrapper_result_dataset.set('')
+
+        # set cursor to show normal status
+        self.main.config(cursor='')
+        self.main.update()
+
+    #---------------
+
+    def combobox_experiment_id_selected_item(self, event=None):
+        '''
+        Process the event when an item of "combobox_experiment_id" has been selected
+        '''
+
+        # set cursor to show busy status
+        self.main.config(cursor='watch')
+        self.main.update()
+
+        # load data in "combobox_result_dataset"
+        self.populate_combobox_result_dataset()
+
+        # set cursor to show normal status
+        self.main.config(cursor='')
+        self.main.update()
+
+    #---------------
+
+    def combobox_result_dataset_selected_item(self, event=None):
+        '''
+        Process the event when an item of "combobox_result_dataset" has been selected
+        '''
+
+        # get the assembly dataset identification
+        (OK, error_list, self.result_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_result_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+
+    #---------------
+
+    def check_inputs(self, *args):
+        '''
+        Check the content of each input of "FormRestartBioinfoProcess" and do the actions linked to its value
+        '''
+
+        # initialize the control variable
+        OK = True
+
+        # check if "button_execute" has to be enabled or disabled
+        if self.wrapper_cluster_name.get() != '' and self.wrapper_experiment_id.get() != ''  and self.wrapper_result_dataset.get() != '':
+            self.button_execute['state'] = 'enable'
+        else:
+            self.button_execute['state'] = 'disabled'
+
+        # return the control variable
+        return OK
+
+    #---------------
+
+    def execute(self):
+        '''
+        Restart a bioinformatic process.
+        '''
+
+        # check inputs
+        OK = self.check_inputs()
+        if not OK:
+            message = 'Some input values are not OK.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+
+        # confirm the process run
+        if OK:
+            message = f'The {self.name} process is going to be run.\n\nAre you sure to continue?'
+            OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
+
+        # execute the process
+        if OK:
+
+            # execute the process when it is a ddRADseq simulation process
+            if self.app == xlib.get_ddradseq_simulation_code():
+                dialog_log = gdialogs.DialogLog(self, self.head, xddradseqtools.restart_ddradseq_simulation_process.__name__)
+                threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
+                threading.Thread(target=xddradseqtools.restart_ddradseq_simulation_process, args=(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.result_dataset_id, dialog_log, lambda: dialog_log.enable_button_close())).start()
+
+            # execute the process when it is a Genome-guided Trinity process
+            elif self.app == xlib.get_ggtrinity_code():
+                dialog_log = gdialogs.DialogLog(self, self.head, xtrinity.restart_ggtrinity_process.__name__)
+                threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
+                threading.Thread(target=xtrinity.restart_ggtrinity_process, args=(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.result_dataset_id, dialog_log, lambda: dialog_log.enable_button_close())).start()
+
+            # execute the process when it is a insilico_read_normalization process
+            elif self.app == xlib.get_insilico_read_normalization_code():
+                dialog_log = gdialogs.DialogLog(self, self.head, xtrinity.restart_insilico_read_normalization_process.__name__)
+                threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
+                threading.Thread(target=xtrinity.restart_insilico_read_normalization_process, args=(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.result_dataset_id, dialog_log, lambda: dialog_log.enable_button_close())).start()
+
+            # execute the process when it is a RADdesigner process
+            elif self.app == xlib.get_raddesigner_code():
+                dialog_log = gdialogs.DialogLog(self, self.head, xraddesigner.restart_raddesigner_process.__name__)
+                threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
+                threading.Thread(target=xraddesigner.restart_raddesigner_process, args=(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.result_dataset_id, dialog_log, lambda: dialog_log.enable_button_close())).start()
+
+            # execute the process when it is a SOAPdenovo2s process
+            elif self.app == xlib.get_soapdenovo2_code():
+                dialog_log = gdialogs.DialogLog(self, self.head, xsoapdenovo2.restart_soapdenovo2_process.__name__)
+                threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
+                threading.Thread(target=xsoapdenovo2.restart_soapdenovo2_process, args=(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.result_dataset_id, dialog_log, lambda: dialog_log.enable_button_close())).start()
+
+            # execute the process when it is a SOAPdenovo-Trans process
+            elif self.app == xlib.get_soapdenovotrans_code():
+                dialog_log = gdialogs.DialogLog(self, self.head, xsoapdenovotrans.restart_soapdenovotrans_process.__name__)
+                threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
+                threading.Thread(target=xsoapdenovotrans.restart_soapdenovotrans_process, args=(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.result_dataset_id, dialog_log, lambda: dialog_log.enable_button_close())).start()
+
+            # execute the process when it is a Trinity process
+            elif self.app == xlib.get_trinity_code():
+                dialog_log = gdialogs.DialogLog(self, self.head, xtrinity.restart_trinity_process.__name__)
+                threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
+                threading.Thread(target=xtrinity.restart_trinity_process, args=(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.result_dataset_id, dialog_log, lambda: dialog_log.enable_button_close())).start()
+
+            # execute the process when it is a Variant calling process
+            elif self.app == xlib.get_variant_calling_code():
+                dialog_log = gdialogs.DialogLog(self, self.head, xddradseqtools.restart_variant_calling_process.__name__)
+                threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
+                threading.Thread(target=xddradseqtools.restart_variant_calling_process, args=(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.result_dataset_id, dialog_log, lambda: dialog_log.enable_button_close())).start()
+
+        # close the form
+        if OK:
+            self.close()
+
+    #---------------
+
+    def close(self):
+        '''
+        Close "FormRestartBioinfoProcess".
+        '''
+
+        # close SSH client connection
+        if self.cluster_name_ant is not None:
+            xssh.close_ssh_client_connection(self.ssh_client)
 
         # clear the label of the current process name
         self.main.label_process['text'] = ''
