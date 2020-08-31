@@ -137,7 +137,7 @@ def install_miniconda3(cluster_name, log, function=None):
     if OK:
         log.write(f'{xlib.get_separator()}\n')
         log.write('Determining the run directory in the cluster ...\n')
-        current_run_dir = xlib.get_cluster_current_run_dir('installation', xlib.get_miniconda3_code())
+        current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_toa_result_installation_dir(), xlib.get_miniconda3_code())
         command = f'mkdir --parents {current_run_dir}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
@@ -741,7 +741,7 @@ def install_anaconda_package_list(app_code, app_name, package_list, cluster_name
     if OK:
         log.write(f'{xlib.get_separator()}\n')
         log.write('Determining the run directory in the cluster ...\n')
-        current_run_dir = xlib.get_cluster_current_run_dir('installation', app_code)
+        current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_toa_result_installation_dir(), app_code)
         command = f'mkdir --parents {current_run_dir}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
@@ -905,12 +905,12 @@ def build_anaconda_package_installation_script(app_name, package_list, cluster_n
             script_file_id.write( '    echo "The channel is added."\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( 'function add_channel_r\n')
+            script_file_id.write( 'function add_channel_bioconda\n')
             script_file_id.write( '{\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '    echo "Adding channel r ..."\n')
+            script_file_id.write( '    echo "Adding channel bioconda ..."\n')
             script_file_id.write(f'    cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-            script_file_id.write( '    ./conda config --add channels r\n')
+            script_file_id.write( '    ./conda config --add channels bioconda\n')
             script_file_id.write( '    RC=$?\n')
             script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error conda $RC; fi\n')
             script_file_id.write( '    echo "The channel is added."\n')
@@ -927,12 +927,12 @@ def build_anaconda_package_installation_script(app_name, package_list, cluster_n
             script_file_id.write( '    echo "The channel is added."\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( 'function add_channel_bioconda\n')
+            script_file_id.write( 'function add_channel_r\n')
             script_file_id.write( '{\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '    echo "Adding channel bioconda ..."\n')
+            script_file_id.write( '    echo "Adding channel r ..."\n')
             script_file_id.write(f'    cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-            script_file_id.write( '    ./conda config --add channels bioconda\n')
+            script_file_id.write( '    ./conda config --add channels r\n')
             script_file_id.write( '    RC=$?\n')
             script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error conda $RC; fi\n')
             script_file_id.write( '    echo "The channel is added."\n')
@@ -1080,9 +1080,9 @@ def build_anaconda_package_installation_script(app_name, package_list, cluster_n
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
             script_file_id.write( 'add_channel_defaults\n')
+            script_file_id.write( 'add_channel_bioconda\n')
             script_file_id.write( 'add_channel_conda_forge\n')
             script_file_id.write( 'add_channel_r\n')
-            script_file_id.write( 'add_channel_bioconda\n')
             for package in package_list:
                 script_file_id.write(f'remove_anaconda_package_{package[0]}\n')
                 script_file_id.write(f'install_anaconda_package_{package[0]}\n')
@@ -1272,7 +1272,7 @@ def install_r(cluster_name, log, function=None):
     if OK:
         log.write(f'{xlib.get_separator()}\n')
         log.write('Determining the run directory in the cluster ...\n')
-        current_run_dir = xlib.get_cluster_current_run_dir('installation', xlib.get_r_code())
+        current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_toa_result_installation_dir(), xlib.get_r_code())
         command = f'mkdir --parents {current_run_dir}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:

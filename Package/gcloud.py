@@ -82,21 +82,18 @@ class FormSetEnvironment(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormSetEnvironment" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
-
-        # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        tkinter.Frame.__init__(self, self.container)
 
         # assign the text of the "head"
         self.head = 'Set environment'
@@ -110,10 +107,6 @@ class FormSetEnvironment(tkinter.Frame):
 
         # load initial data in inputs
         self.initialize_inputs()
-
-        # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
 
     #---------------
 
@@ -138,7 +131,7 @@ class FormSetEnvironment(tkinter.Frame):
         self.combobox_environment.grid(row=1, column=1, padx=(5,5), pady=(25,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(55+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*67)
         self.label_fit.grid(row=2, column=2, padx=(0,0), pady=(25,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -151,6 +144,7 @@ class FormSetEnvironment(tkinter.Frame):
 
         # link a handler to events
         self.combobox_environment.bind('<<ComboboxSelected>>', self.combobox_environment_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -211,10 +205,14 @@ class FormSetEnvironment(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Set the environment.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # if the environment is new, check it is right
         if self.wrapper_environment.get() not in xconfiguration.get_environments_list():
@@ -246,7 +244,7 @@ class FormSetEnvironment(tkinter.Frame):
             self.main.close_current_form()
 
             # create and register "form_create_config_files" in "container" of "Main with the grid geometry manager
-            form_create_config_files = FormCreateConfigFiles(self.main.container, self.main)
+            form_create_config_files = FormCreateConfigFiles(self.main)
             form_create_config_files.grid(row=0, column=0, sticky='nsew')
 
             # set "form_create_config_files" as current form and add it in the forms dictionary
@@ -270,11 +268,17 @@ class FormSetEnvironment(tkinter.Frame):
             # clear the label of the current process name
             self.main.label_process['text'] = ''
 
-            # build the full menu of the application
-            self.main.build_full_menu()
+            # enable the disabled menus on startup
+            self.main.menu_bar.entryconfig('Cloud control', state='normal')
+            self.main.menu_bar.entryconfig('De novo RNA-seq', state='normal')
+            self.main.menu_bar.entryconfig('Reference-based RNA-seq', state='normal')
+            self.main.menu_bar.entryconfig('RAD-seq', state='normal')
+            self.main.menu_bar.entryconfig('Taxonomy-oriented annotation', state='normal')
+            self.main.menu_bar.entryconfig('Datasets', state='normal')
+            self.main.menu_bar.entryconfig('Logs', state='normal')
 
-            # close the current form
-            self.main.close_current_form()
+            # close the form
+            self.close()
 
     #---------------
 
@@ -292,10 +296,24 @@ class FormSetEnvironment(tkinter.Frame):
 
         # exit NGScloud
         if OK:
-            # destroy "FormStart"
-            self.destroy()
-            # destroy "Main"
-            self.main.destroy()
+
+            self.main.close_current_form()
+            self.root.quit()
+            self.root.destroy()
+            exit()
+
+    #---------------
+
+    def close(self):
+        '''
+        Close "FormSetEnvironment".
+        '''
+
+        # clear the label of the current process name
+        self.main.label_process['text'] = ''
+
+        # close the current form
+        self.main.close_current_form()
 
     #---------------
 
@@ -305,21 +323,22 @@ class FormCreateConfigFiles(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormCreateConfigFiles" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
-        # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        # # set cursor to show busy status
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Create config files'
@@ -335,11 +354,12 @@ class FormCreateConfigFiles(tkinter.Frame):
         self.wrapper_email.trace('w', self.check_inputs)
 
         # build the graphical user interface
+ 
         self.build_gui()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -388,7 +408,7 @@ class FormCreateConfigFiles(tkinter.Frame):
         self.label_email_warning.grid(row=4, column=1, padx=(5,5), pady=(5,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(1+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*42)
         self.label_fit.grid(row=5, column=2, padx=(0,0), pady=(25,5), sticky='e')
 
         # create "button_create" and register it with the grid geometry manager
@@ -399,12 +419,23 @@ class FormCreateConfigFiles(tkinter.Frame):
         self.button_exit = tkinter.ttk.Button(self, text='Exit', command=self.exit)
         self.button_exit.grid(row=5, column=4, padx=(5,5), pady=(25,5), sticky='w')
 
+        # link a handler to events
+        self.root.bind('<Return>', self.create)
+
     #---------------
 
-    def create(self):
+    def create(self, event=None):
         '''
         Create the config files.
         '''
+
+        # if "button_create" is disabled, exit function
+        if str(self.button_create['state']) == 'disabled':
+            return
+
+        # set cursor to show busy status
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # initialize the control variable
         OK = True
@@ -582,17 +613,25 @@ class FormCreateConfigFiles(tkinter.Frame):
             self.main.label_zone_value['text'] = xconfiguration.get_current_zone_name()
             self.main.label_environment_value['text'] = xconfiguration.environment
 
+         # enable the disabled menus on startup
+        if OK:
+            self.main.menu_bar.entryconfig('Cloud control', state='normal')
+            self.main.menu_bar.entryconfig('De novo RNA-seq', state='normal')
+            self.main.menu_bar.entryconfig('Reference-based RNA-seq', state='normal')
+            self.main.menu_bar.entryconfig('RAD-seq', state='normal')
+            self.main.menu_bar.entryconfig('Taxonomy-oriented annotation', state='normal')
+            self.main.menu_bar.entryconfig('Datasets', state='normal')
+            self.main.menu_bar.entryconfig('Logs', state='normal')
+
         # clear the label of the current process name
-        if OK:
-            self.main.label_process['text'] = ''
+        self.main.label_process['text'] = ''
 
-        # build the full menu of the application
-        if OK:
-            self.main.build_full_menu()
+        # set cursor to show normal status
+        self.root.config(cursor='')
+        self.root.update()
 
-        # close the current form
-        if OK:
-            self.main.close_current_form()
+        # close the form
+        self.close()
 
     #---------------
 
@@ -610,10 +649,24 @@ class FormCreateConfigFiles(tkinter.Frame):
 
         # exit NGScloud
         if OK:
-            # destroy "FormStart"
-            self.destroy()
-            # destroy "Main"
-            self.main.destroy()
+
+            self.main.close_current_form()
+            self.root.quit()
+            self.root.destroy()
+            exit()
+
+    #---------------
+
+    def close(self):
+        '''
+        Close "FormInstallBioinfoApp".
+        '''
+
+        # clear the label of the current process name
+        self.main.label_process['text'] = ''
+
+        # close the current form
+        self.main.close_current_form()
 
     #---------------
 
@@ -668,21 +721,22 @@ class FormRecreateNGScloudConfigFile(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormRecreateNGScloudConfigFile" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = f'Configuration - Recreate {xlib.get_project_name()} config file'
@@ -704,8 +758,8 @@ class FormRecreateNGScloudConfigFile(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -754,7 +808,7 @@ class FormRecreateNGScloudConfigFile(tkinter.Frame):
         self.label_email_warning.grid(row=3, column=2, columnspan=3, padx=(5,5), pady=(45,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(29+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*42)
         self.label_fit.grid(row=4, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -764,6 +818,9 @@ class FormRecreateNGScloudConfigFile(tkinter.Frame):
         # create "button_close" and register it with the grid geometry manager
         self.button_close = tkinter.ttk.Button(self, text='Close', command=self.close)
         self.button_close.grid(row=4, column=4, padx=(5,5), pady=(45,5), sticky='w')
+
+        # link a handler to events
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -829,10 +886,14 @@ class FormRecreateNGScloudConfigFile(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the recreation of the NGScloud config file.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -888,21 +949,22 @@ class FormUpdateConnectionData(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormUpdateConnectionData" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Configuration - Update connection data and contact e-mail'
@@ -924,8 +986,8 @@ class FormUpdateConnectionData(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -974,7 +1036,7 @@ class FormUpdateConnectionData(tkinter.Frame):
         self.label_email_warning.grid(row=3, column=2,columnspan=3, padx=(5,5), pady=(45,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(29+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*42)
         self.label_fit.grid(row=4, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -984,6 +1046,9 @@ class FormUpdateConnectionData(tkinter.Frame):
         # create "button_close" and register it with the grid geometry manager
         self.button_close = tkinter.ttk.Button(self, text='Close', command=self.close)
         self.button_close.grid(row=4, column=4, padx=(5,5), pady=(45,5), sticky='w')
+
+        # link a handler to events
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -1048,10 +1113,14 @@ class FormUpdateConnectionData(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the update of the connection data in the NGScloud config file.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -1115,21 +1184,22 @@ class FormUpdateRegionZone(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormUpdateRegionZone" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Configuration - Update region and zone'
@@ -1151,8 +1221,8 @@ class FormUpdateRegionZone(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -1181,7 +1251,7 @@ class FormUpdateRegionZone(tkinter.Frame):
         self.combobox_zone_name.grid(row=1, column=1, padx=(5,5), pady=(45,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(94+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*107)
         self.label_fit.grid(row=2, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -1195,6 +1265,7 @@ class FormUpdateRegionZone(tkinter.Frame):
         # link a handler to events
         self.combobox_region_name.bind('<<ComboboxSelected>>', self.combobox_region_name_selected_item)
         self.combobox_zone_name.bind('<<ComboboxSelected>>', self.combobox_zone_name_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -1240,15 +1311,15 @@ class FormUpdateRegionZone(tkinter.Frame):
         '''
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # load data in "combobox_zone_name"
         self.populate_combobox_zone_name()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -1280,14 +1351,18 @@ class FormUpdateRegionZone(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the update of the region and zone in the NGScloud config file.
         '''
 
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
+
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # check inputs
         OK = self.check_inputs()
@@ -1327,8 +1402,8 @@ class FormUpdateRegionZone(tkinter.Frame):
             self.main.label_zone_value['text'] = xconfiguration.get_current_zone_name()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
         # close the form
         if OK:
@@ -1355,21 +1430,22 @@ class FormLinkVolumes(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormLinkVolumes" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Configuration - Link volumes'
@@ -1413,8 +1489,8 @@ class FormLinkVolumes(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -1483,7 +1559,7 @@ class FormLinkVolumes(tkinter.Frame):
         self.combobox_result_volume.grid(row=6, column=1, padx=(5,5), pady=(35,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(40+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*56)
         self.label_fit.grid(row=7, column=2, padx=(0,0), pady=(35,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -1502,6 +1578,7 @@ class FormLinkVolumes(tkinter.Frame):
         self.combobox_read_volume.bind('<<ComboboxSelected>>', self.combobox_read_volume_selected_item)
         self.combobox_reference_volume.bind('<<ComboboxSelected>>', self.combobox_reference_volume_selected_item)
         self.combobox_result_volume.bind('<<ComboboxSelected>>', self.combobox_result_volume_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -1758,10 +1835,14 @@ class FormLinkVolumes(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the link volumes to the configuration.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -1814,7 +1895,7 @@ class FormLinkVolumes(tkinter.Frame):
 
         # confirm the region and zone update in the NGScloud config file
         if OK:
-            message = 'The dataset structure are going to be modified.\n\nAre you sure to continue?'
+            message = 'The dataset structure and linked volumes are going to be modified.\n\nAre you sure to continue?'
             OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # link volumes in the NGScloud config file corresponding to the environment
@@ -1848,21 +1929,22 @@ class FormCreateCluster(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormCreateCluster" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Cluster operation - Create cluster'
@@ -1910,14 +1992,14 @@ class FormCreateCluster(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
         # show warnings about characteristics and pricing
         message = 'You can consult the characteristics of the EC2 intance types in:\n\n'
-        message += 'https://aws.amazon.com/ec2/instance-types/\n\n'
+        message += '   aws.amazon.com/ec2/instance-types/\n\n'
         message += 'and the EC2 pricing is detailed in:\n\n'
-        message += 'https://aws.amazon.com/ec2/pricing/'
+        message += '   aws.amazon.com/ec2/pricing/'
         tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
     #---------------
@@ -2008,7 +2090,7 @@ class FormCreateCluster(tkinter.Frame):
         self.combobox_interruption_behavior.grid(row=7, column=1, padx=(5,5), pady=(35,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(50+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*65)
         self.label_fit.grid(row=8, column=2, padx=(0,0), pady=(35,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -2024,6 +2106,7 @@ class FormCreateCluster(tkinter.Frame):
         self.combobox_volume_type_text.bind('<<ComboboxSelected>>', self.combobox_volume_type_text_selected_item)
         self.combobox_purchasing_option.bind('<<ComboboxSelected>>', self.combobox_purchasing_option_selected_item)
         self.combobox_interruption_behavior.bind('<<ComboboxSelected>>', self.combobox_interruption_behavior_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -2357,10 +2440,14 @@ class FormCreateCluster(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the cluster creation process.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -2428,22 +2515,23 @@ class FormTerminateCluster(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main, force):
+    def __init__(self, main, force):
         '''
         Execute actions correspending to the creation of a "FormTerminateCluster" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
         self.force = force
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = f'Cluster operation - {"Terminate cluster" if not self.force else "Force termination of a cluster"}'
@@ -2463,8 +2551,8 @@ class FormTerminateCluster(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -2513,22 +2601,23 @@ class FormTerminateCluster(tkinter.Frame):
 
         # create "label_fit" and register it with the grid geometry manager
         if not self.force:
-            self.label_fit = tkinter.Label(self, text=' '*(53+xlib.get_os_size_fix()))
+            self.label_fit = tkinter.Label(self, text=' '*67)
         else:
-            self.label_fit = tkinter.Label(self, text=' '*(75+xlib.get_os_size_fix()))
+            self.label_fit = tkinter.Label(self, text=' '*87)
         self.label_fit.grid(row=1, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
         self.button_execute = tkinter.ttk.Button(self, text='Execute', command=self.execute, state='disabled')
-        self.button_execute.grid(row=2, column=3, padx=(5,5), pady=(45,5), sticky='e')
+        self.button_execute.grid(row=1, column=3, padx=(5,5), pady=(45,5), sticky='e')
 
         # create "button_close" and register it with the grid geometry manager
         self.button_close = tkinter.ttk.Button(self, text='Close', command=self.close)
-        self.button_close.grid(row=2, column=4, padx=(5,5), pady=(45,5), sticky='w')
+        self.button_close.grid(row=1, column=4, padx=(5,5), pady=(45,5), sticky='w')
 
         # link a handler to events
         if not self.force:
             self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -2649,10 +2738,14 @@ class FormTerminateCluster(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the cluster termination process.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -2715,21 +2808,22 @@ class FormShowClusterComposition(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormShowClusterComposition" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Cluster operation - Show cluster composition'
@@ -2745,8 +2839,8 @@ class FormShowClusterComposition(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -2767,7 +2861,7 @@ class FormShowClusterComposition(tkinter.Frame):
         self.combobox_cluster_name.grid(row=0, column=1, padx=(5,5), pady=(75,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(53+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*66)
         self.label_fit.grid(row=1, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -2780,6 +2874,7 @@ class FormShowClusterComposition(tkinter.Frame):
 
         # link a handler to events
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -2870,10 +2965,14 @@ class FormShowClusterComposition(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the show of cluster information of every node: OS, CPU number and memory.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -2912,21 +3011,22 @@ class FormShowStatusBatchJobs(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormShowStatusBatchJobs" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Cluster operation - Show status of batch jobs'
@@ -2949,8 +3049,8 @@ class FormShowStatusBatchJobs(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -2971,7 +3071,7 @@ class FormShowStatusBatchJobs(tkinter.Frame):
         self.combobox_cluster_name.grid(row=0, column=1, padx=(5,5), pady=(75,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(53+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*66)
         self.label_fit.grid(row=1, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -2984,6 +3084,7 @@ class FormShowStatusBatchJobs(tkinter.Frame):
 
         # link a handler to events
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -3030,8 +3131,8 @@ class FormShowStatusBatchJobs(tkinter.Frame):
         '''
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # check if the cluster name selected is different to the previous cluster name
         if self.wrapper_cluster_name.get() != self.cluster_name_ant:
@@ -3053,8 +3154,8 @@ class FormShowStatusBatchJobs(tkinter.Frame):
             self.cluster_name_ant = self.wrapper_cluster_name.get()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -3099,10 +3200,14 @@ class FormShowStatusBatchJobs(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the show of the status of batch jobs in the cluster.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -3167,21 +3272,22 @@ class FormKillBatchJob(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormKillBatchJob" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Cluster operation - Kill batch job'
@@ -3203,8 +3309,8 @@ class FormKillBatchJob(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -3233,7 +3339,7 @@ class FormKillBatchJob(tkinter.Frame):
         self.combobox_job.grid(row=1, column=1, padx=(5,5), pady=(45,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(53+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*66)
         self.label_fit.grid(row=2, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -3247,6 +3353,7 @@ class FormKillBatchJob(tkinter.Frame):
         # link a handler to events
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
         self.combobox_job.bind('<<ComboboxSelected>>', self.combobox_job_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -3327,8 +3434,8 @@ class FormKillBatchJob(tkinter.Frame):
         '''
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # check if the cluster name selected is different to the previous cluster name
         if self.wrapper_cluster_name.get() != self.cluster_name_ant:
@@ -3353,8 +3460,8 @@ class FormKillBatchJob(tkinter.Frame):
         self.populate_combobox_job()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -3411,10 +3518,14 @@ class FormKillBatchJob(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the removal of a node in a cluster.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -3462,21 +3573,22 @@ class FormAddNode(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormAddNode" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Node operation - Add node in a cluster'
@@ -3497,8 +3609,8 @@ class FormAddNode(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -3531,7 +3643,7 @@ class FormAddNode(tkinter.Frame):
         self.label_node_name_warning.grid(row=1, column=2, columnspan=3, padx=(5,5), pady=(45,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(53+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*66)
         self.label_fit.grid(row=2, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -3544,6 +3656,7 @@ class FormAddNode(tkinter.Frame):
 
         # link a handler to events
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -3685,10 +3798,14 @@ class FormAddNode(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the detetion moval of a node in a cluster.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -3732,21 +3849,22 @@ class FormRemoveNode(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormRemoveNode" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Node operation - Remove node in a cluster'
@@ -3764,8 +3882,8 @@ class FormRemoveNode(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -3794,7 +3912,7 @@ class FormRemoveNode(tkinter.Frame):
         self.combobox_node_name.grid(row=1, column=1, padx=(5,5), pady=(45,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(53+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*66)
         self.label_fit.grid(row=3, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -3808,6 +3926,7 @@ class FormRemoveNode(tkinter.Frame):
         # link a handler to events
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
         self.combobox_node_name.bind('<<ComboboxSelected>>', self.combobox_node_name_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -3884,16 +4003,16 @@ class FormRemoveNode(tkinter.Frame):
         '''
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # load data in "combobox_node_name"
         if xec2.get_cluster_mode(self.running_cluster_list[0]) == xconfiguration.get_cluster_mode_starcluster():
             self.populate_combobox_node_name()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -3947,10 +4066,14 @@ class FormRemoveNode(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the removal of a node in a cluster.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -3994,21 +4117,22 @@ class FormCreateVolume(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormCreateVolume" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Volume operation - Create volume'
@@ -4033,14 +4157,14 @@ class FormCreateVolume(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
         # show warnings about characteristics and pricing
         message = 'You can consult the characteristics of the EBS volumes in:\n\n'
-        message += 'https://aws.amazon.com/ebs/details/\n\n'
+        message += '   aws.amazon.com/ebs/details/\n\n'
         message += 'and the EBS pricing is detailed in:\n\n'
-        message += '    https://aws.amazon.com/ebs/pricing/'
+        message += '   aws.amazon.com/ebs/pricing/'
         tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
     #---------------
@@ -4086,7 +4210,7 @@ class FormCreateVolume(tkinter.Frame):
         self.checkbutton_terminate_indicator.grid(row=3, column=1, columnspan=2, padx=(5,5), pady=(45,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(43+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*56)
         self.label_fit.grid(row=4, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -4099,6 +4223,7 @@ class FormCreateVolume(tkinter.Frame):
 
         # link a handler to events
         self.combobox_volume_type_text.bind('<<ComboboxSelected>>', self.combobox_volume_type_text_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -4204,10 +4329,14 @@ class FormCreateVolume(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the creation of the volume in the currrent zone.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -4251,21 +4380,22 @@ class FormRemoveVolume(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormRemoveVolume" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Volume operation - Remove volume'
@@ -4281,8 +4411,8 @@ class FormRemoveVolume(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -4303,7 +4433,7 @@ class FormRemoveVolume(tkinter.Frame):
         self.combobox_volume_name.grid(row=0, column=1, padx=(5,5), pady=(75,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(53+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*66)
         self.label_fit.grid(row=1, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -4316,6 +4446,7 @@ class FormRemoveVolume(tkinter.Frame):
 
         # link a handler to events
         self.combobox_volume_name.bind('<<ComboboxSelected>>', self.combobox_volume_name_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -4383,10 +4514,14 @@ class FormRemoveVolume(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the read file transfer process.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -4430,21 +4565,22 @@ class FormMountVolume(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormMountVolume" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Volume operation - Mount volume in a node'
@@ -4468,8 +4604,8 @@ class FormMountVolume(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -4530,7 +4666,7 @@ class FormMountVolume(tkinter.Frame):
         self.label_mount_path_warning.grid(row=4, column=2, columnspan=3, padx=(5,5), pady=(45,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(50+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*65)
         self.label_fit.grid(row=5, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -4545,6 +4681,7 @@ class FormMountVolume(tkinter.Frame):
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
         self.combobox_node_name.bind('<<ComboboxSelected>>', self.combobox_node_name_selected_item)
         self.combobox_volume_name.bind('<<ComboboxSelected>>', self.combobox_volume_name_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -4633,15 +4770,15 @@ class FormMountVolume(tkinter.Frame):
         '''
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # load data in "combobox_node_name"
         self.populate_combobox_node_name()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -4737,10 +4874,14 @@ class FormMountVolume(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the mounting of a volume in a node.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -4784,21 +4925,22 @@ class FormUnmountVolume(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormUnmountVolume" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Volume operation - Unmount volume in a node'
@@ -4820,8 +4962,8 @@ class FormUnmountVolume(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -4870,7 +5012,7 @@ class FormUnmountVolume(tkinter.Frame):
         self.label_mount_path_warning.grid(row=3, column=2, columnspan=3, padx=(5,5), pady=(45,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(53+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*65)
         self.label_fit.grid(row=4, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -4885,6 +5027,7 @@ class FormUnmountVolume(tkinter.Frame):
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
         self.combobox_node_name.bind('<<ComboboxSelected>>', self.combobox_node_name_selected_item)
         self.combobox_volume_name.bind('<<ComboboxSelected>>', self.combobox_volume_name_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -4972,15 +5115,15 @@ class FormUnmountVolume(tkinter.Frame):
         '''
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # load data in "combobox_node_name"
         self.populate_combobox_node_name()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -5047,10 +5190,14 @@ class FormUnmountVolume(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the unmounting of a volume in a node.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -5094,21 +5241,22 @@ class FormOpenTerminal(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormOpenTerminal" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Cluster operation - Open a terminal'
@@ -5126,8 +5274,8 @@ class FormOpenTerminal(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -5156,7 +5304,7 @@ class FormOpenTerminal(tkinter.Frame):
         self.combobox_node_name.grid(row=1, column=1, padx=(5,5), pady=(45,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(53+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*66)
         self.label_fit.grid(row=3, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -5170,6 +5318,7 @@ class FormOpenTerminal(tkinter.Frame):
         # link a handler to events
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
         self.combobox_node_name.bind('<<ComboboxSelected>>', self.combobox_node_name_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -5233,15 +5382,15 @@ class FormOpenTerminal(tkinter.Frame):
         '''
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # load data in "combobox_node_name"
         self.populate_combobox_node_name()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -5273,10 +5422,14 @@ class FormOpenTerminal(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the opening of window of a node cluster.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()

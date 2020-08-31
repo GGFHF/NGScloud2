@@ -56,8 +56,8 @@ def form_create_toa_config_file():
     print(f'TOA directory: {toa_dir}')
 
     # set the Miniconda3 directory
-    miniconda3_bin_dir = f'{xlib.get_cluster_app_dir()}/Miniconda3/bin'
-    print(f'Miniconda bin directory: {miniconda3_bin_dir}')
+    miniconda3_dir = f'{xlib.get_cluster_app_dir()}/Miniconda3'
+    print(f'Miniconda bin directory: {miniconda3_dir}')
 
     # set the database directory
     db_dir = xlib.get_cluster_database_dir()
@@ -76,7 +76,7 @@ def form_create_toa_config_file():
 
         # recreate the config file
         if OK:
-            (OK, error_list) = xtoa.create_toa_config_file(toa_dir, miniconda3_bin_dir, db_dir, result_dir)
+            (OK, error_list) = xtoa.create_toa_config_file(toa_dir, miniconda3_dir, db_dir, result_dir)
             if OK:
                 print('The file is recreated.')
             else:
@@ -164,6 +164,8 @@ def form_manage_genomic_database(process_type, genomic_database):
         name = xlib.get_toa_data_monocots_04_name()
     elif genomic_database == xlib.get_toa_data_refseq_plant_code():
         name = xlib.get_toa_data_refseq_plant_name()
+    elif genomic_database == xlib.get_toa_data_taxonomy_code():
+        name = xlib.get_toa_data_taxonomy_name()
     elif genomic_database == xlib.get_toa_data_nt_code():
         name = xlib.get_toa_data_nt_name()
     elif genomic_database == xlib.get_toa_data_viridiplantae_nucleotide_gi_code():
@@ -181,8 +183,10 @@ def form_manage_genomic_database(process_type, genomic_database):
 
     # print the header
     clib.clear_screen()
-    if process_type == xlib.get_toa_type_build_blastdb():
-        clib.print_headers_with_environment(f'Build {name}')
+    if process_type == xlib.get_toa_type_build_blastplus_db():
+        clib.print_headers_with_environment(f'Build {name} for BLAST+')
+    elif process_type == xlib.get_toa_type_build_diamond_db():
+        clib.print_headers_with_environment(f'Build {name} for DIAMOND')
     elif process_type == xlib.get_toa_type_build_gilist():
         clib.print_headers_with_environment(f'Build {name}')
     elif process_type == xlib.get_toa_type_build_proteome():
@@ -313,23 +317,101 @@ def form_recreate_pipeline_config_file(pipeline_type):
 
         # nucleotide pipelines
         if pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
-            database_list = cinputs.input_database_list(xtoa.get_nucleotide_annotation_database_code_list(), 'nt_complete')
+            database_list = cinputs.input_database_list(xtoa.get_nucleotide_annotation_database_code_list(), 'nt')
 
         # amino acid pipelines
         elif pipeline_type == xlib.get_toa_process_pipeline_aminoacid_code():
-            database_list = cinputs.input_database_list(xtoa.get_aminoacid_annotation_database_code_list(), 'nr_complete')
+            database_list = cinputs.input_database_list(xtoa.get_aminoacid_annotation_database_code_list(), 'nr')
 
     # recreate the pipeline config file
     if OK:
 
         # confirm the creation of the config file
         print(xlib.get_separator())
-        print('config_file: {}'.format(config_file))
         OK = clib.confirm_action(f'The file {config_file} is going to be recreated. The previous files will be lost.')
 
         # recreate the config file
         if OK:
             (OK, error_list) = xtoa.create_pipeline_config_file(pipeline_type, assembly_origin, experiment_id, assembly_dataset_id, assembly_type, reference_dataset_id, transcriptome_file, database_list)
+            if OK:
+                print('The file is recreated.')
+            else:
+                for error in error_list:
+                    print(error)
+
+    # close the SSH client connection
+    if OK:
+        xssh.close_ssh_client_connection(ssh_client)
+
+    # show continuation message 
+    print(xlib.get_separator())
+    input('Press [Intro] to continue ...')
+
+#-------------------------------------------------------------------------------
+
+def form_recreate_annotation_merger_config_file():
+    '''
+    Recreate the annotation merger config file.
+    '''
+
+    # initialize the control variable
+    OK = True
+
+    # print the header
+    clib.clear_screen()
+    clib.print_headers_with_environment(f'{xlib.get_toa_process_merge_annotations_name()} - Recreate config file')
+
+    # get the cluster name
+    print(xlib.get_separator())
+    if xec2.get_running_cluster_list(only_environment_cluster=True, volume_creator_included=False) == []:
+        print('WARNING: There is not any running cluster.')
+        OK = False
+    else:
+        cluster_name = cinputs.input_cluster_name(volume_creator_included=False, help=True)
+
+    # create the SSH client connection
+    if OK:
+        (OK, error_list, ssh_client) = xssh.create_ssh_client_connection(cluster_name)
+        for error in error_list:
+            print(error)
+
+    # get the experiment identification
+    if OK:
+        experiment_id = xlib.get_toa_database_dir()
+
+    # get the identification of the first pipeline dataset
+    app_list = [xlib.get_all_applications_selected_code()]
+    print('First pipeline ...')
+    pipeline_dataset_id_1 = cinputs.input_result_dataset_id(ssh_client, xlib.get_toa_result_pipeline_dir(),  'pipeline', app_list, 'uncompressed', help=True)
+    if pipeline_dataset_id_1 == '':
+        print( 'WARNING: There are not any pipeline datasets.')
+        OK = False
+
+    # get the identification of the second pipeline dataset
+    app_list = [xlib.get_all_applications_selected_code()]
+    print('Second pipeline ...')
+    pipeline_dataset_id_2 = cinputs.input_result_dataset_id(ssh_client, xlib.get_toa_result_pipeline_dir(), 'pipeline', app_list, 'uncompressed', help=True)
+    if pipeline_dataset_id_2 == '':
+        print( 'WARNING: There are not any pipeline datasets.')
+        OK = False
+    elif pipeline_dataset_id_1 == pipeline_dataset_id_2:
+        print( 'ERROR: The first pipeline dataset is equal to the second one.')
+        OK = False
+
+    # get the merger operation
+    if OK:
+        merger_operation = cinputs.input_code(text='Merger operation', code_list=xlib.get_annotation_merger_operation_code_list(), default_code=None).upper()
+
+    # recreate the pipeline config file
+    if OK:
+
+        # confirm the creation of the config file
+        print(xlib.get_separator())
+        OK = clib.confirm_action(f'The file {xtoa.get_annotation_merger_config_file()} is going to be recreated. The previous files will be lost.')
+
+        # recreate the config file
+        if OK:
+            (OK, error_list) = xtoa.create_annotation_merger_config_file(experiment_id, pipeline_dataset_id_1, pipeline_dataset_id_2, merger_operation)
             if OK:
                 print('The file is recreated.')
             else:
@@ -357,8 +439,12 @@ def form_edit_pipeline_config_file(pipeline_type):
     # set the pipeline name
     if pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
         name = xlib.get_toa_process_pipeline_nucleotide_name()
+
     elif pipeline_type == xlib.get_toa_process_pipeline_aminoacid_code():
         name = xlib.get_toa_process_pipeline_aminoacid_name()
+
+    elif pipeline_type == xlib.get_toa_process_merge_annotations_code():
+        name = xlib.get_toa_process_merge_annotations_name()
 
     # print the header
     clib.clear_screen()
@@ -367,8 +453,12 @@ def form_edit_pipeline_config_file(pipeline_type):
     # get the config file
     if pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
         config_file = xtoa.get_nucleotide_pipeline_config_file()
+
     elif pipeline_type == xlib.get_toa_process_pipeline_aminoacid_code():
         config_file = xtoa.get_aminoacid_pipeline_config_file()
+
+    elif pipeline_type == xlib.get_toa_process_merge_annotations_code():
+        config_file = xtoa.get_annotation_merger_config_file()
 
     # edit the read transfer config file
     print(xlib.get_separator())
@@ -383,7 +473,16 @@ def form_edit_pipeline_config_file(pipeline_type):
     if OK:
         print(xlib.get_separator())
         print(f'Checking the {name} config file ...')
-        (OK, error_list) = xtoa.check_pipeline_config_file(pipeline_type, strict=False)
+
+        if pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
+            (OK, error_list) = xtoa.check_pipeline_config_file(pipeline_type, strict=False)
+
+        elif pipeline_type == xlib.get_toa_process_pipeline_aminoacid_code():
+            (OK, error_list) = xtoa.check_pipeline_config_file(pipeline_type, strict=False)
+
+        elif pipeline_type == xlib.get_toa_process_merge_annotations_code():
+            (OK, error_list) = xtoa.check_annotation_merger_config_file(strict=False)
+
         if OK:
             print('The file is OK.')
         else:
@@ -409,8 +508,12 @@ def form_run_pipeline_process(pipeline_type):
     # set the pipeline name
     if pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
         name = xlib.get_toa_process_pipeline_nucleotide_name()
+
     elif pipeline_type == xlib.get_toa_process_pipeline_aminoacid_code():
         name = xlib.get_toa_process_pipeline_aminoacid_name()
+
+    elif pipeline_type == xlib.get_toa_process_merge_annotations_code():
+        name = xlib.get_toa_process_merge_annotations_name()
 
     # print the header
     clib.clear_screen()
@@ -432,8 +535,17 @@ def form_run_pipeline_process(pipeline_type):
     # run the process
     if OK:
 
-        devstdout = xlib.DevStdOut(xtoa.run_pipeline_process.__name__)
-        OK = xtoa.run_pipeline_process(cluster_name, pipeline_type, devstdout, function=None)
+        if pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
+            devstdout = xlib.DevStdOut(xtoa.run_pipeline_process.__name__)
+            OK = xtoa.run_pipeline_process(cluster_name, pipeline_type, devstdout, function=None)
+
+        elif pipeline_type == xlib.get_toa_process_pipeline_aminoacid_code():
+            devstdout = xlib.DevStdOut(xtoa.run_pipeline_process.__name__)
+            OK = xtoa.run_pipeline_process(cluster_name, pipeline_type, devstdout, function=None)
+
+        elif pipeline_type == xlib.get_toa_process_merge_annotations_code():
+            devstdout = xlib.DevStdOut(xtoa.run_annotation_merger_process.__name__)
+            OK = xtoa.run_annotation_merger_process(cluster_name, devstdout, function=None)
 
     # show continuation message 
     print(xlib.get_separator())

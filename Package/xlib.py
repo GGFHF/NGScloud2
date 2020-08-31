@@ -29,6 +29,7 @@ import configparser
 import datetime
 import os
 import re
+import requests
 import subprocess
 import sys
 import tkinter
@@ -60,7 +61,7 @@ def get_project_version():
     Get the project name.
     '''
 
-    return '2.07'
+    return '2.08'
 
 #-------------------------------------------------------------------------------
     
@@ -127,24 +128,6 @@ def get_editor():
 
     # return the editor
     return editor
-
-#-------------------------------------------------------------------------------
-
-def get_os_size_fix():
-    '''
-    Get the size fix of the button line in a GUI form.
-    '''
-
-    # assign the size fix
-    if sys.platform.startswith('linux'):
-        os_size_fix = 0
-    elif sys.platform.startswith('darwin'):
-        os_size_fix = 0
-    elif sys.platform.startswith('win32') or sys.platform.startswith('cygwin'):
-        os_size_fix = 20
-
-    # return the size fix
-    return os_size_fix
 
 #-------------------------------------------------------------------------------
 
@@ -591,6 +574,33 @@ def get_detonate_anaconda_code():
     '''
 
     return 'detonate'
+
+#-------------------------------------------------------------------------------
+
+def get_diamond_code():
+    '''
+    Get the DIAMOND code used to identify its processes.
+    '''
+
+    return 'diamond'
+
+#-------------------------------------------------------------------------------
+
+def get_diamond_name():
+    '''
+    Get the DIAMOND name used to title.
+    '''
+
+    return 'DIAMOND'
+
+#-------------------------------------------------------------------------------
+
+def get_diamond_anaconda_code():
+    '''
+    Get the DIAMOND code used to identify the Anaconda package.
+    '''
+
+    return 'diamond'
 
 #-------------------------------------------------------------------------------
 
@@ -1671,6 +1681,15 @@ def get_toa_name():
 
 #-------------------------------------------------------------------------------
 
+def get_toa_database_dir():
+    '''
+    Get the directory where database data are saved.
+    '''
+
+    return 'TOA-databases'
+
+#-------------------------------------------------------------------------------
+
 def get_toa_data_basic_data_code():
     '''
     Get the code used to identify basic data in TOA processes.
@@ -1851,6 +1870,24 @@ def get_toa_data_refseq_plant_name():
 
 #-------------------------------------------------------------------------------
 
+def get_toa_data_taxonomy_code():
+    '''
+    Get the code used to title NCBI Taxonomy in TOA processes.
+    '''
+
+    return 'taxonomy'
+
+#-------------------------------------------------------------------------------
+
+def get_toa_data_taxonomy_name():
+    '''
+    Get the code used to identify NCBI Taxonomy in TOA processes.
+    '''
+
+    return 'NCBI Taxonomy'
+
+#-------------------------------------------------------------------------------
+
 def get_toa_data_viridiplantae_nucleotide_gi_code():
     '''
     Get the code used to identify NCBI Nucleotide GenInfo viridiplantae identifier list in TOA processes.
@@ -1884,42 +1921,6 @@ def get_toa_data_viridiplantae_protein_gi_name():
     '''
 
     return 'NCBI Protein GenInfo viridiplantae identifier list'
-
-#-------------------------------------------------------------------------------
-
-def get_toa_process_blastdb_nr_code():
-    '''
-    Get the code of the BLAST database NR build process used to identify its processes.
-    '''
-
-    return 'toabbnr'
-
-#-------------------------------------------------------------------------------
-
-def get_toa_process_blastdb_nr_name():
-    '''
-    Get the name of the BLAST database NR build process used to title.
-    '''
-
-    return 'Build BLAST database NR'
-
-#-------------------------------------------------------------------------------
-
-def get_toa_process_blastdb_nt_code():
-    '''
-    Get the code of the BLAST database NT build process used to identify its processes.
-    '''
-
-    return 'toabbnt'
-
-#-------------------------------------------------------------------------------
-
-def get_toa_process_blastdb_nt_name():
-    '''
-    Get the name of the BLAST database NT build process used to title.
-    '''
-
-    return 'Build BLAST database NT'
 
 #-------------------------------------------------------------------------------
 
@@ -2046,6 +2047,23 @@ def get_toa_process_download_monocots_04_name():
     '''
 
     return 'Download Monocots PLAZA 4.0 funcional annotations'
+#-------------------------------------------------------------------------------
+
+def get_toa_process_download_taxonomy_code():
+    '''
+    Get the code used to identify processes to download NCBI Taxonomy data.
+    '''
+
+    return 'toaddtaxo'
+
+#-------------------------------------------------------------------------------
+
+def get_toa_process_download_taxonomy_name():
+    '''
+    Get the name used to title processes to download NCBI Taxonomy data.
+    '''
+
+    return 'Download NCBI Taxonomy data'
 
 #-------------------------------------------------------------------------------
 
@@ -2211,6 +2229,78 @@ def get_toa_process_load_monocots_04_name():
 
 #-------------------------------------------------------------------------------
 
+def get_toa_process_merge_annotations_code():
+    '''
+    Get the code used to identify processes to merge pipeline annotations.
+    '''
+
+    return 'toamergeann'
+
+#-------------------------------------------------------------------------------
+
+def get_toa_process_merge_annotations_name():
+    '''
+    Get the name used to title processes to merge pipeline annotations.
+    '''
+
+    return 'Merge pipeline annotations'
+
+#-------------------------------------------------------------------------------
+
+def get_toa_process_nr_blastplus_db_code():
+    '''
+    Get the code of the BLAST database NR build process with BLAST+ used to identify its processes.
+    '''
+
+    return 'toabbnrbp'
+
+#-------------------------------------------------------------------------------
+
+def get_toa_process_nr_blastplus_db_name():
+    '''
+    Get the name of the BLAST database NR build process with BLAST+ used to title.
+    '''
+
+    return 'Build BLAST database NR for BLAST+'
+
+#-------------------------------------------------------------------------------
+
+def get_toa_process_nr_diamond_db_code():
+    '''
+    Get the code of the BLAST database NR build process with DIAMOND used to identify its processes.
+    '''
+
+    return 'toabbnrdn'
+
+#-------------------------------------------------------------------------------
+
+def get_toa_process_nr_diamond_db_name():
+    '''
+    Get the name of the BLAST database NR build process with DIAMOND used to title.
+    '''
+
+    return 'Build BLAST database NR for DIAMOND'
+
+#-------------------------------------------------------------------------------
+
+def get_toa_process_nt_blastplus_db_code():
+    '''
+    Get the code of the BLAST database NT build process with BLAST+ used to identify its processes.
+    '''
+
+    return 'toabbntbp'
+
+#-------------------------------------------------------------------------------
+
+def get_toa_process_nt_blastplus_db_name():
+    '''
+    Get the name of the BLAST database NT build process with BLAST+ used to title.
+    '''
+
+    return 'Build BLAST database NT for BLAST+'
+
+#-------------------------------------------------------------------------------
+
 def get_toa_process_pipeline_aminoacid_code():
     '''
     Get the code used to identify amino acid pipelines.
@@ -2364,12 +2454,30 @@ def get_toa_pipeline_name():
 
 #-------------------------------------------------------------------------------
 
+def get_toa_result_dir():
+    '''
+    Get the result directory where results datasets are saved.
+    '''
+
+    return 'TOA-results'
+
+#-------------------------------------------------------------------------------
+
 def get_toa_result_database_dir():
     '''
     Get the result subdirectory where TOA process results related to the genomic database managment are saved.
     '''
 
     return 'TOA-databases'
+
+#-------------------------------------------------------------------------------
+
+def get_toa_result_installation_dir():
+    '''
+    Get the result subdirectory where installation process results are saved.
+    '''
+
+    return 'installations'
 
 #-------------------------------------------------------------------------------
 
@@ -2382,12 +2490,21 @@ def get_toa_result_pipeline_dir():
 
 #-------------------------------------------------------------------------------
 
-def get_toa_type_build_blastdb():
+def get_toa_type_build_blastplus_db():
     '''
     Get the code used to identify processes to build BLAST databases.
     '''
 
-    return 'build_blastdb'
+    return 'build_blastplus_db'
+
+#-------------------------------------------------------------------------------
+
+def get_toa_type_build_diamond_db():
+    '''
+    Get the code used to identify processes to build DIAMOND databases.
+    '''
+
+    return 'build_diamond_db'
 
 #-------------------------------------------------------------------------------
 
@@ -2442,6 +2559,70 @@ def get_toa_type_recreate():
     '''
 
     return 'recreate'
+
+
+#-------------------------------------------------------------------------------
+
+def get_taxonomy_server():
+    '''
+    Get the taxonomy server URL.
+    '''
+    return 'https://taxonomy.jgi-psf.org/'
+
+#-------------------------------------------------------------------------------
+
+def get_taxonomy_dict(type, value):
+    '''
+    Get a taxonomy dictionary with the a species data downloaded from the taxonomy server.
+    '''
+
+    # initialize the taxonomy dictionary
+    taxonomy_dict = {}
+
+    # set the taxonomy server
+    taxonomy_server = get_taxonomy_server()
+
+    # replace spaces by underscores in value
+    value = value.strip().replace(' ', '_')
+
+    # inquire the taxonomy data to the server
+    try:
+        r = requests.get(f'{taxonomy_server}/{type}/{value}')
+    except requests.exceptions.ConnectionError:
+        raise ProgramException('W002', taxonomy_server)
+    except Exception as e:
+        raise ProgramException('W001', taxonomy_server)
+
+    # build the taxonomy dictionary
+    if r.status_code == requests.codes.ok: #pylint: disable=no-member
+        try:
+            if r.json()[value].get('error','OK') == 'OK' :
+                taxonomy_dict = r.json()[value]
+        except Exception as e:
+            pass
+    else:
+        raise ProgramException('W003', taxonomy_server, r.status_code)
+
+    # return taxonomy dictionary
+    return taxonomy_dict
+
+#-------------------------------------------------------------------------------
+
+def get_alignment_tool_code_list():
+    '''
+    Get the code list of "alignment_tool".
+    '''
+
+    return [get_blastplus_name(), get_diamond_name()]
+
+#-------------------------------------------------------------------------------
+
+def get_alignment_tool_code_list_text():
+    '''
+    Get the code list of "alignment_tool" as text.
+    '''
+
+    return str(get_alignment_tool_code_list()).strip('[]').replace('\'', '').replace(',', ' or')
 
 #-------------------------------------------------------------------------------
 
@@ -2536,6 +2717,14 @@ def get_submission_process_dict():
     submission_process_dict['create_instance']= {'text': 'Create instance'}
     submission_process_dict['create_volume']= {'text': 'Create volume'}
     submission_process_dict['download_result_dataset']= {'text': 'Download result dataset from a cluster'}
+    submission_process_dict['install_anaconda_package_list']= {'text': 'Install Anaconda package list'}
+    submission_process_dict['install_ddradseqtools']= {'text': 'Install {0}'.format(get_ddradseqtools_name())}
+    submission_process_dict['install_miniconda3']= {'text': 'Install {0}'.format(get_miniconda3_name())}
+    submission_process_dict['install_ngshelper']= {'text': 'Install {0}'.format(get_ngshelper_name())}
+    submission_process_dict['install_r']= {'text': 'Install {0}'.format(get_r_name())}
+    submission_process_dict['install_raddesigner']= {'text': 'Install {0}'.format(get_raddesigner_name())}
+    submission_process_dict['install_toa']= {'text': 'Install {0}'.format(get_toa_name())}
+    submission_process_dict['install_transrate']= {'text': 'Install {0}'.format(get_transrate_name())}
     submission_process_dict['kill_batch_job']= {'text': 'Kill batch job'}
     submission_process_dict['link_volumes']= {'text': 'Link volumes'}
     submission_process_dict['list_clusters']= {'text': 'List clusters'}
@@ -2595,13 +2784,6 @@ def get_submission_process_dict():
     submission_process_dict['run_trimmomatic_process']= {'text': 'Run {0} process'.format(get_trimmomatic_name())}
     submission_process_dict['run_trinity_process']= {'text': 'Run {0} process'.format(get_trinity_name())}
     submission_process_dict['run_variant_calling_process']= {'text': 'Run {0} process'.format(get_variant_calling_name())}
-    submission_process_dict['install_anaconda_package_list']= {'text': 'Install Anaconda package list'}
-    submission_process_dict['install_ddradseqtools']= {'text': 'Install {0}'.format(get_ddradseqtools_name())}
-    submission_process_dict['install_miniconda3']= {'text': 'Install {0}'.format(get_miniconda3_name())}
-    submission_process_dict['install_ngshelper']= {'text': 'Install {0}'.format(get_ngshelper_name())}
-    submission_process_dict['install_r']= {'text': 'Install {0}'.format(get_r_name())}
-    submission_process_dict['install_raddesigner']= {'text': 'Install {0}'.format(get_raddesigner_name())}
-    submission_process_dict['install_transrate']= {'text': 'Install {0}'.format(get_transrate_name())}
     submission_process_dict['show_cluster_composition']= {'text': 'Show cluster composition'}
     submission_process_dict['show_status_batch_jobs']= {'text': 'Show status of batch jobs'}
     submission_process_dict['terminate_cluster']= {'text': 'Terminate cluster'}
@@ -2645,7 +2827,7 @@ def get_cluster_ngscloud_dir():
     Get the NGScloud dataset directory in the cluster (single-volume).
     '''
 
-    return '/ngscloud'
+    return '/ngscloud2'
 
 #-------------------------------------------------------------------------------
 
@@ -2663,7 +2845,7 @@ def get_cluster_app_dir():
     Get the aplication directory in the cluster.
     '''
 
-    return '/ngscloud/apps'
+    return f'{get_cluster_ngscloud_dir()}/apps'
 
 #-------------------------------------------------------------------------------
 
@@ -2681,7 +2863,7 @@ def get_cluster_database_dir():
     Get the database directory in the cluster.
     '''
 
-    return '/ngscloud/databases'
+    return f'{get_cluster_ngscloud_dir()}/databases'
 
 #-------------------------------------------------------------------------------
 
@@ -2725,7 +2907,7 @@ def get_cluster_read_dir():
     Get the read directory in the cluster.
     '''
 
-    return '/ngscloud/reads'
+    return f'{get_cluster_ngscloud_dir()}/reads'
 
 #-------------------------------------------------------------------------------
 
@@ -2778,7 +2960,7 @@ def get_cluster_reference_dir():
     Get the reference directory in the cluster.
     '''
 
-    return '/ngscloud/references'
+    return f'{get_cluster_ngscloud_dir()}/references'
 
 #-------------------------------------------------------------------------------
 
@@ -2822,7 +3004,7 @@ def get_cluster_result_dir():
     Get the result directory in the cluster.
     '''
 
-    return '/ngscloud/results'
+    return f'{get_cluster_ngscloud_dir()}/results'
 
 #-------------------------------------------------------------------------------
 
@@ -2840,7 +3022,7 @@ def get_design_dataset_name():
     Get the name of design dataset in the cluster.
     '''
 
-    return 'design'
+    return 'designs'
 
 #-------------------------------------------------------------------------------
 
@@ -3279,6 +3461,42 @@ def pair_files(file_name_list, specific_chars_1, specific_chars_2):
     return (review_file_name_1_list, review_file_name_2_list, unpaired_file_name_list)
 
 #-------------------------------------------------------------------------------
+    
+def get_fasta_merger_operation_code_list():
+    '''
+    Get the code list of "merger_operation" with FASTA.
+    '''
+
+    return ['1AND2', '1LESS2']
+
+#-------------------------------------------------------------------------------
+    
+def get_fasta_merger_operation_code_list_text():
+    '''
+    Get the code list of "merger_operation" with FASTA files as text.
+    '''
+
+    return '1AND2 (sequences included in both files) or 1LESS2 (sequences in 1 and not in 2)'
+
+#-------------------------------------------------------------------------------
+    
+def get_annotation_merger_operation_code_list():
+    '''
+    Get the code list of "merger_operation" with annotation files.
+    '''
+
+    return ['1AND2', '1BEST']
+
+#-------------------------------------------------------------------------------
+    
+def get_annotation_merger_operation_code_list_text():
+    '''
+    Get the code list of "merger_operation" with annotation files as text.
+    '''
+
+    return '1AND2 (annotations included in both files) or 1BEST (all annotations of the first file and annotations of the second file if their seq id is not in the first)'
+
+#-------------------------------------------------------------------------------
 
 def check_startswith(literal, text_list, case_sensitive=False):
     '''
@@ -3665,6 +3883,15 @@ def get_reverse_complementary_sequence(seq):
 
     # return the reverse complementary sequence
     return revcompl_seq
+
+#-------------------------------------------------------------------------------
+
+def get_na():
+    '''
+    Get the characters to represent not available.
+    '''
+
+    return 'N/A'
 
 #-------------------------------------------------------------------------------
 

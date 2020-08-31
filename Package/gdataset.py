@@ -48,21 +48,22 @@ class FormListDataset(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormListDataset" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Datasets - List dataset'
@@ -87,8 +88,8 @@ class FormListDataset(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -117,7 +118,7 @@ class FormListDataset(tkinter.Frame):
         self.combobox_dataset_type.grid(row=1, column=1, padx=(5,5), pady=(45,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(53+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*66)
         self.label_fit.grid(row=2, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -131,6 +132,7 @@ class FormListDataset(tkinter.Frame):
         # link a handler to events
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
         self.combobox_dataset_type.bind('<<ComboboxSelected>>', self.combobox_dataset_type_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -207,8 +209,8 @@ class FormListDataset(tkinter.Frame):
         '''
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # check if the cluster name selected is different to the previous cluster name
         if self.wrapper_cluster_name.get() != self.cluster_name_ant:
@@ -233,8 +235,8 @@ class FormListDataset(tkinter.Frame):
         self.populate_combobox_dataset_type()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -266,10 +268,14 @@ class FormListDataset(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the list the processes of an experiment.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -351,21 +357,22 @@ class FormRecreateReferenceTransferConfigFile(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormRecreateReferenceTransferConfigFile" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Reference dataset file transfer - Recreate config file'
@@ -385,8 +392,8 @@ class FormRecreateReferenceTransferConfigFile(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -444,7 +451,7 @@ class FormRecreateReferenceTransferConfigFile(tkinter.Frame):
         self.label_reference_dataset_warning.grid(row=2, column=3, columnspan=3, padx=(5,5), pady=(45,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(20+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*33)
         self.label_fit.grid(row=3, column=3, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -454,6 +461,7 @@ class FormRecreateReferenceTransferConfigFile(tkinter.Frame):
         # create "button_close" and register it with the grid geometry manager
         self.button_close = tkinter.ttk.Button(self, text='Close', command=self.close)
         self.button_close.grid(row=3, column=5, padx=(5,5), pady=(45,5), sticky='w')
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -577,7 +585,7 @@ class FormRecreateReferenceTransferConfigFile(tkinter.Frame):
             self.label_reference_dataset_warning['foreground'] = 'red'
             OK = False
         else:
-            self.label_reference_dataset_warning['text'] = 'It is or will be a {0} subdirectory.'.format(cluster_reference_dir)
+            self.label_reference_dataset_warning['text'] = 'It is a {0} subdirectory.'.format(cluster_reference_dir)
             self.label_reference_dataset_warning['foreground'] = 'black'
 
         # return the control variable
@@ -585,10 +593,14 @@ class FormRecreateReferenceTransferConfigFile(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the recreation of the reference transfer config file.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -663,21 +675,22 @@ class FormUploadReferenceDataSet(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormUploadReferenceDataSet" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Reference dataset file transfer - Upload dataset to a cluster'
@@ -693,8 +706,8 @@ class FormUploadReferenceDataSet(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -715,7 +728,7 @@ class FormUploadReferenceDataSet(tkinter.Frame):
         self.combobox_cluster_name.grid(row=0, column=1, padx=(5,5), pady=(75,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(53+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*66)
         self.label_fit.grid(row=1, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -728,6 +741,7 @@ class FormUploadReferenceDataSet(tkinter.Frame):
 
         # link a handler to events
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -796,10 +810,14 @@ class FormUploadReferenceDataSet(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the reference file transfer process.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -843,21 +861,22 @@ class FormRecreateDatabaseTransferConfigFile(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormRecreateDatabaseTransferConfigFile" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Database file transfer - Recreate config file'
@@ -877,8 +896,8 @@ class FormRecreateDatabaseTransferConfigFile(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -936,7 +955,7 @@ class FormRecreateDatabaseTransferConfigFile(tkinter.Frame):
         self.label_database_dataset_warning.grid(row=2, column=3, columnspan=3, padx=(5,5), pady=(45,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(28+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*40)
         self.label_fit.grid(row=3, column=3, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -946,6 +965,9 @@ class FormRecreateDatabaseTransferConfigFile(tkinter.Frame):
         # create "button_close" and register it with the grid geometry manager
         self.button_close = tkinter.ttk.Button(self, text='Close', command=self.close)
         self.button_close.grid(row=3, column=5, padx=(5,5), pady=(45,5), sticky='w')
+
+        # link a handler to events
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -1074,10 +1096,14 @@ class FormRecreateDatabaseTransferConfigFile(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the recreation of the database transfer config file.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -1152,21 +1178,22 @@ class FormUploadDatabaseDataSet(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormUploadDatabaseDataSet" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Database file transfer - Upload dataset to a cluster'
@@ -1182,8 +1209,8 @@ class FormUploadDatabaseDataSet(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -1204,7 +1231,7 @@ class FormUploadDatabaseDataSet(tkinter.Frame):
         self.combobox_cluster_name.grid(row=0, column=1, padx=(5,5), pady=(75,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(53+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*66)
         self.label_fit.grid(row=1, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -1217,6 +1244,7 @@ class FormUploadDatabaseDataSet(tkinter.Frame):
 
         # link a handler to events
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -1285,10 +1313,14 @@ class FormUploadDatabaseDataSet(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the database file transfer process.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -1332,21 +1364,22 @@ class FormRecreateReadTransferConfigFile(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormRecreateReadTransferConfigFile" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Read dataset file transfer - Recreate config file'
@@ -1366,8 +1399,8 @@ class FormRecreateReadTransferConfigFile(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -1425,7 +1458,7 @@ class FormRecreateReadTransferConfigFile(tkinter.Frame):
         self.label_file_pattern_warning.grid(row=2, column=3, columnspan=3, padx=(5,5), pady=(45,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(24+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*34)
         self.label_fit.grid(row=3, column=3, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -1435,6 +1468,9 @@ class FormRecreateReadTransferConfigFile(tkinter.Frame):
         # create "button_close" and register it with the grid geometry manager
         self.button_close = tkinter.ttk.Button(self, text='Close', command=self.close)
         self.button_close.grid(row=3, column=5, padx=(5,5), pady=(45,5), sticky='w')
+
+        # link a handler to events
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -1563,10 +1599,14 @@ class FormRecreateReadTransferConfigFile(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the recreation of the read transfer config file.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -1641,21 +1681,22 @@ class FormUploadReadDataSet(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormUploadReadDataSet" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Read dataset file transfer - Upload dataset to a cluster'
@@ -1671,8 +1712,8 @@ class FormUploadReadDataSet(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -1693,7 +1734,7 @@ class FormUploadReadDataSet(tkinter.Frame):
         self.combobox_cluster_name.grid(row=0, column=1, padx=(5,5), pady=(75,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(53+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*66)
         self.label_fit.grid(row=1, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -1706,6 +1747,7 @@ class FormUploadReadDataSet(tkinter.Frame):
 
         # link a handler to events
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -1774,10 +1816,14 @@ class FormUploadReadDataSet(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the read file transfer process.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -1821,21 +1867,22 @@ class FormRecreateResultTransferConfigFile(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormRecreateResultTransferConfigFile" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Result dataset file transfer - Recreate config file'
@@ -1868,8 +1915,8 @@ class FormRecreateResultTransferConfigFile(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -1947,7 +1994,7 @@ class FormRecreateResultTransferConfigFile(tkinter.Frame):
         self.label_local_dir_warning.grid(row=5, column=3, columnspan=3, padx=(5,5), pady=(40,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(24+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*35)
         self.label_fit.grid(row=6, column=3, padx=(0,0), pady=(40,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -1963,6 +2010,7 @@ class FormRecreateResultTransferConfigFile(tkinter.Frame):
         self.combobox_experiment_id.bind('<<ComboboxSelected>>', self.combobox_experiment_id_selected_item)
         self.combobox_status.bind('<<ComboboxSelected>>', self.combobox_status_selected_item)
         self.combobox_result_dataset.bind('<<ComboboxSelected>>', self.combobox_result_dataset_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -2095,8 +2143,8 @@ class FormRecreateResultTransferConfigFile(tkinter.Frame):
         '''
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # check if the cluster name selected is different to the previous cluster name
         if self.wrapper_cluster_name.get() != self.cluster_name_ant:
@@ -2129,8 +2177,8 @@ class FormRecreateResultTransferConfigFile(tkinter.Frame):
         self.entry_file_pattern['state'] = 'disabled'
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -2266,10 +2314,14 @@ class FormRecreateResultTransferConfigFile(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the recreation of the result transfer config file.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -2356,21 +2408,22 @@ class FormDownloadResultDataSet(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormDownloadResultDataSet" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Result dataset file transfer - Download dataset from a cluster'
@@ -2386,8 +2439,8 @@ class FormDownloadResultDataSet(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -2408,7 +2461,7 @@ class FormDownloadResultDataSet(tkinter.Frame):
         self.combobox_cluster_name.grid(row=0, column=1, padx=(5,5), pady=(75,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(53+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*66)
         self.label_fit.grid(row=1, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -2421,6 +2474,7 @@ class FormDownloadResultDataSet(tkinter.Frame):
 
         # link a handler to events
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -2489,10 +2543,14 @@ class FormDownloadResultDataSet(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the read file transfer process.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -2536,21 +2594,22 @@ class FormRecreateReferenceGzipConfigFile(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormRecreateReferenceGzipConfigFile" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
  
@@ -2586,8 +2645,8 @@ class FormRecreateReferenceGzipConfigFile(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -2636,7 +2695,7 @@ class FormRecreateReferenceGzipConfigFile(tkinter.Frame):
         self.label_file_pattern_warning.grid(row=3, column=2, columnspan=3, padx=(5,5), pady=(45,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(35+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*48)
         self.label_fit.grid(row=4, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -2651,6 +2710,7 @@ class FormRecreateReferenceGzipConfigFile(tkinter.Frame):
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
         self.combobox_action.bind('<<ComboboxSelected>>', self.combobox_action_selected_item)
         self.combobox_reference_dataset.bind('<<ComboboxSelected>>', self.combobox_reference_dataset_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -2732,8 +2792,8 @@ class FormRecreateReferenceGzipConfigFile(tkinter.Frame):
         '''
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # check if the cluster name selected is different to the previous cluster name
         if self.wrapper_cluster_name.get() != self.cluster_name_ant:
@@ -2758,8 +2818,8 @@ class FormRecreateReferenceGzipConfigFile(tkinter.Frame):
         self.populate_combobox_reference_dataset()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -2832,10 +2892,14 @@ class FormRecreateReferenceGzipConfigFile(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the creation of the gzip config file.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # file counter of the files compressed or decompressed
         counter = 0
@@ -2925,21 +2989,22 @@ class FormRecreateDatabaseGzipConfigFile(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormRecreateDatabaseGzipConfigFile" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
  
@@ -2975,8 +3040,8 @@ class FormRecreateDatabaseGzipConfigFile(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -3025,7 +3090,7 @@ class FormRecreateDatabaseGzipConfigFile(tkinter.Frame):
         self.label_file_pattern_warning.grid(row=3, column=2, columnspan=3, padx=(5,5), pady=(45,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(45+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*55)
         self.label_fit.grid(row=4, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -3040,6 +3105,7 @@ class FormRecreateDatabaseGzipConfigFile(tkinter.Frame):
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
         self.combobox_action.bind('<<ComboboxSelected>>', self.combobox_action_selected_item)
         self.combobox_database_dataset.bind('<<ComboboxSelected>>', self.combobox_database_dataset_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -3121,8 +3187,8 @@ class FormRecreateDatabaseGzipConfigFile(tkinter.Frame):
         '''
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # check if the cluster name selected is different to the previous cluster name
         if self.wrapper_cluster_name.get() != self.cluster_name_ant:
@@ -3147,8 +3213,8 @@ class FormRecreateDatabaseGzipConfigFile(tkinter.Frame):
         self.populate_combobox_database_dataset()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -3221,10 +3287,14 @@ class FormRecreateDatabaseGzipConfigFile(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the creation of the gzip config file.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # file counter of the files compressed or decompressed
         counter = 0
@@ -3314,21 +3384,22 @@ class FormRecreateReadGzipConfigFile(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormRecreateReadGzipConfigFile" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
  
         # assign the text of the "head"
         self.head = 'Read dataset file compression/decompression - Recreate config file'
@@ -3364,8 +3435,8 @@ class FormRecreateReadGzipConfigFile(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -3422,7 +3493,7 @@ class FormRecreateReadGzipConfigFile(tkinter.Frame):
         self.label_file_pattern_warning.grid(row=4, column=2, columnspan=3, padx=(5,5), pady=(45,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(40+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*53)
         self.label_fit.grid(row=5, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -3438,6 +3509,7 @@ class FormRecreateReadGzipConfigFile(tkinter.Frame):
         self.combobox_action.bind('<<ComboboxSelected>>', self.combobox_action_selected_item)
         self.combobox_experiment_id.bind('<<ComboboxSelected>>', self.combobox_experiment_id_selected_item)
         self.combobox_read_dataset.bind('<<ComboboxSelected>>', self.combobox_read_dataset_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -3552,8 +3624,8 @@ class FormRecreateReadGzipConfigFile(tkinter.Frame):
         '''
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # check if the cluster name selected is different to the previous cluster name
         if self.wrapper_cluster_name.get() != self.cluster_name_ant:
@@ -3578,8 +3650,8 @@ class FormRecreateReadGzipConfigFile(tkinter.Frame):
         self.populate_combobox_experiment_id()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -3601,15 +3673,15 @@ class FormRecreateReadGzipConfigFile(tkinter.Frame):
         '''
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # load data in "combobox_run_set"
         self.populate_combobox_read_dataset()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -3670,10 +3742,14 @@ class FormRecreateReadGzipConfigFile(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the creation of the gzip config file.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # file counter of the files compressed or decompressed
         counter = 0
@@ -3763,21 +3839,22 @@ class FormRecreateResultGzipConfigFile(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormRecreateResultGzipConfigFile" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
  
         # assign the text of the "head"
         self.head = 'Result dataset file compression/decompression - Recreate config file'
@@ -3815,8 +3892,8 @@ class FormRecreateResultGzipConfigFile(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -3881,7 +3958,7 @@ class FormRecreateResultGzipConfigFile(tkinter.Frame):
         self.label_file_pattern_warning.grid(row=5, column=2, columnspan=3, padx=(5,5), pady=(40,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(40+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*53)
         self.label_fit.grid(row=6, column=2, padx=(0,0), pady=(40,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -3898,6 +3975,7 @@ class FormRecreateResultGzipConfigFile(tkinter.Frame):
         self.combobox_action.bind('<<ComboboxSelected>>', self.combobox_action_selected_item)
         self.combobox_experiment_id.bind('<<ComboboxSelected>>', self.combobox_experiment_id_selected_item)
         self.combobox_result_dataset.bind('<<ComboboxSelected>>', self.combobox_result_dataset_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -4030,8 +4108,8 @@ class FormRecreateResultGzipConfigFile(tkinter.Frame):
         '''
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # check if the cluster name selected is different to the previous cluster name
         if self.wrapper_cluster_name.get() != self.cluster_name_ant:
@@ -4067,8 +4145,8 @@ class FormRecreateResultGzipConfigFile(tkinter.Frame):
         self.entry_file_pattern['state'] = 'disabled'
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -4127,15 +4205,15 @@ class FormRecreateResultGzipConfigFile(tkinter.Frame):
         '''
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # load data in "combobox_result_dataset"
         self.populate_combobox_result_dataset()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -4197,10 +4275,14 @@ class FormRecreateResultGzipConfigFile(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the creation of the gzip config file.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -4290,22 +4372,23 @@ class FormRunGzipProcess(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main, dataset_type):
+    def __init__(self, main, dataset_type):
         '''
         Execute actions correspending to the creation of a "FormRunGzipProcess" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
         self.dataset_type = dataset_type
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         if self.dataset_type == 'reference':
@@ -4330,8 +4413,8 @@ class FormRunGzipProcess(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -4352,7 +4435,7 @@ class FormRunGzipProcess(tkinter.Frame):
         self.combobox_cluster_name.grid(row=0, column=1, padx=(5,5), pady=(75,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(53+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*66)
         self.label_fit.grid(row=1, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -4365,6 +4448,7 @@ class FormRunGzipProcess(tkinter.Frame):
 
         # link a handler to events
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -4433,10 +4517,14 @@ class FormRunGzipProcess(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the file compression/decompression.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -4480,21 +4568,22 @@ class FormRemoveReferenceDataSet(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormRemoveReferenceDataSet" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Datasets - Remove reference dataset'
@@ -4519,8 +4608,8 @@ class FormRemoveReferenceDataSet(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -4549,7 +4638,7 @@ class FormRemoveReferenceDataSet(tkinter.Frame):
         self.combobox_reference_dataset.grid(row=1, column=1, padx=(5,5), pady=(45,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(35+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*48)
         self.label_fit.grid(row=2, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -4563,6 +4652,7 @@ class FormRemoveReferenceDataSet(tkinter.Frame):
         # link a handler to events
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
         self.combobox_reference_dataset.bind('<<ComboboxSelected>>', self.combobox_reference_dataset_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -4629,8 +4719,8 @@ class FormRemoveReferenceDataSet(tkinter.Frame):
         '''
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # check if the cluster name selected is different to the previous cluster name
         if self.wrapper_cluster_name.get() != self.cluster_name_ant:
@@ -4655,8 +4745,8 @@ class FormRemoveReferenceDataSet(tkinter.Frame):
             self.populate_combobox_reference_dataset()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -4689,10 +4779,14 @@ class FormRemoveReferenceDataSet(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         View the log of the run identification.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -4746,21 +4840,22 @@ class FormRemoveDatabaseDataSet(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormRemoveDatabaseDataSet" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Datasets - Remove database'
@@ -4785,8 +4880,8 @@ class FormRemoveDatabaseDataSet(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -4815,7 +4910,7 @@ class FormRemoveDatabaseDataSet(tkinter.Frame):
         self.combobox_database_dataset.grid(row=1, column=1, padx=(5,5), pady=(45,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(40+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*53)
         self.label_fit.grid(row=2, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -4829,6 +4924,7 @@ class FormRemoveDatabaseDataSet(tkinter.Frame):
         # link a handler to events
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
         self.combobox_database_dataset.bind('<<ComboboxSelected>>', self.combobox_database_dataset_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -4895,8 +4991,8 @@ class FormRemoveDatabaseDataSet(tkinter.Frame):
         '''
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # check if the cluster name selected is different to the previous cluster name
         if self.wrapper_cluster_name.get() != self.cluster_name_ant:
@@ -4921,8 +5017,8 @@ class FormRemoveDatabaseDataSet(tkinter.Frame):
             self.populate_combobox_database_dataset()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -4955,10 +5051,14 @@ class FormRemoveDatabaseDataSet(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         View the log of the run identification.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -5012,21 +5112,22 @@ class FormRemoveReadDataSet(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormRemoveReadDataSet" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Datasets - Remove Read dataset'
@@ -5057,8 +5158,8 @@ class FormRemoveReadDataSet(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -5095,7 +5196,7 @@ class FormRemoveReadDataSet(tkinter.Frame):
         self.combobox_read_dataset.grid(row=2, column=1, padx=(5,5), pady=(45,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(40+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*53)
         self.label_fit.grid(row=3, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -5110,6 +5211,7 @@ class FormRemoveReadDataSet(tkinter.Frame):
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
         self.combobox_experiment_id.bind('<<ComboboxSelected>>', self.combobox_experiment_id_selected_item)
         self.combobox_read_dataset.bind('<<ComboboxSelected>>', self.combobox_read_dataset_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -5209,8 +5311,8 @@ class FormRemoveReadDataSet(tkinter.Frame):
         '''
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # check if the cluster name selected is different to the previous cluster name
         if self.wrapper_cluster_name.get() != self.cluster_name_ant:
@@ -5235,8 +5337,8 @@ class FormRemoveReadDataSet(tkinter.Frame):
         self.populate_combobox_experiment_id()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -5246,15 +5348,15 @@ class FormRemoveReadDataSet(tkinter.Frame):
         '''
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # load data in "combobox_read_dataset"
         self.populate_combobox_read_dataset()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -5287,10 +5389,14 @@ class FormRemoveReadDataSet(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         View the log of the run identification.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -5344,21 +5450,22 @@ class FormRemoveResultDataSet(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormRemoveResultDataSet" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Datasets - Remove result dataset'
@@ -5389,8 +5496,8 @@ class FormRemoveResultDataSet(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -5427,7 +5534,7 @@ class FormRemoveResultDataSet(tkinter.Frame):
         self.combobox_result_dataset.grid(row=2, column=1, padx=(5,5), pady=(45,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(35+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*48)
         self.label_fit.grid(row=3, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -5442,6 +5549,7 @@ class FormRemoveResultDataSet(tkinter.Frame):
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
         self.combobox_experiment_id.bind('<<ComboboxSelected>>', self.combobox_experiment_id_selected_item)
         self.combobox_result_dataset.bind('<<ComboboxSelected>>', self.combobox_result_dataset_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -5542,8 +5650,8 @@ class FormRemoveResultDataSet(tkinter.Frame):
         '''
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # check if the cluster name selected is different to the previous cluster name
         if self.wrapper_cluster_name.get() != self.cluster_name_ant:
@@ -5568,8 +5676,8 @@ class FormRemoveResultDataSet(tkinter.Frame):
         self.populate_combobox_experiment_id()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -5579,15 +5687,15 @@ class FormRemoveResultDataSet(tkinter.Frame):
         '''
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # load data in "combobox_result_dataset"
         self.populate_combobox_result_dataset()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -5620,10 +5728,14 @@ class FormRemoveResultDataSet(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         View the log of the run identification.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -5677,21 +5789,22 @@ class FormRemoveExperiment(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormRemoveExperiment" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Datasets - Remove experiment'
@@ -5720,8 +5833,8 @@ class FormRemoveExperiment(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -5750,7 +5863,7 @@ class FormRemoveExperiment(tkinter.Frame):
         self.combobox_experiment_id.grid(row=1, column=1, padx=(5,5), pady=(45,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(53+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*64)
         self.label_fit.grid(row=2, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -5764,6 +5877,7 @@ class FormRemoveExperiment(tkinter.Frame):
         # link a handler to events
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
         self.combobox_experiment_id.bind('<<ComboboxSelected>>', self.combobox_experiment_id_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -5844,8 +5958,8 @@ class FormRemoveExperiment(tkinter.Frame):
         '''
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # check if the cluster name selected is different to the previous cluster name
         if self.wrapper_cluster_name.get() != self.cluster_name_ant:
@@ -5870,8 +5984,8 @@ class FormRemoveExperiment(tkinter.Frame):
         self.populate_combobox_experiment_id()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -5903,10 +6017,14 @@ class FormRemoveExperiment(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         View the log of the run identification.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()

@@ -104,6 +104,9 @@ def form_installation_bioinfo_app(app_code):
     elif app_code == xlib.get_detonate_code():
         app_name = xlib.get_detonate_name()
 
+    elif app_code == xlib.get_diamond_code():
+        app_name = xlib.get_diamond_name()
+
     elif app_code == xlib.get_emboss_code():
         app_name = xlib.get_emboss_name()
 
@@ -289,6 +292,12 @@ def form_installation_bioinfo_app(app_code):
         # install the DETONATE software
         elif app_code == xlib.get_detonate_code():
             package_code_list = [(xlib.get_detonate_anaconda_code(), version, bioinfoapp_channel), (xlib.get_bowtie2_anaconda_code(), 'last', bioinfoapp_channel)]
+            devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
+            OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
+
+        # install the DIAMOND software
+        elif app_code == xlib.get_diamond_code():
+            package_code_list = [(xlib.get_diamond_anaconda_code(), version, bioinfoapp_channel)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 

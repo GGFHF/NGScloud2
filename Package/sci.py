@@ -58,7 +58,7 @@ def main(argv):
                 file_id.write( '{0}\n'.format(line.encode('utf8')))
     except Exception as e:
         for line in output_string.splitlines():
-            print line
+            print(line)
 
 #-------------------------------------------------------------------------------
 

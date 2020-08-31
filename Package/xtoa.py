@@ -62,7 +62,7 @@ def is_installed_toa(cluster_name, passed_connection, ssh_client):
 
     # check the TOA directory is created
     if OK:
-        command = '[ -d {0}/{1} ] && echo RC=0 || echo RC=1'.format(cluster_app_dir, xlib.get_toa_name())
+        command = f'[ -d {cluster_app_dir}/{xlib.get_toa_name()} ] && echo RC=0 || echo RC=1'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] == 'RC=0':
             OK = True
@@ -140,11 +140,11 @@ def install_toa(cluster_name, log, function=None):
 
     # check the app directory is created
     if OK:
-        command = '[ -d {0} ] && echo RC=0 || echo RC=1'.format(cluster_app_dir)
+        command = f'[ -d {cluster_app_dir} ] && echo RC=0 || echo RC=1'.format()
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] != 'RC=0':
             log.write('*** ERROR: There is not any volume mounted in the directory.\n')
-            log.write('You have to link a volume in the mounting point {0} for the cluster {1}.\n'.format(cluster_app_dir, cluster_name))
+            log.write(f'You have to link a volume in the mounting point {cluster_app_dir} for the cluster {cluster_name}.\n')
             OK = False
 
     # warn that the requirements are OK 
@@ -166,7 +166,7 @@ def install_toa(cluster_name, log, function=None):
     # build the TOA installation script
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the installation script {0} ...\n'.format(get_toa_installation_script()))
+        log.write(f'Building the installation script {get_toa_installation_script()} ...\n')
         (OK, error_list) = build_toa_installation_script(cluster_name, current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -176,8 +176,8 @@ def install_toa(cluster_name, log, function=None):
     # upload the TOA installation script in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the installation script {0} in the directory {1} ...\n'.format(get_toa_installation_script(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_toa_installation_script()))
+        log.write(f'Uploading the installation script {get_toa_installation_script()} in the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_toa_installation_script())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_toa_installation_script(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -188,8 +188,8 @@ def install_toa(cluster_name, log, function=None):
     # set run permision to the TOA installation script in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_toa_installation_script())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_toa_installation_script()))
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_toa_installation_script())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_toa_installation_script())}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
@@ -199,7 +199,7 @@ def install_toa(cluster_name, log, function=None):
     # build the TOA installation starter
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process starter {0} ...\n'.format(get_toa_installation_starter()))
+        log.write(f'Building the process starter {get_toa_installation_starter()} ...\n')
         (OK, error_list) = build_toa_installation_starter(current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -209,8 +209,8 @@ def install_toa(cluster_name, log, function=None):
     # upload the TOA installation starter in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process starter {0} in the directory {1} ...\n'.format(get_toa_installation_starter(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_toa_installation_starter()))
+        log.write(f'Uploading the process starter {get_toa_installation_starter()} in the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_toa_installation_starter())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_toa_installation_starter(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -221,8 +221,8 @@ def install_toa(cluster_name, log, function=None):
     # set run permision to the TOA installation starter in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_toa_installation_starter())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_toa_installation_starter()))
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_toa_installation_starter())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_toa_installation_starter())}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
@@ -232,7 +232,7 @@ def install_toa(cluster_name, log, function=None):
     # submit the TOA installation
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Submitting the process script {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_toa_installation_starter())))
+        log.write(f'Submitting the process script {current_run_dir}/{os.path.basename(get_toa_installation_starter())} ...\n')
         OK = xssh.submit_script(cluster_name, ssh_client, current_run_dir, os.path.basename(get_toa_installation_starter()), log)
 
     # close the SSH client connection
@@ -453,7 +453,7 @@ def build_toa_installation_script(cluster_name, current_run_dir):
             script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_toa_installation_script()))
+        error_list.append(f'*** ERROR: The file {get_toa_installation_script()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -477,10 +477,10 @@ def build_toa_installation_starter(current_run_dir):
         with open(get_toa_installation_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_toa_installation_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_toa_installation_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_toa_installation_starter()))
+        error_list.append(f'*** ERROR: The file {get_toa_installation_starter()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -494,7 +494,7 @@ def get_toa_installation_script():
     '''
 
     # assign the script path
-    toa_installation_script = '{0}/{1}-installation.sh'.format(xlib.get_temp_dir(), xlib.get_toa_name())
+    toa_installation_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_name()}-installation.sh'
 
     # return the script path
     return toa_installation_script
@@ -507,14 +507,14 @@ def get_toa_installation_starter():
     '''
 
     # assign the starter path
-    toa_installation_starter = '{0}/{1}-installation-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_name())
+    toa_installation_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_name()}-installation-starter.sh'
 
     # return the starter path
     return toa_installation_starter
 
 #-------------------------------------------------------------------------------
 
-def create_toa_config_file(toa_dir=f'{xlib.get_cluster_app_dir()}/TOA/Package', miniconda3_bin_dir=f'{xlib.get_cluster_app_dir()}/Miniconda3/bin', db_dir=xlib.get_cluster_database_dir(), result_dir=xlib.get_cluster_result_dir()):
+def create_toa_config_file(toa_dir=f'{xlib.get_cluster_app_dir()}/TOA/Package', miniconda3_dir=f'{xlib.get_cluster_app_dir()}/Miniconda3', db_dir=xlib.get_cluster_database_dir(), result_dir=xlib.get_cluster_result_dir()):
     '''
     Create the TOA config file.
     '''
@@ -522,6 +522,10 @@ def create_toa_config_file(toa_dir=f'{xlib.get_cluster_app_dir()}/TOA/Package', 
     # initialize the control variable and the error list
     OK = True
     error_list = []
+
+    # set the Miniconda3 bin and envs directories
+    miniconda3_bin_dir = f'{miniconda3_dir}/bin'
+    miniconda3_envs_dir = f'{miniconda3_dir}/envs'
 
     # get the NGScloud config file
     toa_config_file = get_toa_config_file()
@@ -532,207 +536,223 @@ def create_toa_config_file(toa_dir=f'{xlib.get_cluster_app_dir()}/TOA/Package', 
             if not os.path.exists(os.path.dirname(toa_config_file)):
                 os.makedirs(os.path.dirname(toa_config_file))
             with open(toa_config_file, mode='w', encoding='iso-8859-1', newline='\n') as file_id:
-                file_id.write( '{0}\n'.format('# environment'))
-                file_id.write( '{0}\n'.format('TOA_DIR={0}'.format(toa_dir)))
-                file_id.write( '{0}\n'.format('MINICONDA3_BIN_DIR={0}'.format(miniconda3_bin_dir)))
-                file_id.write( '{0}\n'.format('RESULT_DIR={0}'.format(result_dir)))
-                file_id.write( '{0}\n'.format('DB_DIR={0}'.format(db_dir)))
-                file_id.write( '{0}\n'.format('TOA_DB_DIR={0}/TOA'.format(db_dir)))
-                file_id.write( '{0}\n'.format('DATA_DIR={0}/data'.format(db_dir)))
-                file_id.write( '{0}\n'.format('PLAZA_DIR={0}/PLAZA'.format(db_dir)))
-                file_id.write( '{0}\n'.format('NCBI_DIR={0}/NCBI'.format(db_dir)))
-                file_id.write( '{0}\n'.format('INTERPRO_DIR={0}/InterPro'.format(db_dir)))
-                file_id.write( '{0}\n'.format('GO_DIR={0}/GO'.format(db_dir)))
-                file_id.write( '{0}\n'.format('EC_DIR={0}/EC'.format(db_dir)))
-                file_id.write( '{0}\n'.format('KEGG_DIR={0}/KEGG'.format(db_dir)))
+                file_id.write( '# environment\n')
+                file_id.write(f'TOA_DIR={toa_dir}\n')
+                file_id.write(f'MINICONDA3_DIR={miniconda3_dir}\n')
+                file_id.write(f'MINICONDA3_BIN_DIR={miniconda3_bin_dir}\n')
+                file_id.write(f'MINICONDA3_ENVS_DIR={miniconda3_envs_dir}\n')
+                file_id.write(f'RESULT_DIR={result_dir}\n')
+                file_id.write(f'DB_DIR={db_dir}\n')
+                file_id.write(f'TOA_DB_DIR={db_dir}/TOA\n')
+                file_id.write(f'DATA_DIR={db_dir}/data\n')
+                file_id.write(f'PLAZA_DIR={db_dir}/PLAZA\n')
+                file_id.write(f'NCBI_DIR={db_dir}/NCBI\n')
+                file_id.write(f'INTERPRO_DIR={db_dir}/InterPro\n')
+                file_id.write(f'GO_DIR={db_dir}/GO\n')
+                file_id.write(f'EC_DIR={db_dir}/EC\n')
+                file_id.write(f'KEGG_DIR={db_dir}/KEGG\n')
                 file_id.write( '\n')
-                file_id.write( '{0}\n'.format('# TOA database'))
-                file_id.write( '{0}\n'.format('TOA_DB={0}/TOA/toa.db'.format(db_dir)))
+                file_id.write( '# TOA database\n')
+                file_id.write(f'TOA_DB={db_dir}/TOA/toa.db\n')
                 file_id.write( '\n')
-                file_id.write( '{0}\n'.format('# basic data'))
-                file_id.write( '{0}\n'.format('DATASET_FILE={0}/data/datasets.txt'.format(db_dir)))
-                file_id.write( '{0}\n'.format('SPECIES_FILE={0}/data/species.txt'.format(db_dir)))
+                file_id.write( '# basic data\n')
+                file_id.write(f'DATASET_FILE={db_dir}/data/datasets.txt\n')
+                file_id.write(f'SPECIES_FILE={db_dir}/data/species.txt\n')
                 file_id.write( '\n')
-                file_id.write( '{0}\n'.format('# other basic data'))
-                file_id.write( '{0}\n'.format('EC_IDS_FTP=ftp://ftp.expasy.org/databases/enzyme/enzyme.dat'))
-                file_id.write( '{0}\n'.format('EC_IDS_FILE={0}/EC/enzyme.dat'.format(db_dir)))
-                file_id.write( '{0}\n'.format('KEGG_IDS_FTP=ftp://ftp.genome.jp/pub/db/kofam/ko_list.gz'))
-                file_id.write( '{0}\n'.format('KEGG_IDS_FILE={0}/KEGG/ko_list.gz'.format(db_dir)))
+                file_id.write( '# other basic data\n')
+                file_id.write( '#EC_IDS_FTP=https://www.enzyme-database.org/downloads/enzyme-data.sql.gz\n')
+                file_id.write(f'#EC_IDS_FILE={db_dir}/EC/enzyme-data.sql.gz\n')
+                file_id.write( 'EC_IDS_FTP=ftp://ftp.expasy.org/databases/enzyme/enzyme.dat\n')
+                file_id.write(f'EC_IDS_FILE={db_dir}/EC/enzyme.dat\n')
+                file_id.write( 'KEGG_IDS_FTP=ftp://ftp.genome.jp/pub/db/kofam/ko_list.gz\n')
+                file_id.write(f'KEGG_IDS_FILE={db_dir}/KEGG/ko_list.gz\n')
                 file_id.write( '\n')
-                file_id.write( '{0}\n'.format('# Gymno PLAZA 1.0'))
-                file_id.write( '{0}\n'.format('GYMNO_01_CDS_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_gymno_01/Fasta/cds.csv.gz'))
-                file_id.write( '{0}\n'.format('GYMNO_01_CDS_FILE={0}/PLAZA/gymno_01-cds.fasta.gz'.format(db_dir)))
-                file_id.write( '{0}\n'.format('GYMNO_01_PROTEOME_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_gymno_01/Fasta/proteome.csv.gz'))
-                file_id.write( '{0}\n'.format('GYMNO_01_PROTEOME_FILE={0}/PLAZA/gymno_01-proteome.fasta.gz'.format(db_dir)))
-                file_id.write( '{0}\n'.format('GYMNO_01_GENEDESC_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_gymno_01/Descriptions'))
-                file_id.write( '{0}\n'.format('GYMNO_01_GENEDESC_DIR={0}/PLAZA/gymno_01-descriptions'.format(db_dir)))
-                file_id.write( '{0}\n'.format("GYMNO_01_GENEDESC_FILE_PATTERN='gene_description.*.csv.gz'"))
-                file_id.write( '{0}\n'.format('GYMNO_01_INTERPRO_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_gymno_01/InterPro/interpro.csv.gz'))
-                file_id.write( '{0}\n'.format('GYMNO_01_INTERPRO_FILE={0}/PLAZA/gymno_01-interpro.csv.gz'.format(db_dir)))
-                file_id.write( '{0}\n'.format('GYMNO_01_GO_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_gymno_01/GO/go.csv.gz'))
-                file_id.write( '{0}\n'.format('GYMNO_01_GO_FILE={0}/PLAZA/gymno_01-go.csv.gz'.format(db_dir)))
-                file_id.write( '{0}\n'.format('GYMNO_01_MAPMAN_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_gymno_01/MapMan/mapman.csv.gz'))
-                file_id.write( '{0}\n'.format('GYMNO_01_MAPMAN_FILE={0}/PLAZA/gymno_01-mapman.csv.gz'.format(db_dir)))
-                file_id.write( '{0}\n'.format('GYMNO_01_PROTEOME_DB_NAME=gymno_01_proteome'))
-                file_id.write( '{0}\n'.format('GYMNO_01_PROTEOME_DB_DIR={0}/PLAZA/gymno_01_proteome_db'.format(db_dir)))
-                file_id.write( '{0}\n'.format('GYMNO_01_PROTEOME_DB_FILE={0}/PLAZA/gymno_01_proteome_db/gymno_01_proteome'.format(db_dir)))
-                file_id.write( '{0}\n'.format('GYMNO_01_BLAST_XML=$OUTPUT_DIR/gymno_01-alignment.xml'))
-                file_id.write( '{0}\n'.format('GYMNO_01_ANNOTATION_FILE=$OUTPUT_DIR/gymno_01-annotation.csv'))
-                file_id.write( '{0}\n'.format('GYMNO_01_NON_ANNOTATED_TRANSCRIPT_FILE=$OUTPUT_DIR/gymno_01-nonann-transcripts.fasta'))
-                file_id.write( '{0}\n'.format('GYMNO_01_NON_ANNOTATED_PEPTIDE_FILE=$OUTPUT_DIR/gymno_01-nonann-peptides.fasta'))
+                file_id.write( '# Gymno PLAZA 1.0\n')
+                file_id.write( 'GYMNO_01_CDS_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_gymno_01/Fasta/cds.csv.gz\n')
+                file_id.write(f'GYMNO_01_CDS_FILE={db_dir}/PLAZA/gymno_01-cds.fasta.gz\n')
+                file_id.write( 'GYMNO_01_PROTEOME_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_gymno_01/Fasta/proteome.csv.gz\n')
+                file_id.write(f'GYMNO_01_PROTEOME_FILE={db_dir}/PLAZA/gymno_01-proteome.fasta.gz\n')
+                file_id.write( 'GYMNO_01_GENEDESC_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_gymno_01/Descriptions\n')
+                file_id.write(f'GYMNO_01_GENEDESC_DIR={db_dir}/PLAZA/gymno_01-descriptions\n')
+                file_id.write( 'GYMNO_01_GENEDESC_FILE_PATTERN="gene_description.*.csv.gz"\n')
+                file_id.write( 'GYMNO_01_INTERPRO_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_gymno_01/InterPro/interpro.csv.gz\n')
+                file_id.write(f'GYMNO_01_INTERPRO_FILE={db_dir}/PLAZA/gymno_01-interpro.csv.gz\n')
+                file_id.write( 'GYMNO_01_GO_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_gymno_01/GO/go.csv.gz\n')
+                file_id.write(f'GYMNO_01_GO_FILE={db_dir}/PLAZA/gymno_01-go.csv.gz\n')
+                file_id.write( 'GYMNO_01_MAPMAN_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_gymno_01/MapMan/mapman.csv.gz\n')
+                file_id.write(f'GYMNO_01_MAPMAN_FILE={db_dir}/PLAZA/gymno_01-mapman.csv.gz\n')
+                file_id.write( 'GYMNO_01_BLASTPLUS_DB_NAME=gymno_01\n')
+                file_id.write(f'GYMNO_01_BLASTPLUS_DB_DIR={db_dir}/PLAZA/gymno_01-blastplus-db\n')
+                file_id.write(f'GYMNO_01_BLASTPLUS_DB_FILE={db_dir}/PLAZA/gymno_01-blastplus-db/gymno_01\n')
+                file_id.write(f'GYMNO_01_DIAMOND_DB_DIR={db_dir}/PLAZA/gymno_01-diamond-db\n')
+                file_id.write(f'GYMNO_01_DIAMOND_DB_FILE={db_dir}/PLAZA/gymno_01-diamond-db/gymno_01\n')
+                file_id.write(f'GYMNO_01_BLAST_XML=$OUTPUT_DIR/gymno_01-alignment.xml\n')
+                file_id.write( 'GYMNO_01_ANNOTATION_FILE=$OUTPUT_DIR/gymno_01-annotation.csv\n')
+                file_id.write( 'GYMNO_01_NON_ANNOTATED_TRANSCRIPT_FILE=$OUTPUT_DIR/gymno_01-nonann-transcripts.fasta\n')
+                file_id.write( 'GYMNO_01_NON_ANNOTATED_PEPTIDE_FILE=$OUTPUT_DIR/gymno_01-nonann-peptides.fasta\n')
                 file_id.write( '\n')
-                file_id.write( '{0}\n'.format('# Dicots PLAZA 4.0'))
-                file_id.write( '{0}\n'.format('DICOTS_04_CDS_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_dicots_04/Fasta/cds.all_transcripts.fasta.gz'))
-                file_id.write( '{0}\n'.format('DICOTS_04_CDS_FILE={0}/PLAZA/dicots_04-cds.fasta.gz'.format(db_dir)))
-                file_id.write( '{0}\n'.format('DICOTS_04_PROTEOME_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_dicots_04/Fasta/proteome.all_transcripts.fasta.gz'))
-                file_id.write( '{0}\n'.format('DICOTS_04_PROTEOME_FILE={0}/PLAZA/dicots_04-proteome.fasta.gz'.format(db_dir)))
-                file_id.write( '{0}\n'.format('DICOTS_04_GENEDESC_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_dicots_04/Descriptions'))
-                file_id.write( '{0}\n'.format('DICOTS_04_GENEDESC_DIR={0}/PLAZA/dicots_04-descriptions'.format(db_dir)))
-                file_id.write( '{0}\n'.format("DICOTS_04_GENEDESC_FILE_PATTERN='gene_description.*.csv.gz'"))
-                file_id.write( '{0}\n'.format('DICOTS_04_INTERPRO_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_dicots_04/InterPro/interpro.csv.gz'))
-                file_id.write( '{0}\n'.format('DICOTS_04_INTERPRO_FILE={0}/PLAZA/dicots_04-interpro.csv.gz'.format(db_dir)))
-                file_id.write( '{0}\n'.format('DICOTS_04_GO_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_dicots_04/GO/go.csv.gz'))
-                file_id.write( '{0}\n'.format('DICOTS_04_GO_FILE={0}/PLAZA/dicots_04-go.csv.gz'.format(db_dir)))
-                file_id.write( '{0}\n'.format('DICOTS_04_MAPMAN_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_dicots_04/MapMan/mapman.csv.gz'))
-                file_id.write( '{0}\n'.format('DICOTS_04_MAPMAN_FILE={0}/PLAZA/dicots_04-mapman.csv.gz'.format(db_dir)))
-                file_id.write( '{0}\n'.format('DICOTS_04_PROTEOME_DB_NAME=dicots_04_proteome'))
-                file_id.write( '{0}\n'.format('DICOTS_04_PROTEOME_DB_DIR={0}/PLAZA/dicots_04_proteome_db'.format(db_dir)))
-                file_id.write( '{0}\n'.format('DICOTS_04_PROTEOME_DB_FILE={0}/PLAZA/dicots_04_proteome_db/dicots_04_proteome'.format(db_dir)))
-                file_id.write( '{0}\n'.format('DICOTS_04_BLAST_XML=$OUTPUT_DIR/dicots_04-alignment.xml'))
-                file_id.write( '{0}\n'.format('DICOTS_04_ANNOTATION_FILE=$OUTPUT_DIR/dicots_04-annotation.csv'))
-                file_id.write( '{0}\n'.format('DICOTS_04_NON_ANNOTATED_TRANSCRIPT_FILE=$OUTPUT_DIR/dicots_04-nonann-transcripts.fasta'))
-                file_id.write( '{0}\n'.format('DICOTS_04_NON_ANNOTATED_PEPTIDE_FILE=$OUTPUT_DIR/dicots_04-nonann-peptides.fasta'))
+                file_id.write( '# Dicots PLAZA 4.0\n')
+                file_id.write( 'DICOTS_04_CDS_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_dicots_04/Fasta/cds.all_transcripts.fasta.gz\n')
+                file_id.write(f'DICOTS_04_CDS_FILE={db_dir}/PLAZA/dicots_04-cds.fasta.gz\n')
+                file_id.write( 'DICOTS_04_PROTEOME_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_dicots_04/Fasta/proteome.all_transcripts.fasta.gz\n')
+                file_id.write(f'DICOTS_04_PROTEOME_FILE={db_dir}/PLAZA/dicots_04-proteome.fasta.gz\n')
+                file_id.write( 'DICOTS_04_GENEDESC_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_dicots_04/Descriptions\n')
+                file_id.write(f'DICOTS_04_GENEDESC_DIR={db_dir}/PLAZA/dicots_04-descriptions\n')
+                file_id.write( 'DICOTS_04_GENEDESC_FILE_PATTERN="gene_description.*.csv.gz"\n')
+                file_id.write( 'DICOTS_04_INTERPRO_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_dicots_04/InterPro/interpro.csv.gz\n')
+                file_id.write(f'DICOTS_04_INTERPRO_FILE={db_dir}/PLAZA/dicots_04-interpro.csv.gz\n')
+                file_id.write( 'DICOTS_04_GO_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_dicots_04/GO/go.csv.gz\n')
+                file_id.write(f'DICOTS_04_GO_FILE={db_dir}/PLAZA/dicots_04-go.csv.gz\n')
+                file_id.write( 'DICOTS_04_MAPMAN_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_dicots_04/MapMan/mapman.csv.gz\n')
+                file_id.write(f'DICOTS_04_MAPMAN_FILE={db_dir}/PLAZA/dicots_04-mapman.csv.gz\n')
+                file_id.write( 'DICOTS_04_BLASTPLUS_DB_NAME=dicots_04\n')
+                file_id.write(f'DICOTS_04_BLASTPLUS_DB_DIR={db_dir}/PLAZA/dicots_04-blastplus-db\n')
+                file_id.write(f'DICOTS_04_BLASTPLUS_DB_FILE={db_dir}/PLAZA/dicots_04-blastplus-db/dicots_04\n')
+                file_id.write(f'DICOTS_04_DIAMOND_DB_DIR={db_dir}/PLAZA/dicots_04-diamond-db\n')
+                file_id.write(f'DICOTS_04_DIAMOND_DB_FILE={db_dir}/PLAZA/dicots_04-diamond-db/dicots_04\n')
+                file_id.write( 'DICOTS_04_BLAST_XML=$OUTPUT_DIR/dicots_04-alignment.xml\n')
+                file_id.write( 'DICOTS_04_ANNOTATION_FILE=$OUTPUT_DIR/dicots_04-annotation.csv\n')
+                file_id.write( 'DICOTS_04_NON_ANNOTATED_TRANSCRIPT_FILE=$OUTPUT_DIR/dicots_04-nonann-transcripts.fasta\n')
+                file_id.write( 'DICOTS_04_NON_ANNOTATED_PEPTIDE_FILE=$OUTPUT_DIR/dicots_04-nonann-peptides.fasta\n')
                 file_id.write( '\n')
-                file_id.write( '{0}\n'.format('# Monocots PLAZA 4.0'))
-                file_id.write( '{0}\n'.format('MONOCOTS_04_CDS_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_monocots_04/Fasta/cds.all_transcripts.fasta.gz'))
-                file_id.write( '{0}\n'.format('MONOCOTS_04_CDS_FILE={0}/PLAZA/monocots_04-cds.fasta.gz'.format(db_dir)))
-                file_id.write( '{0}\n'.format('MONOCOTS_04_PROTEOME_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_monocots_04/Fasta/proteome.all_transcripts.fasta.gz'))
-                file_id.write( '{0}\n'.format('MONOCOTS_04_PROTEOME_FILE={0}/PLAZA/monocots_04-proteome.fasta.gz'.format(db_dir)))
-                file_id.write( '{0}\n'.format('MONOCOTS_04_GENEDESC_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_monocots_04/Descriptions'))
-                file_id.write( '{0}\n'.format('MONOCOTS_04_GENEDESC_DIR={0}/PLAZA/monocots_04-descriptions'.format(db_dir)))
-                file_id.write( '{0}\n'.format("MONOCOTS_04_GENEDESC_FILE_PATTERN='gene_description.*.csv.gz'"))
-                file_id.write( '{0}\n'.format('MONOCOTS_04_INTERPRO_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_monocots_04/InterPro/interpro.csv.gz'))
-                file_id.write( '{0}\n'.format('MONOCOTS_04_INTERPRO_FILE={0}/PLAZA/monocots_04-interpro.csv.gz'.format(db_dir)))
-                file_id.write( '{0}\n'.format('MONOCOTS_04_GO_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_monocots_04/GO/go.csv.gz'))
-                file_id.write( '{0}\n'.format('MONOCOTS_04_GO_FILE={0}/PLAZA/monocots_04-go.csv.gz'.format(db_dir)))
-                file_id.write( '{0}\n'.format('MONOCOTS_04_MAPMAN_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_monocots_04/MapMan/mapman.csv.gz'))
-                file_id.write( '{0}\n'.format('MONOCOTS_04_MAPMAN_FILE={0}/PLAZA/monocots_04-mapman.csv.gz'.format(db_dir)))
-                file_id.write( '{0}\n'.format('MONOCOTS_04_PROTEOME_DB_NAME=monocots_04_proteome'))
-                file_id.write( '{0}\n'.format('MONOCOTS_04_PROTEOME_DB_DIR={0}/PLAZA/monocots_04_proteome_db'.format(db_dir)))
-                file_id.write( '{0}\n'.format('MONOCOTS_04_PROTEOME_DB_FILE={0}/PLAZA/monocots_04_proteome_db/monocots_04_proteome'.format(db_dir)))
-                file_id.write( '{0}\n'.format('MONOCOTS_04_BLAST_XML=$OUTPUT_DIR/monocots_04-alignment.xml'))
-                file_id.write( '{0}\n'.format('MONOCOTS_04_ANNOTATION_FILE=$OUTPUT_DIR/monocots_04-annotation.csv'))
-                file_id.write( '{0}\n'.format('MONOCOTS_04_NON_ANNOTATED_TRANSCRIPT_FILE=$OUTPUT_DIR/monocots_04-nonann-transcripts.fasta'))
-                file_id.write( '{0}\n'.format('MONOCOTS_04_NON_ANNOTATED_PEPTIDE_FILE=$OUTPUT_DIR/monocots_04-nonann-peptides.fasta'))
+                file_id.write( '# Monocots PLAZA 4.0\n')
+                file_id.write( 'MONOCOTS_04_CDS_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_monocots_04/Fasta/cds.all_transcripts.fasta.gz\n')
+                file_id.write(f'MONOCOTS_04_CDS_FILE={db_dir}/PLAZA/monocots_04-cds.fasta.gz\n')
+                file_id.write( 'MONOCOTS_04_PROTEOME_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_monocots_04/Fasta/proteome.all_transcripts.fasta.gz\n')
+                file_id.write(f'MONOCOTS_04_PROTEOME_FILE={db_dir}/PLAZA/monocots_04-proteome.fasta.gz\n')
+                file_id.write( 'MONOCOTS_04_GENEDESC_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_monocots_04/Descriptions\n')
+                file_id.write(f'MONOCOTS_04_GENEDESC_DIR={db_dir}/PLAZA/monocots_04-descriptions\n')
+                file_id.write( 'MONOCOTS_04_GENEDESC_FILE_PATTERN="gene_description.*.csv.gz"\n')
+                file_id.write( 'MONOCOTS_04_INTERPRO_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_monocots_04/InterPro/interpro.csv.gz\n')
+                file_id.write(f'MONOCOTS_04_INTERPRO_FILE={db_dir}/PLAZA/monocots_04-interpro.csv.gz\n')
+                file_id.write( 'MONOCOTS_04_GO_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_monocots_04/GO/go.csv.gz\n')
+                file_id.write(f'MONOCOTS_04_GO_FILE={db_dir}/PLAZA/monocots_04-go.csv.gz\n')
+                file_id.write( 'MONOCOTS_04_MAPMAN_FTP=ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_monocots_04/MapMan/mapman.csv.gz\n')
+                file_id.write(f'MONOCOTS_04_MAPMAN_FILE={db_dir}/PLAZA/monocots_04-mapman.csv.gz\n')
+                file_id.write( 'MONOCOTS_04_BLASTPLUS_DB_NAME=monocots_04\n')
+                file_id.write(f'MONOCOTS_04_BLASTPLUS_DB_DIR={db_dir}/PLAZA/monocots_04-blasplus-db\n')
+                file_id.write(f'MONOCOTS_04_BLASTPLUS_DB_FILE={db_dir}/PLAZA/monocots_04-blasplus-db/monocots_04\n')
+                file_id.write(f'MONOCOTS_04_DIAMOND_DB_DIR={db_dir}/PLAZA/monocots_04-diamond-db\n')
+                file_id.write(f'MONOCOTS_04_DIAMOND_DB_FILE={db_dir}/PLAZA/monocots_04-diamond-db/monocots_04\n')
+                file_id.write( 'MONOCOTS_04_BLAST_XML=$OUTPUT_DIR/monocots_04-alignment.xml\n')
+                file_id.write( 'MONOCOTS_04_ANNOTATION_FILE=$OUTPUT_DIR/monocots_04-annotation.csv\n')
+                file_id.write( 'MONOCOTS_04_NON_ANNOTATED_TRANSCRIPT_FILE=$OUTPUT_DIR/monocots_04-nonann-transcripts.fasta\n')
+                file_id.write( 'MONOCOTS_04_NON_ANNOTATED_PEPTIDE_FILE=$OUTPUT_DIR/monocots_04-nonann-peptides.fasta\n')
                 file_id.write( '\n')
-                file_id.write( '{0}\n'.format('# NCBI RefSeq Plant'))
-                file_id.write( '{0}\n'.format('REFSEQ_PLANT_FTP=ftp://ftp.ncbi.nlm.nih.gov/refseq/release/plant/'))
-                file_id.write( '{0}\n'.format('REFSEQ_PLANT_LOCAL={0}/NCBI/ftp.ncbi.nlm.nih.gov/refseq/release/plant/'.format(db_dir)))
-                file_id.write( '{0}\n'.format("REFSEQ_PROTEIN_FILE_PATTERN='.protein.faa.gz'"))
-                file_id.write( '{0}\n'.format('REFSEQ_PLANT_PROTEOME_FILE={0}/NCBI/refseq_plant-proteome.fasta'.format(db_dir)))
-                file_id.write( '{0}\n'.format('REFSEQ_PLANT_PROTEOME_DB_NAME=refseq_plant_proteome'))
-                file_id.write( '{0}\n'.format('REFSEQ_PLANT_PROTEOME_DB_DIR={0}/NCBI/refseq_plant_proteome_db'.format(db_dir)))
-                file_id.write( '{0}\n'.format('REFSEQ_PLANT_PROTEOME_DB_FILE={0}/NCBI/refseq_plant_proteome_db/refseq_plant_proteome'.format(db_dir)))
-                file_id.write( '{0}\n'.format('REFSEQ_PLANT_FILE_LIST={0}/NCBI/refseq_plant_proteome_db/files_list.txt'.format(db_dir)))
-                file_id.write( '{0}\n'.format('REFSEQ_PLANT_BLAST_XML=$OUTPUT_DIR/refseq_plant-alignment.xml'))
-                file_id.write( '{0}\n'.format('REFSEQ_PLANT_ANNOTATION_FILE=$OUTPUT_DIR/refseq_plant-annotation.csv'))
-                file_id.write( '{0}\n'.format('REFSEQ_PLANT_NON_ANNOTATED_TRANSCRIPT_FILE=$OUTPUT_DIR/refseq_plant-nonann-transcripts.fasta'))
-                file_id.write( '{0}\n'.format('REFSEQ_PLANT_NON_ANNOTATED_PEPTIDE_FILE=$OUTPUT_DIR/refseq_plant-nonann-peptides.fasta'))
+                file_id.write( '# NCBI RefSeq Plant\n')
+                file_id.write( 'REFSEQ_PLANT_FTP=ftp://ftp.ncbi.nlm.nih.gov/refseq/release/plant/\n')
+                file_id.write(f'REFSEQ_PLANT_LOCAL={db_dir}/NCBI/ftp.ncbi.nlm.nih.gov/refseq/release/plant/\n')
+                file_id.write( 'REFSEQ_PROTEIN_FILE_PATTERN=".protein.faa.gz"\n')
+                file_id.write(f'REFSEQ_PLANT_PROTEOME_FILE={db_dir}/NCBI/refseq_plant-proteome.fasta\n')
+                file_id.write( 'REFSEQ_PLANT_BLASTPLUS_DB_NAME=refseq_plant\n')
+                file_id.write(f'REFSEQ_PLANT_BLASTPLUS_DB_DIR={db_dir}/NCBI/refseq_plant-blastplus-db\n')
+                file_id.write(f'REFSEQ_PLANT_BLASTPLUS_DB_FILE={db_dir}/NCBI/refseq_plant-blastplus-db/refseq_plant\n')
+                file_id.write(f'REFSEQ_PLANT_DIAMOND_DB_DIR={db_dir}/NCBI/refseq_plant-diamond-db\n')
+                file_id.write(f'REFSEQ_PLANT_DIAMOND_DB_FILE={db_dir}/NCBI/refseq_plant-diamond-db/refseq_plant\n')
+                file_id.write(f'REFSEQ_PLANT_FILE_LIST={db_dir}/NCBI/refseq_plant-file-list.txt\n')
+                file_id.write( 'REFSEQ_PLANT_BLAST_XML=$OUTPUT_DIR/refseq_plant-alignment.xml\n')
+                file_id.write( 'REFSEQ_PLANT_ANNOTATION_FILE=$OUTPUT_DIR/refseq_plant-annotation.csv\n')
+                file_id.write( 'REFSEQ_PLANT_NON_ANNOTATED_TRANSCRIPT_FILE=$OUTPUT_DIR/refseq_plant-nonann-transcripts.fasta\n')
+                file_id.write( 'REFSEQ_PLANT_NON_ANNOTATED_PEPTIDE_FILE=$OUTPUT_DIR/refseq_plant-nonann-peptides.fasta\n')
                 file_id.write( '\n')
-                file_id.write( '{0}\n'.format('# NCBI BLAST database'))
-                # -- file_id.write( '{0}\n'.format('BLAST_DATABASES_FTP=ftp://ftp.ncbi.nlm.nih.gov/blast/db/'))
-                file_id.write( '{0}\n'.format('BLAST_DATABASES_FTP=ftp://ftp.ncbi.nlm.nih.gov/blast/db/v4/'))
-                # -- file_id.write( '{0}\n'.format('BLAST_DATABASES_LOCAL={0}/NCBI/ftp.ncbi.nlm.nih.gov/blast/db/'.format(db_dir)))
-                file_id.write( '{0}\n'.format('BLAST_DATABASES_LOCAL={0}/NCBI/ftp.ncbi.nlm.nih.gov/blast/db/v4/'.format(db_dir)))
+                file_id.write( '# NCBI Taxonomy\n')
+                file_id.write( 'TAXONOMY_TAXDMP_FTP=ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdmp.zip\n')
+                file_id.write(f'TAXONOMY_TAXDMP_FILE={db_dir}/NCBI/taxdmp.zip\n')
+                file_id.write(f'TAXONOMY_TAXONNODES_FILE={db_dir}/NCBI/nodes.dmp\n')
+                file_id.write(f'TAXONOMY_TAXONNAMES_FILE={db_dir}/NCBI/names.dmp\n')
+                file_id.write( 'TAXONOMY_PROTACCESSION_2_TAXID_FTP=ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/prot.accession2taxid.gz\n')
+                file_id.write(f'TAXONOMY_PROTACCESSION_2_TAXID_FILE={db_dir}/NCBI/prot.accession2taxid.gz\n')
+                file_id.write( 'VIRIDIPLANTAE_TAXID=33090\n')
+                file_id.write(f'VIRIDIPLANTAE_TAXID_LIST_FILE={db_dir}/NCBI/taxids_$VIRIDIPLANTAE_TAXID.txt\n')
                 file_id.write( '\n')
-                file_id.write( '{0}\n'.format('# NCBI BLAST database NT'))
-                file_id.write( '{0}\n'.format('NT_DB_NAME=nt'))
-                # -- file_id.write( '{0}\n'.format("NT_FILE_PATTERN='nt.*.tar.gz'"))
-                file_id.write( '{0}\n'.format("NT_FILE_PATTERN='nt_v4.*.tar.gz'"))
-                file_id.write( '{0}\n'.format('NT_DB_DIR={0}/NCBI/nt_db'.format(db_dir)))
-                file_id.write( '{0}\n'.format('NT_FILE_LIST={0}/NCBI/nt_db/files_list.txt'.format(db_dir)))
-                file_id.write( '{0}\n'.format('NT_VIRIDIPLANTAE_BLAST_XML=$OUTPUT_DIR/nt-viridiplantae-alignment.xml'))
-                file_id.write( '{0}\n'.format('NT_VIRIDIPLANTAE_ANNOTATION_FILE=$OUTPUT_DIR/nt-viridiplantae-annotation.csv'))
-                file_id.write( '{0}\n'.format('NT_VIRIDIPLANTAE_NON_ANNOTATED_TRANSCRIPT_FILE=$OUTPUT_DIR/nt-viridiplantae-nonann-transcripts.fasta'))
-                file_id.write( '{0}\n'.format('REIDENTIFIED_NT_REMAINDER_BLAST_XML=$OUTPUT_DIR/reidentified-nt-remainder-alignment.xml'))
-                file_id.write( '{0}\n'.format('NT_REMAINDER_BLAST_XML=$OUTPUT_DIR/nt-remainder-alignment.xml'))
-                file_id.write( '{0}\n'.format('NT_REMAINDER_ANNOTATION_FILE=$OUTPUT_DIR/nt-remainder-annotation.csv'))
-                file_id.write( '{0}\n'.format('NT_REMAINDER_NON_ANNOTATED_TRANSCRIPT_FILE=$OUTPUT_DIR/nt-remainder-nonann-transcripts.fasta'))
-                file_id.write( '{0}\n'.format('NR_REMAINDER_NON_ANNOTATED_PEPTIDE_FILE=$OUTPUT_DIR/nr-remainder-nonann-peptides.fasta'))
+                file_id.write( '# NCBI BLAST database\n')
+                file_id.write( 'BLAST_DATABASES_FTP=ftp://ftp.ncbi.nlm.nih.gov/blast/db/\n')
+                file_id.write(f'BLAST_DATABASES_LOCAL={db_dir}/NCBI/ftp.ncbi.nlm.nih.gov/blast/db/\n')
                 file_id.write( '\n')
-                file_id.write( '{0}\n'.format('# NCBI Nucleotide GenInfo identifier lists'))
-                file_id.write( '{0}\n'.format('NUCLEOTIDE_VIRIDIPLANTAE_GI_LIST={0}/NCBI/nucleotide_viridiplantae.gi'.format(db_dir)))
+                file_id.write( '# NCBI BLAST database NT\n')
+                file_id.write( 'NT_FILE_PATTERN="nt.*.tar.gz"\n')
+                file_id.write(f'NT_FILE_LIST={db_dir}/NCBI/nt-file-list.txt\n')
+                file_id.write( 'NT_BLASTPLUS_DB_NAME=nt\n')
+                file_id.write(f'NT_BLASTPLUS_DB_DIR={db_dir}/NCBI/nt-blastplus-db\n')
+                file_id.write(f'NT_BLASTPLUS_DB_FILE={db_dir}/NCBI/nt-blastplus-db/nt\n')
+                file_id.write( 'NT_BLAST_XML=$OUTPUT_DIR/nt-alignment.xml\n')
+                file_id.write( 'NT_VIRIDIPLANTAE_ANNOTATION_FILE=$OUTPUT_DIR/nt-viridiplantae-annotation.csv\n')
+                file_id.write( 'NT_CONTAMINATION_ANNOTATION_FILE=$OUTPUT_DIR/nt-contamination-annotation.csv\n')
+                file_id.write( 'NT_NON_ANNOTATED_TRANSCRIPT_FILE=$OUTPUT_DIR/nt-nonann-transcripts.fasta\n')
                 file_id.write( '\n')
-                file_id.write( '{0}\n'.format('# NCBI BLAST database NR'))
-                file_id.write( '{0}\n'.format('NR_DB_NAME=nr'))
-                # -- file_id.write( '{0}\n'.format("NR_FILE_PATTERN='nr.*.tar.gz'"))
-                file_id.write( '{0}\n'.format("NR_FILE_PATTERN='nr_v4.*.tar.gz'"))
-                file_id.write( '{0}\n'.format('NR_DB_DIR={0}/NCBI/nr_db'.format(db_dir)))
-                file_id.write( '{0}\n'.format('NR_FILE_LIST={0}/NCBI/nr_db/files_list.txt'.format(db_dir)))
-                file_id.write( '{0}\n'.format('NR_VIRIDIPLANTAE_BLAST_XML=$OUTPUT_DIR/nr-viridiplantae-alignment.xml'))
-                file_id.write( '{0}\n'.format('NR_VIRIDIPLANTAE_ANNOTATION_FILE=$OUTPUT_DIR/nr-viridiplantae-annotation.csv'))
-                file_id.write( '{0}\n'.format('NR_VIRIDIPLANTAE_NON_ANNOTATED_PEPTIDE_FILE=$OUTPUT_DIR/nr-viridiplantae-nonann-peptides.fasta'))
-                file_id.write( '{0}\n'.format('REIDENTIFIED_NR_REMAINDER_BLAST_XML=$OUTPUT_DIR/reidentified-nr-remainder-alignment.xml'))
-                file_id.write( '{0}\n'.format('NR_REMAINDER_BLAST_XML=$OUTPUT_DIR/nr-remainder-alignment.xml'))
-                file_id.write( '{0}\n'.format('NR_REMAINDER_ANNOTATION_FILE=$OUTPUT_DIR/nr-remainder-annotation.csv'))
-                file_id.write( '{0}\n'.format('NT_REMAINDER_NON_ANNOTATED_TRANSCRIPT_FILE=$OUTPUT_DIR/nt-remainder-nonann-transcripts.fasta'))
-                file_id.write( '{0}\n'.format('NR_REMAINDER_NON_ANNOTATED_PEPTIDE_FILE=$OUTPUT_DIR/nr-remainder-nonann-peptides.fasta'))
+                file_id.write( '# NCBI Nucleotide GenInfo identifier lists\n')
+                file_id.write(f'NUCLEOTIDE_VIRIDIPLANTAE_GI_LIST={db_dir}/NCBI/nucleotide_viridiplantae.gi\n')
                 file_id.write( '\n')
-                file_id.write( '{0}\n'.format('# NCBI Protein GenInfo identifier lists'))
-                file_id.write( '{0}\n'.format('PROTEIN_VIRIDIPLANTAE_GI_LIST={0}/NCBI/protein_viridiplantae.gi'.format(db_dir)))
+                file_id.write( '# NCBI BLAST database NR\n')
+                file_id.write( 'NR_PROTEOME_FTP=ftp://ftp.ncbi.nlm.nih.gov/blast/db/FASTA/nr.gz\n')
+                file_id.write(f'NR_PROTEOME_FILE={db_dir}/NCBI/nr.gz\n')
+                file_id.write( 'NR_FILE_PATTERN="nr.*.tar.gz"\n')
+                file_id.write(f'NR_FILE_LIST={db_dir}/NCBI/nr-file-list.txt\n')
+                file_id.write( 'NR_BLASTPLUS_DB_NAME=nr\n')
+                file_id.write(f'NR_BLASTPLUS_DB_DIR={db_dir}/NCBI/nr-blastplus-db\n')
+                file_id.write(f'NR_BLASTPLUS_DB_FILE={db_dir}/NCBI/nr-blastplus-db/nr\n')
+                file_id.write(f'NR_DIAMOND_DB_DIR={db_dir}/NCBI/nr-diamond-db\n')
+                file_id.write(f'NR_DIAMOND_DB_FILE={db_dir}/NCBI/nr-diamond-db/nr\n')
+                file_id.write( 'NR_BLAST_XML=$OUTPUT_DIR/nr-alignment.xml\n')
+                file_id.write( 'NR_VIRIDIPLANTAE_ANNOTATION_FILE=$OUTPUT_DIR/nr-viridiplantae-annotation.csv\n')
+                file_id.write( 'NR_CONTAMINATION_ANNOTATION_FILE=$OUTPUT_DIR/nr-contamination-annotation.csv\n')
+                file_id.write( 'NR_NON_ANNOTATED_PEPTIDE_FILE=$OUTPUT_DIR/nr-nonann-peptides.fasta\n')
                 file_id.write( '\n')
-                file_id.write( '{0}\n'.format('# NCBI Gene'))
-                file_id.write( '{0}\n'.format('GENE_GENE2GO_FTP=ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2go.gz'))
-                file_id.write( '{0}\n'.format('GENE_GENE2GO_FILE={0}/NCBI/gene-gene2go.gz'.format(db_dir)))
-                file_id.write( '{0}\n'.format('GENE_GENE2REFSEQ_FTP=ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2refseq.gz'))
-                file_id.write( '{0}\n'.format('GENE_GENE2REFSEQ_FILE={0}/NCBI/gene-gene2refseq.gz'.format(db_dir)))
+                file_id.write( '# NCBI Protein GenInfo identifier lists\n')
+                file_id.write(f'PROTEIN_VIRIDIPLANTAE_GI_LIST={db_dir}/NCBI/protein_viridiplantae.gi\n')
                 file_id.write( '\n')
-                file_id.write( '{0}\n'.format('# InterPro'))
-                file_id.write( '{0}\n'.format('INTERPRO_INTERPRO2GO_FTP=ftp://ftp.ebi.ac.uk/pub/databases/interpro/interpro2go'))
-                file_id.write( '{0}\n'.format('INTERPRO_INTERPRO2GO_FILE={0}/InterPro/interpro2go'.format(db_dir)))
+                file_id.write( '# NCBI Gene\n')
+                file_id.write( 'GENE_GENE2GO_FTP=ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2go.gz\n')
+                file_id.write(f'GENE_GENE2GO_FILE={db_dir}/NCBI/gene-gene2go.gz\n')
+                file_id.write( 'GENE_GENE2REFSEQ_FTP=ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2refseq.gz\n')
+                file_id.write(f'GENE_GENE2REFSEQ_FILE={db_dir}/NCBI/gene-gene2refseq.gz\n')
                 file_id.write( '\n')
-                file_id.write( '{0}\n'.format('# Gene Onlogolgy'))
-                file_id.write( '{0}\n'.format('GO_ONTOLOGY_FTP=http://purl.obolibrary.org/obo/go.obo'))
-                file_id.write( '{0}\n'.format('GO_ONTOLOGY_FILE={0}/GO/go.obo'.format(db_dir)))
-                file_id.write( '{0}\n'.format('#GO_EC2GO_FTP=http://geneontology.org/external2go/ec2go'))
-                file_id.write( '{0}\n'.format('GO_EC2GO_FTP=https://build.berkeleybop.org/view/GO/job/Update%20external2go/lastSuccessfulBuild/artifact/external2go/ec2go'))
-                file_id.write( '{0}\n'.format('GO_EC2GO_FILE={0}/GO/ec2go.txt'.format(db_dir)))
-                file_id.write( '{0}\n'.format('#GO_KEGG2GO_FTP=http://geneontology.org/external2go/kegg2go'))
-                file_id.write( '{0}\n'.format('GO_KEGG2GO_FTP=https://build.berkeleybop.org/view/GO/job/Update%20external2go/lastSuccessfulBuild/artifact/external2go/kegg2go'))
-                file_id.write( '{0}\n'.format('GO_KEGG2GO_FILE={0}/GO/kegg2go.txt'.format(db_dir)))
-                file_id.write( '{0}\n'.format('#GO_METACYC2GO_FTP=http://geneontology.org/external2go/metacyc2go'))
-                file_id.write( '{0}\n'.format('GO_METACYC2GO_FTP=https://build.berkeleybop.org/view/GO/job/Update%20external2go/lastSuccessfulBuild/artifact/external2go/metacyc2go'))
-                file_id.write( '{0}\n'.format('GO_METACYC2GO_FILE={0}/GO/metacyc2go.txt'.format(db_dir)))
-                file_id.write( '{0}\n'.format('#GO_INTERPRO2GO_FTP=http://geneontology.org/external2go/interpro2go'))
-                file_id.write( '{0}\n'.format('GO_INTERPRO2GO_FTP=https://build.berkeleybop.org/view/GO/job/Update%20external2go/lastSuccessfulBuild/artifact/external2go/interpro2go'))
-                file_id.write( '{0}\n'.format('GO_INTERPRO2GO_FILE={0}/GO/interpro2go.txt'.format(db_dir)))
+                file_id.write( '# InterPro\n')
+                file_id.write( 'INTERPRO_INTERPRO2GO_FTP=ftp://ftp.ebi.ac.uk/pub/databases/interpro/interpro2go\n')
+                file_id.write(f'INTERPRO_INTERPRO2GO_FILE={db_dir}/InterPro/interpro2go\n')
                 file_id.write( '\n')
-                file_id.write( '{0}\n'.format('# other transcriptome files'))
-                file_id.write( '{0}\n'.format('REIDENTIFIED_TRANSCRIPTOME_FILE=$OUTPUT_DIR/reidentified-transcriptome.fasta'))
-                file_id.write( '{0}\n'.format('RELATIONSHIP_FILE=$OUTPUT_DIR/relationships.csv'))
-                file_id.write( '{0}\n'.format('PURGED_TRANSCRIPTOME_FILE=$OUTPUT_DIR/purged-transcriptome.fasta'))
+                file_id.write( '# Gene Onlogolgy\n')
+                file_id.write( 'GO_ONTOLOGY_FTP=http://purl.obolibrary.org/obo/go.obo\n')
+                file_id.write(f'GO_ONTOLOGY_FILE={db_dir}/GO/go.obo\n')
+                file_id.write( 'GO_EC2GO_FTP=http://geneontology.org/external2go/ec2go\n')
+                file_id.write( '#GO_EC2GO_FTP=https://build.berkeleybop.org/view/GO/job/Update%20external2go/lastSuccessfulBuild/artifact/external2go/ec2go\n')
+                file_id.write(f'GO_EC2GO_FILE={db_dir}/GO/ec2go.txt\n')
+                file_id.write( 'GO_KEGG2GO_FTP=http://geneontology.org/external2go/kegg2go\n')
+                file_id.write( '#GO_KEGG2GO_FTP=https://build.berkeleybop.org/view/GO/job/Update%20external2go/lastSuccessfulBuild/artifact/external2go/kegg2go\n')
+                file_id.write(f'GO_KEGG2GO_FILE={db_dir}/GO/kegg2go.txt\n')
+                file_id.write( 'GO_METACYC2GO_FTP=http://geneontology.org/external2go/metacyc2go\n')
+                file_id.write( '#GO_METACYC2GO_FTP=https://build.berkeleybop.org/view/GO/job/Update%20external2go/lastSuccessfulBuild/artifact/external2go/metacyc2go\n')
+                file_id.write(f'GO_METACYC2GO_FILE={db_dir}/GO/metacyc2go.txt\n')
+                file_id.write( 'GO_INTERPRO2GO_FTP=http://geneontology.org/external2go/interpro2go\n')
+                file_id.write( '#GO_INTERPRO2GO_FTP=https://build.berkeleybop.org/view/GO/job/Update%20external2go/lastSuccessfulBuild/artifact/external2go/interpro2go\n')
+                file_id.write(f'GO_INTERPRO2GO_FILE={db_dir}/GO/interpro2go.txt\n')
                 file_id.write( '\n')
-                file_id.write( '{0}\n'.format('# peptide sequence files'))
-                file_id.write( '{0}\n'.format('TRANSDECODER_OUTPUT_DIR=$OUTPUT_DIR/transdecoder'))
-                file_id.write( '{0}\n'.format('ORF_FILE=$TRANSDECODER_OUTPUT_DIR/longest_orfs.pep'))
-                file_id.write( '{0}\n'.format('PEPTIDE_FILE=$OUTPUT_DIR/`basename "$TRANSCRIPTOME_FILE"`.transdecoder.pep'))
-                file_id.write( '{0}\n'.format('REIDENTIFIED_PEPTIDE_FILE=$OUTPUT_DIR/reidentified-peptides.fasta'))
-                file_id.write( '{0}\n'.format('RELATIONSHIP_FILE=$OUTPUT_DIR/relationships.csv'))
+                file_id.write( '# other transcriptome files\n')
+                file_id.write( 'REIDENTIFIED_TRANSCRIPTOME_FILE=$OUTPUT_DIR/reidentified-transcriptome.fasta\n')
+                file_id.write( 'TOA_TRANSCRIPTOME_RELATIONSHIP_FILE=$OUTPUT_DIR/toa_transcriptome_relationships.csv\n')
+                file_id.write( 'PURGED_TRANSCRIPTOME_FILE=$OUTPUT_DIR/purged-transcriptome.fasta\n')
                 file_id.write( '\n')
-                file_id.write( '{0}\n'.format('# merger files'))
-                file_id.write( '{0}\n'.format('MERGED_ANNOTATION_FILE=$OUTPUT_DIR/merged-annotation.csv'))
-                file_id.write( '{0}\n'.format('PLANT_ANNOTATION_FILE=$OUTPUT_DIR/plant-annotation.csv'))
-                file_id.write( '{0}\n'.format('REIDENTIFIED_PLANT_BLAST_XML=$OUTPUT_DIR/reidentified-plant-alignment.xml'))
-                file_id.write( '{0}\n'.format('PLANT_BLAST_XML=$OUTPUT_DIR/plant-alignment.xml'))
+                file_id.write( '# peptide sequence files\n')
+                file_id.write( 'TRANSDECODER_OUTPUT_DIR=$OUTPUT_DIR/transdecoder\n')
+                file_id.write( 'ORF_FILE=$TRANSDECODER_OUTPUT_DIR/longest_orfs.pep\n')
+                file_id.write( 'PEPTIDE_FILE=$OUTPUT_DIR/`basename "$REIDENTIFIED_TRANSCRIPTOME_FILE"`.transdecoder.pep\n')
+                file_id.write( 'REIDENTIFIED_PEPTIDE_FILE=$OUTPUT_DIR/reidentified-peptides.fasta\n')
+                file_id.write( 'TOA_TRANSDECODER_RELATIONSHIP_FILE=$OUTPUT_DIR/toa_transdecoder_relationships.csv\n')
                 file_id.write( '\n')
-                file_id.write( '{0}\n'.format('# statistics'))
-                file_id.write( '{0}\n'.format('STATS_SUBDIR_NAME=stats'))
-                file_id.write( '{0}\n'.format('STATS_DIR=$OUTPUT_DIR/stats'))
-                file_id.write( '{0}\n'.format('STATS_BASE_NAME=stats'))
-                file_id.write( '{0}\n'.format('ANNOTATION_STATS_FILE=$OUTPUT_DIR/stats/stats.csv'))
+                file_id.write( '# merger files\n')
+                file_id.write( 'MERGED_ANNOTATION_FILE=$OUTPUT_DIR/merged-annotation.csv\n')
+                file_id.write( 'PLANT_ANNOTATION_FILE=$OUTPUT_DIR/plant-annotation.csv\n')
+                file_id.write( 'MERGED_BLAST_XML=$OUTPUT_DIR/merged-alignment.xml\n')
+                # -- file_id.write( 'RESTOREDIDS_MERGED_BLAST_XML=$OUTPUT_DIR/restoredids-merged-alignment.xml\n')
+                file_id.write( '\n')
+                file_id.write( '# statistics\n')
+                file_id.write( 'STATS_SUBDIR_NAME=stats\n')
+                file_id.write( 'STATS_DIR=$OUTPUT_DIR/stats\n')
+                file_id.write( 'STATS_BASE_NAME=stats\n')
+                file_id.write( 'ANNOTATION_STATS_FILE=$OUTPUT_DIR/stats/stats.csv\n')
         except Exception as e:
             error_list.append(f'*** EXCEPTION: "{e}".')
-            error_list.append('*** ERROR: The file {0} can not be created'.format(toa_config_file))
+            error_list.append(f'*** ERROR: The file {toa_config_file} can not be created.')
             OK = False
 
     # return the control variable and the error list
@@ -746,7 +766,7 @@ def get_toa_config_file():
     '''
 
     # assign the config file
-    toa_config_file = '{0}/{1}-config.txt'.format(xlib.get_config_dir(), xlib.get_toa_code())
+    toa_config_file = f'{xlib.get_config_dir()}/{xlib.get_toa_code()}-config.txt'
 
     # return the config file
     return toa_config_file
@@ -805,22 +825,20 @@ def create_dataset_file():
         if not os.path.exists(os.path.dirname(get_dataset_file())):
             os.makedirs(os.path.dirname(get_dataset_file()))
         with open(get_dataset_file(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
-            file_id.write( '{0}\n'.format('# This file contains the data of the genomic datasets used by Tree-oriented Annotation (TOA) software package.'))
+            file_id.write( '# This file contains the data of the genomic datasets used by Taxonomy-oriented Annotation (TOA) software package.\n')
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# RECORD FORMAT: "dataset_id";"dataset_name";"repository_id";"ftp_adress"'))
+            file_id.write( '# RECORD FORMAT: "dataset_id";"dataset_name";"repository_id";"ftp_adress"\n')
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('"dicots_04";"Dicots PLAZA 4.0";"plaza";"ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_dicots_04/"'))
-            file_id.write( '{0}\n'.format('"gene";"Gene";"ncbi";"ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/"'))
-            file_id.write( '{0}\n'.format('"gymno_01";"Gymno PLAZA 1.0";"plaza";"ftp://ftp.psb.ugent.be/pub/plaza/plaza_gymno_01/"'))
-            file_id.write( '{0}\n'.format('"monocots_04";"Monocots PLAZA 4.0";"plaza";"ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_monocots_04/"'))
-            file_id.write( '{0}\n'.format('"nr_remainder";"nr remainder";"ncbi";"ftp://ftp.ncbi.nlm.nih.gov/blast/db/"'))
-            file_id.write( '{0}\n'.format('"nr_viridiplantae";"nr Viridiplantae";"ncbi";"ftp://ftp.ncbi.nlm.nih.gov/blast/db/"'))
-            file_id.write( '{0}\n'.format('"nt_remainder";"nt remainder";"ncbi";"ftp://ftp.ncbi.nlm.nih.gov/blast/db/"'))
-            file_id.write( '{0}\n'.format('"nt_viridiplantae";"nt Viridiplantae";"ncbi";"ftp://ftp.ncbi.nlm.nih.gov/blast/db/"'))
-            file_id.write( '{0}\n'.format('"refseq_plant";"RefSeq Plant";"ncbi";"ftp://ftp.ncbi.nlm.nih.gov/refseq/release/plant/"'))
+            file_id.write( '"dicots_04";"Dicots PLAZA 4.0";"plaza";"ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_dicots_04/"\n')
+            file_id.write( '"gene";"Gene";"ncbi";"ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/"\n')
+            file_id.write( '"gymno_01";"Gymno PLAZA 1.0";"plaza";"ftp://ftp.psb.ugent.be/pub/plaza/plaza_gymno_01/"\n')
+            file_id.write( '"monocots_04";"Monocots PLAZA 4.0";"plaza";"ftp://ftp.psb.ugent.be/pub/plaza/plaza_public_monocots_04/"\n')
+            file_id.write( '"nr";"nr";"ncbi";"ftp://ftp.ncbi.nlm.nih.gov/blast/db/"\n')
+            file_id.write( '"nt";"nt";"ncbi";"ftp://ftp.ncbi.nlm.nih.gov/blast/db/"\n')
+            file_id.write( '"refseq_plant";"RefSeq Plant";"ncbi";"ftp://ftp.ncbi.nlm.nih.gov/refseq/release/plant/"\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be recreated'.format(get_dataset_file()))
+        error_list.append('*** ERROR: The file {get_dataset_file()} can not be recreated')
         OK = False
 
     # return the control variable and the error list
@@ -846,7 +864,7 @@ def check_dataset_file(strict):
         dataset_file_id = open(get_dataset_file(), mode='r', encoding='iso-8859-1', newline='\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be opened.'.format(get_dataset_file()))
+        error_list.append(f'*** ERROR: The file {get_dataset_file()} can not be opened.')
         OK = False
 
     # check that all records are OK
@@ -869,7 +887,8 @@ def check_dataset_file(strict):
                     repository_id = mo.group(3).strip()
                     ftp_adress = mo.group(4).strip()
                 except Exception as e:
-                    error_list.append('*** ERROR: There is a format error in the record "{0}".'.format(record.replace("\n", "")))
+                    record_text = record.replace("\n", "")
+                    error_list.append(f'*** ERROR: There is a format error in the record: {record_text}.')
                     OK = False
                     break
 
@@ -881,7 +900,7 @@ def check_dataset_file(strict):
 
     # warn that the file of datasets is not valid if there are any errors
     if not OK:
-        error_list.append('\nThe file {0} is not valid. Please, correct this file or recreate it.'.format(get_dataset_file()))
+        error_list.append(f'\nThe file {get_dataset_file()} is not valid. Please, correct this file or recreate it.')
 
     # return the control variable and the error list
     return (OK, error_list)
@@ -894,7 +913,7 @@ def get_dataset_file():
     '''
 
     # assign the dataset file path
-    dataset_file = '{0}/datasets.txt'.format(xlib.get_config_dir())
+    dataset_file = f'{xlib.get_config_dir()}/datasets.txt'
 
     # return the dataset file path
     return dataset_file
@@ -910,98 +929,98 @@ def create_species_file():
     OK = True
     error_list = []
 
-    # create the file of restriction sites and write the default data
+    # create the file of species and write the default data
     try:
         if not os.path.exists(os.path.dirname(get_species_file())):
             os.makedirs(os.path.dirname(get_species_file()))
         with open(get_species_file(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
-            file_id.write( '{0}\n'.format('# This file contains the data of specioes used by Tree-oriented Annotation (TOA) software package.'))
+            file_id.write( '# This file contains the data of species used by Taxonomy-oriented Annotation (TOA) software package.\n')
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# RECORD FORMAT: "species_name";"plaza_id"'))
+            file_id.write( '# RECORD FORMAT: "species_name";"plaza_id"\n')
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('"Actinidia chinensis";"ach"'))
-            file_id.write( '{0}\n'.format('"Amborella trichopoda";"atr"'))
-            file_id.write( '{0}\n'.format('"Ananas comosus";"aco"'))
-            file_id.write( '{0}\n'.format('"Arabidopsis lyrata";"aly"'))
-            file_id.write( '{0}\n'.format('"Arabidopsis thaliana";"ath"'))
-            file_id.write( '{0}\n'.format('"Arachis ipaensis";"aip"'))
-            file_id.write( '{0}\n'.format('"Beta vulgaris";"bvu"'))
-            file_id.write( '{0}\n'.format('"Brachypodium distachyon";"bdi"'))
-            file_id.write( '{0}\n'.format('"Brassica oleracea";"bol"'))
-            file_id.write( '{0}\n'.format('"Brassica rapa";"bra"'))
-            file_id.write( '{0}\n'.format('"Cajanus cajan";"ccaj"'))
-            file_id.write( '{0}\n'.format('"Capsella rubella";"cru"'))
-            file_id.write( '{0}\n'.format('"Capsicum annuum";"can"'))
-            file_id.write( '{0}\n'.format('"Carica papaya";"cpa"'))
-            file_id.write( '{0}\n'.format('"Chenopodium quinoa";"cqu"'))
-            file_id.write( '{0}\n'.format('"Chlamydomonas reinhardtii";"cre"'))
-            file_id.write( '{0}\n'.format('"Cicer arietinum";"car"'))
-            file_id.write( '{0}\n'.format('"Citrullus lanatus";"cla"'))
-            file_id.write( '{0}\n'.format('"Citrus clementina";"ccl"'))
-            file_id.write( '{0}\n'.format('"Coffea canephora";"ccan"'))
-            file_id.write( '{0}\n'.format('"Corchorus olitorius";"col"'))
-            file_id.write( '{0}\n'.format('"Cucumis melo";"cme"'))
-            file_id.write( '{0}\n'.format('"Cucumis sativus L.";"csa"'))
-            file_id.write( '{0}\n'.format('"Cycas micholitzii";"cmi"'))
-            file_id.write( '{0}\n'.format('"Daucus carota";"dca"'))
-            file_id.write( '{0}\n'.format('"Elaeis guineensis";"egu"'))
-            file_id.write( '{0}\n'.format('"Erythranthe guttata";"egut"'))
-            file_id.write( '{0}\n'.format('"Eucalyptus grandis";"egr"'))
-            file_id.write( '{0}\n'.format('"Fragaria vesca";"fve"'))
-            file_id.write( '{0}\n'.format('"Ginkgo biloba";"gbi"'))
-            file_id.write( '{0}\n'.format('"Glycine max";"gma"'))
-            file_id.write( '{0}\n'.format('"Gnetum montanum";"gmo"'))
-            file_id.write( '{0}\n'.format('"Gossypium raimondii";"gra"'))
-            file_id.write( '{0}\n'.format('"Hevea brasiliensis";"hbr"'))
-            file_id.write( '{0}\n'.format('"Hordeum vulgare";"hvu"'))
-            file_id.write( '{0}\n'.format('"Malus domestica";"mdo"'))
-            file_id.write( '{0}\n'.format('"Manihot esculenta";"mes"'))
-            file_id.write( '{0}\n'.format('"Marchantia polymorpha";"mpo"'))
-            file_id.write( '{0}\n'.format('"Medicago truncatula";"mtr"'))
-            file_id.write( '{0}\n'.format('"Micromonas commoda";"mco"'))
-            file_id.write( '{0}\n'.format('"Musa acuminata";"mac"'))
-            file_id.write( '{0}\n'.format('"Nelumbo nucifera";"nnu"'))
-            file_id.write( '{0}\n'.format('"Oropetium thomaeum";"oth"'))
-            file_id.write( '{0}\n'.format('"Oryza brachyantha";"obr"'))
-            file_id.write( '{0}\n'.format('"Oryza sativa ssp. indica";"osaindica"'))
-            file_id.write( '{0}\n'.format('"Oryza sativa ssp. japonica";"osa"'))
-            file_id.write( '{0}\n'.format('"Petunia axillaris";"pax"'))
-            file_id.write( '{0}\n'.format('"Phalaenopsis equestris";"peq"'))
-            file_id.write( '{0}\n'.format('"Phyllostachys edulis";"ped"'))
-            file_id.write( '{0}\n'.format('"Physcomitrella patens";"ppa"'))
-            file_id.write( '{0}\n'.format('"Picea abies";"pab"'))
-            file_id.write( '{0}\n'.format('"Picea glauca";"pgl"'))
-            file_id.write( '{0}\n'.format('"Picea sitchensis";"psi"'))
-            file_id.write( '{0}\n'.format('"Pinus pinaster";"ppi"'))
-            file_id.write( '{0}\n'.format('"Pinus sylvestris";"psy"'))
-            file_id.write( '{0}\n'.format('"Pinus taeda";"pta"'))
-            file_id.write( '{0}\n'.format('"Populus trichocarpa";"ptr"'))
-            file_id.write( '{0}\n'.format('"Prunus persica";"ppe"'))
-            file_id.write( '{0}\n'.format('"Pseudotsuga menziesii";"pme"'))
-            file_id.write( '{0}\n'.format('"Pyrus bretschneideri";"pbr"'))
-            file_id.write( '{0}\n'.format('"Ricinus communis";"rco"'))
-            file_id.write( '{0}\n'.format('"Schrenkiella parvula";"spa"'))
-            file_id.write( '{0}\n'.format('"Selaginella moellendorffii";"smo"'))
-            file_id.write( '{0}\n'.format('"Setaria italica";"sit"'))
-            file_id.write( '{0}\n'.format('"Solanum lycopersicum";"sly"'))
-            file_id.write( '{0}\n'.format('"Solanum tuberosum";"stu"'))
-            file_id.write( '{0}\n'.format('"Sorghum bicolor";"sbi"'))
-            file_id.write( '{0}\n'.format('"Spirodela polyrhiza";"spo"'))
-            file_id.write( '{0}\n'.format('"Tarenaya hassleriana";"tha"'))
-            file_id.write( '{0}\n'.format('"Taxus baccata";"tba"'))
-            file_id.write( '{0}\n'.format('"Theobroma cacao";"tca"'))
-            file_id.write( '{0}\n'.format('"Trifolium pratense";"tpr"'))
-            file_id.write( '{0}\n'.format('"Triticum aestivum";"tae"'))
-            file_id.write( '{0}\n'.format('"Utricularia gibba";"ugi"'))
-            file_id.write( '{0}\n'.format('"Vigna radiata var. radiata";"vra"'))
-            file_id.write( '{0}\n'.format('"Vitis vinifera";"vvi"'))
-            file_id.write( '{0}\n'.format('"Zea mays";"zma"'))
-            file_id.write( '{0}\n'.format('"Ziziphus jujuba";"zju"'))
-            file_id.write( '{0}\n'.format('"Zostera marina";"zosmarina"'))
-            file_id.write( '{0}\n'.format('"Zoysia japonica ssp. nagirizaki";"zjn"'))
+            file_id.write( '"Actinidia chinensis";"ach"\n')
+            file_id.write( '"Amborella trichopoda";"atr"\n')
+            file_id.write( '"Ananas comosus";"aco"\n')
+            file_id.write( '"Arabidopsis lyrata";"aly"\n')
+            file_id.write( '"Arabidopsis thaliana";"ath"\n')
+            file_id.write( '"Arachis ipaensis";"aip"\n')
+            file_id.write( '"Beta vulgaris";"bvu"\n')
+            file_id.write( '"Brachypodium distachyon";"bdi"\n')
+            file_id.write( '"Brassica oleracea";"bol"\n')
+            file_id.write( '"Brassica rapa";"bra"\n')
+            file_id.write( '"Cajanus cajan";"ccaj"\n')
+            file_id.write( '"Capsella rubella";"cru"\n')
+            file_id.write( '"Capsicum annuum";"can"\n')
+            file_id.write( '"Carica papaya";"cpa"\n')
+            file_id.write( '"Chenopodium quinoa";"cqu"\n')
+            file_id.write( '"Chlamydomonas reinhardtii";"cre"\n')
+            file_id.write( '"Cicer arietinum";"car"\n')
+            file_id.write( '"Citrullus lanatus";"cla"\n')
+            file_id.write( '"Citrus clementina";"ccl"\n')
+            file_id.write( '"Coffea canephora";"ccan"\n')
+            file_id.write( '"Corchorus olitorius";"col"\n')
+            file_id.write( '"Cucumis melo";"cme"\n')
+            file_id.write( '"Cucumis sativus L.";"csa"\n')
+            file_id.write( '"Cycas micholitzii";"cmi"\n')
+            file_id.write( '"Daucus carota";"dca"\n')
+            file_id.write( '"Elaeis guineensis";"egu"\n')
+            file_id.write( '"Erythranthe guttata";"egut"\n')
+            file_id.write( '"Eucalyptus grandis";"egr"\n')
+            file_id.write( '"Fragaria vesca";"fve"\n')
+            file_id.write( '"Ginkgo biloba";"gbi"\n')
+            file_id.write( '"Glycine max";"gma"\n')
+            file_id.write( '"Gnetum montanum";"gmo"\n')
+            file_id.write( '"Gossypium raimondii";"gra"\n')
+            file_id.write( '"Hevea brasiliensis";"hbr"\n')
+            file_id.write( '"Hordeum vulgare";"hvu"\n')
+            file_id.write( '"Malus domestica";"mdo"\n')
+            file_id.write( '"Manihot esculenta";"mes"\n')
+            file_id.write( '"Marchantia polymorpha";"mpo"\n')
+            file_id.write( '"Medicago truncatula";"mtr"\n')
+            file_id.write( '"Micromonas commoda";"mco"\n')
+            file_id.write( '"Musa acuminata";"mac"\n')
+            file_id.write( '"Nelumbo nucifera";"nnu"\n')
+            file_id.write( '"Oropetium thomaeum";"oth"\n')
+            file_id.write( '"Oryza brachyantha";"obr"\n')
+            file_id.write( '"Oryza sativa ssp. indica";"osaindica"\n')
+            file_id.write( '"Oryza sativa ssp. japonica";"osa"\n')
+            file_id.write( '"Petunia axillaris";"pax"\n')
+            file_id.write( '"Phalaenopsis equestris";"peq"\n')
+            file_id.write( '"Phyllostachys edulis";"ped"\n')
+            file_id.write( '"Physcomitrella patens";"ppa"\n')
+            file_id.write( '"Picea abies";"pab"\n')
+            file_id.write( '"Picea glauca";"pgl"\n')
+            file_id.write( '"Picea sitchensis";"psi"\n')
+            file_id.write( '"Pinus pinaster";"ppi"\n')
+            file_id.write( '"Pinus sylvestris";"psy"\n')
+            file_id.write( '"Pinus taeda";"pta"\n')
+            file_id.write( '"Populus trichocarpa";"ptr"\n')
+            file_id.write( '"Prunus persica";"ppe"\n')
+            file_id.write( '"Pseudotsuga menziesii";"pme"\n')
+            file_id.write( '"Pyrus bretschneideri";"pbr"\n')
+            file_id.write( '"Ricinus communis";"rco"\n')
+            file_id.write( '"Schrenkiella parvula";"spa"\n')
+            file_id.write( '"Selaginella moellendorffii";"smo"\n')
+            file_id.write( '"Setaria italica";"sit"\n')
+            file_id.write( '"Solanum lycopersicum";"sly"\n')
+            file_id.write( '"Solanum tuberosum";"stu"\n')
+            file_id.write( '"Sorghum bicolor";"sbi"\n')
+            file_id.write( '"Spirodela polyrhiza";"spo"\n')
+            file_id.write( '"Tarenaya hassleriana";"tha"\n')
+            file_id.write( '"Taxus baccata";"tba"\n')
+            file_id.write( '"Theobroma cacao";"tca"\n')
+            file_id.write( '"Trifolium pratense";"tpr"\n')
+            file_id.write( '"Triticum aestivum";"tae"\n')
+            file_id.write( '"Utricularia gibba";"ugi"\n')
+            file_id.write( '"Vigna radiata var. radiata";"vra"\n')
+            file_id.write( '"Vitis vinifera";"vvi"\n')
+            file_id.write( '"Zea mays";"zma"\n')
+            file_id.write( '"Ziziphus jujuba";"zju"\n')
+            file_id.write( '"Zostera marina";"zosmarina"\n')
+            file_id.write( '"Zoysia japonica ssp. nagirizaki";"zjn"\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be recreated'.format(get_species_file()))
+        error_list.append(f'*** ERROR: The file {get_species_file()} can not be recreated')
         OK = False
 
     # return the control variable and the error list
@@ -1027,7 +1046,7 @@ def check_species_file(strict):
         species_file_id = open(get_species_file(), mode='r', encoding='iso-8859-1', newline='\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be opened.'.format(get_species_file()))
+        error_list.append(f'*** ERROR: The file {get_species_file()} can not be opened.')
         OK = False
 
     # check that all records are OK
@@ -1048,7 +1067,8 @@ def check_species_file(strict):
                     species_name = mo.group(1).strip()
                     plaza_species_id = mo.group(2).strip()
                 except Exception as e:
-                    error_list.append('*** ERROR: There is a format error in the record "{0}".'.format(record.replace("\n", "")))
+                    record_text = record.replace("\n", "")
+                    error_list.append(f'*** ERROR: There is a format error in the record: {record_text}.')
                     OK = False
                     break
 
@@ -1060,7 +1080,7 @@ def check_species_file(strict):
 
     # warn that the file of species is not valid if there are any errors
     if not OK:
-        error_list.append('\nThe file {0} is not valid. Please, correct this file or recreate it.'.format(get_species_file()))
+        error_list.append(f'\nThe file {get_species_file()} is not valid. Please, correct this file or recreate it.')
 
     # return the control variable and the error list
     return (OK, error_list)
@@ -1073,7 +1093,7 @@ def get_species_file():
     '''
 
     # assign the species file path
-    species_file = '{0}/species.txt'.format(xlib.get_config_dir())
+    species_file = f'{xlib.get_config_dir()}/species.txt'
 
     # return the species file path
     return species_file
@@ -1141,10 +1161,10 @@ def manage_toa_database(cluster_name, process_type, log, function=None):
 
     # check the TOA is installed
     if OK:
-        command = '[ -d {0}/{1} ] && echo RC=0 || echo RC=1'.format(xlib.get_cluster_app_dir(), xlib.get_toa_name())
+        command = f'[ -d {xlib.get_cluster_app_dir()}/{xlib.get_toa_name()} ] && echo RC=0 || echo RC=1'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] != 'RC=0':
-            log.write('*** ERROR: {0} is not installed.\n'.format(xlib.get_toa_name()))
+            log.write(f'*** ERROR: {xlib.get_toa_name()} is not installed.\n')
             OK = False
 
     # warn that the requirements are OK 
@@ -1171,11 +1191,11 @@ def manage_toa_database(cluster_name, process_type, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         if process_type == xlib.get_toa_type_recreate():
             script = get_recreate_toa_database_script()
-            log.write('Building the process script {0} ...\n'.format(script))
+            log.write(f'Building the process script {script} ...\n')
             (OK, error_list) = build_recreate_toa_database_script(cluster_name, current_run_dir)
         elif process_type == xlib.get_toa_type_rebuild(): 
             script = get_rebuild_toa_database_script()
-            log.write('Building the process script {0} ...\n'.format(script))
+            log.write(f'Building the process script {script} ...\n')
             (OK, error_list) = build_rebuild_toa_database_script(cluster_name, current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -1187,8 +1207,8 @@ def manage_toa_database(cluster_name, process_type, log, function=None):
     # upload the script to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process script {0} to the directory {1} ...\n'.format(script, current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(script))
+        log.write(f'Uploading the process script {script} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(script)}'
         (OK, error_list) = xssh.put_file(sftp_client, script, cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -1199,8 +1219,8 @@ def manage_toa_database(cluster_name, process_type, log, function=None):
     # set run permision to the script in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(script)))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(script))
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(script)} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(script)}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
@@ -1212,11 +1232,11 @@ def manage_toa_database(cluster_name, process_type, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         if process_type == xlib.get_toa_type_recreate():
             starter = get_recreate_toa_database_starter()
-            log.write('Building the process starter {0} ...\n'.format(starter))
+            log.write(f'Building the process starter {starter} ...\n')
             (OK, error_list) = build_recreate_toa_database_starter(current_run_dir)
         elif process_type == xlib.get_toa_type_rebuild():
             starter = get_rebuild_toa_database_starter()
-            log.write('Building the process starter {0} ...\n'.format(starter))
+            log.write(f'Building the process starter {starter} ...\n')
             (OK, error_list) = build_rebuild_toa_database_starter(current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -1227,8 +1247,8 @@ def manage_toa_database(cluster_name, process_type, log, function=None):
     # upload the script starter to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process starter {0} to the directory {1} ...\n'.format(get_recreate_toa_database_starter(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_recreate_toa_database_starter()))
+        log.write(f'Uploading the process starter {get_recreate_toa_database_starter()} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_recreate_toa_database_starter())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_recreate_toa_database_starter(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -1239,8 +1259,8 @@ def manage_toa_database(cluster_name, process_type, log, function=None):
     # set run permision to the script starter in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_recreate_toa_database_starter())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_recreate_toa_database_starter()))
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_recreate_toa_database_starter())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_recreate_toa_database_starter())}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
@@ -1250,7 +1270,7 @@ def manage_toa_database(cluster_name, process_type, log, function=None):
     # submit the script
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Submitting the process script {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_recreate_toa_database_starter())))
+        log.write(f'Submitting the process script {current_run_dir}/{os.path.basename(get_recreate_toa_database_starter())} ...\n')
         OK = xssh.submit_script(cluster_name, ssh_client, current_run_dir, os.path.basename(get_recreate_toa_database_starter()), log)
 
     # close the SSH transport connection
@@ -1311,7 +1331,9 @@ def build_recreate_toa_database_script(cluster_name, current_run_dir):
                 script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
                 script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])))
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
                 script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -1333,32 +1355,32 @@ def build_recreate_toa_database_script(cluster_name, current_run_dir):
                 script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function create_toa_database_dir'))
+                script_file_id.write( 'function create_toa_database_dir\n')
                 script_file_id.write( '{\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Creating the database directory ..."'))
+                script_file_id.write( '    echo "Creating the database directory ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        mkdir --parents {0}'.format(toa_config_dict['TOA_DB_DIR'])))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write(f'        mkdir --parents {toa_config_dict["TOA_DB_DIR"]}\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error load-ncbi-data.py $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "Data are loaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error mkdir $RC; fi\n')
+                script_file_id.write( '    echo "Data are loaded."\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function recreate_toa_database'))
+                script_file_id.write( 'function recreate_toa_database\n')
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Loading functional annotation data into TOA database ..."'))
+                script_file_id.write( '    echo "Loading functional annotation data into TOA database ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        recreate-database.py \\'))
-                script_file_id.write( '{0}\n'.format('            --db=$TOA_DB \\'))
-                script_file_id.write( '{0}\n'.format('            --verbose=N \\'))
-                script_file_id.write( '{0}\n'.format('            --trace=N'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        recreate-database.py \\\n')
+                script_file_id.write( '            --db=$TOA_DB \\\n')
+                script_file_id.write( '            --verbose=N \\\n')
+                script_file_id.write( '            --trace=N\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error load-ncbi-data.py $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "Data are loaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error recreate-database.py $RC; fi\n')
+                script_file_id.write( '    echo "Data are loaded."\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function end\n')
@@ -1433,12 +1455,12 @@ def build_recreate_toa_database_script(cluster_name, current_run_dir):
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'init\n')
-                script_file_id.write( '{0}\n'.format('create_toa_database_dir'))
-                script_file_id.write( '{0}\n'.format('recreate_toa_database'))
+                script_file_id.write( 'create_toa_database_dir\n')
+                script_file_id.write( 'recreate_toa_database\n')
                 script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created.'.format(get_recreate_toa_database_script()))
+        error_list.append(f'*** ERROR: The file {get_recreate_toa_database_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -1462,10 +1484,10 @@ def build_recreate_toa_database_starter(current_run_dir):
         with open(get_recreate_toa_database_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_recreate_toa_database_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_recreate_toa_database_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_recreate_toa_database_starter()))
+        error_list.append(f'*** ERROR: The file {get_recreate_toa_database_starter()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -1479,7 +1501,7 @@ def get_recreate_toa_database_script():
     '''
 
     # assign the script path
-    recreate_toa_database_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_recreate_toa_database_code())
+    recreate_toa_database_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_recreate_toa_database_code()}-process.sh'
 
     # return the script path
     return recreate_toa_database_script
@@ -1492,7 +1514,7 @@ def get_recreate_toa_database_starter():
     '''
 
     # assign the starter path
-    recreate_toa_database_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_recreate_toa_database_code())
+    recreate_toa_database_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_recreate_toa_database_code()}-process-starter.sh'
 
     # return the starter path
     return recreate_toa_database_starter
@@ -1529,7 +1551,9 @@ def build_rebuild_toa_database_script(cluster_name, current_run_dir):
                 script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
                 script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])))
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
                 script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -1551,20 +1575,20 @@ def build_rebuild_toa_database_script(cluster_name, current_run_dir):
                 script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function rebuild_toa_database'))
+                script_file_id.write( 'function rebuild_toa_database\n')
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Loading functional annotation data into TOA database ..."'))
+                script_file_id.write( '    echo "Loading functional annotation data into TOA database ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        rebuild-database.py \\'))
-                script_file_id.write( '{0}\n'.format('            --db=$TOA_DB \\'))
-                script_file_id.write( '{0}\n'.format('            --verbose=N \\'))
-                script_file_id.write( '{0}\n'.format('            --trace=N'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        rebuild-database.py \\\n')
+                script_file_id.write( '            --db=$TOA_DB \\\n')
+                script_file_id.write( '            --verbose=N \\\n')
+                script_file_id.write( '            --trace=N\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error load-ncbi-data.py $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "Data are loaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error rebuild-database.py $RC; fi\n')
+                script_file_id.write( '    echo "Data are loaded."\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function end\n')
@@ -1639,11 +1663,11 @@ def build_rebuild_toa_database_script(cluster_name, current_run_dir):
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'init\n')
-                script_file_id.write( '{0}\n'.format('rebuild_toa_database'))
+                script_file_id.write( 'rebuild_toa_database\n')
                 script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created.'.format(get_rebuild_toa_database_script()))
+        error_list.append(f'*** ERROR: The file {get_rebuild_toa_database_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -1667,10 +1691,10 @@ def build_rebuild_toa_database_starter(current_run_dir):
         with open(get_rebuild_toa_database_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_rebuild_toa_database_script()), xlib.get_cluster_log_file())))
+            file_id.write( '{current_run_dir}/{os.path.basename(get_rebuild_toa_database_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_rebuild_toa_database_starter()))
+        error_list.append(f'*** ERROR: The file {get_rebuild_toa_database_starter()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -1684,7 +1708,7 @@ def get_rebuild_toa_database_script():
     '''
 
     # assign the script path
-    rebuild_toa_database_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_rebuild_toa_database_code())
+    rebuild_toa_database_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_rebuild_toa_database_code()}-process.sh'
 
     # return the script path
     return rebuild_toa_database_script
@@ -1697,7 +1721,7 @@ def get_rebuild_toa_database_starter():
     '''
 
     # assign the starter path
-    rebuild_toa_database_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_rebuild_toa_database_code())
+    rebuild_toa_database_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_rebuild_toa_database_code()}-process-starter.sh'
 
     # return the starter path
     return rebuild_toa_database_starter
@@ -1781,10 +1805,10 @@ def manage_genomic_database(cluster_name, process_type, genomic_database, log, f
 
     # check the TOA is installed
     if OK:
-        command = '[ -d {0}/{1} ] && echo RC=0 || echo RC=1'.format(xlib.get_cluster_app_dir(), xlib.get_toa_name())
+        command = f'[ -d {xlib.get_cluster_app_dir()}/{xlib.get_toa_name()} ] && echo RC=0 || echo RC=1'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] != 'RC=0':
-            log.write('*** ERROR: {0} is not installed.\n'.format(xlib.get_toa_name()))
+            log.write(f'*** ERROR: {xlib.get_toa_name()} is not installed.\n')
             OK = False
 
     # warn that the requirements are OK 
@@ -1817,6 +1841,8 @@ def manage_genomic_database(cluster_name, process_type, genomic_database, log, f
                 current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_toa_result_database_dir(), xlib.get_toa_process_download_dicots_04_code())
             elif genomic_database == xlib.get_toa_data_monocots_04_code():
                 current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_toa_result_database_dir(), xlib.get_toa_process_download_monocots_04_code())
+            elif genomic_database == xlib.get_toa_data_taxonomy_code():
+                current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_toa_result_database_dir(), xlib.get_toa_process_download_taxonomy_code())
             elif genomic_database == xlib.get_toa_data_viridiplantae_nucleotide_gi_code():
                 current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_toa_result_database_dir(), xlib.get_toa_process_gilist_viridiplantae_nucleotide_gi_code())
             elif genomic_database == xlib.get_toa_data_viridiplantae_protein_gi_code():
@@ -1845,12 +1871,17 @@ def manage_genomic_database(cluster_name, process_type, genomic_database, log, f
             elif genomic_database == xlib.get_toa_data_go_code():
                 current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_toa_result_database_dir(), xlib.get_toa_process_load_go_code())
 
-        # processes to build BLAST databases
-        elif process_type == xlib.get_toa_type_build_blastdb():
+        # processes to build BLAST databases for BLAST+
+        elif process_type == xlib.get_toa_type_build_blastplus_db():
             if genomic_database == xlib.get_toa_data_nt_code():
-                current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_toa_result_database_dir(), xlib.get_toa_process_blastdb_nt_code())
+                current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_toa_result_database_dir(), xlib.get_toa_process_nt_blastplus_db_code())
             elif genomic_database == xlib.get_toa_data_nr_code():
-                current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_toa_result_database_dir(), xlib.get_toa_process_blastdb_nr_code())
+                current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_toa_result_database_dir(), xlib.get_toa_process_nr_blastplus_db_code())
+
+        # processes to build BLAST databases for DIAMOND
+        elif process_type == xlib.get_toa_type_build_diamond_db():
+            if genomic_database == xlib.get_toa_data_nr_code():
+                current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_toa_result_database_dir(), xlib.get_toa_process_nr_diamond_db_code())
 
         # processes to build GeneId identifier list
         elif process_type == xlib.get_toa_type_build_gilist():
@@ -1871,10 +1902,10 @@ def manage_genomic_database(cluster_name, process_type, genomic_database, log, f
         if process_type == xlib.get_toa_type_load_data() and genomic_database == xlib.get_toa_data_basic_data_code():
             log.write(f'{xlib.get_separator()}\n')
             log.write('Creating the TOA data directory ...\n')
-            command = 'mkdir --parents {0}'.format(data_dir)
+            command = f'mkdir --parents {data_dir}'
             (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
             if OK:
-                log.write('The directory path {0} is created.\n'.format(data_dir))
+                log.write(f'The directory path {data_dir} is created.\n')
             else:
                 log.write(f'*** ERROR: Wrong command ---> {command}\n')
 
@@ -1886,8 +1917,8 @@ def manage_genomic_database(cluster_name, process_type, genomic_database, log, f
                 OK = False
             else:
                 log.write(f'{xlib.get_separator()}\n')
-                log.write('Uploading the file {0} to the directory {1} ...\n'.format(get_dataset_file(), data_dir))
-                cluster_path = '{0}/{1}'.format(data_dir, os.path.basename(get_dataset_file()))
+                log.write(f'Uploading the file {get_dataset_file()} to the directory {data_dir} ...\n')
+                cluster_path = f'{data_dir}/{os.path.basename(get_dataset_file())}'
                 (OK, error_list) = xssh.put_file(sftp_client, get_dataset_file(), cluster_path)
                 if OK:
                     log.write('The file is uploaded.\n')
@@ -1899,8 +1930,8 @@ def manage_genomic_database(cluster_name, process_type, genomic_database, log, f
     if OK:
         if process_type == xlib.get_toa_type_load_data() and genomic_database == xlib.get_toa_data_basic_data_code():
             log.write(f'{xlib.get_separator()}\n')
-            log.write('Uploading the file {0} to the directory {1} ...\n'.format(get_species_file(), data_dir))
-            cluster_path = '{0}/{1}'.format(data_dir, os.path.basename(get_species_file()))
+            log.write(f'Uploading the file {get_species_file()} to the directory {data_dir} ...\n')
+            cluster_path = f'{data_dir}/{os.path.basename(get_species_file())}'
             (OK, error_list) = xssh.put_file(sftp_client, get_species_file(), cluster_path)
             if OK:
                 log.write('The file is uploaded.\n')
@@ -1916,103 +1947,114 @@ def manage_genomic_database(cluster_name, process_type, genomic_database, log, f
         if process_type == xlib.get_toa_type_build_proteome():
             if genomic_database == xlib.get_toa_data_gymno_01_code():
                 script = get_gymno_01_proteome_script()
-                log.write('Building the process script {0} ...\n'.format(script))
+                log.write(f'Building the process script {script} ...\n')
                 (OK, error_list) = build_gymno_01_proteome_script(cluster_name, current_run_dir)
             elif genomic_database == xlib.get_toa_data_dicots_04_code():
                 script = get_dicots_04_proteome_script()
-                log.write('Building the process script {0} ...\n'.format(script))
+                log.write(f'Building the process script {script} ...\n')
                 (OK, error_list) = build_dicots_04_proteome_script(cluster_name, current_run_dir)
             elif genomic_database == xlib.get_toa_data_monocots_04_code():
                 script = get_monocots_04_proteome_script()
-                log.write('Building the process script {0} ...\n'.format(script))
+                log.write(f'Building the process script {script} ...\n')
                 (OK, error_list) = build_monocots_04_proteome_script(cluster_name, current_run_dir)
             elif genomic_database == xlib.get_toa_data_refseq_plant_code():
                 script = get_refseq_plant_proteome_script()
-                log.write('Building the process script {0} ...\n'.format(script))
+                log.write(f'Building the process script {script} ...\n')
                 (OK, error_list) = build_refseq_plant_proteome_script(cluster_name, current_run_dir)
 
         # processes to download functional annotations from a genomic database server
         elif process_type == xlib.get_toa_type_download_data():
             if genomic_database == xlib.get_toa_data_basic_data_code():
                 script = get_basic_data_download_script()
-                log.write('Building the process script {0} ...\n'.format(script))
+                log.write(f'Building the process script {script} ...\n')
                 (OK, error_list) = build_basic_data_download_script(cluster_name, current_run_dir)
             elif genomic_database == xlib.get_toa_data_gymno_01_code():
                 script = get_gymno_01_download_script()
-                log.write('Building the process script {0} ...\n'.format(script))
+                log.write(f'Building the process script {script} ...\n')
                 (OK, error_list) = build_gymno_01_download_script(cluster_name, current_run_dir)
             elif genomic_database == xlib.get_toa_data_dicots_04_code():
                 script = get_dicots_04_download_script()
-                log.write('Building the process script {0} ...\n'.format(script))
+                log.write(f'Building the process script {script} ...\n')
                 (OK, error_list) = build_dicots_04_download_script(cluster_name, current_run_dir)
             elif genomic_database == xlib.get_toa_data_monocots_04_code():
                 script = get_monocots_04_download_script()
-                log.write('Building the process script {0} ...\n'.format(script))
+                log.write(f'Building the process script {script} ...\n')
                 (OK, error_list) = build_monocots_04_download_script(cluster_name, current_run_dir)
+            elif genomic_database == xlib.get_toa_data_taxonomy_code():
+                script = get_taxonomy_download_script()
+                log.write(f'Building the process script {script} ...\n')
+                (OK, error_list) = build_taxonomy_download_script(cluster_name, current_run_dir)
             elif genomic_database == xlib.get_toa_data_gene_code():
                 script = get_gene_download_script()
-                log.write('Building the process script {0} ...\n'.format(script))
+                log.write(f'Building the process script {script} ...\n')
                 (OK, error_list) = build_gene_download_script(cluster_name, current_run_dir)
             elif genomic_database == xlib.get_toa_data_interpro_code():
                 script = get_interpro_download_script()
-                log.write('Building the process script {0} ...\n'.format(script))
+                log.write(f'Building the process script {script} ...\n')
                 (OK, error_list) = build_interpro_download_script(cluster_name, current_run_dir)
             elif genomic_database == xlib.get_toa_data_go_code():
                 script = get_go_download_script()
-                log.write('Building the process script {0} ...\n'.format(script))
+                log.write(f'Building the process script {script} ...\n')
                 (OK, error_list) = build_go_download_script(cluster_name, current_run_dir)
 
         # processes to load data of a genomic database into TOA database
         elif process_type == xlib.get_toa_type_load_data():
             if genomic_database == xlib.get_toa_data_basic_data_code():
                 script = get_basic_data_load_script()
-                log.write('Building the process script {0} ...\n'.format(script))
+                log.write(f'Building the process script {script} ...\n')
                 (OK, error_list) = build_basic_data_load_script(cluster_name, current_run_dir)
             elif genomic_database == xlib.get_toa_data_gymno_01_code():
                 script = get_gymno_01_load_script()
-                log.write('Building the process script {0} ...\n'.format(script))
+                log.write(f'Building the process script {script} ...\n')
                 (OK, error_list) = build_gymno_01_load_script(cluster_name, current_run_dir)
             elif genomic_database == xlib.get_toa_data_dicots_04_code():
                 script = get_dicots_04_load_script()
-                log.write('Building the process script {0} ...\n'.format(script))
+                log.write(f'Building the process script {script} ...\n')
                 (OK, error_list) = build_dicots_04_load_script(cluster_name, current_run_dir)
             elif genomic_database == xlib.get_toa_data_monocots_04_code():
                 script = get_monocots_04_load_script()
-                log.write('Building the process script {0} ...\n'.format(script))
+                log.write(f'Building the process script {script} ...\n')
                 (OK, error_list) = build_monocots_04_load_script(cluster_name, current_run_dir)
             elif genomic_database == xlib.get_toa_data_gene_code():
                 script = get_gene_load_script()
-                log.write('Building the process script {0} ...\n'.format(script))
+                log.write(f'Building the process script {script} ...\n')
                 (OK, error_list) = build_gene_load_script(cluster_name, current_run_dir)
             elif genomic_database == xlib.get_toa_data_interpro_code():
                 script = get_interpro_load_script()
-                log.write('Building the process script {0} ...\n'.format(script))
+                log.write(f'Building the process script {script} ...\n')
                 (OK, error_list) = build_interpro_load_script(cluster_name, current_run_dir)
             elif genomic_database == xlib.get_toa_data_go_code():
                 script = get_go_load_script()
-                log.write('Building the process script {0} ...\n'.format(script))
+                log.write(f'Building the process script {script} ...\n')
                 (OK, error_list) = build_go_load_script(cluster_name, current_run_dir)
 
-        # processes to build BLAST databases
-        elif process_type == xlib.get_toa_type_build_blastdb():
+        # processes to build BLAST databases for BLAST+
+        elif process_type == xlib.get_toa_type_build_blastplus_db():
             if genomic_database == xlib.get_toa_data_nt_code():
-                script = get_nt_blastdb_script()
-                log.write('Building the process script {0} ...\n'.format(script))
-                (OK, error_list) = build_nt_blastdb_script(cluster_name, current_run_dir)
+                script = get_nt_blastplus_db_script()
+                log.write(f'Building the process script {script} ...\n')
+                (OK, error_list) = build_nt_blastplus_db_script(cluster_name, current_run_dir)
             elif genomic_database == xlib.get_toa_data_nr_code():
-                script = get_nr_blastdb_script()
-                log.write('Building the process script {0} ...\n'.format(script))
-                (OK, error_list) = build_nr_blastdb_script(cluster_name, current_run_dir)
+                script = get_nr_blastplus_db_script()
+                log.write(f'Building the process script {script} ...\n')
+                (OK, error_list) = build_nr_blastplus_db_script(cluster_name, current_run_dir)
+
+        # processes to build BLAST databases for DIAMOND
+        elif process_type == xlib.get_toa_type_build_diamond_db():
+            if genomic_database == xlib.get_toa_data_nr_code():
+                script = get_nr_diamond_db_script()
+                log.write(f'Building the process script {script} ...\n')
+                (OK, error_list) = build_nr_diamond_db_script(cluster_name, current_run_dir)
 
         # processes to build GeneId identifier list
         elif process_type == xlib.get_toa_type_build_gilist():
             if genomic_database == xlib.get_toa_data_viridiplantae_nucleotide_gi_code():
                 script = get_viridiplantae_nucleotide_gi_gilist_script()
-                log.write('Building the process script {0} ...\n'.format(script))
+                log.write(f'Building the process script {script} ...\n')
                 (OK, error_list) = build_viridiplantae_nucleotide_gi_gilist_script(cluster_name, current_run_dir)
             elif genomic_database == xlib.get_toa_data_viridiplantae_protein_gi_code():
                 script = get_viridiplantae_protein_gi_gilist_script()
-                log.write('Building the process script {0} ...\n'.format(script))
+                log.write(f'Building the process script {script} ...\n')
                 (OK, error_list) = build_viridiplantae_protein_gi_gilist_script(cluster_name, current_run_dir)
 
         if OK:
@@ -2025,8 +2067,8 @@ def manage_genomic_database(cluster_name, process_type, genomic_database, log, f
     # upload the script to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process script {0} to the directory {1} ...\n'.format(script, current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(script))
+        log.write(f'Uploading the process script {script} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(script)}'
         (OK, error_list) = xssh.put_file(sftp_client, script, cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -2037,8 +2079,8 @@ def manage_genomic_database(cluster_name, process_type, genomic_database, log, f
     # set run permision to the script in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(script)))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(script))
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(script)} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(script)}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
@@ -2053,103 +2095,114 @@ def manage_genomic_database(cluster_name, process_type, genomic_database, log, f
         if process_type == xlib.get_toa_type_build_proteome():
             if genomic_database == xlib.get_toa_data_gymno_01_code():
                 starter = get_gymno_01_proteome_starter()
-                log.write('Building the process starter {0} ...\n'.format(starter))
+                log.write(f'Building the process starter {starter} ...\n')
                 (OK, error_list) = build_gymno_01_proteome_starter(current_run_dir)
             elif genomic_database == xlib.get_toa_data_dicots_04_code():
                 starter = get_dicots_04_proteome_starter()
-                log.write('Building the process starter {0} ...\n'.format(starter))
+                log.write(f'Building the process starter {starter} ...\n')
                 (OK, error_list) = build_dicots_04_proteome_starter(current_run_dir)
             elif genomic_database == xlib.get_toa_data_monocots_04_code():
                 starter = get_monocots_04_proteome_starter()
-                log.write('Building the process starter {0} ...\n'.format(starter))
+                log.write(f'Building the process starter {starter} ...\n')
                 (OK, error_list) = build_monocots_04_proteome_starter(current_run_dir)
             elif genomic_database == xlib.get_toa_data_refseq_plant_code():
                 starter = get_refseq_plant_proteome_starter()
-                log.write('Building the process starter {0} ...\n'.format(starter))
+                log.write(f'Building the process starter {starter} ...\n')
                 (OK, error_list) = build_refseq_plant_proteome_starter(current_run_dir)
 
         # processes to download functional annotations from a genomic database server
         elif process_type == xlib.get_toa_type_download_data():
             if genomic_database == xlib.get_toa_data_basic_data_code():
                 starter = get_basic_data_download_starter()
-                log.write('Building the process starter {0} ...\n'.format(starter))
+                log.write(f'Building the process starter {starter} ...\n')
                 (OK, error_list) = build_basic_data_download_starter(current_run_dir)
             elif genomic_database == xlib.get_toa_data_gymno_01_code():
                 starter = get_gymno_01_download_starter()
-                log.write('Building the process starter {0} ...\n'.format(starter))
+                log.write(f'Building the process starter {starter} ...\n')
                 (OK, error_list) = build_gymno_01_download_starter(current_run_dir)
             elif genomic_database == xlib.get_toa_data_dicots_04_code():
                 starter = get_dicots_04_download_starter()
-                log.write('Building the process starter {0} ...\n'.format(starter))
+                log.write(f'Building the process starter {starter} ...\n')
                 (OK, error_list) = build_dicots_04_download_starter(current_run_dir)
             elif genomic_database == xlib.get_toa_data_monocots_04_code():
                 starter = get_monocots_04_download_starter()
-                log.write('Building the process starter {0} ...\n'.format(starter))
+                log.write(f'Building the process starter {starter} ...\n')
                 (OK, error_list) = build_monocots_04_download_starter(current_run_dir)
+            elif genomic_database == xlib.get_toa_data_taxonomy_code():
+                starter = get_taxonomy_download_starter()
+                log.write(f'Building the process starter {starter} ...\n')
+                (OK, error_list) = build_taxonomy_download_starter(current_run_dir)
             elif genomic_database == xlib.get_toa_data_gene_code():
                 starter = get_gene_download_starter()
-                log.write('Building the process starter {0} ...\n'.format(starter))
+                log.write(f'Building the process starter {starter} ...\n')
                 (OK, error_list) = build_gene_download_starter(current_run_dir)
             elif genomic_database == xlib.get_toa_data_interpro_code():
                 starter = get_interpro_download_starter()
-                log.write('Building the process starter {0} ...\n'.format(starter))
+                log.write(f'Building the process starter {starter} ...\n')
                 (OK, error_list) = build_interpro_download_starter(current_run_dir)
             elif genomic_database == xlib.get_toa_data_go_code():
                 starter = get_go_download_starter()
-                log.write('Building the process starter {0} ...\n'.format(starter))
+                log.write(f'Building the process starter {starter} ...\n')
                 (OK, error_list) = build_go_download_starter(current_run_dir)
 
         # processes to load data of a genomic database into TOA database
         elif process_type == xlib.get_toa_type_load_data():
             if genomic_database == xlib.get_toa_data_basic_data_code():
                 starter = get_basic_data_load_starter()
-                log.write('Building the process starter {0} ...\n'.format(starter))
+                log.write(f'Building the process starter {starter} ...\n')
                 (OK, error_list) = build_basic_data_load_starter(current_run_dir)
             elif genomic_database == xlib.get_toa_data_gymno_01_code():
                 starter = get_gymno_01_load_starter()
-                log.write('Building the process starter {0} ...\n'.format(starter))
+                log.write(f'Building the process starter {starter} ...\n')
                 (OK, error_list) = build_gymno_01_load_starter(current_run_dir)
             elif genomic_database == xlib.get_toa_data_dicots_04_code():
                 starter = get_dicots_04_load_starter()
-                log.write('Building the process starter {0} ...\n'.format(starter))
+                log.write(f'Building the process starter {starter} ...\n')
                 (OK, error_list) = build_dicots_04_load_starter(current_run_dir)
             elif genomic_database == xlib.get_toa_data_monocots_04_code():
                 starter = get_monocots_04_load_starter()
-                log.write('Building the process starter {0} ...\n'.format(starter))
+                log.write(f'Building the process starter {starter} ...\n')
                 (OK, error_list) = build_monocots_04_load_starter(current_run_dir)
             elif genomic_database == xlib.get_toa_data_gene_code():
                 starter = get_gene_load_starter()
-                log.write('Building the process starter {0} ...\n'.format(starter))
+                log.write(f'Building the process starter {starter} ...\n')
                 (OK, error_list) = build_gene_load_starter(current_run_dir)
             elif genomic_database == xlib.get_toa_data_interpro_code():
                 starter = get_interpro_load_starter()
-                log.write('Building the process starter {0} ...\n'.format(starter))
+                log.write(f'Building the process starter {starter} ...\n')
                 (OK, error_list) = build_interpro_load_starter(current_run_dir)
             elif genomic_database == xlib.get_toa_data_go_code():
                 starter = get_go_load_starter()
-                log.write('Building the process starter {0} ...\n'.format(starter))
+                log.write(f'Building the process starter {starter} ...\n')
                 (OK, error_list) = build_go_load_starter(current_run_dir)
 
-        # processes to build BLAST databases
-        elif process_type == xlib.get_toa_type_build_blastdb():
+        # processes to build BLAST databases for BLAST+
+        elif process_type == xlib.get_toa_type_build_blastplus_db():
             if genomic_database == xlib.get_toa_data_nt_code():
-                starter = get_nt_blastdb_starter()
-                log.write('Building the process starter {0} ...\n'.format(starter))
-                (OK, error_list) = build_nt_blastdb_starter(current_run_dir)
+                starter = get_nt_blastplus_db_starter()
+                log.write(f'Building the process starter {starter} ...\n')
+                (OK, error_list) = build_nt_blastplus_db_starter(current_run_dir)
             elif genomic_database == xlib.get_toa_data_nr_code():
-                starter = get_nr_blastdb_starter()
-                log.write('Building the process starter {0} ...\n'.format(starter))
-                (OK, error_list) = build_nr_blastdb_starter(current_run_dir)
+                starter = get_nr_blastplus_db_starter()
+                log.write(f'Building the process starter {starter} ...\n')
+                (OK, error_list) = build_nr_blastplus_db_starter(current_run_dir)
+
+        # processes to build BLAST databases for DIAMOND
+        elif process_type == xlib.get_toa_type_build_diamond_db():
+            if genomic_database == xlib.get_toa_data_nr_code():
+                starter = get_nr_diamond_db_starter()
+                log.write(f'Building the process starter {starter} ...\n')
+                (OK, error_list) = build_nr_diamond_db_starter(current_run_dir)
 
         # processes to build GeneId identifier list
         elif process_type == xlib.get_toa_type_build_gilist():
             if genomic_database == xlib.get_toa_data_viridiplantae_nucleotide_gi_code():
                 starter = get_viridiplantae_nucleotide_gi_gilist_starter()
-                log.write('Building the process starter {0} ...\n'.format(starter))
+                log.write(f'Building the process starter {starter} ...\n')
                 (OK, error_list) = build_viridiplantae_nucleotide_gi_gilist_starter(current_run_dir)
             elif genomic_database == xlib.get_toa_data_viridiplantae_protein_gi_code():
                 starter = get_viridiplantae_protein_gi_gilist_starter()
-                log.write('Building the process starter {0} ...\n'.format(starter))
+                log.write(f'Building the process starter {starter} ...\n')
                 (OK, error_list) = build_viridiplantae_protein_gi_gilist_starter(current_run_dir)
 
         if OK:
@@ -2161,8 +2214,8 @@ def manage_genomic_database(cluster_name, process_type, genomic_database, log, f
     # upload the script starter to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process starter {0} to the directory {1} ...\n'.format(starter, current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(starter))
+        log.write(f'Uploading the process starter {starter} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(starter)}'
         (OK, error_list) = xssh.put_file(sftp_client, starter, cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -2173,8 +2226,8 @@ def manage_genomic_database(cluster_name, process_type, genomic_database, log, f
     # set run permision to the script starter in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(starter)))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(starter))
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(starter)} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(starter)}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
@@ -2184,7 +2237,7 @@ def manage_genomic_database(cluster_name, process_type, genomic_database, log, f
     # submit the script
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Submitting the process script {0}/{1} ...\n'.format(current_run_dir, os.path.basename(starter)))
+        log.write(f'Submitting the process script {current_run_dir}/{os.path.basename(starter)} ...\n')
         OK = xssh.submit_script(cluster_name, ssh_client, current_run_dir, os.path.basename(starter), log)
 
     # close the SSH transport connection
@@ -2245,7 +2298,9 @@ def build_basic_data_download_script(cluster_name, current_run_dir):
                 script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
                 script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])))
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
                 script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -2254,8 +2309,8 @@ def build_basic_data_download_script(cluster_name, current_run_dir):
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('if [ ! -d "$EC_DIR" ]; then mkdir --parents $EC_DIR; fi'))
-                script_file_id.write( '{0}\n'.format('if [ ! -d "$KEGG_DIR" ]; then mkdir --parents $KEGG_DIR; fi'))
+                script_file_id.write( 'if [ ! -d "$EC_DIR" ]; then mkdir --parents $EC_DIR; fi\n')
+                script_file_id.write( 'if [ ! -d "$KEGG_DIR" ]; then mkdir --parents $KEGG_DIR; fi\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function init\n')
                 script_file_id.write( '{\n')
@@ -2270,31 +2325,31 @@ def build_basic_data_download_script(cluster_name, current_run_dir):
                 script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function download_basic_data'))
+                script_file_id.write( 'function download_basic_data\n')
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading Enzyme Commission (EC) ids ..."'))
+                script_file_id.write( '    echo "Downloading Enzyme Commission (EC) ids ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --output-document  $EC_IDS_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            $EC_IDS_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --output-document  $EC_IDS_FILE \\\n')
+                script_file_id.write( '            $EC_IDS_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "File is downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "File is downloaded."\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading KEGG ids ..."'))
+                script_file_id.write( '    echo "Downloading KEGG ids ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --output-document $KEGG_IDS_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            $KEGG_IDS_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --output-document $KEGG_IDS_FILE \\\n')
+                script_file_id.write( '            $KEGG_IDS_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "File is downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "File is downloaded."\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function end\n')
@@ -2369,11 +2424,11 @@ def build_basic_data_download_script(cluster_name, current_run_dir):
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'init\n')
-                script_file_id.write( '{0}\n'.format('download_basic_data'))
+                script_file_id.write( 'download_basic_data\n')
                 script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created.'.format(get_basic_data_download_script()))
+        error_list.append(f'*** ERROR: The file {get_basic_data_download_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -2397,10 +2452,10 @@ def build_basic_data_download_starter(current_run_dir):
         with open(get_basic_data_download_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_basic_data_download_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_basic_data_download_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_basic_data_download_starter()))
+        error_list.append(f'*** ERROR: The file {get_basic_data_download_starter()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -2414,7 +2469,7 @@ def get_basic_data_download_script():
     '''
 
     # assign the script path
-    basic_data_download_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_download_basic_data_code())
+    basic_data_download_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_download_basic_data_code()}-process.sh'
 
     # return the script path
     return basic_data_download_script
@@ -2427,7 +2482,7 @@ def get_basic_data_download_starter():
     '''
 
     # assign the starter path
-    basic_data_download_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_download_basic_data_code())
+    basic_data_download_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_download_basic_data_code()}-process-starter.sh'
 
     # return the starter path
     return basic_data_download_starter
@@ -2464,7 +2519,9 @@ def build_basic_data_load_script(cluster_name, current_run_dir):
                 script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
                 script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])))
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
                 script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -2473,7 +2530,7 @@ def build_basic_data_load_script(cluster_name, current_run_dir):
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('if [ ! -d "$TOA_DB_DIR" ]; then mkdir --parents $TOA_DB_DIR; fi'))
+                script_file_id.write( 'if [ ! -d "$TOA_DB_DIR" ]; then mkdir --parents $TOA_DB_DIR; fi\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function init\n')
                 script_file_id.write( '{\n')
@@ -2488,24 +2545,24 @@ def build_basic_data_load_script(cluster_name, current_run_dir):
                 script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function load_basic_data'))
+                script_file_id.write( 'function load_basic_data\n')
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Loading basic data into TOA database ..."'))
+                script_file_id.write( '    echo "Loading basic data into TOA database ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        load-basic-data.py \\'))
-                script_file_id.write( '{0}\n'.format('            --db=$TOA_DB \\'))
-                script_file_id.write( '{0}\n'.format('            --datasets=$DATASET_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            --species=$SPECIES_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            --ecids=$EC_IDS_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            --keggids=$KEGG_IDS_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            --verbose=N \\'))
-                script_file_id.write( '{0}\n'.format('            --trace=N'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        load-basic-data.py \\\n')
+                script_file_id.write( '            --db=$TOA_DB \\\n')
+                script_file_id.write( '            --datasets=$DATASET_FILE \\\n')
+                script_file_id.write( '            --species=$SPECIES_FILE \\\n')
+                script_file_id.write( '            --ecids=$EC_IDS_FILE \\\n')
+                script_file_id.write( '            --keggids=$KEGG_IDS_FILE \\\n')
+                script_file_id.write( '            --verbose=N \\\n')
+                script_file_id.write( '            --trace=N\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error load-basic-data.py $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "Data are loaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error load-basic-data.py $RC; fi\n')
+                script_file_id.write( '    echo "Data are loaded."\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function end\n')
@@ -2580,11 +2637,11 @@ def build_basic_data_load_script(cluster_name, current_run_dir):
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'init\n')
-                script_file_id.write( '{0}\n'.format('load_basic_data'))
+                script_file_id.write( 'load_basic_data\n')
                 script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created.'.format(get_basic_data_load_script()))
+        error_list.append(f'*** ERROR: The file {get_basic_data_load_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -2608,10 +2665,10 @@ def build_basic_data_load_starter(current_run_dir):
         with open(get_basic_data_load_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_basic_data_load_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_basic_data_load_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_basic_data_load_starter()))
+        error_list.append(f'*** ERROR: The file {get_basic_data_load_starter()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -2625,7 +2682,7 @@ def get_basic_data_load_script():
     '''
 
     # assign the script path
-    basic_data_load_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_load_basic_data_code())
+    basic_data_load_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_load_basic_data_code()}-process.sh'
 
     # return the script path
     return basic_data_load_script
@@ -2638,7 +2695,7 @@ def get_basic_data_load_starter():
     '''
 
     # assign the starter path
-    basic_data_load_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_load_basic_data_code())
+    basic_data_load_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_load_basic_data_code()}-process-starter.sh'
 
     # return the starter path
     return basic_data_load_starter
@@ -2675,7 +2732,9 @@ def build_gymno_01_proteome_script(cluster_name, current_run_dir):
                 script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
                 script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])))
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
                 script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -2684,7 +2743,10 @@ def build_gymno_01_proteome_script(cluster_name, current_run_dir):
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('if [ ! -d "$GYMNO_01_PROTEOME_DB_DIR" ]; then mkdir --parents $GYMNO_01_PROTEOME_DB_DIR; fi'))
+                script_file_id.write( 'if [ -d "$GYMNO_01_BLASTPLUS_DB_DIR" ]; then rm -rf $GYMNO_01_BLASTPLUS_DB_DIR; fi\n')
+                script_file_id.write( 'mkdir --parents $GYMNO_01_BLASTPLUS_DB_DIR\n')
+                script_file_id.write( 'if [ -d "$GYMNO_01_DIAMOND_DB_DIR" ]; then rm -rf $GYMNO_01_DIAMOND_DB_DIR; fi\n')
+                script_file_id.write( 'mkdir --parents $GYMNO_01_DIAMOND_DB_DIR\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function init\n')
                 script_file_id.write( '{\n')
@@ -2699,44 +2761,50 @@ def build_gymno_01_proteome_script(cluster_name, current_run_dir):
                 script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function build_gymno01_proteome'))
+                script_file_id.write( 'function build_gymno01_proteome\n')
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading proteome file ..."'))
+                script_file_id.write( '    echo "Downloading proteome file ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --output-document $GYMNO_01_PROTEOME_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            $GYMNO_01_PROTEOME_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --output-document $GYMNO_01_PROTEOME_FILE \\\n')
+                script_file_id.write( '            $GYMNO_01_PROTEOME_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "File is downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "File is downloaded."\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Decompressing proteome file ..."'))
+                script_file_id.write( '    echo "Generating BLAST+ database ..."\n')
+                script_file_id.write(f'    source activate {xlib.get_blastplus_anaconda_code()}\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        gzip --decompress --force $GYMNO_01_PROTEOME_FILE'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        gunzip -c $GYMNO_01_PROTEOME_FILE | \\\n')
+                script_file_id.write( '        makeblastdb \\\n')
+                script_file_id.write( '            -title $GYMNO_01_BLASTPLUS_DB_NAME \\\n')
+                script_file_id.write( '            -dbtype prot \\\n')
+                script_file_id.write( '            -input_type fasta \\\n')
+                script_file_id.write( '            -hash_index \\\n')
+                script_file_id.write( '            -in - \\\n')
+                script_file_id.write( '            -out $GYMNO_01_BLASTPLUS_DB_FILE\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error gzip $RC; fi'))
-                script_file_id.write( '{0}\n'.format("    GYMNO_01_PROTEOME_FILE=`echo $GYMNO_01_PROTEOME_FILE | sed 's/.gz//g'`"))
-                script_file_id.write( '{0}\n'.format('    echo "File is decompressed."'))
-                script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Generating BLAST database ..."'))
-                script_file_id.write(f'        source activate {xlib.get_blastplus_anaconda_code()}\n')
-                script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        makeblastdb \\'))
-                script_file_id.write( '{0}\n'.format('            -title $GYMNO_01_PROTEOME_DB_NAME \\'))
-                script_file_id.write( '{0}\n'.format('            -dbtype prot \\'))
-                script_file_id.write( '{0}\n'.format('            -input_type fasta \\'))
-                script_file_id.write( '{0}\n'.format('            -in $GYMNO_01_PROTEOME_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            -out $GYMNO_01_PROTEOME_DB_FILE'))
-                script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error load-basic-data.py $RC; fi'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error makeblastdb $RC; fi\n')
                 script_file_id.write( '    conda deactivate\n')
-                script_file_id.write( '{0}\n'.format('    echo "BLAST database is generated."'))
+                script_file_id.write( '    echo "BLAST+ database is generated."\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "Generating DIAMOND database ..."\n')
+                script_file_id.write(f'    source activate {xlib.get_diamond_anaconda_code()}\n')
+                script_file_id.write( '    /usr/bin/time \\\n')
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        diamond makedb \\\n')
+                script_file_id.write( '            --threads 4 \\\n')
+                script_file_id.write( '            --in $GYMNO_01_PROTEOME_FILE \\\n')
+                script_file_id.write( '            --db $GYMNO_01_DIAMOND_DB_FILE\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error diamond-makedb $RC; fi\n')
+                script_file_id.write( '    conda deactivate\n')
+                script_file_id.write( '    echo "DIAMOND database is generated."\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function end\n')
@@ -2811,11 +2879,11 @@ def build_gymno_01_proteome_script(cluster_name, current_run_dir):
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'init\n')
-                script_file_id.write( '{0}\n'.format('build_gymno01_proteome'))
+                script_file_id.write( 'build_gymno01_proteome\n')
                 script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created.'.format(get_gymno_01_proteome_script()))
+        error_list.append(f'*** ERROR: The file {get_gymno_01_proteome_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -2839,10 +2907,10 @@ def build_gymno_01_proteome_starter(current_run_dir):
         with open(get_gymno_01_proteome_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_gymno_01_proteome_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_gymno_01_proteome_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_gymno_01_proteome_starter()))
+        error_list.append(f'*** ERROR: The file {get_gymno_01_proteome_starter()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -2856,7 +2924,7 @@ def get_gymno_01_proteome_script():
     '''
 
     # assign the script path
-    gymno_01_proteome_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_proteome_gymno_01_code())
+    gymno_01_proteome_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_proteome_gymno_01_code()}-process.sh'
 
     # return the script path
     return gymno_01_proteome_script
@@ -2869,7 +2937,7 @@ def get_gymno_01_proteome_starter():
     '''
 
     # assign the starter path
-    gymno_01_proteome_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_proteome_gymno_01_code())
+    gymno_01_proteome_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_proteome_gymno_01_code()}-process-starter.sh'
 
     # return the starter path
     return gymno_01_proteome_starter
@@ -2906,7 +2974,9 @@ def build_gymno_01_download_script(cluster_name, current_run_dir):
                 script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
                 script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])))
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
                 script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -2915,7 +2985,8 @@ def build_gymno_01_download_script(cluster_name, current_run_dir):
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('if [ ! -d "$GYMNO_01_GENEDESC_DIR" ]; then mkdir --parents $GYMNO_01_GENEDESC_DIR; fi'))
+                script_file_id.write( 'if [ -d "$GYMNO_01_GENEDESC_DIR" ]; then rm -rf $GYMNO_01_GENEDESC_DIR; fi\n')
+                script_file_id.write( 'mkdir --parents $GYMNO_01_GENEDESC_DIR\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function init\n')
                 script_file_id.write( '{\n')
@@ -2930,58 +3001,58 @@ def build_gymno_01_download_script(cluster_name, current_run_dir):
                 script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function download_gymno01_functional_annotation'))
+                script_file_id.write( 'function download_gymno01_functional_annotation\n')
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading gene description files ..."'))
+                script_file_id.write( '    echo "Downloading gene description files ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --recursive \\'))
-                script_file_id.write( '{0}\n'.format('            --level=0 \\'))
-                script_file_id.write( '{0}\n'.format('            --no-host-directories \\'))
-                script_file_id.write( '{0}\n'.format('            --cut-dirs=4 \\'))
-                script_file_id.write( '{0}\n'.format('            --accept=$GYMNO_01_GENEDESC_FILE_PATTERN \\'))
-                script_file_id.write( '{0}\n'.format('            --directory-prefix=$GYMNO_01_GENEDESC_DIR \\'))
-                script_file_id.write( '{0}\n'.format('            $GYMNO_01_GENEDESC_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --recursive \\\n')
+                script_file_id.write( '            --level=0 \\\n')
+                script_file_id.write( '            --no-host-directories \\\n')
+                script_file_id.write( '            --cut-dirs=4 \\\n')
+                script_file_id.write( '            --accept=$GYMNO_01_GENEDESC_FILE_PATTERN \\\n')
+                script_file_id.write( '            --directory-prefix=$GYMNO_01_GENEDESC_DIR \\\n')
+                script_file_id.write( '            $GYMNO_01_GENEDESC_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "Files are downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "Files are downloaded."\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading InterPro file ..."'))
+                script_file_id.write( '    echo "Downloading InterPro file ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --output-document $GYMNO_01_INTERPRO_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            $GYMNO_01_INTERPRO_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --output-document $GYMNO_01_INTERPRO_FILE \\\n')
+                script_file_id.write( '            $GYMNO_01_INTERPRO_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "File is downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "File is downloaded."\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading Gene Ontology file ..."'))
+                script_file_id.write( '    echo "Downloading Gene Ontology file ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --output-document $GYMNO_01_GO_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            $GYMNO_01_GO_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --output-document $GYMNO_01_GO_FILE \\\n')
+                script_file_id.write( '            $GYMNO_01_GO_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "File is downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "File is downloaded."\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading Gene Ontology file ..."'))
+                script_file_id.write( '    echo "Downloading Gene Ontology file ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --output-document $GYMNO_01_MAPMAN_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            $GYMNO_01_MAPMAN_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --output-document $GYMNO_01_MAPMAN_FILE \\\n')
+                script_file_id.write( '            $GYMNO_01_MAPMAN_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "File is downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "File is downloaded."\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function end\n')
@@ -3056,11 +3127,11 @@ def build_gymno_01_download_script(cluster_name, current_run_dir):
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'init\n')
-                script_file_id.write( '{0}\n'.format('download_gymno01_functional_annotation'))
+                script_file_id.write( 'download_gymno01_functional_annotation\n')
                 script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created.'.format(get_gymno_01_download_script()))
+        error_list.append(f'*** ERROR: The file {get_gymno_01_download_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -3084,10 +3155,10 @@ def build_gymno_01_download_starter(current_run_dir):
         with open(get_gymno_01_download_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_gymno_01_download_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_gymno_01_download_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_gymno_01_download_starter()))
+        error_list.append(f'*** ERROR: The file {get_gymno_01_download_starter()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -3101,7 +3172,7 @@ def get_gymno_01_download_script():
     '''
 
     # assign the script path
-    gymno_01_download_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_download_gymno_01_code())
+    gymno_01_download_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_download_gymno_01_code()}-process.sh'
 
     # return the script path
     return gymno_01_download_script
@@ -3114,7 +3185,7 @@ def get_gymno_01_download_starter():
     '''
 
     # assign the starter path
-    gymno_01_download_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_download_gymno_01_code())
+    gymno_01_download_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_download_gymno_01_code()}-process-starter.sh'
 
     # return the starter path
     return gymno_01_download_starter
@@ -3151,7 +3222,9 @@ def build_gymno_01_load_script(cluster_name, current_run_dir):
                 script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
                 script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])))
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
                 script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -3173,26 +3246,26 @@ def build_gymno_01_load_script(cluster_name, current_run_dir):
                 script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function load_gymno01_functional_annotation'))
+                script_file_id.write( 'function load_gymno01_functional_annotation\n')
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Loading functional annotation data into TOA database ..."'))
+                script_file_id.write( '    echo "Loading functional annotation data into TOA database ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        load-plaza-data.py \\'))
-                script_file_id.write( '{0}\n'.format('            --db=$TOA_DB \\'))
-                script_file_id.write( '{0}\n'.format('            --dataset=gymno_01 \\'))
-                script_file_id.write( '{0}\n'.format('            --species=all \\'))
-                script_file_id.write( '{0}\n'.format('            --genedesc=$GYMNO_01_GENEDESC_DIR \\'))
-                script_file_id.write( '{0}\n'.format('            --interpro=$GYMNO_01_INTERPRO_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            --go=$GYMNO_01_GO_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            --mapman=$GYMNO_01_MAPMAN_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            --verbose=N \\'))
-                script_file_id.write( '{0}\n'.format('            --trace=N'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        load-plaza-data.py \\\n')
+                script_file_id.write( '            --db=$TOA_DB \\\n')
+                script_file_id.write( '            --dataset=gymno_01 \\\n')
+                script_file_id.write( '            --species=all \\\n')
+                script_file_id.write( '            --genedesc=$GYMNO_01_GENEDESC_DIR \\\n')
+                script_file_id.write( '            --interpro=$GYMNO_01_INTERPRO_FILE \\\n')
+                script_file_id.write( '            --go=$GYMNO_01_GO_FILE \\\n')
+                script_file_id.write( '            --mapman=$GYMNO_01_MAPMAN_FILE \\\n')
+                script_file_id.write( '            --verbose=N \\\n')
+                script_file_id.write( '            --trace=N\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error load-plaza-data.py $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "Data are loaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error load-plaza-data.py $RC; fi\n')
+                script_file_id.write( '    echo "Data are loaded."\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function end\n')
@@ -3267,11 +3340,11 @@ def build_gymno_01_load_script(cluster_name, current_run_dir):
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'init\n')
-                script_file_id.write( '{0}\n'.format('load_gymno01_functional_annotation'))
+                script_file_id.write( 'load_gymno01_functional_annotation\n')
                 script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created.'.format(get_gymno_01_load_script()))
+        error_list.append(f'*** ERROR: The file {get_gymno_01_load_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -3295,10 +3368,10 @@ def build_gymno_01_load_starter(current_run_dir):
         with open(get_gymno_01_load_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_gymno_01_load_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_gymno_01_load_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_gymno_01_load_starter()))
+        error_list.append(f'*** ERROR: The file {get_gymno_01_load_starter()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -3312,7 +3385,7 @@ def get_gymno_01_load_script():
     '''
 
     # assign the script path
-    gymno_01_load_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_load_gymno_01_code())
+    gymno_01_load_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_load_gymno_01_code()}-process.sh'
 
     # return the script path
     return gymno_01_load_script
@@ -3325,7 +3398,7 @@ def get_gymno_01_load_starter():
     '''
 
     # assign the starter path
-    gymno_01_load_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_load_gymno_01_code())
+    gymno_01_load_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_load_gymno_01_code()}-process-starter.sh'
 
     # return the starter path
     return gymno_01_load_starter
@@ -3362,7 +3435,9 @@ def build_dicots_04_proteome_script(cluster_name, current_run_dir):
                 script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
                 script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])))
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
                 script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -3371,7 +3446,10 @@ def build_dicots_04_proteome_script(cluster_name, current_run_dir):
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('if [ ! -d "$DICOTS_04_PROTEOME_DB_DIR" ]; then mkdir --parents $DICOTS_04_PROTEOME_DB_DIR; fi'))
+                script_file_id.write( 'if [ -d "$DICOTS_04_BLASTPLUS_DB_DIR" ]; then rm -rf $DICOTS_04_BLASTPLUS_DB_DIR; fi\n')
+                script_file_id.write( 'mkdir --parents $DICOTS_04_BLASTPLUS_DB_DIR\n')
+                script_file_id.write( 'if [ -d "$DICOTS_04_DIAMOND_DB_DIR" ]; then rm -rf $DICOTS_04_DIAMOND_DB_DIR; fi\n')
+                script_file_id.write( 'mkdir --parents $DICOTS_04_DIAMOND_DB_DIR\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function init\n')
                 script_file_id.write( '{\n')
@@ -3386,44 +3464,50 @@ def build_dicots_04_proteome_script(cluster_name, current_run_dir):
                 script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function build_dicots04_proteome'))
+                script_file_id.write( 'function build_dicots04_proteome\n')
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading proteome file ..."'))
+                script_file_id.write( '    echo "Downloading proteome file ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --output-document $DICOTS_04_PROTEOME_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            $DICOTS_04_PROTEOME_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --output-document $DICOTS_04_PROTEOME_FILE \\\n')
+                script_file_id.write( '            $DICOTS_04_PROTEOME_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "File is downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "File is downloaded."\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Decompressing proteome file ..."'))
+                script_file_id.write( '    echo "Generating BLAST+ database ..."\n')
+                script_file_id.write(f'    source activate {xlib.get_blastplus_anaconda_code()}\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        gzip --decompress --force $DICOTS_04_PROTEOME_FILE'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        gunzip -c $DICOTS_04_PROTEOME_FILE | \\\n')
+                script_file_id.write( '        makeblastdb \\\n')
+                script_file_id.write( '            -title $DICOTS_04_BLASTPLUS_DB_NAME \\\n')
+                script_file_id.write( '            -dbtype prot \\\n')
+                script_file_id.write( '            -input_type fasta \\\n')
+                script_file_id.write( '            -hash_index \\\n')
+                script_file_id.write( '            -in - \\\n')
+                script_file_id.write( '            -out $DICOTS_04_BLASTPLUS_DB_FILE\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error gzip $RC; fi'))
-                script_file_id.write( '{0}\n'.format("    DICOTS_04_PROTEOME_FILE=`echo $DICOTS_04_PROTEOME_FILE | sed 's/.gz//g'`"))
-                script_file_id.write( '{0}\n'.format('    echo "File is decompressed."'))
-                script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Generating BLAST database ..."'))
-                script_file_id.write(f'        source activate {xlib.get_blastplus_anaconda_code()}\n')
-                script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        makeblastdb \\'))
-                script_file_id.write( '{0}\n'.format('            -title $DICOTS_04_PROTEOME_DB_NAME \\'))
-                script_file_id.write( '{0}\n'.format('            -dbtype prot \\'))
-                script_file_id.write( '{0}\n'.format('            -input_type fasta \\'))
-                script_file_id.write( '{0}\n'.format('            -in $DICOTS_04_PROTEOME_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            -out $DICOTS_04_PROTEOME_DB_FILE'))
-                script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error load-basic-data.py $RC; fi'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error makeblastdb $RC; fi\n')
                 script_file_id.write( '    conda deactivate\n')
-                script_file_id.write( '{0}\n'.format('    echo "BLAST database is generated."'))
+                script_file_id.write( '    echo "BLAST+ database is generated."\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "Generating DIAMOND database ..."\n')
+                script_file_id.write(f'    source activate {xlib.get_diamond_anaconda_code()}\n')
+                script_file_id.write( '    /usr/bin/time \\\n')
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        diamond makedb \\\n')
+                script_file_id.write( '            --threads 4 \\\n')
+                script_file_id.write( '            --in $DICOTS_04_PROTEOME_FILE \\\n')
+                script_file_id.write( '            --db $DICOTS_04_DIAMOND_DB_FILE\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error diamond-makedb $RC; fi\n')
+                script_file_id.write( '    conda deactivate\n')
+                script_file_id.write( '    echo "DIAMOND database is generated."\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function end\n')
@@ -3498,11 +3582,11 @@ def build_dicots_04_proteome_script(cluster_name, current_run_dir):
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'init\n')
-                script_file_id.write( '{0}\n'.format('build_dicots04_proteome'))
+                script_file_id.write( 'build_dicots04_proteome\n')
                 script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created.'.format(get_dicots_04_proteome_script()))
+        error_list.append(f'*** ERROR: The file {get_dicots_04_proteome_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -3526,10 +3610,10 @@ def build_dicots_04_proteome_starter(current_run_dir):
         with open(get_dicots_04_proteome_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_dicots_04_proteome_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_dicots_04_proteome_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_dicots_04_proteome_starter()))
+        error_list.append(f'*** ERROR: The file {get_dicots_04_proteome_starter()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -3543,7 +3627,7 @@ def get_dicots_04_proteome_script():
     '''
 
     # assign the script path
-    dicots_04_proteome_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_proteome_dicots_04_code())
+    dicots_04_proteome_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_proteome_dicots_04_code()}-process.sh'
 
     # return the script path
     return dicots_04_proteome_script
@@ -3556,7 +3640,7 @@ def get_dicots_04_proteome_starter():
     '''
 
     # assign the starter path
-    dicots_04_proteome_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_proteome_dicots_04_code())
+    dicots_04_proteome_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_proteome_dicots_04_code()}-process-starter.sh'
 
     # return the starter path
     return dicots_04_proteome_starter
@@ -3593,7 +3677,9 @@ def build_dicots_04_download_script(cluster_name, current_run_dir):
                 script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
                 script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])))
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
                 script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -3602,7 +3688,8 @@ def build_dicots_04_download_script(cluster_name, current_run_dir):
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('if [ ! -d "$DICOTS_04_GENEDESC_DIR" ]; then mkdir --parents $DICOTS_04_GENEDESC_DIR; fi'))
+                script_file_id.write( 'if [ -d "$DICOTS_04_GENEDESC_DIR" ]; then rm -rf $DICOTS_04_GENEDESC_DIR; fi\n')
+                script_file_id.write( 'mkdir --parents $DICOTS_04_GENEDESC_DIR\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function init\n')
                 script_file_id.write( '{\n')
@@ -3617,58 +3704,58 @@ def build_dicots_04_download_script(cluster_name, current_run_dir):
                 script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function download_dicots04_functional_annotation'))
+                script_file_id.write( 'function download_dicots04_functional_annotation\n')
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading gene description files ..."'))
+                script_file_id.write( '    echo "Downloading gene description files ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --recursive \\'))
-                script_file_id.write( '{0}\n'.format('            --level=0 \\'))
-                script_file_id.write( '{0}\n'.format('            --no-host-directories \\'))
-                script_file_id.write( '{0}\n'.format('            --cut-dirs=4 \\'))
-                script_file_id.write( '{0}\n'.format('            --accept=$DICOTS_04_GENEDESC_FILE_PATTERN \\'))
-                script_file_id.write( '{0}\n'.format('            --directory-prefix=$DICOTS_04_GENEDESC_DIR \\'))
-                script_file_id.write( '{0}\n'.format('            $DICOTS_04_GENEDESC_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --recursive \\\n')
+                script_file_id.write( '            --level=0 \\\n')
+                script_file_id.write( '            --no-host-directories \\\n')
+                script_file_id.write( '            --cut-dirs=4 \\\n')
+                script_file_id.write( '            --accept=$DICOTS_04_GENEDESC_FILE_PATTERN \\\n')
+                script_file_id.write( '            --directory-prefix=$DICOTS_04_GENEDESC_DIR \\\n')
+                script_file_id.write( '            $DICOTS_04_GENEDESC_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "Files are downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "Files are downloaded."\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading InterPro file ..."'))
+                script_file_id.write( '    echo "Downloading InterPro file ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --output-document $DICOTS_04_INTERPRO_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            $DICOTS_04_INTERPRO_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --output-document $DICOTS_04_INTERPRO_FILE \\\n')
+                script_file_id.write( '            $DICOTS_04_INTERPRO_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "File is downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "File is downloaded."\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading Gene Ontology file ..."'))
+                script_file_id.write( '    echo "Downloading Gene Ontology file ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --output-document $DICOTS_04_GO_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            $DICOTS_04_GO_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --output-document $DICOTS_04_GO_FILE \\\n')
+                script_file_id.write( '            $DICOTS_04_GO_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "File is downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "File is downloaded."\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading Gene Ontology file ..."'))
+                script_file_id.write( '    echo "Downloading Gene Ontology file ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --output-document $DICOTS_04_MAPMAN_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            $DICOTS_04_MAPMAN_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --output-document $DICOTS_04_MAPMAN_FILE \\\n')
+                script_file_id.write( '            $DICOTS_04_MAPMAN_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "File is downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "File is downloaded."\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function end\n')
@@ -3743,11 +3830,11 @@ def build_dicots_04_download_script(cluster_name, current_run_dir):
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'init\n')
-                script_file_id.write( '{0}\n'.format('download_dicots04_functional_annotation'))
+                script_file_id.write( 'download_dicots04_functional_annotation\n')
                 script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created.'.format(get_dicots_04_download_script()))
+        error_list.append(f'*** ERROR: The file {get_dicots_04_download_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -3771,10 +3858,10 @@ def build_dicots_04_download_starter(current_run_dir):
         with open(get_dicots_04_download_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_dicots_04_download_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_dicots_04_download_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_dicots_04_download_starter()))
+        error_list.append(f'*** ERROR: The file {get_dicots_04_download_starter()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -3788,7 +3875,7 @@ def get_dicots_04_download_script():
     '''
 
     # assign the script path
-    dicots_04_download_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_download_dicots_04_code())
+    dicots_04_download_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_download_dicots_04_code()}-process.sh'
 
     # return the script path
     return dicots_04_download_script
@@ -3801,7 +3888,7 @@ def get_dicots_04_download_starter():
     '''
 
     # assign the starter path
-    dicots_04_download_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_download_dicots_04_code())
+    dicots_04_download_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_download_dicots_04_code()}-process-starter.sh'
 
     # return the starter path
     return dicots_04_download_starter
@@ -3838,7 +3925,9 @@ def build_dicots_04_load_script(cluster_name, current_run_dir):
                 script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
                 script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])))
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
                 script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -3860,26 +3949,26 @@ def build_dicots_04_load_script(cluster_name, current_run_dir):
                 script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function load_dicots04_functional_annotation'))
+                script_file_id.write( 'function load_dicots04_functional_annotation\n')
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Loading functional annotation data into TOA database ..."'))
+                script_file_id.write( '    echo "Loading functional annotation data into TOA database ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        load-plaza-data.py \\'))
-                script_file_id.write( '{0}\n'.format('            --db=$TOA_DB \\'))
-                script_file_id.write( '{0}\n'.format('            --dataset=dicots_04 \\'))
-                script_file_id.write( '{0}\n'.format('            --species=all \\'))
-                script_file_id.write( '{0}\n'.format('            --genedesc=$DICOTS_04_GENEDESC_DIR \\'))
-                script_file_id.write( '{0}\n'.format('            --interpro=$DICOTS_04_INTERPRO_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            --go=$DICOTS_04_GO_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            --mapman=$DICOTS_04_MAPMAN_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            --verbose=N \\'))
-                script_file_id.write( '{0}\n'.format('            --trace=N'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        load-plaza-data.py \\\n')
+                script_file_id.write( '            --db=$TOA_DB \\\n')
+                script_file_id.write( '            --dataset=dicots_04 \\\n')
+                script_file_id.write( '            --species=all \\\n')
+                script_file_id.write( '            --genedesc=$DICOTS_04_GENEDESC_DIR \\\n')
+                script_file_id.write( '            --interpro=$DICOTS_04_INTERPRO_FILE \\\n')
+                script_file_id.write( '            --go=$DICOTS_04_GO_FILE \\\n')
+                script_file_id.write( '            --mapman=$DICOTS_04_MAPMAN_FILE \\\n')
+                script_file_id.write( '            --verbose=N \\\n')
+                script_file_id.write( '            --trace=N\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error load-plaza-data.py $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "Data are loaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error load-plaza-data.py $RC; fi\n')
+                script_file_id.write( '    echo "Data are loaded."\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function end\n')
@@ -3954,11 +4043,11 @@ def build_dicots_04_load_script(cluster_name, current_run_dir):
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'init\n')
-                script_file_id.write( '{0}\n'.format('load_dicots04_functional_annotation'))
+                script_file_id.write( 'load_dicots04_functional_annotation\n')
                 script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created.'.format(get_dicots_04_load_script()))
+        error_list.append(f'*** ERROR: The file {get_dicots_04_load_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -3982,10 +4071,10 @@ def build_dicots_04_load_starter(current_run_dir):
         with open(get_dicots_04_load_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_dicots_04_load_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_dicots_04_load_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_dicots_04_load_starter()))
+        error_list.append(f'*** ERROR: The file {get_dicots_04_load_starter()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -3999,7 +4088,7 @@ def get_dicots_04_load_script():
     '''
 
     # assign the script path
-    dicots_04_load_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_load_dicots_04_code())
+    dicots_04_load_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_load_dicots_04_code()}-process.sh'
 
     # return the script path
     return dicots_04_load_script
@@ -4012,7 +4101,7 @@ def get_dicots_04_load_starter():
     '''
 
     # assign the starter path
-    dicots_04_load_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_load_dicots_04_code())
+    dicots_04_load_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_load_dicots_04_code()}-process-starter.sh'
 
     # return the starter path
     return dicots_04_load_starter
@@ -4049,7 +4138,9 @@ def build_monocots_04_proteome_script(cluster_name, current_run_dir):
                 script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
                 script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])))
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
                 script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -4058,7 +4149,10 @@ def build_monocots_04_proteome_script(cluster_name, current_run_dir):
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('if [ ! -d "$MONOCOTS_04_PROTEOME_DB_DIR" ]; then mkdir --parents $MONOCOTS_04_PROTEOME_DB_DIR; fi'))
+                script_file_id.write( 'if [ -d "$MONOCOTS_04_BLASTPLUS_DB_DIR" ]; then rm -rf $MONOCOTS_04_BLASTPLUS_DB_DIR; fi\n')
+                script_file_id.write( 'mkdir --parents $MONOCOTS_04_BLASTPLUS_DB_DIR\n')
+                script_file_id.write( 'if [ -d "$MONOCOTS_04_DIAMOND_DB_DIR" ]; then rm -rf $MONOCOTS_04_DIAMOND_DB_DIR; fi\n')
+                script_file_id.write( 'mkdir --parents $MONOCOTS_04_DIAMOND_DB_DIR\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function init\n')
                 script_file_id.write( '{\n')
@@ -4073,44 +4167,50 @@ def build_monocots_04_proteome_script(cluster_name, current_run_dir):
                 script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function build_monocots04_proteome'))
+                script_file_id.write( 'function build_monocots04_proteome\n')
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading proteome file ..."'))
+                script_file_id.write( '    echo "Downloading proteome file ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --output-document $MONOCOTS_04_PROTEOME_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            $MONOCOTS_04_PROTEOME_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --output-document $MONOCOTS_04_PROTEOME_FILE \\\n')
+                script_file_id.write( '            $MONOCOTS_04_PROTEOME_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "File is downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "File is downloaded."\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Decompressing proteome file ..."'))
+                script_file_id.write( '    echo "Generating BLAST+ database ..."\n')
+                script_file_id.write(f'    source activate {xlib.get_blastplus_anaconda_code()}\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        gzip --decompress --force $MONOCOTS_04_PROTEOME_FILE'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        gunzip -c $MONOCOTS_04_PROTEOME_FILE | \\\n')
+                script_file_id.write( '        makeblastdb \\\n')
+                script_file_id.write( '            -title $MONOCOTS_04_BLASTPLUS_DB_NAME \\\n')
+                script_file_id.write( '            -dbtype prot \\\n')
+                script_file_id.write( '            -input_type fasta \\\n')
+                script_file_id.write( '            -hash_index \\\n')
+                script_file_id.write( '            -in - \\\n')
+                script_file_id.write( '            -out $MONOCOTS_04_BLASTPLUS_DB_FILE\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error gzip $RC; fi'))
-                script_file_id.write( '{0}\n'.format("    MONOCOTS_04_PROTEOME_FILE=`echo $MONOCOTS_04_PROTEOME_FILE | sed 's/.gz//g'`"))
-                script_file_id.write( '{0}\n'.format('    echo "File is decompressed."'))
-                script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Generating BLAST database ..."'))
-                script_file_id.write(f'        source activate {xlib.get_blastplus_anaconda_code()}\n')
-                script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        makeblastdb \\'))
-                script_file_id.write( '{0}\n'.format('            -title $MONOCOTS_04_PROTEOME_DB_NAME \\'))
-                script_file_id.write( '{0}\n'.format('            -dbtype prot \\'))
-                script_file_id.write( '{0}\n'.format('            -input_type fasta \\'))
-                script_file_id.write( '{0}\n'.format('            -in $MONOCOTS_04_PROTEOME_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            -out $MONOCOTS_04_PROTEOME_DB_FILE'))
-                script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error load-basic-data.py $RC; fi'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error makeblastdb $RC; fi\n')
                 script_file_id.write( '    conda deactivate\n')
-                script_file_id.write( '{0}\n'.format('    echo "BLAST database is generated."'))
+                script_file_id.write( '    echo "BLAST+ database is generated."\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "Generating DIAMOND database ..."\n')
+                script_file_id.write(f'    source activate {xlib.get_diamond_anaconda_code()}\n')
+                script_file_id.write( '    /usr/bin/time \\\n')
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        diamond makedb \\\n')
+                script_file_id.write( '            --threads 4 \\\n')
+                script_file_id.write( '            --in $MONOCOTS_04_PROTEOME_FILE \\\n')
+                script_file_id.write( '            --db $MONOCOTS_04_DIAMOND_DB_FILE\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error diamond-makedb $RC; fi\n')
+                script_file_id.write( '    conda deactivate\n')
+                script_file_id.write( '    echo "DIAMOND database is generated."\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function end\n')
@@ -4185,11 +4285,11 @@ def build_monocots_04_proteome_script(cluster_name, current_run_dir):
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'init\n')
-                script_file_id.write( '{0}\n'.format('build_monocots04_proteome'))
+                script_file_id.write( 'build_monocots04_proteome\n')
                 script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created.'.format(get_monocots_04_proteome_script()))
+        error_list.append(f'*** ERROR: The file {get_monocots_04_proteome_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -4213,10 +4313,10 @@ def build_monocots_04_proteome_starter(current_run_dir):
         with open(get_monocots_04_proteome_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_monocots_04_proteome_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_monocots_04_proteome_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_monocots_04_proteome_starter()))
+        error_list.append(f'*** ERROR: The file {get_monocots_04_proteome_starter()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -4230,7 +4330,7 @@ def get_monocots_04_proteome_script():
     '''
 
     # assign the script path
-    monocots_04_proteome_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_proteome_monocots_04_code())
+    monocots_04_proteome_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_proteome_monocots_04_code()}-process.sh'
 
     # return the script path
     return monocots_04_proteome_script
@@ -4243,7 +4343,7 @@ def get_monocots_04_proteome_starter():
     '''
 
     # assign the starter path
-    monocots_04_proteome_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_proteome_monocots_04_code())
+    monocots_04_proteome_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_proteome_monocots_04_code()}-process-starter.sh'
 
     # return the starter path
     return monocots_04_proteome_starter
@@ -4280,7 +4380,9 @@ def build_monocots_04_download_script(cluster_name, current_run_dir):
                 script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
                 script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])))
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
                 script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -4289,7 +4391,8 @@ def build_monocots_04_download_script(cluster_name, current_run_dir):
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('if [ ! -d "$MONOCOTS_04_GENEDESC_DIR" ]; then mkdir --parents $MONOCOTS_04_GENEDESC_DIR; fi'))
+                script_file_id.write( 'if [ -d "$MONOCOTS_04_GENEDESC_DIR" ]; then rm -rf $MONOCOTS_04_GENEDESC_DIR; fi\n')
+                script_file_id.write( 'mkdir --parents $MONOCOTS_04_GENEDESC_DIR\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function init\n')
                 script_file_id.write( '{\n')
@@ -4304,58 +4407,58 @@ def build_monocots_04_download_script(cluster_name, current_run_dir):
                 script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function download_monocots04_functional_annotation'))
+                script_file_id.write( 'function download_monocots04_functional_annotation\n')
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading gene description files ..."'))
+                script_file_id.write( '    echo "Downloading gene description files ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --recursive \\'))
-                script_file_id.write( '{0}\n'.format('            --level=0 \\'))
-                script_file_id.write( '{0}\n'.format('            --no-host-directories \\'))
-                script_file_id.write( '{0}\n'.format('            --cut-dirs=4 \\'))
-                script_file_id.write( '{0}\n'.format('            --accept=$MONOCOTS_04_GENEDESC_FILE_PATTERN \\'))
-                script_file_id.write( '{0}\n'.format('            --directory-prefix=$MONOCOTS_04_GENEDESC_DIR \\'))
-                script_file_id.write( '{0}\n'.format('            $MONOCOTS_04_GENEDESC_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --recursive \\\n')
+                script_file_id.write( '            --level=0 \\\n')
+                script_file_id.write( '            --no-host-directories \\\n')
+                script_file_id.write( '            --cut-dirs=4 \\\n')
+                script_file_id.write( '            --accept=$MONOCOTS_04_GENEDESC_FILE_PATTERN \\\n')
+                script_file_id.write( '            --directory-prefix=$MONOCOTS_04_GENEDESC_DIR \\\n')
+                script_file_id.write( '            $MONOCOTS_04_GENEDESC_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "Files are downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "Files are downloaded."\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading InterPro file ..."'))
+                script_file_id.write( '    echo "Downloading InterPro file ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --output-document $MONOCOTS_04_INTERPRO_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            $MONOCOTS_04_INTERPRO_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --output-document $MONOCOTS_04_INTERPRO_FILE \\\n')
+                script_file_id.write( '            $MONOCOTS_04_INTERPRO_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "File is downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "File is downloaded."\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading Gene Ontology file ..."'))
+                script_file_id.write( '    echo "Downloading Gene Ontology file ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --output-document $MONOCOTS_04_GO_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            $MONOCOTS_04_GO_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --output-document $MONOCOTS_04_GO_FILE \\\n')
+                script_file_id.write( '            $MONOCOTS_04_GO_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "File is downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "File is downloaded."\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading Gene Ontology file ..."'))
+                script_file_id.write( '    echo "Downloading Gene Ontology file ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --output-document $MONOCOTS_04_MAPMAN_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            $MONOCOTS_04_MAPMAN_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --output-document $MONOCOTS_04_MAPMAN_FILE \\\n')
+                script_file_id.write( '            $MONOCOTS_04_MAPMAN_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "File is downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "File is downloaded."\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function end\n')
@@ -4430,11 +4533,11 @@ def build_monocots_04_download_script(cluster_name, current_run_dir):
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'init\n')
-                script_file_id.write( '{0}\n'.format('download_monocots04_functional_annotation'))
+                script_file_id.write( 'download_monocots04_functional_annotation\n')
                 script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created.'.format(get_monocots_04_download_script()))
+        error_list.append(f'*** ERROR: The file {get_monocots_04_download_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -4458,10 +4561,10 @@ def build_monocots_04_download_starter(current_run_dir):
         with open(get_monocots_04_download_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_monocots_04_download_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_monocots_04_download_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_monocots_04_download_starter()))
+        error_list.append(f'*** ERROR: The file {get_monocots_04_download_starter()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -4475,7 +4578,7 @@ def get_monocots_04_download_script():
     '''
 
     # assign the script path
-    monocots_04_download_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_download_monocots_04_code())
+    monocots_04_download_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_download_monocots_04_code()}-process.sh'
 
     # return the script path
     return monocots_04_download_script
@@ -4488,7 +4591,7 @@ def get_monocots_04_download_starter():
     '''
 
     # assign the starter path
-    monocots_04_download_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_download_monocots_04_code())
+    monocots_04_download_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_download_monocots_04_code()}-process-starter.sh'
 
     # return the starter path
     return monocots_04_download_starter
@@ -4525,7 +4628,9 @@ def build_monocots_04_load_script(cluster_name, current_run_dir):
                 script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
                 script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])))
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
                 script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -4547,26 +4652,26 @@ def build_monocots_04_load_script(cluster_name, current_run_dir):
                 script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function load_monocots04_functional_annotation'))
+                script_file_id.write( 'function load_monocots04_functional_annotation\n')
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Loading functional annotation data into TOA database ..."'))
+                script_file_id.write( '    echo "Loading functional annotation data into TOA database ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        load-plaza-data.py \\'))
-                script_file_id.write( '{0}\n'.format('            --db=$TOA_DB \\'))
-                script_file_id.write( '{0}\n'.format('            --dataset=monocots_04 \\'))
-                script_file_id.write( '{0}\n'.format('            --species=all \\'))
-                script_file_id.write( '{0}\n'.format('            --genedesc=$MONOCOTS_04_GENEDESC_DIR \\'))
-                script_file_id.write( '{0}\n'.format('            --interpro=$MONOCOTS_04_INTERPRO_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            --go=$MONOCOTS_04_GO_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            --mapman=$MONOCOTS_04_MAPMAN_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            --verbose=N \\'))
-                script_file_id.write( '{0}\n'.format('            --trace=N'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        load-plaza-data.py \\\n')
+                script_file_id.write( '            --db=$TOA_DB \\\n')
+                script_file_id.write( '            --dataset=monocots_04 \\\n')
+                script_file_id.write( '            --species=all \\\n')
+                script_file_id.write( '            --genedesc=$MONOCOTS_04_GENEDESC_DIR \\\n')
+                script_file_id.write( '            --interpro=$MONOCOTS_04_INTERPRO_FILE \\\n')
+                script_file_id.write( '            --go=$MONOCOTS_04_GO_FILE \\\n')
+                script_file_id.write( '            --mapman=$MONOCOTS_04_MAPMAN_FILE \\\n')
+                script_file_id.write( '            --verbose=N \\\n')
+                script_file_id.write( '            --trace=N\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error load-plaza-data.py $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "Data are loaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error load-plaza-data.py $RC; fi\n')
+                script_file_id.write( '    echo "Data are loaded."\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function end\n')
@@ -4641,11 +4746,11 @@ def build_monocots_04_load_script(cluster_name, current_run_dir):
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'init\n')
-                script_file_id.write( '{0}\n'.format('load_monocots04_functional_annotation'))
+                script_file_id.write( 'load_monocots04_functional_annotation\n')
                 script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created.'.format(get_monocots_04_load_script()))
+        error_list.append(f'*** ERROR: The file {get_monocots_04_load_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -4669,10 +4774,10 @@ def build_monocots_04_load_starter(current_run_dir):
         with open(get_monocots_04_load_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_monocots_04_load_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_monocots_04_load_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_monocots_04_load_starter()))
+        error_list.append(f'*** ERROR: The file {get_monocots_04_load_starter()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -4686,7 +4791,7 @@ def get_monocots_04_load_script():
     '''
 
     # assign the script path
-    monocots_04_load_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_load_monocots_04_code())
+    monocots_04_load_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_load_monocots_04_code()}-process.sh'
 
     # return the script path
     return monocots_04_load_script
@@ -4699,7 +4804,7 @@ def get_monocots_04_load_starter():
     '''
 
     # assign the starter path
-    monocots_04_load_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_load_monocots_04_code())
+    monocots_04_load_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_load_monocots_04_code()}-process-starter.sh'
 
     # return the starter path
     return monocots_04_load_starter
@@ -4736,7 +4841,9 @@ def build_refseq_plant_proteome_script(cluster_name, current_run_dir):
                 script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
                 script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])))
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
                 script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -4745,8 +4852,11 @@ def build_refseq_plant_proteome_script(cluster_name, current_run_dir):
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('if [ ! -d "$REFSEQ_PLANT_LOCAL" ]; then mkdir --parents $REFSEQ_PLANT_LOCAL; fi'))
-                script_file_id.write( '{0}\n'.format('if [ ! -d "$REFSEQ_PLANT_PROTEOME_DB_DIR" ]; then mkdir --parents $REFSEQ_PLANT_PROTEOME_DB_DIR; fi'))
+                script_file_id.write( 'if [ ! -d "$REFSEQ_PLANT_LOCAL" ]; then mkdir --parents $REFSEQ_PLANT_LOCAL; fi\n')
+                script_file_id.write( 'if [ -d "$REFSEQ_PLANT_BLASTPLUS_DB_DIR" ]; then rm -rf $REFSEQ_PLANT_BLASTPLUS_DB_DIR; fi\n')
+                script_file_id.write( 'mkdir --parents $REFSEQ_PLANT_BLASTPLUS_DB_DIR\n')
+                script_file_id.write( 'if [ -d "$REFSEQ_PLANT_DIAMOND_DB_DIR" ]; then rm -rf $REFSEQ_PLANT_DIAMOND_DB_DIR; fi\n')
+                script_file_id.write( 'mkdir --parents $REFSEQ_PLANT_DIAMOND_DB_DIR\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function init\n')
                 script_file_id.write( '{\n')
@@ -4761,55 +4871,69 @@ def build_refseq_plant_proteome_script(cluster_name, current_run_dir):
                 script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function build_refseqplant_proteome'))
+                script_file_id.write( 'function build_refseqplant_proteome\n')
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading protein FASTA files ..."'))
+                script_file_id.write( '    echo "Downloading protein FASTA files ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --recursive \\'))
-                script_file_id.write( '{0}\n'.format('            --level=1 \\'))
-                script_file_id.write( '{0}\n'.format('            --accept=$REFSEQ_PROTEIN_FILE_PATTERN \\'))
-                script_file_id.write( '{0}\n'.format('            --directory-prefix=$NCBI_DIR \\'))
-                script_file_id.write( '{0}\n'.format('            $REFSEQ_PLANT_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --recursive \\\n')
+                script_file_id.write( '            --level=1 \\\n')
+                script_file_id.write( '            --accept=$REFSEQ_PROTEIN_FILE_PATTERN \\\n')
+                script_file_id.write( '            --directory-prefix=$NCBI_DIR \\\n')
+                script_file_id.write( '            $REFSEQ_PLANT_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "Files are downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "Files are downloaded."\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Building proteome file ..."'))
-                script_file_id.write( '{0}\n'.format('    > $REFSEQ_PLANT_PROTEOME_FILE'))
-                script_file_id.write( '{0}\n'.format("    ls `echo $REFSEQ_PLANT_LOCAL/'*'$REFSEQ_PROTEIN_FILE_PATTERN` > $REFSEQ_PLANT_FILE_LIST"))
-                script_file_id.write( '{0}\n'.format('    while read FILE_GZ; do'))
-                script_file_id.write( '{0}\n'.format("        FILE_FASTA=`echo $FILE_GZ | sed 's/.gz//g'`"))
-                script_file_id.write( '{0}\n'.format('        gzip --decompress --force  $FILE_GZ'))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error gzip $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        cat $FILE_FASTA >> $REFSEQ_PLANT_PROTEOME_FILE'))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error cat $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        rm -f $FILE_FASTA'))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error rm $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    done < $REFSEQ_PLANT_FILE_LIST'))
-                script_file_id.write( '{0}\n'.format('    echo "Proteome is buit."'))
+                script_file_id.write( '    echo "Building proteome file ..."\n')
+                script_file_id.write( '    > $REFSEQ_PLANT_PROTEOME_FILE\n')
+                script_file_id.write( '    ls `echo $REFSEQ_PLANT_LOCAL/"*"$REFSEQ_PROTEIN_FILE_PATTERN` > $REFSEQ_PLANT_FILE_LIST\n')
+                script_file_id.write( '    while read FILE_GZ; do\n')
+                script_file_id.write( '        FILE_FASTA=`echo $FILE_GZ | sed "s|.gz||g"`\n')
+                script_file_id.write( '        gzip --decompress --force  $FILE_GZ\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error gzip $RC; fi\n')
+                script_file_id.write( '        cat $FILE_FASTA >> $REFSEQ_PLANT_PROTEOME_FILE\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error cat $RC; fi\n')
+                script_file_id.write( '        rm -f $FILE_FASTA\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error rm $RC; fi\n')
+                script_file_id.write( '    done < $REFSEQ_PLANT_FILE_LIST\n')
+                script_file_id.write( '    echo "Proteome is buit."\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Generating BLAST database ..."'))
-                script_file_id.write(f'        source activate {xlib.get_blastplus_anaconda_code()}\n')
+                script_file_id.write( '    echo "Generating BLAST+ database ..."\n')
+                script_file_id.write(f'    source activate {xlib.get_blastplus_anaconda_code()}\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        makeblastdb \\'))
-                script_file_id.write( '{0}\n'.format('            -title $REFSEQ_PLANT_PROTEOME_DB_NAME \\'))
-                script_file_id.write( '{0}\n'.format('            -dbtype prot \\'))
-                script_file_id.write( '{0}\n'.format('            -input_type fasta \\'))
-                script_file_id.write( '{0}\n'.format('            -in $REFSEQ_PLANT_PROTEOME_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            -out $REFSEQ_PLANT_PROTEOME_DB_FILE'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        makeblastdb \\\n')
+                script_file_id.write( '            -title $REFSEQ_PLANT_BLASTPLUS_DB_NAME \\\n')
+                script_file_id.write( '            -dbtype prot \\\n')
+                script_file_id.write( '            -input_type fasta \\\n')
+                # -- script_file_id.write( '            -hash_index \\\n')
+                script_file_id.write( '            -in $REFSEQ_PLANT_PROTEOME_FILE \\\n')
+                script_file_id.write( '            -out $REFSEQ_PLANT_BLASTPLUS_DB_FILE\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error load-basic-data.py $RC; fi'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error makeblastdb $RC; fi\n')
                 script_file_id.write( '    conda deactivate\n')
-                script_file_id.write( '{0}\n'.format('    echo "BLAST database is generated."'))
+                script_file_id.write( '    echo "BLAST+ database is generated."\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "Generating DIAMOND database ..."\n')
+                script_file_id.write(f'    source activate {xlib.get_diamond_anaconda_code()}\n')
+                script_file_id.write( '    /usr/bin/time \\\n')
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        diamond makedb \\\n')
+                script_file_id.write( '            --threads 4 \\\n')
+                script_file_id.write( '            --in $REFSEQ_PLANT_PROTEOME_FILE \\\n')
+                script_file_id.write( '            --db $REFSEQ_PLANT_DIAMOND_DB_FILE\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error diamond-makedb $RC; fi\n')
+                script_file_id.write( '    conda deactivate\n')
+                script_file_id.write( '    echo "DIAMOND database is generated."\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function end\n')
@@ -4884,11 +5008,11 @@ def build_refseq_plant_proteome_script(cluster_name, current_run_dir):
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'init\n')
-                script_file_id.write( '{0}\n'.format('build_refseqplant_proteome'))
+                script_file_id.write( 'build_refseqplant_proteome\n')
                 script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created.'.format(get_refseq_plant_proteome_script()))
+        error_list.append(f'*** ERROR: The file {get_refseq_plant_proteome_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -4912,10 +5036,10 @@ def build_refseq_plant_proteome_starter(current_run_dir):
         with open(get_refseq_plant_proteome_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_refseq_plant_proteome_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_refseq_plant_proteome_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_refseq_plant_proteome_starter()))
+        error_list.append(f'*** ERROR: The file {get_refseq_plant_proteome_starter()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -4929,7 +5053,7 @@ def get_refseq_plant_proteome_script():
     '''
 
     # assign the script path
-    refseq_plant_proteome_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_proteome_refseq_plant_code())
+    refseq_plant_proteome_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_proteome_refseq_plant_code()}-process.sh'
 
     # return the script path
     return refseq_plant_proteome_script
@@ -4942,16 +5066,16 @@ def get_refseq_plant_proteome_starter():
     '''
 
     # assign the starter path
-    refseq_plant_proteome_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_proteome_refseq_plant_code())
+    refseq_plant_proteome_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_proteome_refseq_plant_code()}-process-starter.sh'
 
     # return the starter path
     return refseq_plant_proteome_starter
 
 #-------------------------------------------------------------------------------
 
-def build_nt_blastdb_script(cluster_name, current_run_dir):
+def build_taxonomy_download_script(cluster_name, current_run_dir):
     '''
-    Build the script to build BLAST database NT.
+    Build the script to download the NCBI Taxonomy data.
     '''
 
     # initialize the control variable and the error list
@@ -4963,9 +5087,9 @@ def build_nt_blastdb_script(cluster_name, current_run_dir):
 
     # write the script
     try:
-        if not os.path.exists(os.path.dirname(get_nt_blastdb_script())):
-            os.makedirs(os.path.dirname(get_nt_blastdb_script()))
-        with open(get_nt_blastdb_script(), mode='w', encoding='iso-8859-1', newline='\n') as script_file_id:
+        if not os.path.exists(os.path.dirname(get_taxonomy_download_script())):
+            os.makedirs(os.path.dirname(get_taxonomy_download_script()))
+        with open(get_taxonomy_download_script(), mode='w', encoding='iso-8859-1', newline='\n') as script_file_id:
             script_file_id.write( '#!/bin/bash\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             with open(get_toa_config_file(), mode='r', encoding='iso-8859-1', newline='\n') as toa_config_file_id:
@@ -4979,7 +5103,9 @@ def build_nt_blastdb_script(cluster_name, current_run_dir):
                 script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
                 script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])))
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
                 script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -4988,7 +5114,7 @@ def build_nt_blastdb_script(cluster_name, current_run_dir):
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('if [ ! -d "$NT_DB_DIR" ]; then mkdir --parents $NT_DB_DIR; fi'))
+                script_file_id.write( 'if [ ! -d "$NCBI_DIR" ]; then mkdir --parents $NCBI_DIR; fi\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function init\n')
                 script_file_id.write( '{\n')
@@ -5003,35 +5129,54 @@ def build_nt_blastdb_script(cluster_name, current_run_dir):
                 script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function build_database_nt'))
+                script_file_id.write( 'function download_taxonomy_data\n')
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading nt database files ..."'))
+                script_file_id.write( '    echo "Downloading compressed NCBI Taxonomy database dump files ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --recursive \\'))
-                script_file_id.write( '{0}\n'.format('            --level=1 \\'))
-                script_file_id.write( '{0}\n'.format('            --accept=$NT_FILE_PATTERN \\'))
-                script_file_id.write( '{0}\n'.format('            --directory-prefix=$NCBI_DIR \\'))
-                script_file_id.write( '{0}\n'.format('            $BLAST_DATABASES_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --output-document $TAXONOMY_TAXDMP_FILE \\\n')
+                script_file_id.write( '            $TAXONOMY_TAXDMP_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "Files are downloaded."'))
-                script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Decompressing nt database files ..."'))
-                script_file_id.write( '{0}\n'.format('    ls `echo $BLAST_DATABASES_LOCAL/$NT_FILE_PATTERN` > $NT_FILE_LIST'))
-                script_file_id.write( '{0}\n'.format('    while read NT_FILE; do'))
-                script_file_id.write( '{0}\n'.format('        tar --extract --gzip --file=$NT_FILE --directory=$NT_DB_DIR'))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error tar $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        rm -f $NT_FILE'))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error rm $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    done < $NT_FILE_LIST'))
-                script_file_id.write( '{0}\n'.format('    echo "Files are decompressed."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "File is downloaded."\n')
+                script_file_id.write( '    echo "Decompressing NCBI Taxonomy database dump files ..."\n')
+                script_file_id.write( '    /usr/bin/time \\\n')
+                script_file_id.write( '        unzip -o -d $NCBI_DIR $TAXONOMY_TAXDMP_FILE\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "File is decompressed."\n')
+                script_file_id.write( '    echo "Downloading NCBI TaxID mapping for live protein sequence record. ..."\n')
+                script_file_id.write( '    /usr/bin/time \\\n')
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --output-document $TAXONOMY_PROTACCESSION_2_TAXID_FILE \\\n')
+                script_file_id.write( '            $TAXONOMY_PROTACCESSION_2_TAXID_FTP\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "File is downloaded."\n')
+                script_file_id.write( '    echo "Downloading NCBI taxonomy identifications of Viridiplantae ..."\n')
+                script_file_id.write(f'    cp $MINICONDA3_ENVS_DIR/{xlib.get_blastplus_anaconda_code()}/bin/get_species_taxids.sh .\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error cp $RC; fi\n')
+                script_file_id.write(f'    sed -i "s|export PATH=|#export PATH=|g" ./get_species_taxids.sh\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error sed $RC; fi\n')
+                script_file_id.write(f'    source activate {xlib.get_entrez_direct_anaconda_code()}\n')
+                script_file_id.write( '    ./get_species_taxids.sh -n Viridiplantae\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error get_species_taxids.sh $RC; fi\n')
+                script_file_id.write( '    /usr/bin/time \\\n')
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        get_species_taxids.sh -t 33090 >$VIRIDIPLANTAE_TAXID_LIST_FILE\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error get_species_taxids.sh $RC; fi\n')
+                script_file_id.write( '    conda deactivate\n')
+                script_file_id.write( '    echo "Taxids ared downloaded."\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function end\n')
@@ -5061,7 +5206,7 @@ def build_nt_blastdb_script(cluster_name, current_run_dir):
                 script_file_id.write( '    exit 3\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                process_name = f'TOA - {xlib.get_toa_process_blastdb_nt_name()}'
+                process_name = f'TOA - {xlib.get_toa_process_proteome_refseq_plant_name()}'
                 mail_message_ok = xlib.get_mail_message_ok(process_name, cluster_name)
                 mail_message_wrong = xlib.get_mail_message_wrong(process_name, cluster_name)
                 script_file_id.write( 'function send_mail\n')
@@ -5106,11 +5251,11 @@ def build_nt_blastdb_script(cluster_name, current_run_dir):
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'init\n')
-                script_file_id.write( '{0}\n'.format('build_database_nt'))
+                script_file_id.write( 'download_taxonomy_data\n')
                 script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created.'.format(get_nt_blastdb_script()))
+        error_list.append(f'*** ERROR: The file {get_taxonomy_download_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -5118,9 +5263,9 @@ def build_nt_blastdb_script(cluster_name, current_run_dir):
 
 #-------------------------------------------------------------------------------
 
-def build_nt_blastdb_starter(current_run_dir):
+def build_taxonomy_download_starter(current_run_dir):
     '''
-    Build the starter of the script to build BLAST database NT.
+    Build the starter of the script to download the NCBI Taxonomy data.
     '''
 
     # initialize the control variable and the error list
@@ -5129,15 +5274,15 @@ def build_nt_blastdb_starter(current_run_dir):
 
     # write the starter
     try:
-        if not os.path.exists(os.path.dirname(get_nt_blastdb_starter())):
-            os.makedirs(os.path.dirname(get_nt_blastdb_starter()))
-        with open(get_nt_blastdb_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
+        if not os.path.exists(os.path.dirname(get_taxonomy_download_starter())):
+            os.makedirs(os.path.dirname(get_taxonomy_download_starter()))
+        with open(get_taxonomy_download_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_nt_blastdb_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_taxonomy_download_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_nt_blastdb_starter()))
+        error_list.append(f'*** ERROR: The file {get_taxonomy_download_starter()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -5145,29 +5290,254 @@ def build_nt_blastdb_starter(current_run_dir):
 
 #-------------------------------------------------------------------------------
 
-def get_nt_blastdb_script():
+def get_taxonomy_download_script():
     '''
-    Get the script path in the local computer to build BLAST database NT.
+    Get the script path to download the NCBI Taxonomy data.
     '''
 
     # assign the script path
-    nt_blastdb_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_blastdb_nt_code())
+    taxonomy_download_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_download_taxonomy_code()}-process.sh'
 
     # return the script path
-    return nt_blastdb_script
+    return taxonomy_download_script
 
 #-------------------------------------------------------------------------------
 
-def get_nt_blastdb_starter():
+def get_taxonomy_download_starter():
     '''
-    Get the starter path in the local computer to build BLAST database NT.
+    Get the script path to download the NCBI Taxonomy data.
     '''
 
     # assign the starter path
-    nt_blastdb_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_blastdb_nt_code())
+    taxonomy_download_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_download_taxonomy_code()}-process-starter.sh'
 
     # return the starter path
-    return nt_blastdb_starter
+    return taxonomy_download_starter
+
+#-------------------------------------------------------------------------------
+
+def build_nt_blastplus_db_script(cluster_name, current_run_dir):
+    '''
+    Build the script to build BLAST database NT for BLAST+.
+    '''
+
+    # initialize the control variable and the error list
+    OK = True
+    error_list = []
+
+    # get the dictionary of TOA configuration.
+    toa_config_dict = get_toa_config_dict()
+
+    # write the script
+    try:
+        if not os.path.exists(os.path.dirname(get_nt_blastplus_db_script())):
+            os.makedirs(os.path.dirname(get_nt_blastplus_db_script()))
+        with open(get_nt_blastplus_db_script(), mode='w', encoding='iso-8859-1', newline='\n') as script_file_id:
+            script_file_id.write( '#!/bin/bash\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            with open(get_toa_config_file(), mode='r', encoding='iso-8859-1', newline='\n') as toa_config_file_id:
+                records = toa_config_file_id.readlines()
+                for record in records:
+                    script_file_id.write(record)
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'SEP="#########################################"\n')
+                script_file_id.write( 'export HOST_IP=`curl --silent checkip.amazonaws.com`\n')
+                script_file_id.write( 'export HOST_ADDRESS="ec2-${HOST_IP//./-}-compute-1.amazonaws.com"\n')
+                script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
+                script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
+                script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
+                script_file_id.write(f'SCRIPT_STATUS_WRONG={xlib.get_status_wrong(current_run_dir)}\n')
+                script_file_id.write( 'mkdir --parents $STATUS_DIR\n')
+                script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
+                script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'if [ -d "$NT_BLASTPLUS_DB_DIR" ]; then rm -rf $NT_BLASTPLUS_DB_DIR; fi\n')
+                script_file_id.write( 'mkdir --parents $NT_BLASTPLUS_DB_DIR\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function init\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    INIT_DATETIME=`date --utc +%s`\n')
+                script_file_id.write( '    FORMATTED_INIT_DATETIME=`date --date="@$INIT_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "Script started at $FORMATTED_INIT_DATETIME+00:00."\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write(f'    echo "CLUSTER: {cluster_name}"\n')
+                script_file_id.write( '    echo "HOST NAME: $HOSTNAME"\n')
+                script_file_id.write( '    echo "HOST IP: $HOST_IP"\n')
+                script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function build_database_nt\n')
+                script_file_id.write( '{\n')
+                script_file_id.write(f'    cd {current_run_dir}\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "Downloading nt database files ..."\n')
+                script_file_id.write( '    /usr/bin/time \\\n')
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --recursive \\\n')
+                script_file_id.write( '            --level=1 \\\n')
+                script_file_id.write( '            --accept=$NT_FILE_PATTERN \\\n')
+                script_file_id.write( '            --directory-prefix=$NCBI_DIR \\\n')
+                script_file_id.write( '            $BLAST_DATABASES_FTP\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "Files are downloaded."\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "Decompressing nt database files ..."\n')
+                script_file_id.write( '    ls `echo $BLAST_DATABASES_LOCAL/$NT_FILE_PATTERN` > $NT_FILE_LIST\n')
+                script_file_id.write( '    while read NT_FILE; do\n')
+                script_file_id.write( '        tar --extract --gzip --file=$NT_FILE --directory=$NT_BLASTPLUS_DB_DIR\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error tar $RC; fi\n')
+                script_file_id.write( '        rm -f $NT_FILE\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error rm $RC; fi\n')
+                script_file_id.write( '    done < $NT_FILE_LIST\n')
+                script_file_id.write( '    echo "Files are decompressed."\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function end\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
+                script_file_id.write( '    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
+                script_file_id.write( '    calculate_duration\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "Script ended OK at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    send_mail ok\n')
+                script_file_id.write( '    touch $SCRIPT_STATUS_OK\n')
+                script_file_id.write( '    exit 0\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function manage_error\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
+                script_file_id.write( '    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
+                script_file_id.write( '    calculate_duration\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "ERROR: $1 returned error $2"\n')
+                script_file_id.write( '    echo "Script ended WRONG at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    send_mail wrong\n')
+                script_file_id.write( '    touch $SCRIPT_STATUS_WRONG\n')
+                script_file_id.write( '    exit 3\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                process_name = f'TOA - {xlib.get_toa_process_nt_blastplus_db_name()}'
+                mail_message_ok = xlib.get_mail_message_ok(process_name, cluster_name)
+                mail_message_wrong = xlib.get_mail_message_wrong(process_name, cluster_name)
+                script_file_id.write( 'function send_mail\n')
+                script_file_id.write( '{\n')
+                script_file_id.write(f'    SUBJECT="{xlib.get_project_name()}: {process_name}"\n')
+                script_file_id.write( '    if [ "$1" == "ok" ]; then\n')
+                script_file_id.write(f'        MESSAGE="{mail_message_ok}"\n')
+                script_file_id.write( '    elif [ "$1" == "wrong" ]; then\n')
+                script_file_id.write(f'        MESSAGE="{mail_message_wrong}"\n')
+                script_file_id.write( '    else\n')
+                script_file_id.write( '         MESSAGE=""\n')
+                script_file_id.write( '    fi\n')
+                script_file_id.write( '    DESTINATION_FILE=mail-destination.json\n')
+                script_file_id.write( '    echo "{" > $DESTINATION_FILE\n')
+                script_file_id.write(f'    echo "    \\\"ToAddresses\\\":  [\\\"{xconfiguration.get_contact_data()}\\\"]," >> $DESTINATION_FILE\n')
+                script_file_id.write( '    echo "    \\\"CcAddresses\\\":  []," >> $DESTINATION_FILE\n')
+                script_file_id.write( '    echo "    \\\"BccAddresses\\\":  []" >> $DESTINATION_FILE\n')
+                script_file_id.write( '    echo "}" >> $DESTINATION_FILE\n')
+                script_file_id.write( '    MESSAGE_FILE=mail-message.json\n')
+                script_file_id.write( '    echo "{" > $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "    \\\"Subject\\\": {" >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "        \\\"Data\\\":  \\\"$SUBJECT\\\"," >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "        \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "    }," >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "    \\\"Body\\\": {" >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "        \\\"Html\\\": {" >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "            \\\"Data\\\":  \\\"$MESSAGE\\\"," >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "            \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "        }" >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "    }" >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "}" >> $MESSAGE_FILE\n')
+                script_file_id.write(f'    aws ses send-email --from {xconfiguration.get_contact_data()} --destination file://$DESTINATION_FILE --message file://$MESSAGE_FILE\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function calculate_duration\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    DURATION=`expr $END_DATETIME - $INIT_DATETIME`\n')
+                script_file_id.write( '    HH=`expr $DURATION / 3600`\n')
+                script_file_id.write( '    MM=`expr $DURATION % 3600 / 60`\n')
+                script_file_id.write( '    SS=`expr $DURATION % 60`\n')
+                script_file_id.write( '    FORMATTED_DURATION=`printf "%03d:%02d:%02d\\n" $HH $MM $SS`\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'init\n')
+                script_file_id.write( 'build_database_nt\n')
+                script_file_id.write( 'end\n')
+    except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append(f'*** ERROR: The file {get_nt_blastplus_db_script()} can not be created.')
+        OK = False
+
+    # return the control variable and the error list
+    return (OK, error_list)
+
+#-------------------------------------------------------------------------------
+
+def build_nt_blastplus_db_starter(current_run_dir):
+    '''
+    Build the starter of the script to build BLAST database NT for BLAST+.
+    '''
+
+    # initialize the control variable and the error list
+    OK = True
+    error_list = []
+
+    # write the starter
+    try:
+        if not os.path.exists(os.path.dirname(get_nt_blastplus_db_starter())):
+            os.makedirs(os.path.dirname(get_nt_blastplus_db_starter()))
+        with open(get_nt_blastplus_db_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
+            file_id.write( '#!/bin/bash\n')
+            file_id.write( '#-------------------------------------------------------------------------------\n')
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_nt_blastplus_db_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
+    except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append(f'*** ERROR: The file {get_nt_blastplus_db_starter()} can not be created.')
+        OK = False
+
+    # return the control variable and the error list
+    return (OK, error_list)
+
+#-------------------------------------------------------------------------------
+
+def get_nt_blastplus_db_script():
+    '''
+    Get the script path to build BLAST database NT for BLAST+.
+    '''
+
+    # assign the script path
+    nt_blastplus_db_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_nt_blastplus_db_code()}-process.sh'
+
+    # return the script path
+    return nt_blastplus_db_script
+
+#-------------------------------------------------------------------------------
+
+def get_nt_blastplus_db_starter():
+    '''
+    Get the starter path to build BLAST database NT for BLAST+.
+    '''
+
+    # assign the starter path
+    nt_blastplus_db_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_nt_blastplus_db_code()}-process-starter.sh'
+
+    # return the starter path
+    return nt_blastplus_db_starter
 
 #-------------------------------------------------------------------------------
 
@@ -5201,7 +5571,9 @@ def build_viridiplantae_nucleotide_gi_gilist_script(cluster_name, current_run_di
                 script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
                 script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])))
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
                 script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -5210,7 +5582,7 @@ def build_viridiplantae_nucleotide_gi_gilist_script(cluster_name, current_run_di
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('if [ ! -d "$NCBI_DIR" ]; then mkdir --parents $NCBI_DIR; fi'))
+                script_file_id.write( 'if [ ! -d "$NCBI_DIR" ]; then mkdir --parents $NCBI_DIR; fi\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function init\n')
                 script_file_id.write( '{\n')
@@ -5225,17 +5597,17 @@ def build_viridiplantae_nucleotide_gi_gilist_script(cluster_name, current_run_di
                 script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function build_viridiplantae_nucleotide_gilist'))
+                script_file_id.write( 'function build_viridiplantae_nucleotide_gilist\n')
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Building Viridiplantae nucleotide GI list ..."'))
-                script_file_id.write(f'        source activate {xlib.get_entrez_direct_code()}\n')
-                script_file_id.write( '{0}\n'.format('    esearch -db nucleotide -query "Viridiplantae[Organism]" | efetch -format uid > $NUCLEOTIDE_VIRIDIPLANTAE_GI_LIST'))
+                script_file_id.write( '    echo "Building Viridiplantae nucleotide GI list ..."\n')
+                script_file_id.write(f'    source activate {xlib.get_entrez_direct_code()}\n')
+                script_file_id.write( '    esearch -db nucleotide -query "Viridiplantae[Organism]" | efetch -format uid > $NUCLEOTIDE_VIRIDIPLANTAE_GI_LIST\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error entrez-direct $RC; fi'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error entrez-direct $RC; fi\n')
                 script_file_id.write( '    conda deactivate\n')
-                script_file_id.write( '{0}\n'.format('    echo "List is built."'))
+                script_file_id.write( '    echo "List is built."\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function end\n')
@@ -5310,11 +5682,11 @@ def build_viridiplantae_nucleotide_gi_gilist_script(cluster_name, current_run_di
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'init\n')
-                script_file_id.write( '{0}\n'.format('build_viridiplantae_nucleotide_gilist'))
+                script_file_id.write( 'build_viridiplantae_nucleotide_gilist\n')
                 script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created.'.format(get_viridiplantae_nucleotide_gi_gilist_script()))
+        error_list.append(f'*** ERROR: The file {get_viridiplantae_nucleotide_gi_gilist_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -5338,10 +5710,10 @@ def build_viridiplantae_nucleotide_gi_gilist_starter(current_run_dir):
         with open(get_viridiplantae_nucleotide_gi_gilist_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_viridiplantae_nucleotide_gi_gilist_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_viridiplantae_nucleotide_gi_gilist_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_viridiplantae_nucleotide_gi_gilist_starter()))
+        error_list.append(f'*** ERROR: The file {get_viridiplantae_nucleotide_gi_gilist_starter()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -5355,7 +5727,7 @@ def get_viridiplantae_nucleotide_gi_gilist_script():
     '''
 
     # assign the script path
-    viridiplantae_nucleotide_gi_gilist_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_gilist_viridiplantae_nucleotide_gi_code())
+    viridiplantae_nucleotide_gi_gilist_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_gilist_viridiplantae_nucleotide_gi_code()}-process.sh'
 
     # return the script path
     return viridiplantae_nucleotide_gi_gilist_script
@@ -5368,16 +5740,16 @@ def get_viridiplantae_nucleotide_gi_gilist_starter():
     '''
 
     # assign the starter path
-    viridiplantae_nucleotide_gi_gilist_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_gilist_viridiplantae_nucleotide_gi_code())
+    viridiplantae_nucleotide_gi_gilist_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_gilist_viridiplantae_nucleotide_gi_code()}-process-starter.sh'
 
     # return the starter path
     return viridiplantae_nucleotide_gi_gilist_starter
 
 #-------------------------------------------------------------------------------
 
-def build_nr_blastdb_script(cluster_name, current_run_dir):
+def build_nr_blastplus_db_script(cluster_name, current_run_dir):
     '''
-    Build the script to build BLAST database NR.
+    Build the script to build BLAST database NR for BLAST+.
     '''
 
     # initialize the control variable and the error list
@@ -5389,9 +5761,9 @@ def build_nr_blastdb_script(cluster_name, current_run_dir):
 
     # write the script
     try:
-        if not os.path.exists(os.path.dirname(get_nr_blastdb_script())):
-            os.makedirs(os.path.dirname(get_nr_blastdb_script()))
-        with open(get_nr_blastdb_script(), mode='w', encoding='iso-8859-1', newline='\n') as script_file_id:
+        if not os.path.exists(os.path.dirname(get_nr_blastplus_db_script())):
+            os.makedirs(os.path.dirname(get_nr_blastplus_db_script()))
+        with open(get_nr_blastplus_db_script(), mode='w', encoding='iso-8859-1', newline='\n') as script_file_id:
             script_file_id.write( '#!/bin/bash\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             with open(get_toa_config_file(), mode='r', encoding='iso-8859-1', newline='\n') as toa_config_file_id:
@@ -5405,7 +5777,9 @@ def build_nr_blastdb_script(cluster_name, current_run_dir):
                 script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
                 script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])))
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
                 script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -5414,7 +5788,8 @@ def build_nr_blastdb_script(cluster_name, current_run_dir):
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('if [ ! -d "$NR_DB_DIR" ]; then mkdir --parents $NR_DB_DIR; fi'))
+                script_file_id.write( 'if [ -d "$NR_BLASTPLUS_DB_DIR" ]; then rm -rf $NR_BLASTPLUS_DB_DIR; fi\n')
+                script_file_id.write( 'mkdir --parents $NR_BLASTPLUS_DB_DIR\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function init\n')
                 script_file_id.write( '{\n')
@@ -5429,35 +5804,35 @@ def build_nr_blastdb_script(cluster_name, current_run_dir):
                 script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function build_database_nr'))
+                script_file_id.write( 'function build_database_nr\n')
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading nr database files ..."'))
+                script_file_id.write( '    echo "Downloading nr database files ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --recursive \\'))
-                script_file_id.write( '{0}\n'.format('            --level=1 \\'))
-                script_file_id.write( '{0}\n'.format('            --accept=$NR_FILE_PATTERN \\'))
-                script_file_id.write( '{0}\n'.format('            --directory-prefix=$NCBI_DIR \\'))
-                script_file_id.write( '{0}\n'.format('            $BLAST_DATABASES_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --recursive \\\n')
+                script_file_id.write( '            --level=1 \\\n')
+                script_file_id.write( '            --accept=$NR_FILE_PATTERN \\\n')
+                script_file_id.write( '            --directory-prefix=$NCBI_DIR \\\n')
+                script_file_id.write( '            $BLAST_DATABASES_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "Files are downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "Files are downloaded."\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Decompressing nr database files ..."'))
-                script_file_id.write( '{0}\n'.format('    ls `echo $BLAST_DATABASES_LOCAL/$NR_FILE_PATTERN` > $NR_FILE_LIST'))
-                script_file_id.write( '{0}\n'.format('    while read NR_FILE; do'))
-                script_file_id.write( '{0}\n'.format('        tar --extract --gzip --file=$NR_FILE --directory=$NR_DB_DIR'))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error tar $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        rm -f $NR_FILE'))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error rm $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    done < $NR_FILE_LIST'))
-                script_file_id.write( '{0}\n'.format('    echo "Files are decompressed."'))
+                script_file_id.write( '    echo "Decompressing nr database files ..."\n')
+                script_file_id.write( '    ls `echo $BLAST_DATABASES_LOCAL/$NR_FILE_PATTERN` > $NR_FILE_LIST\n')
+                script_file_id.write( '    while read NR_FILE; do\n')
+                script_file_id.write( '        tar --extract --gzip --file=$NR_FILE --directory=$NR_BLASTPLUS_DB_DIR\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error tar $RC; fi\n')
+                script_file_id.write( '        rm -f $NR_FILE\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error rm $RC; fi\n')
+                script_file_id.write( '    done < $NR_FILE_LIST\n')
+                script_file_id.write( '    echo "Files are decompressed."\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function end\n')
@@ -5487,7 +5862,7 @@ def build_nr_blastdb_script(cluster_name, current_run_dir):
                 script_file_id.write( '    exit 3\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                process_name = f'TOA - {xlib.get_toa_process_blastdb_nr_name()}'
+                process_name = f'TOA - {xlib.get_toa_process_nr_blastplus_db_name()}'
                 mail_message_ok = xlib.get_mail_message_ok(process_name, cluster_name)
                 mail_message_wrong = xlib.get_mail_message_wrong(process_name, cluster_name)
                 script_file_id.write( 'function send_mail\n')
@@ -5532,11 +5907,11 @@ def build_nr_blastdb_script(cluster_name, current_run_dir):
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'init\n')
-                script_file_id.write( '{0}\n'.format('build_database_nr'))
+                script_file_id.write( 'build_database_nr\n')
                 script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created.'.format(get_nr_blastdb_script()))
+        error_list.append(f'*** ERROR: The file {get_nr_blastplus_db_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -5544,9 +5919,9 @@ def build_nr_blastdb_script(cluster_name, current_run_dir):
 
 #-------------------------------------------------------------------------------
 
-def build_nr_blastdb_starter(current_run_dir):
+def build_nr_blastplus_db_starter(current_run_dir):
     '''
-    Build the starter of the script to build BLAST database NR.
+    Build the starter of the script to build BLAST database NR for BLAST+.
     '''
 
     # initialize the control variable and the error list
@@ -5555,15 +5930,15 @@ def build_nr_blastdb_starter(current_run_dir):
 
     # write the starter
     try:
-        if not os.path.exists(os.path.dirname(get_nr_blastdb_starter())):
-            os.makedirs(os.path.dirname(get_nr_blastdb_starter()))
-        with open(get_nr_blastdb_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
+        if not os.path.exists(os.path.dirname(get_nr_blastplus_db_starter())):
+            os.makedirs(os.path.dirname(get_nr_blastplus_db_starter()))
+        with open(get_nr_blastplus_db_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_nr_blastdb_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_nr_blastplus_db_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_nr_blastdb_starter()))
+        error_list.append(f'*** ERROR: The file {get_nr_blastplus_db_starter()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -5571,29 +5946,250 @@ def build_nr_blastdb_starter(current_run_dir):
 
 #-------------------------------------------------------------------------------
 
-def get_nr_blastdb_script():
+def get_nr_blastplus_db_script():
     '''
-    Get the script path in the local computer to build BLAST database NR.
+    Get the script path to build BLAST database NR for BLAST+.
     '''
 
     # assign the script path
-    nr_blastdb_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_blastdb_nr_code())
+    nr_blastplus_db_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_nr_blastplus_db_code()}-process.sh'
 
     # return the script path
-    return nr_blastdb_script
+    return nr_blastplus_db_script
 
 #-------------------------------------------------------------------------------
 
-def get_nr_blastdb_starter():
+def get_nr_blastplus_db_starter():
     '''
-    Get the starter path in the local computer to build BLAST database NR.
+    Get the starter path to build BLAST database NR for BLAST+.
     '''
 
     # assign the starter path
-    nr_blastdb_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_blastdb_nr_code())
+    nr_blastplus_db_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_nr_blastplus_db_code()}-process-starter.sh'
 
     # return the starter path
-    return nr_blastdb_starter
+    return nr_blastplus_db_starter
+
+#-------------------------------------------------------------------------------
+
+def build_nr_diamond_db_script(cluster_name, current_run_dir):
+    '''
+    Build the script to build BLAST database NR for BLAST+.
+    '''
+
+    # initialize the control variable and the error list
+    OK = True
+    error_list = []
+
+    # get the dictionary of TOA configuration.
+    toa_config_dict = get_toa_config_dict()
+
+    # write the script
+    try:
+        if not os.path.exists(os.path.dirname(get_nr_diamond_db_script())):
+            os.makedirs(os.path.dirname(get_nr_diamond_db_script()))
+        with open(get_nr_diamond_db_script(), mode='w', encoding='iso-8859-1', newline='\n') as script_file_id:
+            script_file_id.write( '#!/bin/bash\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            with open(get_toa_config_file(), mode='r', encoding='iso-8859-1', newline='\n') as toa_config_file_id:
+                records = toa_config_file_id.readlines()
+                for record in records:
+                    script_file_id.write(record)
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'SEP="#########################################"\n')
+                script_file_id.write( 'export HOST_IP=`curl --silent checkip.amazonaws.com`\n')
+                script_file_id.write( 'export HOST_ADDRESS="ec2-${HOST_IP//./-}-compute-1.amazonaws.com"\n')
+                script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
+                script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
+                script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
+                script_file_id.write(f'SCRIPT_STATUS_WRONG={xlib.get_status_wrong(current_run_dir)}\n')
+                script_file_id.write( 'mkdir --parents $STATUS_DIR\n')
+                script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
+                script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'if [ -d "$NR_DIAMOND_DB_DIR" ]; then rm -rf $NR_DIAMOND_DB_DIR; fi\n')
+                script_file_id.write( 'mkdir --parents $NR_DIAMOND_DB_DIR\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function init\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    INIT_DATETIME=`date --utc +%s`\n')
+                script_file_id.write( '    FORMATTED_INIT_DATETIME=`date --date="@$INIT_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "Script started at $FORMATTED_INIT_DATETIME+00:00."\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write(f'    echo "CLUSTER: {cluster_name}"\n')
+                script_file_id.write( '    echo "HOST NAME: $HOSTNAME"\n')
+                script_file_id.write( '    echo "HOST IP: $HOST_IP"\n')
+                script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function build_database_nr\n')
+                script_file_id.write( '{\n')
+                script_file_id.write(f'    cd {current_run_dir}\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "Downloading proteome file ..."\n')
+                script_file_id.write( '    /usr/bin/time \\\n')
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --output-document $NR_PROTEOME_FILE \\\n')
+                script_file_id.write( '            $NR_PROTEOME_FTP\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "File is downloaded."\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "Generating DIAMOND database ..."\n')
+                script_file_id.write(f'    source activate {xlib.get_diamond_anaconda_code()}\n')
+                script_file_id.write( '    /usr/bin/time \\\n')
+                script_file_id.write( '        diamond makedb \\\n')
+                script_file_id.write( '            --in $NR_PROTEOME_FILE \\\n')
+                script_file_id.write( '            --db $NR_DIAMOND_DB_FILE\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error diamond-makedb $RC; fi\n')
+                script_file_id.write( '    conda deactivate\n')
+                script_file_id.write( '    echo "DIAMOND database is generated."\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function end\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
+                script_file_id.write( '    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
+                script_file_id.write( '    calculate_duration\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "Script ended OK at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    send_mail ok\n')
+                script_file_id.write( '    touch $SCRIPT_STATUS_OK\n')
+                script_file_id.write( '    exit 0\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function manage_error\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
+                script_file_id.write( '    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
+                script_file_id.write( '    calculate_duration\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "ERROR: $1 returned error $2"\n')
+                script_file_id.write( '    echo "Script ended WRONG at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    send_mail wrong\n')
+                script_file_id.write( '    touch $SCRIPT_STATUS_WRONG\n')
+                script_file_id.write( '    exit 3\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                process_name = f'TOA - {xlib.get_toa_process_nr_diamond_db_name}'
+                mail_message_ok = xlib.get_mail_message_ok(process_name, cluster_name)
+                mail_message_wrong = xlib.get_mail_message_wrong(process_name, cluster_name)
+                script_file_id.write( 'function send_mail\n')
+                script_file_id.write( '{\n')
+                script_file_id.write(f'    SUBJECT="{xlib.get_project_name()}: {process_name}"\n')
+                script_file_id.write( '    if [ "$1" == "ok" ]; then\n')
+                script_file_id.write(f'        MESSAGE="{mail_message_ok}"\n')
+                script_file_id.write( '    elif [ "$1" == "wrong" ]; then\n')
+                script_file_id.write(f'        MESSAGE="{mail_message_wrong}"\n')
+                script_file_id.write( '    else\n')
+                script_file_id.write( '         MESSAGE=""\n')
+                script_file_id.write( '    fi\n')
+                script_file_id.write( '    DESTINATION_FILE=mail-destination.json\n')
+                script_file_id.write( '    echo "{" > $DESTINATION_FILE\n')
+                script_file_id.write(f'    echo "    \\\"ToAddresses\\\":  [\\\"{xconfiguration.get_contact_data()}\\\"]," >> $DESTINATION_FILE\n')
+                script_file_id.write( '    echo "    \\\"CcAddresses\\\":  []," >> $DESTINATION_FILE\n')
+                script_file_id.write( '    echo "    \\\"BccAddresses\\\":  []" >> $DESTINATION_FILE\n')
+                script_file_id.write( '    echo "}" >> $DESTINATION_FILE\n')
+                script_file_id.write( '    MESSAGE_FILE=mail-message.json\n')
+                script_file_id.write( '    echo "{" > $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "    \\\"Subject\\\": {" >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "        \\\"Data\\\":  \\\"$SUBJECT\\\"," >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "        \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "    }," >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "    \\\"Body\\\": {" >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "        \\\"Html\\\": {" >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "            \\\"Data\\\":  \\\"$MESSAGE\\\"," >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "            \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "        }" >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "    }" >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "}" >> $MESSAGE_FILE\n')
+                script_file_id.write(f'    aws ses send-email --from {xconfiguration.get_contact_data()} --destination file://$DESTINATION_FILE --message file://$MESSAGE_FILE\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function calculate_duration\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    DURATION=`expr $END_DATETIME - $INIT_DATETIME`\n')
+                script_file_id.write( '    HH=`expr $DURATION / 3600`\n')
+                script_file_id.write( '    MM=`expr $DURATION % 3600 / 60`\n')
+                script_file_id.write( '    SS=`expr $DURATION % 60`\n')
+                script_file_id.write( '    FORMATTED_DURATION=`printf "%03d:%02d:%02d\\n" $HH $MM $SS`\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'init\n')
+                script_file_id.write( 'build_database_nr\n')
+                script_file_id.write( 'end\n')
+    except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append(f'*** ERROR: The file {get_nr_diamond_db_script()} can not be created.')
+        OK = False
+
+    # return the control variable and the error list
+    return (OK, error_list)
+
+#-------------------------------------------------------------------------------
+
+def build_nr_diamond_db_starter(current_run_dir):
+    '''
+    Build the starter of the script to build BLAST database NR for BLAST+.
+    '''
+
+    # initialize the control variable and the error list
+    OK = True
+    error_list = []
+
+    # write the starter
+    try:
+        if not os.path.exists(os.path.dirname(get_nr_diamond_db_starter())):
+            os.makedirs(os.path.dirname(get_nr_diamond_db_starter()))
+        with open(get_nr_diamond_db_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
+            file_id.write( '#!/bin/bash\n')
+            file_id.write( '#-------------------------------------------------------------------------------\n')
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_nr_diamond_db_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
+    except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append(f'*** ERROR: The file {get_nr_diamond_db_starter()} can not be created.')
+        OK = False
+
+    # return the control variable and the error list
+    return (OK, error_list)
+
+#-------------------------------------------------------------------------------
+
+def get_nr_diamond_db_script():
+    '''
+    Get the script path to build BLAST database NR for BLAST+.
+    '''
+
+    # assign the script path
+    nr_diamond_db_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_nr_diamond_db_code()}-process.sh'
+
+    # return the script path
+    return nr_diamond_db_script
+
+#-------------------------------------------------------------------------------
+
+def get_nr_diamond_db_starter():
+    '''
+    Get the starter path to build BLAST database NR for BLAST+.
+    '''
+
+    # assign the starter path
+    nr_diamond_db_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_nr_diamond_db_code()}-process-starter.sh'
+
+    # return the starter path
+    return nr_diamond_db_starter
 
 #-------------------------------------------------------------------------------
 
@@ -5627,7 +6223,9 @@ def build_viridiplantae_protein_gi_gilist_script(cluster_name, current_run_dir):
                 script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
                 script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])))
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
                 script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -5636,7 +6234,7 @@ def build_viridiplantae_protein_gi_gilist_script(cluster_name, current_run_dir):
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('if [ ! -d "$NCBI_DIR" ]; then mkdir --parents $NCBI_DIR; fi'))
+                script_file_id.write( 'if [ ! -d "$NCBI_DIR" ]; then mkdir  --parents $NCBI_DIR; fi\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function init\n')
                 script_file_id.write( '{\n')
@@ -5651,17 +6249,17 @@ def build_viridiplantae_protein_gi_gilist_script(cluster_name, current_run_dir):
                 script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function build_viridiplantae_protein_gilist'))
+                script_file_id.write( 'function build_viridiplantae_protein_gilist\n')
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Building Viridiplantae protein GI list ..."'))
+                script_file_id.write( '    echo "Building Viridiplantae protein GI list ..."\n')
                 script_file_id.write(f'        source activate {xlib.get_entrez_direct_anaconda_code()}\n')
-                script_file_id.write( '{0}\n'.format('    esearch -db protein -query "Viridiplantae[Organism]" | efetch -format uid > $PROTEIN_VIRIDIPLANTAE_GI_LIST'))
+                script_file_id.write( '    esearch -db protein -query "Viridiplantae[Organism]" | efetch -format uid > $PROTEIN_VIRIDIPLANTAE_GI_LIST\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error entrez-direct $RC; fi'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error entrez-direct $RC; fi\n')
                 script_file_id.write( '    conda deactivate\n')
-                script_file_id.write( '{0}\n'.format('    echo "List is built."'))
+                script_file_id.write( '    echo "List is built."\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function end\n')
@@ -5691,7 +6289,7 @@ def build_viridiplantae_protein_gi_gilist_script(cluster_name, current_run_dir):
                 script_file_id.write( '    exit 3\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                process_name = f'TOA - {get_toa_process_gilist_viridiplantae_nucleotide_gi_name()}'
+                process_name = f'TOA - {xlib.get_toa_process_gilist_viridiplantae_nucleotide_gi_name()}'
                 mail_message_ok = xlib.get_mail_message_ok(process_name, cluster_name)
                 mail_message_wrong = xlib.get_mail_message_wrong(process_name, cluster_name)
                 script_file_id.write( 'function send_mail\n')
@@ -5736,11 +6334,11 @@ def build_viridiplantae_protein_gi_gilist_script(cluster_name, current_run_dir):
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'init\n')
-                script_file_id.write( '{0}\n'.format('build_viridiplantae_protein_gilist'))
+                script_file_id.write( 'build_viridiplantae_protein_gilist\n')
                 script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created.'.format(get_viridiplantae_protein_gi_gilist_script()))
+        error_list.append(f'*** ERROR: The file {get_viridiplantae_protein_gi_gilist_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -5764,10 +6362,10 @@ def build_viridiplantae_protein_gi_gilist_starter(current_run_dir):
         with open(get_viridiplantae_protein_gi_gilist_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_viridiplantae_protein_gi_gilist_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_viridiplantae_protein_gi_gilist_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_viridiplantae_protein_gi_gilist_starter()))
+        error_list.append(f'*** ERROR: The file {get_viridiplantae_protein_gi_gilist_starter()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -5781,7 +6379,7 @@ def get_viridiplantae_protein_gi_gilist_script():
     '''
 
     # assign the script path
-    viridiplantae_protein_gi_gilist_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_gilist_viridiplantae_protein_gi_code())
+    viridiplantae_protein_gi_gilist_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_gilist_viridiplantae_protein_gi_code()}-process.sh'
 
     # return the script path
     return viridiplantae_protein_gi_gilist_script
@@ -5794,7 +6392,7 @@ def get_viridiplantae_protein_gi_gilist_starter():
     '''
 
     # assign the starter path
-    viridiplantae_protein_gi_gilist_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_gilist_viridiplantae_protein_gi_code())
+    viridiplantae_protein_gi_gilist_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_gilist_viridiplantae_protein_gi_code()}-process-starter.sh'
 
     # return the starter path
     return viridiplantae_protein_gi_gilist_starter
@@ -5831,7 +6429,9 @@ def build_gene_download_script(cluster_name, current_run_dir):
                 script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
                 script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])))
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
                 script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -5840,7 +6440,7 @@ def build_gene_download_script(cluster_name, current_run_dir):
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('if [ ! -d "$NCBI_DIR" ]; then mkdir --parents $NCBI_DIR; fi'))
+                script_file_id.write( 'if [ ! -d "$NCBI_DIR" ]; then mkdir --parents $NCBI_DIR; fi\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function init\n')
                 script_file_id.write( '{\n')
@@ -5855,31 +6455,31 @@ def build_gene_download_script(cluster_name, current_run_dir):
                 script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function download_gene_functional_annotation'))
+                script_file_id.write( 'function download_gene_functional_annotation\n')
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading Gene to RefSeq file ..."'))
+                script_file_id.write( '    echo "Downloading Gene to RefSeq file ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --output-document $GENE_GENE2REFSEQ_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            $GENE_GENE2REFSEQ_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --output-document $GENE_GENE2REFSEQ_FILE \\\n')
+                script_file_id.write( '            $GENE_GENE2REFSEQ_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "File is downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "File is downloaded."\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading Gene Ontology file ..."'))
+                script_file_id.write( '    echo "Downloading Gene Ontology file ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --output-document $GENE_GENE2GO_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            $GENE_GENE2GO_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --output-document $GENE_GENE2GO_FILE \\\n')
+                script_file_id.write( '            $GENE_GENE2GO_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "File is downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "File is downloaded."\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function end\n')
@@ -5954,11 +6554,11 @@ def build_gene_download_script(cluster_name, current_run_dir):
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'init\n')
-                script_file_id.write( '{0}\n'.format('download_gene_functional_annotation'))
+                script_file_id.write( 'download_gene_functional_annotation\n')
                 script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created.'.format(get_gene_download_script()))
+        error_list.append(f'*** ERROR: The file {get_gene_download_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -5982,10 +6582,10 @@ def build_gene_download_starter(current_run_dir):
         with open(get_gene_download_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_gene_download_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_gene_download_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_gene_download_starter()))
+        error_list.append(f'*** ERROR: The file {get_gene_download_starter()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -5999,7 +6599,7 @@ def get_gene_download_script():
     '''
 
     # assign the script path
-    gene_download_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_download_gene_code())
+    gene_download_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_download_gene_code()}-process.sh'
 
     # return the script path
     return gene_download_script
@@ -6012,7 +6612,7 @@ def get_gene_download_starter():
     '''
 
     # assign the starter path
-    gene_download_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_download_gene_code())
+    gene_download_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_download_gene_code()}-process-starter.sh'
 
     # return the starter path
     return gene_download_starter
@@ -6049,7 +6649,9 @@ def build_gene_load_script(cluster_name, current_run_dir):
                 script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
                 script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])))
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
                 script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -6071,23 +6673,23 @@ def build_gene_load_script(cluster_name, current_run_dir):
                 script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function load_gene_functional_annotation'))
+                script_file_id.write( 'function load_gene_functional_annotation\n')
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Loading functional annotation data into TOA database ..."'))
+                script_file_id.write( '    echo "Loading functional annotation data into TOA database ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        load-ncbi-data.py \\'))
-                script_file_id.write( '{0}\n'.format('            --db=$TOA_DB \\'))
-                script_file_id.write( '{0}\n'.format('            --dataset=gene \\'))
-                script_file_id.write( '{0}\n'.format('            --gene2refseq=$GENE_GENE2REFSEQ_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            --gene2go=$GENE_GENE2GO_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            --verbose=N \\'))
-                script_file_id.write( '{0}\n'.format('            --trace=N'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        load-ncbi-data.py \\\n')
+                script_file_id.write( '            --db=$TOA_DB \\\n')
+                script_file_id.write( '            --dataset=gene \\\n')
+                script_file_id.write( '            --gene2refseq=$GENE_GENE2REFSEQ_FILE \\\n')
+                script_file_id.write( '            --gene2go=$GENE_GENE2GO_FILE \\\n')
+                script_file_id.write( '            --verbose=N \\\n')
+                script_file_id.write( '            --trace=N\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error load-ncbi-data.py $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "Data are loaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error load-ncbi-data.py $RC; fi\n')
+                script_file_id.write( '    echo "Data are loaded."\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function end\n')
@@ -6162,11 +6764,11 @@ def build_gene_load_script(cluster_name, current_run_dir):
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'init\n')
-                script_file_id.write( '{0}\n'.format('load_gene_functional_annotation'))
+                script_file_id.write( 'load_gene_functional_annotation\n')
                 script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created.'.format(get_gene_load_script()))
+        error_list.append(f'*** ERROR: The file {get_gene_load_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -6190,10 +6792,10 @@ def build_gene_load_starter(current_run_dir):
         with open(get_gene_load_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_gene_load_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_gene_load_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_gene_load_starter()))
+        error_list.append(f'*** ERROR: The file {get_gene_load_starter()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -6203,11 +6805,11 @@ def build_gene_load_starter(current_run_dir):
 
 def get_gene_load_script():
     '''
-    Get the script path in the local computer to load NCBI Gene functional annotation into TOA database.
+    Get the script path to load NCBI Gene functional annotation into TOA database.
     '''
 
     # assign the script path
-    gene_load_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_load_gene_code())
+    gene_load_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_load_gene_code()}-process.sh'
 
     # return the script path
     return gene_load_script
@@ -6216,11 +6818,11 @@ def get_gene_load_script():
 
 def get_gene_load_starter():
     '''
-    Get the starter path in the local computer to load NCBI Gene functional annotation into TOA database.
+    Get the starter path to load NCBI Gene functional annotation into TOA database.
     '''
 
     # assign the starter path
-    gene_load_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_load_gene_code())
+    gene_load_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_load_gene_code()}-process-starter.sh'
 
     # return the starter path
     return gene_load_starter
@@ -6257,7 +6859,9 @@ def build_interpro_download_script(cluster_name, current_run_dir):
                 script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
                 script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])))
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
                 script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -6266,7 +6870,7 @@ def build_interpro_download_script(cluster_name, current_run_dir):
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('if [ ! -d "$INTERPRO_DIR" ]; then mkdir --parents $INTERPRO_DIR; fi'))
+                script_file_id.write( 'if [ ! -d "$INTERPRO_DIR" ]; then mkdir --parents $INTERPRO_DIR; fi\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function init\n')
                 script_file_id.write( '{\n')
@@ -6281,20 +6885,20 @@ def build_interpro_download_script(cluster_name, current_run_dir):
                 script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function download_interpro_functional_annotation'))
+                script_file_id.write( 'function download_interpro_functional_annotation\n')
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading file of mappings of InterPro entries to Gene Ontology terms ..."'))
+                script_file_id.write( '    echo "Downloading file of mappings of InterPro entries to Gene Ontology terms ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --output-document $INTERPRO_INTERPRO2GO_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            $INTERPRO_INTERPRO2GO_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --output-document $INTERPRO_INTERPRO2GO_FILE \\\n')
+                script_file_id.write( '            $INTERPRO_INTERPRO2GO_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "File is downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "File is downloaded."\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function end\n')
@@ -6369,11 +6973,11 @@ def build_interpro_download_script(cluster_name, current_run_dir):
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'init\n')
-                script_file_id.write( '{0}\n'.format('download_interpro_functional_annotation'))
+                script_file_id.write( 'download_interpro_functional_annotation\n')
                 script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created.'.format(get_interpro_download_script()))
+        error_list.append(f'*** ERROR: The file {get_interpro_download_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -6397,10 +7001,10 @@ def build_interpro_download_starter(current_run_dir):
         with open(get_interpro_download_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_interpro_download_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_interpro_download_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_interpro_download_starter()))
+        error_list.append(f'*** ERROR: The file {get_interpro_download_starter()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -6410,11 +7014,11 @@ def build_interpro_download_starter(current_run_dir):
 
 def get_interpro_download_script():
     '''
-    Get the script path in the local computer to download the InterPro functional annotation.
+    Get the script path to download the InterPro functional annotation.
     '''
 
     # assign the script path
-    interpro_download_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_download_interpro_code())
+    interpro_download_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_download_interpro_code()}-process.sh'
 
     # return the script path
     return interpro_download_script
@@ -6423,11 +7027,11 @@ def get_interpro_download_script():
 
 def get_interpro_download_starter():
     '''
-    Get the script path in the local computer to download the InterPro functional annotation.
+    Get the script path to download the InterPro functional annotation.
     '''
 
     # assign the starter path
-    interpro_download_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_download_interpro_code())
+    interpro_download_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_download_interpro_code()}-process-starter.sh'
 
     # return the starter path
     return interpro_download_starter
@@ -6464,7 +7068,9 @@ def build_interpro_load_script(cluster_name, current_run_dir):
                 script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
                 script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])))
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
                 script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -6486,21 +7092,21 @@ def build_interpro_load_script(cluster_name, current_run_dir):
                 script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function load_interpro_functional_annotation'))
+                script_file_id.write( 'function load_interpro_functional_annotation\n')
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Loading functional annotation data into TOA database ..."'))
+                script_file_id.write( '    echo "Loading functional annotation data into TOA database ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        load-interpro-data.py \\'))
-                script_file_id.write( '{0}\n'.format('            --db=$TOA_DB \\'))
-                script_file_id.write( '{0}\n'.format('            --interpro2go=$INTERPRO_INTERPRO2GO_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            --verbose=N \\'))
-                script_file_id.write( '{0}\n'.format('            --trace=N'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        load-interpro-data.py \\\n')
+                script_file_id.write( '            --db=$TOA_DB \\\n')
+                script_file_id.write( '            --interpro2go=$INTERPRO_INTERPRO2GO_FILE \\\n')
+                script_file_id.write( '            --verbose=N \\\n')
+                script_file_id.write( '            --trace=N\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error load-interpro-data.py $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "Data are loaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error load-interpro-data.py $RC; fi\n')
+                script_file_id.write( '    echo "Data are loaded."\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function end\n')
@@ -6575,11 +7181,11 @@ def build_interpro_load_script(cluster_name, current_run_dir):
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'init\n')
-                script_file_id.write( '{0}\n'.format('load_interpro_functional_annotation'))
+                script_file_id.write( 'load_interpro_functional_annotation\n')
                 script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created.'.format(get_interpro_load_script()))
+        error_list.append(f'*** ERROR: The file {get_interpro_load_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -6603,10 +7209,10 @@ def build_interpro_load_starter(current_run_dir):
         with open(get_interpro_load_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_interpro_load_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_interpro_load_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_interpro_load_starter()))
+        error_list.append(f'*** ERROR: The file {get_interpro_load_starter()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -6616,11 +7222,11 @@ def build_interpro_load_starter(current_run_dir):
 
 def get_interpro_load_script():
     '''
-    Get the script path in the local computer to load InterPro functional annotation into TOA database.
+    Get the script path to load InterPro functional annotation into TOA database.
     '''
 
     # assign the script path
-    interpro_load_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_load_interpro_code())
+    interpro_load_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_load_interpro_code()}-process.sh'
 
     # return the script path
     return interpro_load_script
@@ -6629,11 +7235,11 @@ def get_interpro_load_script():
 
 def get_interpro_load_starter():
     '''
-    Get the starter path in the local computer to load InterPro functional annotation into TOA database.
+    Get the starter path to load InterPro functional annotation into TOA database.
     '''
 
     # assign the starter path
-    interpro_load_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_load_interpro_code())
+    interpro_load_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_load_interpro_code()}-process-starter.sh'
 
     # return the starter path
     return interpro_load_starter
@@ -6670,7 +7276,9 @@ def build_go_download_script(cluster_name, current_run_dir):
                 script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
                 script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])))
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
                 script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -6679,7 +7287,7 @@ def build_go_download_script(cluster_name, current_run_dir):
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
                 script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('if [ ! -d "$GO_DIR" ]; then mkdir --parents $GO_DIR; fi'))
+                script_file_id.write( 'if [ ! -d "$GO_DIR" ]; then mkdir --parents $GO_DIR; fi\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function init\n')
                 script_file_id.write( '{\n')
@@ -6694,64 +7302,64 @@ def build_go_download_script(cluster_name, current_run_dir):
                 script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function download_go_functional_annotation'))
+                script_file_id.write( 'function download_go_functional_annotation\n')
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading ontology ..."'))
+                script_file_id.write( '    echo "Downloading ontology ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --output-document $GO_ONTOLOGY_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            $GO_ONTOLOGY_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --output-document $GO_ONTOLOGY_FILE \\\n')
+                script_file_id.write( '            $GO_ONTOLOGY_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "File is downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "File is downloaded."\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading GO to Enzyme Commission (EC) ..."'))
+                script_file_id.write( '    echo "Downloading GO to Enzyme Commission (EC) ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --output-document  $GO_EC2GO_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            $GO_EC2GO_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --output-document  $GO_EC2GO_FILE \\\n')
+                script_file_id.write( '            $GO_EC2GO_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "File is downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "File is downloaded."\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading GO to KEGG ..."'))
+                script_file_id.write( '    echo "Downloading GO to KEGG ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --output-document $GO_KEGG2GO_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            $GO_KEGG2GO_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --output-document $GO_KEGG2GO_FILE \\\n')
+                script_file_id.write( '            $GO_KEGG2GO_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "File is downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "File is downloaded."\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading GO to MetaCyc ..."'))
+                script_file_id.write( '    echo "Downloading GO to MetaCyc ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --output-document $GO_METACYC2GO_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            $GO_METACYC2GO_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --output-document $GO_METACYC2GO_FILE \\\n')
+                script_file_id.write( '            $GO_METACYC2GO_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "File is downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "File is downloaded."\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Downloading GO to InterPro ..."'))
+                script_file_id.write( '    echo "Downloading GO to InterPro ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        wget \\'))
-                script_file_id.write( '{0}\n'.format('            --quiet \\'))
-                script_file_id.write( '{0}\n'.format('            --output-document $GO_INTERPRO2GO_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            $GO_INTERPRO2GO_FTP'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        wget \\\n')
+                script_file_id.write( '            --quiet \\\n')
+                script_file_id.write( '            --output-document $GO_INTERPRO2GO_FILE \\\n')
+                script_file_id.write( '            $GO_INTERPRO2GO_FTP\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error wget $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "File is downloaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error wget $RC; fi\n')
+                script_file_id.write( '    echo "File is downloaded."\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function end\n')
@@ -6826,11 +7434,11 @@ def build_go_download_script(cluster_name, current_run_dir):
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'init\n')
-                script_file_id.write( '{0}\n'.format('download_go_functional_annotation'))
+                script_file_id.write( 'download_go_functional_annotation\n')
                 script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created.'.format(get_go_download_script()))
+        error_list.append(f'*** ERROR: The file {get_go_download_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -6854,10 +7462,10 @@ def build_go_download_starter(current_run_dir):
         with open(get_go_download_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_go_download_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_go_download_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_go_download_starter()))
+        error_list.append(f'*** ERROR: The file {get_go_download_starter()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -6867,11 +7475,11 @@ def build_go_download_starter(current_run_dir):
 
 def get_go_download_script():
     '''
-    Get the script path in the local computer to download the Gene Ontology functional annotation.
+    Get the script path to download the Gene Ontology functional annotation.
     '''
 
     # assign the script path
-    go_download_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_download_go_code())
+    go_download_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_download_go_code()}-process.sh'
 
     # return the script path
     return go_download_script
@@ -6880,11 +7488,11 @@ def get_go_download_script():
 
 def get_go_download_starter():
     '''
-    Get the script path in the local computer to download the Gene Ontology functional annotation.
+    Get the script path to download the Gene Ontology functional annotation.
     '''
 
     # assign the starter path
-    go_download_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_download_go_code())
+    go_download_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_download_go_code()}-process-starter.sh'
 
     # return the starter path
     return go_download_starter
@@ -6921,7 +7529,9 @@ def build_go_load_script(cluster_name, current_run_dir):
                 script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
                 script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])))
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
                 script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -6943,25 +7553,25 @@ def build_go_load_script(cluster_name, current_run_dir):
                 script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function load_go_functional_annotation'))
+                script_file_id.write( 'function load_go_functional_annotation\n')
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Loading functional annotation data into TOA database ..."'))
+                script_file_id.write( '    echo "Loading functional annotation data into TOA database ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        load-go-data.py \\'))
-                script_file_id.write( '{0}\n'.format('            --db=$TOA_DB \\'))
-                script_file_id.write( '{0}\n'.format('            --ontology=$GO_ONTOLOGY_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            --ec2go=$GO_EC2GO_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            --kegg2go=$GO_KEGG2GO_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            --metacyc2go=$GO_METACYC2GO_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            --interpro2go=$GO_INTERPRO2GO_FILE \\'))
-                script_file_id.write( '{0}\n'.format('            --verbose=N \\'))
-                script_file_id.write( '{0}\n'.format('            --trace=N'))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        load-go-data.py \\\n')
+                script_file_id.write( '            --db=$TOA_DB \\\n')
+                script_file_id.write( '            --ontology=$GO_ONTOLOGY_FILE \\\n')
+                script_file_id.write( '            --ec2go=$GO_EC2GO_FILE \\\n')
+                script_file_id.write( '            --kegg2go=$GO_KEGG2GO_FILE \\\n')
+                script_file_id.write( '            --metacyc2go=$GO_METACYC2GO_FILE \\\n')
+                script_file_id.write( '            --interpro2go=$GO_INTERPRO2GO_FILE \\\n')
+                script_file_id.write( '            --verbose=N \\\n')
+                script_file_id.write( '            --trace=N\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error load-go-data.py $RC; fi'))
-                script_file_id.write( '{0}\n'.format('    echo "Data are loaded."'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error load-go-data.py $RC; fi\n')
+                script_file_id.write( '    echo "Data are loaded."\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function end\n')
@@ -7036,11 +7646,11 @@ def build_go_load_script(cluster_name, current_run_dir):
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'init\n')
-                script_file_id.write( '{0}\n'.format('load_go_functional_annotation'))
+                script_file_id.write( 'load_go_functional_annotation\n')
                 script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created.'.format(get_go_load_script()))
+        error_list.append(f'*** ERROR: The file {get_go_load_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -7064,10 +7674,10 @@ def build_go_load_starter(current_run_dir):
         with open(get_go_load_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_go_load_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_go_load_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_go_load_starter()))
+        error_list.append(f'*** ERROR: The file {get_go_load_starter()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -7077,11 +7687,11 @@ def build_go_load_starter(current_run_dir):
 
 def get_go_load_script():
     '''
-    Get the script path in the local computer to load Gene Ontology functional annotation into TOA database.
+    Get the script path to load Gene Ontology functional annotation into TOA database.
     '''
 
     # assign the script path
-    go_load_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_load_go_code())
+    go_load_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_load_go_code()}-process.sh'
 
     # return the script path
     return go_load_script
@@ -7090,11 +7700,11 @@ def get_go_load_script():
 
 def get_go_load_starter():
     '''
-    Get the starter path in the local computer to load Gene Ontology functional annotation into TOA database.
+    Get the starter path to load Gene Ontology functional annotation into TOA database.
     '''
 
     # assign the starter path
-    go_load_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_load_go_code())
+    go_load_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_load_go_code()}-process-starter.sh'
 
     # return the starter path
     return go_load_starter
@@ -7129,38 +7739,30 @@ def create_pipeline_config_file(pipeline_type, assembly_origin='NGSCLOUD', exper
     # get the order of the database in the list
     try:
         dicots_04_order = database_list.index('dicots_04') + 1
-    except:
+    except Exception as e:
         dicots_04_order = 0
     try:
         gymno_01_order = database_list.index('gymno_01') + 1
-    except:
+    except Exception as e:
         gymno_01_order = 0
     try:
         monocots_04_order = database_list.index('monocots_04') + 1
-    except:
+    except Exception as e:
         monocots_04_order = 0
     try:
         refseq_plant_order = database_list.index('refseq_plant') + 1
-    except:
+    except Exception as e:
         refseq_plant_order = 0
     if pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
         try:
-            nt_viridiplantae_order = database_list.index('nt_viridiplantae') + 1
-        except:
-            nt_viridiplantae_order = 0
-        try:
-            nt_complete_order = database_list.index('nt_complete') + 1
-        except:
-            nt_complete_order = 0
+            nt_order = database_list.index('nt') + 1
+        except Exception as e:
+            nt_order = 0
     elif pipeline_type == xlib.get_toa_process_pipeline_aminoacid_code():
         try:
-            nr_viridiplantae_order = database_list.index('nr_viridiplantae') + 1
-        except:
-            nr_viridiplantae_order = 0
-        try:
-            nr_complete_order = database_list.index('nr_complete') + 1
-        except:
-            nr_complete_order = 0
+            nr_order = database_list.index('nr') + 1
+        except Exception as e:
+            nr_order = 0
 
     # get the config file
     if pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
@@ -7175,47 +7777,79 @@ def create_pipeline_config_file(pipeline_type, assembly_origin='NGSCLOUD', exper
         with open(config_file, mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '# You must review the information of this file and update the values with the corresponding ones to the current run.\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# The assembly files have to be located in:'))
-            file_id.write( '{0}\n'.format('#    {0}/experiment_id/assembly_dataset_id  (when the assembly origin is NGSCLOUD)'.format(xlib.get_cluster_result_dir())))
-            file_id.write( '{0}\n'.format('#    {0}/reference_dataset_id  (when the assembly origin is EXTERNAL)'.format(xlib.get_cluster_reference_dir())))
-            file_id.write( '{0}\n'.format('# The experiment_id, database_dataset_id, assembly_dataset_id, reference_dataset_id and trasncriptome_file names are fixed in the identification section.'))
+            file_id.write( '# The assembly files have to be located in:\n')
+            file_id.write(f'#    {xlib.get_cluster_result_dir()}/experiment_id/assembly_dataset_id  (when the assembly origin is NGSCLOUD)\n')
+            file_id.write(f'#    {xlib.get_cluster_reference_dir()}/reference_dataset_id  (when the assembly origin is EXTERNAL)\n')
+            file_id.write( '# The experiment_id, database_dataset_id, assembly_dataset_id, reference_dataset_id and trasncriptome_file names are fixed in the identification section.\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# You can consult the parameters of nucleotide pipeline (TOA package) and their meaning in "https://github.com/GGFHF/TOA".'))
+            file_id.write( '# You can consult the parameters of NCBI BLAST+ and their meaning in "https://blast.ncbi.nlm.nih.gov/"\n')
+            file_id.write( '# and the ones of DIAMOND in "http://www.diamondsearch.org/".\n')
+            file_id.write( '#\n')
+            file_id.write( '# In sections "BLAST+ parameters" and "DIAMOND parameters", the key "other_parameters_blast?" allows you to input additional\n')
+            file_id.write( '# parameters in the format:\n')
+            file_id.write( '#\n')
+            file_id.write( '#    other_parameters = --parameter-1[=value-1][; --parameter-2[=value-2][; ...; --parameter-n[=value-n]]]\n')
+            file_id.write( '#\n')
+            file_id.write( '# parameter-i is a parameter name of BLAST+/DIAMOND and value-i a valid value of parameter-i, e.g. in BLAST+:\n')
+            file_id.write( '#\n')
+            if pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
+                file_id.write( '#    other_parameters_blastx = --ungapped; --best_hit_score_edge=0.1\n')
+            elif pipeline_type == xlib.get_toa_process_pipeline_aminoacid_code():
+                file_id.write( '#    other_parameters_blastp = --lcase_masking; --matrix=BLOSUM62\n')
             file_id.write( '\n')
             file_id.write( '# This section has the information identifies the experiment.\n')
             file_id.write( '[identification]\n')
-            file_id.write( '{0:<50} {1}\n'.format('assembly_origin = {0}'.format(assembly_origin), '# assembly origin: {0}'.format(get_assembly_origin_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('experiment_id = {0}'.format(experiment_id), '# experiment identification; NONE when the assembly origin is EXTERNAL'))
-            file_id.write( '{0:<50} {1}\n'.format('assembly_software = {0}'.format(assembly_software), '# assembly software: {0}; NONE when the assembly origin is EXTERNAL'.format(get_assembly_software_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('assembly_dataset_id = {0}'.format(assembly_dataset_id), '# assembly dataset identification; NONE when the assembly origin is EXTERNAL'))
+            file_id.write( '{0:<50} {1}\n'.format(f'assembly_origin = {assembly_origin}', f'# assembly origin: {get_assembly_origin_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format(f'experiment_id = {experiment_id}', '# experiment identification; NONE when the assembly origin is EXTERNAL'))
+            file_id.write( '{0:<50} {1}\n'.format(f'assembly_software = {assembly_software}', f'# assembly software: {get_assembly_software_code_list_text()}; NONE when the assembly origin is EXTERNAL'))
+            file_id.write( '{0:<50} {1}\n'.format(f'assembly_dataset_id = {assembly_dataset_id}', '# assembly dataset identification; NONE when the assembly origin is EXTERNAL'))
             file_id.write( '{0:<50} {1}\n'.format(f'assembly_type = {assembly_type}', f'# assembly type: CONTIGS or SCAFFOLDS in {xlib.get_soapdenovotrans_name()}; NONE in any other case'))
-            file_id.write( '{0:<50} {1}\n'.format('reference_dataset_id = {0}'.format(reference_dataset_id), '# reference dataset identification; NONE when the assembly origin is NGSCLOUD'))
-            file_id.write( '{0:<50} {1}\n'.format('transcriptome_file = {0}'.format(transcriptome_file), '# transcriptome file name; NONE when the assembly origin is NGSCLOUD'))
+            file_id.write( '{0:<50} {1}\n'.format(f'reference_dataset_id = {reference_dataset_id}', '# reference dataset identification; NONE when the assembly origin is NGSCLOUD'))
+            file_id.write( '{0:<50} {1}\n'.format(f'transcriptome_file = {transcriptome_file}', '# transcriptome file name; NONE when the assembly origin is NGSCLOUD'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information to set the database parameters'))
-            file_id.write( '{0}\n'.format('[database parameters]'))
-            file_id.write( '{0:<50} {1}\n'.format('gymno_01 = {0}'.format(gymno_01_order), '# order of Gymno PLAZA 1.0 in the annotation; 0 if it is not used'))
-            file_id.write( '{0:<50} {1}\n'.format('dicots_04 = {0}'.format(dicots_04_order), '# order of Dicots PLAZA 4.0 in the annotation; 0 if it is not used'))
-            file_id.write( '{0:<50} {1}\n'.format('monocots_04 = {0}'.format(monocots_04_order), '# order of Monocots PLAZA 4.0 in the annotation; 0 if it is not used'))
-            file_id.write( '{0:<50} {1}\n'.format('refseq_plant = {0}'.format(refseq_plant_order), '# order of NCBI RefSeq Plant in the annotation; 0 if it is not used'))
+            file_id.write( '# This section has the information to set the database parameters\n')
+            file_id.write( '[database parameters]\n')
+            file_id.write( '{0:<50} {1}\n'.format(f'gymno_01 = {gymno_01_order}', '# order of Gymno PLAZA 1.0 in the annotation; 0 if it is not used'))
+            file_id.write( '{0:<50} {1}\n'.format(f'dicots_04 = {dicots_04_order}', '# order of Dicots PLAZA 4.0 in the annotation; 0 if it is not used'))
+            file_id.write( '{0:<50} {1}\n'.format(f'monocots_04 = {monocots_04_order}', '# order of Monocots PLAZA 4.0 in the annotation; 0 if it is not used'))
+            file_id.write( '{0:<50} {1}\n'.format(f'refseq_plant = {refseq_plant_order}', '# order of NCBI RefSeq Plant in the annotation; 0 if it is not used'))
             if pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
-                file_id.write( '{0:<50} {1}\n'.format('nt_viridiplantae = {0}'.format(nt_viridiplantae_order), '# order of NCBI BLAST database NT (Viridiplantae) in the annotation; 0 if it is not used'))
-                file_id.write( '{0:<50} {1}\n'.format('nt_complete = {0}'.format(nt_complete_order), '# order of NCBI BLAST database NT (complete) in the annotation, it has to be the last; 0 if it is not used'))
+                file_id.write( '{0:<50} {1}\n'.format(f'nt = {nt_order}', '# order of NCBI BLAST database NT in the annotation; 0 if it is not used'))
             elif pipeline_type == xlib.get_toa_process_pipeline_aminoacid_code():
-                file_id.write( '{0:<50} {1}\n'.format('nr_viridiplantae = {0}'.format(nr_viridiplantae_order), '# order of NCBI BLAST database NR (Viridiplantae) in the annotation; 0 if it is not used'))
-                file_id.write( '{0:<50} {1}\n'.format('nr_complete = {0}'.format(nr_complete_order), '# order of NCBI BLAST database NR (complete) in the annotation, it has to be the last; 0 if it is not used'))
-                pass
+                file_id.write( '{0:<50} {1}\n'.format(f'nr = {nr_order}', '# order of NCBI BLAST database NR in the annotation; 0 if it is not used'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information to set the BLAST parameters'))
-            file_id.write( '{0}\n'.format('[BLAST parameters]'))
-            file_id.write( '{0:<50} {1}\n'.format('thread_number = 16', '# threads number'))
-            file_id.write( '{0:<50} {1}\n'.format('e_value = 1E-6', '# expectation value (E-value) threshold for saving hits'))
-            file_id.write( '{0:<50} {1}\n'.format('max_target_seqs = 20', '# maximum number of aligned sequences to keep'))
-            file_id.write( '{0:<50} {1}\n'.format('max_hsps = 999999', '# maximum number of HSPs per subject sequence to save for each query'))
-            file_id.write( '{0:<50} {1}\n'.format('qcov_hsp_perc = 0.0', '# alignments below the specified query coverage per HSPs are removed'))
+            file_id.write( '# This section has the information to set the pipeline building parameters\n')
+            file_id.write( '[pipeline parameters]\n')
+            if pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
+                file_id.write( '{0:<50} {1}\n'.format(f'alignment_tool = {xlib.get_blastplus_name()}', f'# tool used in blastx alignments: {xlib.get_alignment_tool_code_list_text()}; blastn alignments will use BLAST+'))
+            elif pipeline_type == xlib.get_toa_process_pipeline_aminoacid_code():
+                file_id.write( '{0:<50} {1}\n'.format(f'alignment_tool = {xlib.get_blastplus_name()}', f'# tool used in blastp alignments: {xlib.get_alignment_tool_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format('threads = 4', '# number of threads for use'))
+            file_id.write( '\n')
+            file_id.write( '# This section has the information to set the NCBI BLAST+ parameters\n')
+            file_id.write( '[BLAST+ parameters]\n')
+            file_id.write( '{0:<50} {1}\n'.format( 'evalue = 1E-6', '# expectation value threshold for saving hits'))
+            file_id.write( '{0:<50} {1}\n'.format( 'max_target_seqs = 20', '# maximum number of aligned sequences to keep'))
+            file_id.write( '{0:<50} {1}\n'.format( 'max_hsps = 999999', '# maximum number of HSPs per subject sequence to save for each query'))
+            file_id.write( '{0:<50} {1}\n'.format( 'qcov_hsp_perc = 0.0', '# alignments below the specified query coverage per HSPs are removed'))
+            if pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
+                file_id.write( '{0:<50} {1}\n'.format( 'other_parameters_blastx = NONE', '# blastx additional parameters or NONE'))
+                file_id.write( '{0:<50} {1}\n'.format( 'other_parameters_blastn = NONE', '# blastn additional parameters or NONE'))
+            elif pipeline_type == xlib.get_toa_process_pipeline_aminoacid_code():
+                file_id.write( '{0:<50} {1}\n'.format( 'other_parameters_blastp = NONE', '# blastp additional parameters or NONE'))
+            file_id.write( '\n')
+            file_id.write( '# This section has the information to set the DIAMOND parameters\n')
+            file_id.write( '[DIAMOND parameters]\n')
+            file_id.write( '{0:<50} {1}\n'.format( 'evalue = 1E-6', '# expectation value threshold for saving hits'))
+            file_id.write( '{0:<50} {1}\n'.format( 'max-target-seqs = 20', '# maximum number of aligned sequences to keep'))
+            file_id.write( '{0:<50} {1}\n'.format( 'max-hsps = 999999', '# maximum number of HSPs per subject sequence to save for each query'))
+            if pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
+                file_id.write( '{0:<50} {1}\n'.format( 'other_parameters_blastx = NONE', '# blastx additional parameters or NONE'))
+            elif pipeline_type == xlib.get_toa_process_pipeline_aminoacid_code():
+                file_id.write( '{0:<50} {1}\n'.format( 'other_parameters_blastp = NONE', '# blastp additional parameters or NONE'))
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be recreated'.format(config_file))
+        error_list.append(f'*** ERROR: The file {config_file} can not be recreated')
         OK = False
 
     # return the control variable and the error list
@@ -7268,7 +7902,7 @@ def check_pipeline_config_file(pipeline_type, strict):
                 error_list.append('*** ERROR: the key "assembly_origin" is not found in the section "identification".')
                 OK = False
             elif not xlib.check_code(assembly_origin, get_assembly_origin_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "assembly_origin" has to be {0}.'.format(get_assembly_origin_code_list_text()))
+                error_list.append(f'*** ERROR: the key "assembly_origin" has to be {get_assembly_origin_code_list_text()}.')
                 OK = False
 
             # check section "identification" - key "experiment_id"
@@ -7292,7 +7926,7 @@ def check_pipeline_config_file(pipeline_type, strict):
                 OK = False
             elif assembly_origin == 'NGSCLOUD':
                 if not xlib.check_code(assembly_software, get_assembly_software_code_list(), case_sensitive=False):
-                    error_list.append('*** ERROR: the key "assembly_software" has to be {0} when the assembly origin is NGSCLOUD.'.format(get_assembly_software_code_list_text()))
+                    error_list.append(f'*** ERROR: the key "assembly_software" has to be {get_assembly_software_code_list_text()} when the assembly origin is NGSCLOUD.')
                     OK = False
             elif assembly_origin == 'EXTERNAL':
                 if assembly_software.upper() != 'NONE':
@@ -7306,7 +7940,7 @@ def check_pipeline_config_file(pipeline_type, strict):
                 OK = False
             elif assembly_origin == 'NGSCLOUD':
                 if not xlib.check_startswith(assembly_dataset_id, get_assembly_software_code_list(), case_sensitive=True):
-                    error_list.append('*** ERROR: the key "assembly_software" has to start with {0} when the assembly origin is NGSCLOUD.'.format(get_assembly_software_code_list_text()))
+                    error_list.append(f'*** ERROR: the key "assembly_software" has to start with {get_assembly_software_code_list_text()} when the assembly origin is NGSCLOUD.')
                     OK = False
             elif assembly_origin == 'EXTERNAL':
                 if assembly_dataset_id.upper() != 'NONE':
@@ -7410,121 +8044,201 @@ def check_pipeline_config_file(pipeline_type, strict):
             else:
                 is_ok_refseq_plant = True
 
-            # check section "database parameters" - key "nt_viridiplantae"/"nr_viridiplantae"
-            is_ok_nx_viridiplantae = False
+            # check section "database parameters" - key "nt"/"nr"
+            is_ok_nx = False
             if pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
-                nt_viridiplantae = pipeline_option_dict.get('database parameters', {}).get('nt_viridiplantae', not_found)
-                if nt_viridiplantae == not_found:
-                    error_list.append('*** ERROR: the key "nt_viridiplantae" is not found in the section "database parameters".')
+                nt = pipeline_option_dict.get('database parameters', {}).get('nt', not_found)
+                if nt == not_found:
+                    error_list.append('*** ERROR: the key "nt" is not found in the section "database parameters".')
                     OK = False
-                elif not xlib.check_int(nt_viridiplantae, minimum=0, maximum=6):
-                    error_list.append('*** ERROR: the key "nt_viridiplantae" has to be an integer number between 0 and 6.')
+                elif not xlib.check_int(nt, minimum=0, maximum=6):
+                    error_list.append('*** ERROR: the key "nt" has to be an integer number between 0 and 6.')
                     OK = False
                 else:
-                    is_ok_nx_viridiplantae = True
+                    is_ok_nx = True
             elif pipeline_type == xlib.get_toa_process_pipeline_aminoacid_code():
-                nr_viridiplantae = pipeline_option_dict.get('database parameters', {}).get('nr_viridiplantae', not_found)
-                if nr_viridiplantae == not_found:
-                    error_list.append('*** ERROR: the key "nr_viridiplantae" is not found in the section "database parameters".')
+                nr = pipeline_option_dict.get('database parameters', {}).get('nr', not_found)
+                if nr == not_found:
+                    error_list.append('*** ERROR: the key "nr" is not found in the section "database parameters".')
                     OK = False
-                elif not xlib.check_int(nr_viridiplantae, minimum=0, maximum=6):
-                    error_list.append('*** ERROR: the key "nr_viridiplantae" has to be an integer number between 0 and 6.')
-                    OK = False
-                else:
-                    is_ok_nx_viridiplantae = True
-
-            # check section "database parameters" - key "nt_complete"/"nr_complete"
-            is_ok_nx_complete = False
-            if pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
-                nt_complete = pipeline_option_dict.get('database parameters', {}).get('nt_complete', not_found)
-                if nt_complete == not_found:
-                    error_list.append('*** ERROR: the key "nt_complete" is not found in the section "database parameters".')
-                    OK = False
-                elif not xlib.check_int(nt_complete, minimum=0, maximum=6):
-                    error_list.append('*** ERROR: the key "nt_complete" has to be an integer number between 0 and 6.')
+                elif not xlib.check_int(nr, minimum=0, maximum=6):
+                    error_list.append('*** ERROR: the key "nr" has to be an integer number between 0 and 6.')
                     OK = False
                 else:
-                    is_ok_nx_complete = True
-            elif pipeline_type == xlib.get_toa_process_pipeline_aminoacid_code():
-                nr_complete = pipeline_option_dict.get('database parameters', {}).get('nr_complete', not_found)
-                if nr_complete == not_found:
-                    error_list.append('*** ERROR: the key "nr_complete" is not found in the section "database parameters".')
-                    OK = False
-                elif not xlib.check_int(nr_complete, minimum=0, maximum=6):
-                    error_list.append('*** ERROR: the key "nr_complete" has to be an integer number between 0 and 6.')
-                    OK = False
-                else:
-                    is_ok_nx_complete = True
+                    is_ok_nx = True
 
             # check the order of databases
-            if is_ok_gymno_01 and is_ok_dicots_04 and is_ok_monocots_04 and is_ok_refseq_plant and is_ok_nx_viridiplantae and is_ok_nx_complete:
+            if is_ok_gymno_01 and is_ok_dicots_04 and is_ok_monocots_04 and is_ok_refseq_plant and is_ok_nx:
                 if pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
                     database_code_list = get_nucleotide_annotation_database_code_list()
-                    database_order_list = [int(dicots_04), int(gymno_01), int(monocots_04), int(refseq_plant), int(nt_viridiplantae), int(nt_complete)]
-                    last_database_code = 'nt_complete'
+                    database_order_list = [int(dicots_04), int(gymno_01), int(monocots_04), int(refseq_plant), int(nt)]
+                    last_database_code = 'nt'
                 elif pipeline_type == xlib.get_toa_process_pipeline_aminoacid_code():
                     database_code_list = get_aminoacid_annotation_database_code_list()
-                    database_order_list = [int(dicots_04), int(gymno_01), int(monocots_04), int(refseq_plant), int(nr_viridiplantae), int(nr_complete)]
-                    last_database_code = 'nr_complete'
+                    database_order_list = [int(dicots_04), int(gymno_01), int(monocots_04), int(refseq_plant), int(nr)]
+                    last_database_code = 'nr'
                 (OK2, error_list2) = check_database_order(database_code_list, database_order_list, last_database_code)
                 if not OK2:
                     OK = False
                     error_list = error_list + error_list2
 
-        # check section "BLAST parameters"
-        if 'BLAST parameters' not in sections_list:
-            error_list.append('*** ERROR: the section "BLAST parameters" is not found.')
+        # check section "pipeline parameters"
+        if 'pipeline parameters' not in sections_list:
+            error_list.append('*** ERROR: the section "pipeline parameters" is not found.')
             OK = False
         else:
 
-            # check section "BLAST parameters" - key "thread_number"
-            thread_number = pipeline_option_dict.get('BLAST parameters', {}).get('thread_number', not_found)
-            if thread_number == not_found:
-                error_list.append('*** ERROR: the key "thread_number" is not found in the section "BLAST parameters".')
+            # check section "pipeline parameters" - key "alignment_tool"
+            alignment_tool = pipeline_option_dict.get('pipeline parameters', {}).get('alignment_tool', not_found)
+            if alignment_tool == not_found:
+                error_list.append('*** ERROR: the key "alignment_tool" is not found in the section "pipeline parameters".')
                 OK = False
-            elif not xlib.check_int(thread_number, minimum=1):
-                error_list.append('*** ERROR: the key "thread_number" has to be an integer number greater than or equal to 1.')
-                OK = False
-
-            # check section "BLAST parameters" - key "e_value"
-            e_value = pipeline_option_dict.get('BLAST parameters', {}).get('e_value', not_found)
-            if e_value == not_found:
-                error_list.append('*** ERROR: the key "e_value" is not found in the section "BLAST parameters".')
-                OK = False
-            elif not xlib.check_float(e_value, minimum=0., mne=1E-12):
-                error_list.append('*** ERROR: the key "e_value" has to be a float number greater than to 0.0.')
+            elif not xlib.check_code(alignment_tool, xlib.get_alignment_tool_code_list(), case_sensitive=False):
+                error_list.append(f'*** ERROR: the key "alignment_tool" has to be {xlib.get_alignment_tool_code_list_text()}.')
                 OK = False
 
-            # check section "BLAST parameters" - key "max_target_seqs"
-            max_target_seqs = pipeline_option_dict.get('BLAST parameters', {}).get('max_target_seqs', not_found)
-            if max_target_seqs == not_found:
-                error_list.append('*** ERROR: the key "max_target_seqs" is not found in the section "BLAST parameters".')
+            # check section "pipeline parameters" - key "threads"
+            threads = pipeline_option_dict.get('pipeline parameters', {}).get('threads', not_found)
+            if threads == not_found:
+                error_list.append('*** ERROR: the key "threads" is not found in the section "pipeline parameters".')
                 OK = False
-            elif not xlib.check_int(max_target_seqs, minimum=1):
+            elif not xlib.check_int(threads, minimum=1):
+                error_list.append('*** ERROR: the key "threads" has to be an integer number greater than or equal to 1.')
+                OK = False
+
+        # check section "BLAST+ parameters"
+        if 'BLAST+ parameters' not in sections_list:
+            error_list.append('*** ERROR: the section "BLAST+ parameters" is not found.')
+            OK = False
+        else:
+
+            # check section "BLAST+ parameters" - key "evalue"
+            blastplus_evalue = pipeline_option_dict.get('BLAST+ parameters', {}).get('evalue', not_found)
+            if blastplus_evalue == not_found:
+                error_list.append('*** ERROR: the key "evalue" is not found in the section "BLAST+ parameters".')
+                OK = False
+            elif not xlib.check_float(blastplus_evalue, minimum=0., mne=1E-12):
+                error_list.append('*** ERROR: the key "evalue" has to be a float number greater than to 0.0.')
+                OK = False
+
+            # check section "BLAST+ parameters" - key "max_target_seqs"
+            blastplus_max_target_seqs = pipeline_option_dict.get('BLAST+ parameters', {}).get('max_target_seqs', not_found)
+            if blastplus_max_target_seqs == not_found:
+                error_list.append('*** ERROR: the key "max_target_seqs" is not found in the section "BLAST+ parameters".')
+                OK = False
+            elif not xlib.check_int(blastplus_max_target_seqs, minimum=1):
                 error_list.append('*** ERROR: the key "max_target_seqsr" has to be an integer number greater than or equal to 1.')
                 OK = False
 
-            # check section "BLAST parameters" - key "max_hsps"
-            max_hsps = pipeline_option_dict.get('BLAST parameters', {}).get('max_hsps', not_found)
-            if max_hsps == not_found:
-                error_list.append('*** ERROR: the key "max_hsps" is not found in the section "BLAST parameters".')
+            # check section "BLAST+ parameters" - key "max_hsps"
+            blastplus_max_hsps = pipeline_option_dict.get('BLAST+ parameters', {}).get('max_hsps', not_found)
+            if blastplus_max_hsps == not_found:
+                error_list.append('*** ERROR: the key "max_hsps" is not found in the section "BLAST+ parameters".')
                 OK = False
-            elif not xlib.check_int(max_hsps, minimum=1):
+            elif not xlib.check_int(blastplus_max_hsps, minimum=1):
                 error_list.append('*** ERROR: the key "max_hsps" has to be an integer number greater than or equal to 1.')
                 OK = False
 
-            # check section "BLAST parameters" - key "qcov_hsp_perc"
-            qcov_hsp_perc = pipeline_option_dict.get('BLAST parameters', {}).get('qcov_hsp_perc', not_found)
-            if qcov_hsp_perc == not_found:
-                error_list.append('*** ERROR: the key "qcov_hsp_perc" is not found in the section "BLAST parameters".')
+            # check section "BLAST+ parameters" - key "qcov_hsp_perc"
+            blastplus_qcov_hsp_perc = pipeline_option_dict.get('BLAST+ parameters', {}).get('qcov_hsp_perc', not_found)
+            if blastplus_qcov_hsp_perc == not_found:
+                error_list.append('*** ERROR: the key "qcov_hsp_perc" is not found in the section "BLAST+ parameters".')
                 OK = False
-            elif not xlib.check_float(qcov_hsp_perc, minimum=0., maximum=100., mne=0., mxe=1E-12):
+            elif not xlib.check_float(blastplus_qcov_hsp_perc, minimum=0., maximum=100., mne=0., mxe=1E-12):
                 error_list.append('*** ERROR: the key "qcov_hsp_perc" has to be a float number greater than or equal to 0.0 and less than 100.0.')
                 OK = False
 
+            # check section "BLAST+ parameters" - key "other_parameters_blastx"
+            if pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
+                not_allowed_parameters_list = ['num_threads', 'db', 'query', 'evalue', 'max_target_seqs', 'max_hsps', 'qcov_hsp_perc', 'outfmt', 'out']
+                blastplus_other_parameters_blastx = pipeline_option_dict.get('BLAST+ parameters', {}).get('other_parameters_blastx', not_found)
+                if blastplus_other_parameters_blastx == not_found:
+                    error_list.append('*** ERROR: the key "other_parameters_blastx" is not found in the section "BLAST+ parameters".')
+                    OK = False
+                elif blastplus_other_parameters_blastx.upper() != 'NONE':
+                    (OK, error_list2) = xlib.check_parameter_list(blastplus_other_parameters_blastx, "other_parameters_blastx", not_allowed_parameters_list)
+                    error_list = error_list + error_list2
+
+            # check section "BLAST+ parameters" - key "other_parameters_blastn"
+            if pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
+                not_allowed_parameters_list = ['num_threads', 'db', 'query', 'evalue', 'max_target_seqs', 'max_hsps', 'qcov_hsp_perc', 'outfmt', 'out']
+                blastplus_other_parameters_blastn = pipeline_option_dict.get('BLAST+ parameters', {}).get('other_parameters_blastn', not_found)
+                if blastplus_other_parameters_blastn == not_found:
+                    error_list.append('*** ERROR: the key "other_parameters_blastn" is not found in the section "BLAST+ parameters".')
+                    OK = False
+                elif blastplus_other_parameters_blastn.upper() != 'NONE':
+                    (OK, error_list2) = xlib.check_parameter_list(blastplus_other_parameters_blastn, "other_parameters_blastn", not_allowed_parameters_list)
+                    error_list = error_list + error_list2
+
+            # check section "BLAST+ parameters" - key "other_parameters_blastp"
+            if pipeline_type == xlib.get_toa_process_pipeline_aminoacid_code():
+                not_allowed_parameters_list = ['num_threads', 'db', 'query', 'evalue', 'max_target_seqs', 'max_hsps', 'qcov_hsp_perc', 'outfmt', 'out']
+                blastplus_other_parameters_blastp = pipeline_option_dict.get('BLAST+ parameters', {}).get('other_parameters_blastp', not_found)
+                if blastplus_other_parameters_blastp == not_found:
+                    error_list.append('*** ERROR: the key "other_parameters_blastp" is not found in the section "BLAST+ parameters".')
+                    OK = False
+                elif blastplus_other_parameters_blastp.upper() != 'NONE':
+                    (OK, error_list2) = xlib.check_parameter_list(blastplus_other_parameters_blastp, "other_parameters_blastp", not_allowed_parameters_list)
+                    error_list = error_list + error_list2
+
+        # check section "DIAMOND parameters"
+        if 'DIAMOND parameters' not in sections_list:
+            error_list.append('*** ERROR: the section "DIAMOND parameters" is not found.')
+            OK = False
+        else:
+
+            # check section "DIAMOND parameters" - key "evalue"
+            diamond_evalue = pipeline_option_dict.get('DIAMOND parameters', {}).get('evalue', not_found)
+            if diamond_evalue == not_found:
+                error_list.append('*** ERROR: the key "evalue" is not found in the section "DIAMOND parameters".')
+                OK = False
+            elif not xlib.check_float(diamond_evalue, minimum=0., mne=1E-12):
+                error_list.append('*** ERROR: the key "evalue" has to be a float number greater than to 0.0.')
+                OK = False
+
+            # check section "DIAMOND parameters" - key "max-target-seqs"
+            diamond_max_target_seqs = pipeline_option_dict.get('DIAMOND parameters', {}).get('max-target-seqs', not_found)
+            if diamond_max_target_seqs == not_found:
+                error_list.append('*** ERROR: the key "max-target-seqs" is not found in the section "DIAMOND parameters".')
+                OK = False
+            elif not xlib.check_int(diamond_max_target_seqs, minimum=1):
+                error_list.append('*** ERROR: the key "max-target-seqsr" has to be an integer number greater than or equal to 1.')
+                OK = False
+
+            # check section "DIAMOND parameters" - key "max-hsps"
+            diamond_max_hsps = pipeline_option_dict.get('DIAMOND parameters', {}).get('max-hsps', not_found)
+            if diamond_max_hsps == not_found:
+                error_list.append('*** ERROR: the key "max-hsps" is not found in the section "DIAMOND parameters".')
+                OK = False
+            elif not xlib.check_int(diamond_max_hsps, minimum=1):
+                error_list.append('*** ERROR: the key "max-hsps" has to be an integer number greater than or equal to 1.')
+                OK = False
+
+            # check section "DIAMOND parameters" - key "other_parameters_blastx"
+            if pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
+                not_allowed_parameters_list = ['threads', 'db', 'query', 'evalue', 'max-target-seqs', 'max-hsps', 'outfmt', 'out']
+                diamond_other_parameters_blastx = pipeline_option_dict.get('DIAMOND parameters', {}).get('other_parameters_blastx', not_found)
+                if diamond_other_parameters_blastx == not_found:
+                    error_list.append('*** ERROR: the key "other_parameters_blastx" is not found in the section "DIAMOND parameters".')
+                    OK = False
+                elif diamond_other_parameters_blastx.upper() != 'NONE':
+                    (OK, error_list2) = xlib.check_parameter_list(diamond_other_parameters_blastx, "other_parameters_blastx", not_allowed_parameters_list)
+                    error_list = error_list + error_list2
+
+            # check section "DIAMOND parameters" - key "other_parameters_blastp"
+            if pipeline_type == xlib.get_toa_process_pipeline_aminoacid_code():
+                not_allowed_parameters_list = ['threads', 'db', 'query', 'evalue', 'max-target-seqs', 'max-hsps', 'outfmt', 'out']
+                diamond_other_parameters_blastp = pipeline_option_dict.get('DIAMOND parameters', {}).get('other_parameters_blastp', not_found)
+                if diamond_other_parameters_blastp == not_found:
+                    error_list.append('*** ERROR: the key "other_parameters_blastp" is not found in the section "DIAMOND parameters".')
+                    OK = False
+                elif diamond_other_parameters_blastp.upper() != 'NONE':
+                    (OK, error_list2) = xlib.check_parameter_list(diamond_other_parameters_blastp, "other_parameters_blastp", not_allowed_parameters_list)
+                    error_list = error_list + error_list2
+
     # warn that the results config file is not valid if there are any errors
     if not OK:
-        error_list.append('\nThe {0} config file is not valid. Please, correct this file or recreate it.'.format(xlib.get_toa_process_pipeline_nucleotide_name()))
+        error_list.append(f'\nThe {xlib.get_toa_process_pipeline_nucleotide_name()} config file is not valid. Please, correct this file or recreate it.')
 
     # return the control variable and the error list
     return (OK, error_list)
@@ -7578,7 +8292,7 @@ def check_database_order(database_code_list, database_order_list, last_database_
             error_list.append('*** ERROR: the database orders has to have sequencial numbers.')
             OK = False
         elif last_database_order > 0 and last_database_order != len(order_list):
-            error_list.append('*** ERROR: the {0} order has to be the last one.'.format(last_database_code))
+            error_list.append(f'*** ERROR: the {last_database_code} order has to be the last one.')
             OK = False
 
     # return the control variable and the error list
@@ -7628,7 +8342,7 @@ def get_nucleotide_pipeline_config_file():
     '''
 
     # assign the nucleotide pipeline config file path
-    nucleotide_pipeline_config_file = '{0}/{1}-config.txt'.format(xlib.get_config_dir(), xlib.get_toa_process_pipeline_nucleotide_code())
+    nucleotide_pipeline_config_file = f'{xlib.get_config_dir()}/{xlib.get_toa_process_pipeline_nucleotide_code()}-config.txt'
 
     # return the nucleotide pipeline config file path
     return nucleotide_pipeline_config_file
@@ -7641,7 +8355,7 @@ def get_aminoacid_pipeline_config_file():
     '''
 
     # assign the amino acid pipeline config file path
-    aminoacid_pipeline_config_file = '{0}/{1}-config.txt'.format(xlib.get_config_dir(), xlib.get_toa_process_pipeline_aminoacid_code())
+    aminoacid_pipeline_config_file = f'{xlib.get_config_dir()}/{xlib.get_toa_process_pipeline_aminoacid_code()}-config.txt'
 
     # return the amino acid pipeline config file path
     return aminoacid_pipeline_config_file
@@ -7659,8 +8373,17 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
     # get the dictionary of TOA configuration
     toa_config_dict = get_toa_config_dict()
 
+    # get the config file
+    if pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
+        config_file = get_nucleotide_pipeline_config_file()
+    elif pipeline_type == xlib.get_toa_process_pipeline_aminoacid_code():
+        config_file = get_aminoacid_pipeline_config_file()
+
+    # get the option dictionary
+    pipeline_option_dict = xlib.get_option_dict(config_file)
+
     # build the sentence to set the cluster PATH to check requirements
-    path_sentence = 'export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])
+    path_sentence = f'export PATH={toa_config_dict["MINICONDA3_BIN_DIR"]}:{toa_config_dict["TOA_DIR"]}:$PATH'
 
     # get the selected database list
     selected_database_list = get_selected_database_list(pipeline_type)
@@ -7671,12 +8394,12 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
 
     # check the TOA config file
     log.write(f'{xlib.get_separator()}\n')
-    log.write('Checking the {0} config file ...\n'.format(xlib.get_toa_name()))
+    log.write(f'Checking the {xlib.get_toa_name()} config file ...\n')
     OK = os.path.isfile(get_toa_config_file())
     if OK:
         log.write('The file is OK.\n')
     else:
-        log.write('*** ERROR: The {0} config file does not exist.\n')
+        log.write('*** ERROR: The config file does not exist.\n')
         log.write('Please recreate this file.\n')
         OK = False
 
@@ -7684,9 +8407,9 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
     if OK:
         log.write(f'{xlib.get_separator()}\n')
         if pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
-            log.write('Checking the {0} config file ...\n'.format(xlib.get_toa_process_pipeline_nucleotide_name()))
+            log.write(f'Checking the {xlib.get_toa_process_pipeline_nucleotide_name()} config file ...\n')
         elif pipeline_type == xlib.get_toa_process_pipeline_aminoacid_code():
-            log.write('Checking the {0} config file ...\n'.format(xlib.get_toa_process_pipeline_aminoacid_name()))
+            log.write(f'Checking the {xlib.get_toa_process_pipeline_aminoacid_name()} config file ...\n')
         (OK, error_list) = check_pipeline_config_file(pipeline_type, strict=True)
         if OK:
             log.write('The file is OK.\n')
@@ -7737,16 +8460,16 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
 
     # check the TOA is installed
     if OK:
-        command = '[ -d {0}/{1} ] && echo RC=0 || echo RC=1'.format(xlib.get_cluster_app_dir(), xlib.get_toa_name())
+        command = f'[ -d {xlib.get_cluster_app_dir()}/{xlib.get_toa_name()} ] && echo RC=0 || echo RC=1'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] != 'RC=0':
-            log.write('*** ERROR: {0} is not installed.\n'.format(xlib.get_toa_name()))
+            log.write(f'*** ERROR: {xlib.get_toa_name()} is not installed.\n')
             OK = False
 
     # check the basic data load in TOA databasep
     if OK:
-        check_sentence = 'check-data-load.py --db={0} --group=basic'.format(toa_config_dict['TOA_DB'])
-        command = '{0}; {1} && echo RC=0 || echo RC=1'.format(path_sentence, check_sentence)
+        check_sentence = f'check-data-load.py --db={toa_config_dict["TOA_DB"]} --group=basic'
+        command = f'{path_sentence}; {check_sentence} && echo RC=0 || echo RC=1'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] != 'RC=0':
             log.write('*** ERROR: The basic data load in TOA database is wrong.\n')
@@ -7757,7 +8480,7 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
     # check the Gymno PLAZA 1.0 proteome
     if OK:
         if 'gymno_01' in selected_database_list:
-            command = '[ -d {0} ] && echo RC=0 || echo RC=1'.format(toa_config_dict['GYMNO_01_PROTEOME_DB_DIR'])
+            command = f'[ -d {toa_config_dict["GYMNO_01_BLASTPLUS_DB_DIR"]} ] && echo RC=0 || echo RC=1'
             (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
             if stdout[len(stdout) - 1] != 'RC=0':
                 log.write('*** ERROR: Gymno PLAZA 1.0 proteome is not built.\n')
@@ -7768,8 +8491,8 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
     # check the Gymno PLAZA 1.0 data load in TOA database
     if OK:
         if 'gymno_01' in selected_database_list:
-            check_sentence = 'check-data-load.py --db={0} --group=gymno_01'.format(toa_config_dict['TOA_DB'])
-            command = '{0}; {1} && echo RC=0 || echo RC=1'.format(path_sentence, check_sentence)
+            check_sentence = f'check-data-load.py --db={toa_config_dict["TOA_DB"]} --group=gymno_01'
+            command = f'{path_sentence}; {check_sentence} && echo RC=0 || echo RC=1'
             (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
             if stdout[len(stdout) - 1] != 'RC=0':
                 log.write('*** ERROR: Gymno PLAZA 1.0 load in TOA database is wrong.\n')
@@ -7780,7 +8503,7 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
     # check the Dicots PLAZA 4.0 proteome
     if OK:
         if 'dicots_04' in selected_database_list:
-            command = '[ -d {0} ] && echo RC=0 || echo RC=1'.format(toa_config_dict['DICOTS_04_PROTEOME_DB_DIR'])
+            command = f'[ -d {toa_config_dict["DICOTS_04_BLASTPLUS_DB_DIR"]} ] && echo RC=0 || echo RC=1'
             (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
             if stdout[len(stdout) - 1] != 'RC=0':
                 log.write('*** ERROR: Dicots PLAZA 4.0 proteome is not built.\n')
@@ -7791,8 +8514,8 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
     # check the Dicots PLAZA 4.0 data load in TOA database
     if OK:
         if 'dicots_04' in selected_database_list:
-            check_sentence = 'check-data-load.py --db={0} --group=dicots_04'.format(toa_config_dict['TOA_DB'])
-            command = '{0}; {1} && echo RC=0 || echo RC=1'.format(path_sentence, check_sentence)
+            check_sentence = f'check-data-load.py --db={toa_config_dict["TOA_DB"]} --group=dicots_04'
+            command = f'{path_sentence}; {check_sentence} && echo RC=0 || echo RC=1'
             (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
             if stdout[len(stdout) - 1] != 'RC=0':
                 log.write('*** ERROR: Dicots PLAZA 4.0 load in TOA database is wrong.\n')
@@ -7803,7 +8526,7 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
     # check the Monocots PLAZA 4.0 proteome
     if OK:
         if 'monocots_04' in selected_database_list:
-            command = '[ -d {0} ] && echo RC=0 || echo RC=1'.format(toa_config_dict['MONOCOTS_04_PROTEOME_DB_DIR'])
+            command = f'[ -d {toa_config_dict["MONOCOTS_04_BLASTPLUS_DB_DIR"]} ] && echo RC=0 || echo RC=1'
             (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
             if stdout[len(stdout) - 1] != 'RC=0':
                 log.write('*** ERROR: Monocots PLAZA 4.0 proteome is not built.\n')
@@ -7814,8 +8537,8 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
     # check the Monocots PLAZA 4.0 data load in TOA database
     if OK:
         if 'monocots_04' in selected_database_list:
-            check_sentence = 'check-data-load.py --db={0} --group=monocots_04'.format(toa_config_dict['TOA_DB'])
-            command = '{0}; {1} && echo RC=0 || echo RC=1'.format(path_sentence, check_sentence)
+            check_sentence = f'check-data-load.py --db={toa_config_dict["TOA_DB"]} --group=monocots_04'
+            command = f'{path_sentence}; {check_sentence} && echo RC=0 || echo RC=1'
             (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
             if stdout[len(stdout) - 1] != 'RC=0':
                 log.write('*** ERROR: Monocots PLAZA 4.0 load in TOA database is wrong.\n')
@@ -7826,7 +8549,7 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
     # check the NCBI RefSeq Plant proteome
     if OK:
         if 'refseq_plant' in selected_database_list:
-            command = '[ -d {0} ] && echo RC=0 || echo RC=1'.format(toa_config_dict['REFSEQ_PLANT_PROTEOME_DB_DIR'])
+            command = f'[ -d {toa_config_dict["REFSEQ_PLANT_BLASTPLUS_DB_DIR"]} ] && echo RC=0 || echo RC=1'
             (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
             if stdout[len(stdout) - 1] != 'RC=0':
                 log.write('*** ERROR: NCBI RefSeq Plant proteome is not built.\n')
@@ -7836,31 +8559,40 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
 
     # check the NCBI BLAST database NT
     if OK:
-        if 'nt_viridiplantae' in selected_database_list or 'nt_complete' in selected_database_list:
-            command = '[ -d {0} ] && echo RC=0 || echo RC=1'.format(toa_config_dict['NT_DB_DIR'])
+        if 'nt' in selected_database_list and pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
+            command = f'[ -d {toa_config_dict["NT_BLASTPLUS_DB_DIR"]} ] && echo RC=0 || echo RC=1'
             (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
             if stdout[len(stdout) - 1] != 'RC=0':
-                log.write('*** ERROR: NCBI BLAST database NT is not built.\n')
+                log.write('*** ERROR: NCBI BLAST database NT for BLAST+ is not built.\n')
                 OK = False
             else:
-                log.write('... NCBI BLAST database NT is OK ...\n')
+                log.write('... NCBI BLAST database NTfor BLAST+ is OK ...\n')
 
-    # check the NCBI Nucleotide GenInfo viridiplantae identifier list
+    # check the NCBI BLAST database NR
     if OK:
-        if 'nt_viridiplantae' in selected_database_list:
-            command = '[ -f {0} ] && echo RC=0 || echo RC=1'.format(toa_config_dict['NUCLEOTIDE_VIRIDIPLANTAE_GI_LIST'])
-            (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
-            if stdout[len(stdout) - 1] != 'RC=0':
-                log.write('*** ERROR: NCBI Nucleotide GenInfo viridiplantae identifier list is not built.\n')
-                OK = False
-            else:
-                log.write('... NCBI Nucleotide GenInfo viridiplantae identifier list is OK ...\n')
+        if 'nr' in selected_database_list and pipeline_type == xlib.get_toa_process_pipeline_aminoacid_code():
+            if pipeline_option_dict['pipeline parameters']['alignment_tool'] == 'BLAST+':
+                command = f'[ -d {toa_config_dict["NR_BLASTPLUS_DB_DIR"]} ] && echo RC=0 || echo RC=1'
+                (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+                if stdout[len(stdout) - 1] != 'RC=0':
+                    log.write('*** ERROR: NCBI BLAST database NR for BLAST+ is not built.\n')
+                    OK = False
+                else:
+                    log.write('... NCBI BLAST database NR for BLAST+ is OK ...\n')
+            elif pipeline_option_dict['pipeline parameters']['alignment_tool'] == 'DIAMOND':
+                command = f'[ -d {toa_config_dict["NR_DIAMOND_DB_DIR"]} ] && echo RC=0 || echo RC=1'
+                (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+                if stdout[len(stdout) - 1] != 'RC=0':
+                    log.write('*** ERROR: NCBI BLAST database NR for DIAMOND is not built.\n')
+                    OK = False
+                else:
+                    log.write('... NCBI BLAST database NR for DIAMOND is OK ...\n')
 
     # check the NCBI Gene data load in TOA database
     if OK:
         if 'gymno_01' in selected_database_list or 'dicots_04' in selected_database_list or 'monocots_04' in selected_database_list:
-            check_sentence = 'check-data-load.py --db={0} --group=gene'.format(toa_config_dict['TOA_DB'])
-            command = '{0}; {1} && echo RC=0 || echo RC=1'.format(path_sentence, check_sentence)
+            check_sentence = f'check-data-load.py --db={toa_config_dict["TOA_DB"]} --group=gene'.format()
+            command = f'{path_sentence}; {check_sentence} && echo RC=0 || echo RC=1'
             (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
             if stdout[len(stdout) - 1] != 'RC=0':
                 log.write('*** ERROR: NCBI Gene load in TOA database is wrong.\n')
@@ -7871,8 +8603,8 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
     # check the InterPro data load in TOA database
     if OK:
         if 'gymno_01' in selected_database_list or 'dicots_04' in selected_database_list or 'monocots_04' in selected_database_list:
-            check_sentence = 'check-data-load.py --db={0} --group=interpro'.format(toa_config_dict['TOA_DB'])
-            command = '{0}; {1} && echo RC=0 || echo RC=1'.format(path_sentence, check_sentence)
+            check_sentence = f'check-data-load.py --db={toa_config_dict["TOA_DB"]} --group=interpro'
+            command = f'{path_sentence}; {check_sentence} && echo RC=0 || echo RC=1'
             (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
             if stdout[len(stdout) - 1] != 'RC=0':
                 log.write('*** ERROR: InterPro load in TOA database is wrong.\n')
@@ -7883,8 +8615,8 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
     # check the Gene Ontology data load in TOA database
     if OK:
         if 'gymno_01' in selected_database_list or 'dicots_04' in selected_database_list or 'monocots_04' in selected_database_list:
-            check_sentence = 'check-data-load.py --db={0} --group=go'.format(toa_config_dict['TOA_DB'])
-            command = '{0}; {1} && echo RC=0 || echo RC=1'.format(path_sentence, check_sentence)
+            check_sentence = f'check-data-load.py --db={toa_config_dict["TOA_DB"]} --group=go'
+            command = f'{path_sentence}; {check_sentence} && echo RC=0 || echo RC=1'
             (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
             if stdout[len(stdout) - 1] != 'RC=0':
                 log.write('*** ERROR: Gene Ontology data load in TOA database is wrong.\n')
@@ -7923,13 +8655,13 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
         # nucleotide pipelines
         if pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
             script = get_nucleotide_pipeline_script()
-            log.write('Building the process script {0} ...\n'.format(script))
+            log.write(f'Building the process script {script} ...\n')
             (OK, error_list) = build_nucleotide_pipeline_script(cluster_name, current_run_dir)
 
         # amino acid pipelines
         elif pipeline_type == xlib.get_toa_process_pipeline_aminoacid_code():
             script = get_aminoacid_pipeline_script()
-            log.write('Building the process script {0} ...\n'.format(script))
+            log.write(f'Building the process script {script} ...\n')
             (OK, error_list) = build_aminoacid_pipeline_script(cluster_name, current_run_dir)
 
         if OK:
@@ -7942,8 +8674,8 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
     # upload the script to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process script {0} to the directory {1} ...\n'.format(script, current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(script))
+        log.write(f'Uploading the process script {script} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(script)}'
         (OK, error_list) = xssh.put_file(sftp_client, script, cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -7954,8 +8686,8 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
     # set run permision to the script in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(script)))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(script))
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(script)} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(script)}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
@@ -7969,13 +8701,13 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
         # nucleotide pipelines
         if pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
             starter = get_nucleotide_pipeline_starter()
-            log.write('Building the process starter {0} ...\n'.format(starter))
+            log.write(f'Building the process starter {starter} ...\n')
             (OK, error_list) = build_nucleotide_pipeline_starter(current_run_dir)
 
         # amino acid pipelines
         elif pipeline_type == xlib.get_toa_process_pipeline_aminoacid_code():
             starter = get_aminoacid_pipeline_starter()
-            log.write('Building the process starter {0} ...\n'.format(starter))
+            log.write(f'Building the process starter {starter} ...\n')
             (OK, error_list) = build_aminoacid_pipeline_starter(current_run_dir)
 
         if OK:
@@ -7987,8 +8719,8 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
     # upload the script starter to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process starter {0} to the directory {1} ...\n'.format(starter, current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(starter))
+        log.write(f'Uploading the process starter {starter} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(starter)}'
         (OK, error_list) = xssh.put_file(sftp_client, starter, cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -7999,8 +8731,8 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
     # set run permision to the script starter in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(starter)))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(starter))
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(starter)} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(starter)}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
@@ -8010,7 +8742,7 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
     # submit the script
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Submitting the process script {0}/{1} ...\n'.format(current_run_dir, os.path.basename(starter)))
+        log.write(f'Submitting the process script {current_run_dir}/{os.path.basename(starter)} ...\n')
         OK = xssh.submit_script(cluster_name, ssh_client, current_run_dir, os.path.basename(starter), log)
 
     # close the SSH transport connection
@@ -8064,33 +8796,37 @@ def build_nucleotide_pipeline_script(cluster_name, current_run_dir):
     assembly_type = pipeline_option_dict['identification']['assembly_type']
     reference_dataset_id = pipeline_option_dict['identification']['reference_dataset_id']
     transcriptome_file = pipeline_option_dict['identification']['transcriptome_file']
-    thread_number = pipeline_option_dict['BLAST parameters']['thread_number']
-    e_value = pipeline_option_dict['BLAST parameters']['e_value']
-    max_target_seqs = pipeline_option_dict['BLAST parameters']['max_target_seqs']
-    max_hsps = pipeline_option_dict['BLAST parameters']['max_hsps']
-    qcov_hsp_perc = pipeline_option_dict['BLAST parameters']['qcov_hsp_perc']
+    alignment_tool = pipeline_option_dict['pipeline parameters']['alignment_tool']
+    threads = pipeline_option_dict['pipeline parameters']['threads']
+    blastplus_evalue = pipeline_option_dict['BLAST+ parameters']['evalue']
+    blastplus_max_target_seqs = pipeline_option_dict['BLAST+ parameters']['max_target_seqs']
+    blastplus_max_hsps = pipeline_option_dict['BLAST+ parameters']['max_hsps']
+    blastplus_qcov_hsp_perc = pipeline_option_dict['BLAST+ parameters']['qcov_hsp_perc']
+    blastplus_other_parameters_blastx = pipeline_option_dict['BLAST+ parameters']['other_parameters_blastx']
+    blastplus_other_parameters_blastn = pipeline_option_dict['BLAST+ parameters']['other_parameters_blastn']
+    diamond_evalue = pipeline_option_dict['DIAMOND parameters']['evalue']
+    diamond_max_target_seqs = pipeline_option_dict['DIAMOND parameters']['max-target-seqs']
+    diamond_max_hsps = pipeline_option_dict['DIAMOND parameters']['max-hsps']
+    diamond_other_parameters_blastx = pipeline_option_dict['DIAMOND parameters']['other_parameters_blastx']
 
     # get the all selected database list
-    all_database_list = get_selected_database_list(xlib.get_toa_process_pipeline_nucleotide_code())
-
-    # change code "nt_complete" by "nt_remainder"
-    if all_database_list[len(all_database_list) - 1] == 'nt_complete':
-        all_database_list[len(all_database_list) - 1] = 'nt_remainder'
-
-    # get the plant database list
-    plant_database_list = all_database_list.copy()
-    if 'nt_remainder' in plant_database_list:
-        plant_database_list.remove('nt_remainder')
+    database_list = get_selected_database_list(xlib.get_toa_process_pipeline_nucleotide_code())
 
     # get the database type dictionary
     database_type_dict = {}
-    for i in range(len(all_database_list)):
-        if all_database_list[i] in ['gymno_01', 'dicots_04', 'monocots_04']:
-            database_type_dict[all_database_list[i]] = 'PLAZA'
-        elif all_database_list[i] == 'refseq_plant':
-            database_type_dict[all_database_list[i]] = 'REFSEQ'
-        elif all_database_list[i] in ['nt_viridiplantae', 'nt_remainder']:
-            database_type_dict[all_database_list[i]] = 'NT'
+    for i in range(len(database_list)):
+        if database_list[i] in ['gymno_01', 'dicots_04', 'monocots_04']:
+            database_type_dict[database_list[i]] = 'PLAZA'
+        elif database_list[i] == 'refseq_plant':
+            database_type_dict[database_list[i]] = 'REFSEQ'
+        elif database_list[i] in ['nt']:
+            database_type_dict[database_list[i]] = 'NT'
+
+    # get the database list for the merger of plant annotation files
+    database_list2 = database_list.copy()
+    for i in range(len(database_list2)):
+        if database_list2[i] == 'nt':
+            database_list2[i] = 'nt_viridiplantae'
 
     # set the transcriptome file path
     if OK:
@@ -8115,8 +8851,8 @@ def build_nucleotide_pipeline_script(cluster_name, current_run_dir):
 
     # get the non annotation file list
     non_annotation_file_list = []
-    for database in all_database_list:
-        non_annotation_file_list.append('${0}_NON_ANNOTATED_TRANSCRIPT_FILE'.format(database.upper()))
+    for database in database_list:
+        non_annotation_file_list.append(f'${database.upper()}_NON_ANNOTATED_TRANSCRIPT_FILE')
 
     # write the script
     try:
@@ -8125,18 +8861,28 @@ def build_nucleotide_pipeline_script(cluster_name, current_run_dir):
         with open(get_nucleotide_pipeline_script(), mode='w', encoding='iso-8859-1', newline='\n') as script_file_id:
             script_file_id.write( '#!/bin/bash\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('# transcriptome file'))
-            script_file_id.write( '{0}\n'.format('TRANSCRIPTOME_FILE={0}'.format(transcriptome_file)))
+            script_file_id.write( '# transcriptome file\n')
+            script_file_id.write(f'TRANSCRIPTOME_FILE={transcriptome_file}\n')
             script_file_id.write( '\n')
-            script_file_id.write( '{0}\n'.format('# BLAST parameters'))
-            script_file_id.write( '{0}\n'.format('NUM_THREADS={0}'.format(thread_number)))
-            script_file_id.write( '{0}\n'.format('E_VALUE={0}'.format(e_value)))
-            script_file_id.write( '{0}\n'.format('MAX_TARGET_SEQS={0}'.format(max_target_seqs)))
-            script_file_id.write( '{0}\n'.format('MAX_HSPS={0}'.format(max_hsps)))
-            script_file_id.write( '{0}\n'.format('QCOV_HSP_PERC={0}'.format(qcov_hsp_perc)))
+            script_file_id.write( '# pipeline parameters\n')
+            script_file_id.write(f'THREADS={threads}\n')
             script_file_id.write( '\n')
-            script_file_id.write( '{0}\n'.format('# output directory'))
-            script_file_id.write( '{0}\n'.format('OUTPUT_DIR={0}'.format(current_run_dir)))
+            script_file_id.write( '# BLAST+ parameters\n')
+            script_file_id.write(f'BLASTPLUS_EVALUE={blastplus_evalue}\n')
+            script_file_id.write(f'BLASTPLUS_MAX_TARGET_SEQS={blastplus_max_target_seqs}\n')
+            script_file_id.write(f'BLASTPLUS_MAX_HSPS={blastplus_max_hsps}\n')
+            script_file_id.write(f'BLASTPLUS_QCOV_HSP_PERC={blastplus_qcov_hsp_perc}\n')
+            script_file_id.write(f'BLASTPLUS_OTHER_PARAMETERS_BLASTX="{blastplus_other_parameters_blastx}"\n')
+            script_file_id.write(f'BLASTPLUS_OTHER_PARAMETERS_BLASTN="{blastplus_other_parameters_blastn}"\n')
+            script_file_id.write( '\n')
+            script_file_id.write( '# DIAMOND parameters\n')
+            script_file_id.write(f'DIAMOND_EVALUE={diamond_evalue}\n')
+            script_file_id.write(f'DIAMOND_MAX_TARGET_SEQS={diamond_max_target_seqs}\n')
+            script_file_id.write(f'DIAMOND_MAX_HSPS={diamond_max_hsps}\n')
+            script_file_id.write(f'DIAMOND_OTHER_PARAMETERS_BLASTX="{diamond_other_parameters_blastx}"\n')
+            script_file_id.write( '\n')
+            script_file_id.write( '# output directory\n')
+            script_file_id.write(f'OUTPUT_DIR={current_run_dir}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             with open(get_toa_config_file(), mode='r', encoding='iso-8859-1', newline='\n') as toa_config_file_id:
                 records = toa_config_file_id.readlines()
@@ -8149,7 +8895,9 @@ def build_nucleotide_pipeline_script(cluster_name, current_run_dir):
             script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
             script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])))
+            script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+            script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+            script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
             script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -8158,7 +8906,7 @@ def build_nucleotide_pipeline_script(cluster_name, current_run_dir):
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('mkdir --parents $STATS_DIR'))
+            script_file_id.write( 'mkdir --parents $STATS_DIR\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function init\n')
             script_file_id.write( '{\n')
@@ -8172,445 +8920,549 @@ def build_nucleotide_pipeline_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "HOST IP: $HOST_IP"\n')
             script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "TRANSCRIPTOME FILE: $TRANSCRIPTOME_FILE"'))
-            script_file_id.write( '{0}\n'.format('    echo "ALIGNMENT DATASETS: {0}"'.format(','.join(all_database_list))))
-            script_file_id.write( '{0}\n'.format('    echo "NUM_THREADS: $NUM_THREADS"'))
-            script_file_id.write( '{0}\n'.format('    echo "E_VALUE: $E_VALUE"'))
-            script_file_id.write( '{0}\n'.format('    echo "MAX_TARGET_SEQS: $MAX_TARGET_SEQS"'))
-            script_file_id.write( '{0}\n'.format('    echo "MAX_HSPS: $MAX_HSPS"'))
-            script_file_id.write( '{0}\n'.format('    echo "QCOV_HSP_PERC: $QCOV_HSP_PERC"'))
+            script_file_id.write( '    echo "TRANSCRIPTOME FILE: $TRANSCRIPTOME_FILE"\n')
+            database_list_text = ','.join(database_list)
+            script_file_id.write(f'    echo "ALIGNMENT DATASETS: {database_list_text}"\n')
+            script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write(f'    echo "ALIGNMENT TOOLS (blastp and blastx): {alignment_tool}"\n')
+            script_file_id.write(f'    echo "ALIGNMENT TOOLS (blastn): {xlib.get_blastplus_name()}"\n')
+            script_file_id.write( '    echo "THREADS: $THREADS"\n')
+            script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write( '    echo "BLAST+ EVALUE: $BLASTPLUS_EVALUE"\n')
+            script_file_id.write( '    echo "BLAST+ MAX_TARGET_SEQS: $BLASTPLUS_MAX_TARGET_SEQS"\n')
+            script_file_id.write( '    echo "BLAST+ MAX_HSPS: $BLASTPLUS_MAX_HSPS"\n')
+            script_file_id.write( '    echo "BLAST+ QCOV_HSP_PERC: $BLASTPLUS_QCOV_HSP_PERC"\n')
+            script_file_id.write( '    echo "BLAST+ BLASTX OTHER PARAMETERS: $BLASTPLUS_OTHER_PARAMETERS_BLASTX"\n')
+            script_file_id.write( '    echo "BLAST+ BLASTN OTHER PARAMETERS: $BLASTPLUS_OTHER_PARAMETERS_BLASTN"\n')
+            script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write( '    echo "DIAMOND EVALUE: $DIAMOND_EVALUE"\n')
+            script_file_id.write( '    echo "DIAMOND MAX_TARGET_SEQS: $DIAMOND_MAX_TARGET_SEQS"\n')
+            script_file_id.write( '    echo "DIAMOND MAX_HSPS: $DIAMOND_MAX_HSPS"\n')
+            script_file_id.write( '    echo "DIAMOND BLASTX OTHER PARAMETERS: $DIAMOND_OTHER_PARAMETERS_BLASTX"\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function reidentify_sequences'))
+            script_file_id.write( 'function reidentify_transcript_sequences\n')
             script_file_id.write( '{\n')
-            script_file_id.write(f'    cd {current_run_dir}\n')
-            script_file_id.write( '{0}\n'.format('    STEP_STATUS=$STATUS_DIR/reidentify_sequences.ok'))
+            script_file_id.write( '    cd $OUTPUT_DIR\n')
+            script_file_id.write(f'    STEP_STATUS=$STATUS_DIR/reidentify_transcript_sequences.ok\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "RE-INDENTIFY SEQUENCES OF THE TRANSCRIPTOME FILE"'))
-            script_file_id.write( '{0}\n'.format('    if [ -f $STEP_STATUS ]; then'))
-            script_file_id.write( '{0}\n'.format('        echo "This step was previously run."'))
+            script_file_id.write( '    echo "RE-INDENTIFY SEQUENCES OF THE TRANSCRIPTOME FILE"\n')
+            script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+            script_file_id.write( '        echo "This step was previously run."\n')
             script_file_id.write( '    else\n')
-            script_file_id.write( '{0}\n'.format('        echo "Re-identifing sequences ..."'))
-            script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-            script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-            script_file_id.write( '{0}\n'.format('            reid-fasta-file.py \\'))
-            script_file_id.write( '{0}\n'.format('                --fasta=$TRANSCRIPTOME_FILE \\'))
-            script_file_id.write( '{0}\n'.format('                --out=$REIDENTIFIED_TRANSCRIPTOME_FILE \\'))
-            script_file_id.write( '{0}\n'.format('                --relationships=$RELATIONSHIP_FILE \\'))
-            script_file_id.write( '{0}\n'.format('                --verbose=N \\'))
-            script_file_id.write( '{0}\n'.format('                --trace=N'))
-            script_file_id.write( '{0}\n'.format('        RC=$?'))
-            script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error reid-fasta-file.py $RC; fi'))
-            script_file_id.write( '{0}\n'.format('        echo "Sequences are re-identified."'))
-            script_file_id.write( '{0}\n'.format('        touch $STEP_STATUS'))
+            script_file_id.write( '        echo "Re-identifing sequences ..."\n')
+            script_file_id.write( '        /usr/bin/time \\\n')
+            script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+            script_file_id.write( '            reid-fasta-file.py \\\n')
+            script_file_id.write( '                --fasta=$TRANSCRIPTOME_FILE \\\n')
+            script_file_id.write( '                --type=NT \\\n')
+            script_file_id.write( '                --out=$REIDENTIFIED_TRANSCRIPTOME_FILE \\\n')
+            script_file_id.write( '                --relationships=$TOA_TRANSCRIPTOME_RELATIONSHIP_FILE \\\n')
+            script_file_id.write( '                --verbose=N \\\n')
+            script_file_id.write( '                --trace=N\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error reid-fasta-file.py $RC; fi\n')
+            script_file_id.write( '        echo "Sequences are re-identified."\n')
+            script_file_id.write( '        touch $STEP_STATUS\n')
             script_file_id.write( '    fi\n')
             script_file_id.write( '}\n')
-            for i in range(len(all_database_list)):
-                current_code = all_database_list[i]
-                previus_code = all_database_list[i - 1] if i > 0 else ''
+            for i in range(len(database_list)):
+                current_code = database_list[i]
+                previus_code = database_list[i - 1] if i > 0 else ''
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function align_transcripts_{0}_proteome'.format(current_code)))
+                script_file_id.write(f'function align_transcripts_{current_code}_proteome\n')
                 script_file_id.write( '{\n')
-                script_file_id.write(f'    cd {current_run_dir}\n')
-                script_file_id.write( '{0}\n'.format('    STEP_STATUS=$STATUS_DIR/align_transcripts_{0}_proteome.ok'.format(current_code)))
+                script_file_id.write( '    cd $OUTPUT_DIR\n')
+                script_file_id.write(f'    STEP_STATUS=$STATUS_DIR/align_transcripts_{current_code}_proteome.ok\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "ALIGNMENT OF TRANSCRIPTS TO {0} PROTEOME"'.format(current_code.upper())))
-                script_file_id.write( '{0}\n'.format('    if [ -f $STEP_STATUS ]; then'))
-                script_file_id.write( '{0}\n'.format('        echo "This step was previously run."'))
+                script_file_id.write(f'    echo "ALIGNMENT OF TRANSCRIPTS TO {current_code.upper()} PROTEOME"\n')
+                script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+                script_file_id.write( '        echo "This step was previously run."\n')
                 script_file_id.write( '    else\n')
-                script_file_id.write(f'        source activate {xlib.get_blastplus_anaconda_code()}\n')
-                script_file_id.write( '{0}\n'.format('        echo "Aligning transcripts ..."'))
+                script_file_id.write( '        echo "Aligning transcripts ..."\n')
                 if current_code in ['gymno_01', 'dicots_04', 'monocots_04', 'refseq_plant']:
-                    script_file_id.write( '{0}\n'.format('        export BLASTDB=${0}_PROTEOME_DB_DIR'.format(current_code.upper())))
-                elif current_code in ['nt_viridiplantae', 'nt_remainder']:
-                    script_file_id.write( '{0}\n'.format('        export BLASTDB=$NT_DB_DIR'))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                if current_code in ['gymno_01', 'dicots_04', 'monocots_04', 'refseq_plant']:
-                    script_file_id.write( '{0}\n'.format('            blastx \\'))
-                elif current_code in ['nt_viridiplantae', 'nt_remainder']:
-                    script_file_id.write( '{0}\n'.format('            blastn \\'))
-                script_file_id.write( '{0}\n'.format('                -num_threads $NUM_THREADS \\'))
-                if current_code in ['gymno_01', 'dicots_04', 'monocots_04', 'refseq_plant']:
-                    script_file_id.write( '{0}\n'.format('                -db ${0}_PROTEOME_DB_NAME \\'.format(current_code.upper())))
-                elif current_code in ['nt_viridiplantae', 'nt_remainder']:
-                    script_file_id.write( '{0}\n'.format('                -db $NT_DB_NAME \\'))
-                if i == 0:
-                    script_file_id.write( '{0}\n'.format('                -query $REIDENTIFIED_TRANSCRIPTOME_FILE \\'))
-                else:
-                    script_file_id.write( '{0}\n'.format('                -query ${0}_NON_ANNOTATED_TRANSCRIPT_FILE \\'.format(previus_code.upper())))
-                if current_code == 'nt_viridiplantae':
-                    script_file_id.write( '{0}\n'.format('                -gilist $NUCLEOTIDE_VIRIDIPLANTAE_GI_LIST \\'))
-                script_file_id.write( '{0}\n'.format('                -evalue $E_VALUE \\'))
-                script_file_id.write( '{0}\n'.format('                -max_target_seqs $MAX_TARGET_SEQS \\'))
-                script_file_id.write( '{0}\n'.format('                -max_hsps $MAX_HSPS \\'))
-                script_file_id.write( '{0}\n'.format('                -qcov_hsp_perc $QCOV_HSP_PERC \\'))
-                script_file_id.write( '{0}\n'.format('                -outfmt 5 \\'))
-                if current_code == 'nt_remainder':
-                    script_file_id.write( '{0}\n'.format('                -out $REIDENTIFIED_NT_REMAINDER_BLAST_XML'))
-                else:
-                    script_file_id.write( '{0}\n'.format('                -out ${0}_BLAST_XML'.format(current_code.upper())))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error blastx $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Alignment is done."'))
-                script_file_id.write( '{0}\n'.format('        conda deactivate'))
-                if current_code == 'nt_remainder':
-                    script_file_id.write( '{0}\n'.format('        echo "Restoring sequence identifications in alignment file ..."'))
-                    script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                    script_file_id.write( '{0}\n'.format('            restore-ids.py \\'))
-                    script_file_id.write( '{0}\n'.format('                --in=$REIDENTIFIED_NT_REMAINDER_BLAST_XML \\'))
-                    script_file_id.write( '{0}\n'.format('                --format=XML \\'))
-                    script_file_id.write( '{0}\n'.format('                --relationships=$RELATIONSHIP_FILE \\'))
-                    script_file_id.write( '{0}\n'.format('                --out=$NT_REMAINDER_BLAST_XML \\'))
-                    script_file_id.write( '{0}\n'.format('                --verbose=N \\'))
-                    script_file_id.write( '{0}\n'.format('                --trace=N'))
-                    script_file_id.write( '{0}\n'.format('        RC=$?'))
-                    script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error restore-ids.py $RC; fi'))
-                    script_file_id.write( '{0}\n'.format('        echo "Identifications are restored."'))
-                if len(plant_database_list) == 1 and current_code != 'nt_remainder':
-                    script_file_id.write( '{0}\n'.format('        echo "Creating plant alignment file ..."'))
-                    script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                    script_file_id.write( '{0}\n'.format('            cp ${0}_BLAST_XML $REIDENTIFIED_PLANT_BLAST_XML'.format(current_code.upper())))
-                    script_file_id.write( '{0}\n'.format('        RC=$?'))
-                    script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error cp $RC; fi'))
-                    script_file_id.write( '{0}\n'.format('        echo "File is created."'))
-                    script_file_id.write( '{0}\n'.format('        echo "Restoring sequence identifications in merged alignment file ..."'))
-                    script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                    script_file_id.write( '{0}\n'.format('            restore-ids.py \\'))
-                    script_file_id.write( '{0}\n'.format('                --in=$REIDENTIFIED_PLANT_BLAST_XML \\'))
-                    script_file_id.write( '{0}\n'.format('                --format=XML \\'))
-                    script_file_id.write( '{0}\n'.format('                --relationships=$RELATIONSHIP_FILE \\'))
-                    script_file_id.write( '{0}\n'.format('                --out=$PLANT_BLAST_XML \\'))
-                    script_file_id.write( '{0}\n'.format('                --verbose=N \\'))
-                    script_file_id.write( '{0}\n'.format('                --trace=N'))
-                    script_file_id.write( '{0}\n'.format('        RC=$?'))
-                    script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error restore-ids.py $RC; fi'))
-                    script_file_id.write( '{0}\n'.format('        echo "Identifications are restored."'))
-                script_file_id.write( '{0}\n'.format('        touch $STEP_STATUS'))
-                script_file_id.write( '    fi\n')
-                script_file_id.write( '}\n')
-                script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function load_alignment_{0}_proteome'.format(current_code)))
-                script_file_id.write( '{\n')
-                script_file_id.write(f'    cd {current_run_dir}\n')
-                script_file_id.write( '{0}\n'.format('    STEP_STATUS=$STATUS_DIR/load_alignment_{0}_proteome.ok'.format(current_code)))
-                script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "LOAD OF TRANSCRIPT ALIGNMENT TO {0} PROTEOME INTO TOA DATABASE"'.format(current_code.upper())))
-                script_file_id.write( '{0}\n'.format('    if [ -f $STEP_STATUS ]; then'))
-                script_file_id.write( '{0}\n'.format('        echo "This step was previously run."'))
-                script_file_id.write( '    else\n')
-                script_file_id.write( '{0}\n'.format('        echo "Loading alignmnet data ..."'))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('            load-blast-data.py \\'))
-                script_file_id.write( '{0}\n'.format('                --db=$TOA_DB \\'))
-                script_file_id.write( '{0}\n'.format('                --dataset={0} \\'.format(current_code)))
-                script_file_id.write( '{0}\n'.format('                --format=5 \\'))
-                if current_code == 'nt_remainder':
-                    script_file_id.write( '{0}\n'.format('                --blast=$REIDENTIFIED_NT_REMAINDER_BLAST_XML \\'))
-                else:
-                    script_file_id.write( '{0}\n'.format('                --blast=${0}_BLAST_XML \\'.format(current_code.upper())))
-                script_file_id.write( '{0}\n'.format('                --verbose=N \\'))
-                script_file_id.write( '{0}\n'.format('                --trace=N'))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error load-blast-data.py $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Data are loaded."'))
-                script_file_id.write( '{0}\n'.format('        touch $STEP_STATUS'))
-                script_file_id.write( '    fi\n')
-                script_file_id.write( '}\n')
-                script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function annotate_transcripts_{0}'.format(current_code)))
-                script_file_id.write( '{\n')
-                script_file_id.write(f'    cd {current_run_dir}\n')
-                script_file_id.write( '{0}\n'.format('    STEP_STATUS=$STATUS_DIR/annotate_transcripts_{0}.ok'.format(current_code)))
-                script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "ANNOTATION OF TRANSCRIPTS WITH {0}"'.format(current_code.upper())))
-                script_file_id.write( '{0}\n'.format('    if [ -f $STEP_STATUS ]; then'))
-                script_file_id.write( '{0}\n'.format('        echo "This step was previously run."'))
-                script_file_id.write( '    else\n')
-                script_file_id.write( '{0}\n'.format('        echo "Annotating transcripts ..."'))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('            annotate-sequences.py \\'))
-                script_file_id.write( '{0}\n'.format('                --db=$TOA_DB \\'))
-                script_file_id.write( '{0}\n'.format('                --dataset={0} \\'.format(current_code)))
-                if i == 0:
-                    script_file_id.write( '{0}\n'.format('                --seqs=$REIDENTIFIED_TRANSCRIPTOME_FILE \\'))
-                else:
-                    script_file_id.write( '{0}\n'.format('                --seqs=${0}_NON_ANNOTATED_TRANSCRIPT_FILE \\'.format(previus_code.upper())))
-                script_file_id.write( '{0}\n'.format('                --relationships=$RELATIONSHIP_FILE \\'))
-                script_file_id.write( '{0}\n'.format('                --annotation=${0}_ANNOTATION_FILE \\'.format(current_code.upper())))
-                script_file_id.write( '{0}\n'.format('                --nonann=${0}_NON_ANNOTATED_TRANSCRIPT_FILE \\'.format(current_code.upper())))
-                script_file_id.write( '{0}\n'.format('                --verbose=N \\'))
-                script_file_id.write( '{0}\n'.format('                --trace=N'))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error annotate-sequences.py $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Annotation is done."'))
-                if len(plant_database_list) == 1 and current_code != 'nt_remainder':
-                    script_file_id.write( '{0}\n'.format('        echo "Creating plant annotation file ..."'))
-                    script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                    script_file_id.write( '{0}\n'.format('            cp ${0}_ANNOTATION_FILE $PLANT_ANNOTATION_FILE'.format(current_code.upper())))
-                    script_file_id.write( '{0}\n'.format('        RC=$?'))
-                    script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error cp $RC; fi'))
-                    script_file_id.write( '{0}\n'.format('        echo "File is created."'))
-                script_file_id.write( '{0}\n'.format('        touch $STEP_STATUS'))
-                script_file_id.write( '    fi\n')
-                script_file_id.write( '}\n')
-            if len(plant_database_list) > 1:
-                script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function merge_plant_alignment_files'))
-                script_file_id.write( '{\n')
-                script_file_id.write(f'    cd {current_run_dir}\n')
-                script_file_id.write( '{0}\n'.format('    STEP_STATUS=$STATUS_DIR/merge_plant_alignment_files.ok'))
-                script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "MERGER OF PLANT ALIGNMENT FILES"'))
-                script_file_id.write( '{0}\n'.format('    if [ -f $STEP_STATUS ]; then'))
-                script_file_id.write( '{0}\n'.format('        echo "This step was previously run."'))
-                script_file_id.write( '    else\n')
-                script_file_id.write( '{0}\n'.format('        echo "Merging alignment files ..."'))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('            merge-xml-files.py \\'))
-                plant_blast_xml_list = []
-                for database_code in plant_database_list:
-                    plant_blast_xml_list.append('${0}_BLAST_XML'.format(database_code.upper()))
-                script_file_id.write( '{0}\n'.format('                --list={0} \\'.format(','.join(plant_blast_xml_list))))
-                script_file_id.write( '{0}\n'.format('                --relationships=NONE \\'))
-                script_file_id.write( '{0}\n'.format('                --mfile=$REIDENTIFIED_PLANT_BLAST_XML \\'))
-                script_file_id.write( '{0}\n'.format('                --verbose=N \\'))
-                script_file_id.write( '{0}\n'.format('                --trace=N'))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error merge-xml-files.py $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Files are merged."'))
-                script_file_id.write( '{0}\n'.format('        echo "Restoring sequence identifications in merged alignment file ..."'))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write( '{0}\n'.format('            restore-ids.py \\'))
-                script_file_id.write( '{0}\n'.format('                --in=$REIDENTIFIED_PLANT_BLAST_XML \\'))
-                script_file_id.write( '{0}\n'.format('                --format=XML \\'))
-                script_file_id.write( '{0}\n'.format('                --relationships=$RELATIONSHIP_FILE \\'))
-                script_file_id.write( '{0}\n'.format('                --out=$PLANT_BLAST_XML \\'))
-                script_file_id.write( '{0}\n'.format('                --verbose=N \\'))
-                script_file_id.write( '{0}\n'.format('                --trace=N'))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error restore-ids.py $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Identifications are restored."'))
-                script_file_id.write( '{0}\n'.format('        touch $STEP_STATUS'))
-                script_file_id.write( '    fi\n')
-                script_file_id.write( '}\n')
-                script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function merge_plant_annotation_files'))
-                script_file_id.write( '{\n')
-                script_file_id.write(f'    cd {current_run_dir}\n')
-                script_file_id.write( '{0}\n'.format('    STEP_STATUS=$STATUS_DIR/merge_plant_annotation_files.ok'))
-                script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "MERGER OF PLANT ANNOTATION FILES"'))
-                script_file_id.write( '{0}\n'.format('    if [ -f $STEP_STATUS ]; then'))
-                script_file_id.write( '{0}\n'.format('        echo "This step was previously run."'))
-                script_file_id.write( '    else\n')
-                for database_code in plant_database_list:
-                    script_file_id.write( '{0}\n'.format('        {0}_ANNOTATION_FILE_TMP=${0}_ANNOTATION_FILE".tmp"'.format(database_code.upper())))
-                    script_file_id.write( '{0}\n'.format('        {0}_ANNOTATION_FILE_SORTED=${0}_ANNOTATION_FILE".sorted"'.format(database_code.upper())))
-                tmp_file_list = []
-                for i in range(len(plant_database_list) - 2):
-                    script_file_id.write( '{0}\n'.format('        MERGED_ANNOTATION_FILE_TMP{0}=$MERGED_ANNOTATION_FILE".tmp{0}"'.format(i + 1)))
-                    tmp_file_list.append('$MERGED_ANNOTATION_FILE_TMP{0}'.format(i + 1))
-                script_file_id.write( '{0}\n'.format('        echo "Deleting the header record of `basename ${0}_ANNOTATION_FILE` ..."'.format(plant_database_list[0].upper())))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('            tail --lines=+2 ${0}_ANNOTATION_FILE > ${0}_ANNOTATION_FILE_TMP'.format(plant_database_list[0].upper())))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error tail $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Records are deleted."'))
-                script_file_id.write( '{0}\n'.format('        echo "Sorting data records of `basename ${0}_ANNOTATION_FILE` ..."'.format(plant_database_list[0].upper())))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('            sort --field-separator=";" --key=1,2 --key=4,4 --key=6,6 < ${0}_ANNOTATION_FILE_TMP > ${0}_ANNOTATION_FILE_SORTED'.format(plant_database_list[0].upper())))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error sort $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Records are sorted."'))
-                script_file_id.write( '{0}\n'.format('        echo "Deleting the header record of `basename ${0}_ANNOTATION_FILE` ..."'.format(plant_database_list[1].upper())))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('            tail --lines=+2 ${0}_ANNOTATION_FILE > ${0}_ANNOTATION_FILE_TMP'.format(plant_database_list[1].upper())))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        echo "Records are deleted."'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error tail $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Sorting data records of `basename ${0}_ANNOTATION_FILE` ..."'.format(plant_database_list[1].upper())))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('            sort --field-separator=";" --key=1,2 --key=4,4 --key=6,6 < ${0}_ANNOTATION_FILE_TMP > ${0}_ANNOTATION_FILE_SORTED'.format(plant_database_list[1].upper())))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error sort $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Records are sorted."'))
-                script_file_id.write( '{0}\n'.format('        echo "Merging `basename ${0}_ANNOTATION_FILE` and `basename ${1}_ANNOTATION_FILE` ..."'.format(plant_database_list[0].upper(), plant_database_list[1].upper())))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('            merge-annotation-files.py \\'))
-                script_file_id.write( '{0}\n'.format('                --file1=${0}_ANNOTATION_FILE_SORTED \\'.format(plant_database_list[0].upper())))
-                script_file_id.write( '{0}\n'.format('                --type1={0} \\'.format(database_type_dict[plant_database_list[0]])))
-                script_file_id.write( '{0}\n'.format('                --file2=${0}_ANNOTATION_FILE_SORTED \\'.format(plant_database_list[1].upper())))
-                script_file_id.write( '{0}\n'.format('                --type2={0} \\'.format(database_type_dict[plant_database_list[1]])))
-                if len(plant_database_list) > 2:
-                    script_file_id.write( '{0}\n'.format('                --mfile=$MERGED_ANNOTATION_FILE_TMP1 \\'))
-                    script_file_id.write( '{0}\n'.format('                --header=N \\'))
-                else:
-                    script_file_id.write( '{0}\n'.format('                --mfile=$PLANT_ANNOTATION_FILE \\'))
-                    script_file_id.write( '{0}\n'.format('                --header=Y \\'))
-                script_file_id.write( '{0}\n'.format('                --verbose=N \\'))
-                script_file_id.write( '{0}\n'.format('                --trace=N'))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error merge-annotation-files.py $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Files are merged."'))
-                script_file_id.write( '{0}\n'.format('        echo "Deleting temporal files of `basename ${0}_ANNOTATION_FILE` ..."'.format(plant_database_list[0].upper())))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('            rm ${0}_ANNOTATION_FILE_TMP ${0}_ANNOTATION_FILE_SORTED'.format(plant_database_list[0].upper())))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error rm $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Files are deleted."'))
-                script_file_id.write( '{0}\n'.format('        echo "Deleting temporal files of `basename ${0}_ANNOTATION_FILE` ..."'.format(plant_database_list[1].upper())))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('            rm ${0}_ANNOTATION_FILE_TMP ${0}_ANNOTATION_FILE_SORTED'.format(plant_database_list[1].upper())))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error rm $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Files are deleted."'))
-                for i in range(2, len(plant_database_list)):
-                    script_file_id.write( '{0}\n'.format('        echo "Deleting the header record of `basename ${0}_ANNOTATION_FILE` ..."'.format(plant_database_list[i].upper())))
-                    script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                    script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                    script_file_id.write( '{0}\n'.format('            tail --lines=+2 ${0}_ANNOTATION_FILE > ${0}_ANNOTATION_FILE_TMP'.format(plant_database_list[i].upper())))
-                    script_file_id.write( '{0}\n'.format('        RC=$?'))
-                    script_file_id.write( '{0}\n'.format('        echo "Records are deleted."'))
-                    script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error tail $RC; fi'))
-                    script_file_id.write( '{0}\n'.format('        echo "Sorting data records of `basename ${0}_ANNOTATION_FILE` ..."'.format(plant_database_list[i].upper())))
-                    script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                    script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                    script_file_id.write( '{0}\n'.format('            sort --field-separator=";" --key=1,2 --key=4,4 --key=6,6 < ${0}_ANNOTATION_FILE_TMP > ${0}_ANNOTATION_FILE_SORTED'.format(plant_database_list[i].upper())))
-                    script_file_id.write( '{0}\n'.format('        RC=$?'))
-                    script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error sort $RC; fi'))
-                    script_file_id.write( '{0}\n'.format('        echo "Records are sorted."'))
-                    script_file_id.write( '{0}\n'.format('        echo "Adding annotation of `basename ${0}_ANNOTATION_FILE` to the merged annotation file ..."'.format(plant_database_list[i].upper())))
-                    script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                    script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                    script_file_id.write( '{0}\n'.format('            merge-annotation-files.py \\'))
-                    script_file_id.write( '{0}\n'.format('                --file1=$MERGED_ANNOTATION_FILE_TMP{} \\'.format(i - 1)))
-                    script_file_id.write( '{0}\n'.format('                --type1=MERGER \\'))
-                    script_file_id.write( '{0}\n'.format('                --file2=${0}_ANNOTATION_FILE_SORTED \\'.format(plant_database_list[i].upper())))
-                    script_file_id.write( '{0}\n'.format('                --type2={0} \\'.format(database_type_dict[plant_database_list[i]])))
-                    if i < len(plant_database_list) - 1:
-                        script_file_id.write( '{0}\n'.format('                --mfile=$MERGED_ANNOTATION_FILE_TMP{0} \\'.format(i)))
-                        script_file_id.write( '{0}\n'.format('                --header=N \\'))
+                    if alignment_tool == xlib.get_blastplus_name():
+                        script_file_id.write( '        source activate blast\n')
+                        script_file_id.write(f'        export BLASTDB=${current_code.upper()}_BLASTPLUS_DB_DIR\n')
+                        script_file_id.write( '        /usr/bin/time \\\n')
+                        script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                        script_file_id.write( '            blastx \\\n')
+                        script_file_id.write( '                -num_threads $THREADS \\\n')
+                        script_file_id.write(f'                -db ${current_code.upper()}_BLASTPLUS_DB_NAME \\\n')
+                        if i == 0:
+                            script_file_id.write( '                -query $REIDENTIFIED_TRANSCRIPTOME_FILE \\\n')
+                        else:
+                            script_file_id.write(f'                -query ${previus_code.upper()}_NON_ANNOTATED_TRANSCRIPT_FILE \\\n')
+                        script_file_id.write( '                -evalue $BLASTPLUS_EVALUE \\\n')
+                        script_file_id.write( '                -max_target_seqs $BLASTPLUS_MAX_TARGET_SEQS \\\n')
+                        script_file_id.write( '                -max_hsps $BLASTPLUS_MAX_HSPS \\\n')
+                        script_file_id.write( '                -qcov_hsp_perc $BLASTPLUS_QCOV_HSP_PERC \\\n')
+                        if blastplus_other_parameters_blastx.upper() != 'NONE':
+                            parameter_list = [x.strip() for x in blastplus_other_parameters_blastx.split(';')]
+                            for parameter in parameter_list:
+                                if parameter.find('=') > 0:
+                                    pattern = r'^--(.+)=(.+)$'
+                                    mo = re.search(pattern, parameter)
+                                    parameter_name = mo.group(1).strip()
+                                    parameter_value = mo.group(2).strip()
+                                    script_file_id.write(f'                -{parameter_name} {parameter_value} \\\n')
+                                else:
+                                    pattern = r'^--(.+)$'
+                                    mo = re.search(pattern, parameter)
+                                    parameter_name = mo.group(1).strip()
+                                    script_file_id.write(f'                -{parameter_name} \\\n')
+                        script_file_id.write( '                -outfmt 5 \\\n')
+                        script_file_id.write(f'                -out ${current_code.upper()}_BLAST_XML\n')
+                        script_file_id.write( '        RC=$?\n')
+                        script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error blastx $RC; fi\n')
+                        script_file_id.write( '        echo "Alignment is done."\n')
+                        script_file_id.write( '        conda deactivate\n')
+                    elif alignment_tool == xlib.get_diamond_name():
+                        if i == 0:
+                            script_file_id.write( '        if [[ -s $REIDENTIFIED_TRANSCRIPTOME_FILE ]]; then\n')
+                        else:
+                            script_file_id.write(f'        if [[ -s ${previus_code.upper()}_NON_ANNOTATED_TRANSCRIPT_FILE ]]; then\n')
+                        script_file_id.write( '            source activate diamond\n')
+                        script_file_id.write( '            /usr/bin/time \\\n')
+                        script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                        script_file_id.write( '                diamond blastx \\\n')
+                        script_file_id.write( '                    --threads $THREADS \\\n')
+                        script_file_id.write(f'                    --db ${current_code.upper()}_DIAMOND_DB_FILE \\\n')
+                        if i == 0:
+                            script_file_id.write( '                    --query $REIDENTIFIED_TRANSCRIPTOME_FILE \\\n')
+                        else:
+                            script_file_id.write(f'                    --query ${previus_code.upper()}_NON_ANNOTATED_TRANSCRIPT_FILE \\\n')
+                        script_file_id.write( '                    --evalue $DIAMOND_EVALUE \\\n')
+                        script_file_id.write( '                    --max-target-seqs $DIAMOND_MAX_TARGET_SEQS \\\n')
+                        script_file_id.write( '                    --max-hsps $DIAMOND_MAX_HSPS \\\n')
+                        if diamond_other_parameters_blastx.upper() != 'NONE':
+                            parameter_list = [x.strip() for x in diamond_other_parameters_blastx.split(';')]
+                            for parameter in parameter_list:
+                                if parameter.find('=') > 0:
+                                    pattern = r'^--(.+)=(.+)$'
+                                    mo = re.search(pattern, parameter)
+                                    parameter_name = mo.group(1).strip()
+                                    parameter_value = mo.group(2).strip()
+                                    script_file_id.write(f'                    --{parameter_name} {parameter_value} \\\n')
+                                else:
+                                    pattern = r'^--(.+)$'
+                                    mo = re.search(pattern, parameter)
+                                    parameter_name = mo.group(1).strip()
+                                    script_file_id.write(f'                    --{parameter_name} \\\n')
+                        script_file_id.write( '                    --outfmt 5 \\\n')
+                        script_file_id.write(f'                    --out ${current_code.upper()}_BLAST_XML\n')
+                        script_file_id.write( '            RC=$?\n')
+                        script_file_id.write( '            if [ $RC -ne 0 ]; then manage_error diamond-blastx $RC; fi\n')
+                        script_file_id.write( '        else\n')
+                        script_file_id.write(f'            touch ${current_code.upper()}_BLAST_XML\n')
+                        script_file_id.write( '        fi\n')
+                        script_file_id.write( '        echo "Alignment is done."\n')
+                        script_file_id.write( '        conda deactivate\n')
+                elif current_code == 'nt':
+                    script_file_id.write( '        source activate blast\n')
+                    script_file_id.write(f'        export BLASTDB=$NT_BLASTPLUS_DB_DIR\n')
+                    script_file_id.write( '        /usr/bin/time \\\n')
+                    script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                    script_file_id.write( '            blastn \\\n')
+                    script_file_id.write( '                -num_threads $THREADS \\\n')
+                    script_file_id.write(f'                -db $NT_BLASTPLUS_DB_NAME \\\n')
+                    if i == 0:
+                        script_file_id.write( '                -query $REIDENTIFIED_TRANSCRIPTOME_FILE \\\n')
                     else:
-                        script_file_id.write( '{0}\n'.format('                --mfile=$PLANT_ANNOTATION_FILE \\'))
-                        script_file_id.write( '{0}\n'.format('                --header=Y \\'))
-                    script_file_id.write( '{0}\n'.format('                --verbose=N \\'))
-                    script_file_id.write( '{0}\n'.format('                --trace=N'))
-                    script_file_id.write( '{0}\n'.format('        RC=$?'))
-                    script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error merge-annotation-files.py $RC; fi'))
-                    script_file_id.write( '{0}\n'.format('        echo "Files are merged."'))
-                    script_file_id.write( '{0}\n'.format('        echo "Deleting temporal files of `basename ${0}_ANNOTATION_FILE` ..."'.format(plant_database_list[i].upper())))
-                    script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                    script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                    script_file_id.write( '{0}\n'.format('            rm ${0}_ANNOTATION_FILE_TMP ${0}_ANNOTATION_FILE_SORTED'.format(plant_database_list[i].upper())))
-                    script_file_id.write( '{0}\n'.format('        RC=$?'))
-                    script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error rm $RC; fi'))
-                    script_file_id.write( '{0}\n'.format('        echo "Files are deleted."'))
-                script_file_id.write( '{0}\n'.format('        echo "Deleting temporal annotation files ..."'))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('            rm {0}'.format(' '.join(tmp_file_list))))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error rm $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Files are deleted."'))
-                script_file_id.write( '{0}\n'.format('        touch $STEP_STATUS'))
+                        script_file_id.write(f'                -query ${previus_code.upper()}_NON_ANNOTATED_TRANSCRIPT_FILE \\\n')
+                    script_file_id.write( '                -evalue $BLASTPLUS_EVALUE \\\n')
+                    script_file_id.write( '                -max_target_seqs $BLASTPLUS_MAX_TARGET_SEQS \\\n')
+                    script_file_id.write( '                -max_hsps $BLASTPLUS_MAX_HSPS \\\n')
+                    script_file_id.write( '                -qcov_hsp_perc $BLASTPLUS_QCOV_HSP_PERC \\\n')
+                    if blastplus_other_parameters_blastn.upper() != 'NONE':
+                        parameter_list = [x.strip() for x in blastplus_other_parameters_blastn.split(';')]
+                        for parameter in parameter_list:
+                            if parameter.find('=') > 0:
+                                pattern = r'^--(.+)=(.+)$'
+                                mo = re.search(pattern, parameter)
+                                parameter_name = mo.group(1).strip()
+                                parameter_value = mo.group(2).strip()
+                                script_file_id.write(f'                -{parameter_name} {parameter_value} \\\n')
+                            else:
+                                pattern = r'^--(.+)$'
+                                mo = re.search(pattern, parameter)
+                                parameter_name = mo.group(1).strip()
+                                script_file_id.write(f'                -{parameter_name} \\\n')
+                    script_file_id.write( '                -outfmt 5 \\\n')
+                    script_file_id.write(f'                -out ${current_code.upper()}_BLAST_XML\n')
+                    script_file_id.write( '        RC=$?\n')
+                    script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error blastn $RC; fi\n')
+                    script_file_id.write( '        echo "Alignment is done."\n')
+                    script_file_id.write( '        conda deactivate\n')
+                if len(database_list) == 1:
+                    script_file_id.write( '        echo "Restoring sequence identifications in alignment file ..."\n')
+                    script_file_id.write( '        /usr/bin/time \\\n')
+                    script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                    script_file_id.write( '            restore-ids.py \\\n')
+                    script_file_id.write(f'                --in=${current_code.upper()}_BLAST_XML \\\n')
+                    script_file_id.write( '                --format=XML \\\n')
+                    script_file_id.write( '                --relationships=$TOA_TRANSCRIPTOME_RELATIONSHIP_FILE \\\n')
+                    script_file_id.write( '                --relationships2=NONE \\\n')
+                    script_file_id.write( '                --out=$MERGED_BLAST_XML \\\n')
+                    script_file_id.write( '                --verbose=N \\\n')
+                    script_file_id.write( '                --trace=N\n')
+                    script_file_id.write( '        RC=$?\n')
+                    script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error restore-ids.py $RC; fi\n')
+                    script_file_id.write( '        echo "Identifications are restored."\n')
+                script_file_id.write( '        touch $STEP_STATUS\n')
                 script_file_id.write( '    fi\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function split_merged_plant_annotation_file'))
+                script_file_id.write(f'function load_alignment_{current_code}_proteome\n')
                 script_file_id.write( '{\n')
-                script_file_id.write(f'    cd {current_run_dir}\n')
-                script_file_id.write( '{0}\n'.format('    STEP_STATUS=$STATUS_DIR/split_merged_plant_annotation_file.ok'))
+                script_file_id.write( '    cd $OUTPUT_DIR\n')
+                script_file_id.write(f'    STEP_STATUS=$STATUS_DIR/load_alignment_{current_code}_proteome.ok\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "SPLIT OF MERGED PLANT ANNOTATION FILE"'))
-                script_file_id.write( '{0}\n'.format('    if [ -f $STEP_STATUS ]; then'))
-                script_file_id.write( '{0}\n'.format('        echo "This step was previously run."'))
+                script_file_id.write(f'    echo "LOAD OF TRANSCRIPT ALIGNMENT TO {current_code.upper()} PROTEOME INTO TOA DATABASE"\n')
+                script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+                script_file_id.write( '        echo "This step was previously run."\n')
                 script_file_id.write( '    else\n')
-                script_file_id.write( '{0}\n'.format('        echo "Splitting merged file `basename $PLANT_ANNOTATION_FILE` ..."'))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('            split-annotation-file.py \\'))
-                script_file_id.write( '{0}\n'.format('                --annotation=$PLANT_ANNOTATION_FILE \\'))
-                script_file_id.write( '{0}\n'.format('                --type=MERGER \\'))
-                script_file_id.write( '{0}\n'.format('                --header=Y \\'))
-                script_file_id.write( '{0}\n'.format('                --rnum=250000 \\'))
-                script_file_id.write( '{0}\n'.format('                --verbose=N \\'))
-                script_file_id.write( '{0}\n'.format('                --trace=N'))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error split-annotation-file.py $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "File is splitted."'))
-                script_file_id.write( '{0}\n'.format('        touch $STEP_STATUS'))
+                script_file_id.write( '        echo "Loading alignmnet data ..."\n')
+                script_file_id.write( '        /usr/bin/time \\\n')
+                script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '            load-blast-data.py \\\n')
+                script_file_id.write( '                --db=$TOA_DB \\\n')
+                script_file_id.write(f'                --dataset={current_code} \\\n')
+                script_file_id.write( '                --format=5 \\\n')
+                script_file_id.write(f'                --blast=${current_code.upper()}_BLAST_XML \\\n')
+                script_file_id.write( '                --verbose=N \\\n')
+                script_file_id.write( '                --trace=N\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error load-blast-data.py $RC; fi\n')
+                script_file_id.write( '        echo "Data are loaded."\n')
+                script_file_id.write( '        touch $STEP_STATUS\n')
                 script_file_id.write( '    fi\n')
                 script_file_id.write( '}\n')
-            if all_database_list[0] != 'nt_remainder':
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function purge_transcriptome'))
+                script_file_id.write(f'function annotate_transcripts_{current_code}\n')
                 script_file_id.write( '{\n')
-                script_file_id.write(f'    cd {current_run_dir}\n')
-                script_file_id.write( '{0}\n'.format('    STEP_STATUS=$STATUS_DIR/purge_transcriptome.ok'))
+                script_file_id.write( '    cd $OUTPUT_DIR\n')
+                script_file_id.write(f'    STEP_STATUS=$STATUS_DIR/annotate_transcripts_{current_code}.ok\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "PURGE TRANSCRIPTOME REMOVING NON-ANNOTATED TRANSCRIPTS"'))
-                script_file_id.write( '{0}\n'.format('    if [ -f $STEP_STATUS ]; then'))
-                script_file_id.write( '{0}\n'.format('        echo "This step was previously run."'))
+                script_file_id.write(f'    echo "ANNOTATION OF TRANSCRIPTS WITH {current_code.upper()}"\n')
+                script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+                script_file_id.write( '        echo "This step was previously run."\n')
                 script_file_id.write( '    else\n')
-                script_file_id.write( '{0}\n'.format('        echo "Purging transcriptome files ..."'))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('            merge-fasta-files.py \\'))
-                script_file_id.write( '{0}\n'.format('                --file1=$REIDENTIFIED_TRANSCRIPTOME_FILE \\'))
-                script_file_id.write( '{0}\n'.format('                --file2=${0}_NON_ANNOTATED_TRANSCRIPT_FILE \\'.format(plant_database_list[len(plant_database_list) - 1].upper())))
-                script_file_id.write( '{0}\n'.format('                --mfile=$PURGED_TRANSCRIPTOME_FILE \\'))
-                script_file_id.write( '{0}\n'.format('                --operation=1LESS2 \\'))
-                script_file_id.write( '{0}\n'.format('                --relationships=$RELATIONSHIP_FILE \\'))
-                script_file_id.write( '{0}\n'.format('                --verbose=N \\'))
-                script_file_id.write( '{0}\n'.format('                --trace=N'))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error merge-fasta-files.py $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Transcriptome is purged."'))
-                script_file_id.write( '{0}\n'.format('        touch $STEP_STATUS'))
+                script_file_id.write( '        echo "Annotating transcripts ..."\n')
+                script_file_id.write( '        /usr/bin/time \\\n')
+                script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '            annotate-sequences.py \\\n')
+                script_file_id.write( '                --db=$TOA_DB \\\n')
+                script_file_id.write(f'                --dataset={current_code} \\\n')
+                if current_code == 'nt':
+                    script_file_id.write(f'                --aligner=BLAST+ \\\n')
+                else:
+                    script_file_id.write(f'                --aligner={alignment_tool} \\\n')
+                if i == 0:
+                    script_file_id.write( '                --seqs=$REIDENTIFIED_TRANSCRIPTOME_FILE \\\n')
+                else:
+                    script_file_id.write(f'                --seqs=${previus_code.upper()}_NON_ANNOTATED_TRANSCRIPT_FILE \\\n')
+                script_file_id.write( '                --relationships=$TOA_TRANSCRIPTOME_RELATIONSHIP_FILE \\\n')
+                script_file_id.write( '                --relationships2=NONE \\\n')
+                if current_code == 'nt':
+                    script_file_id.write(f'                --annotation=$NT_VIRIDIPLANTAE_ANNOTATION_FILE \\\n')
+                    script_file_id.write(f'                --annotation2=$NT_CONTAMINATION_ANNOTATION_FILE \\\n')
+                else:
+                    script_file_id.write(f'                --annotation=${current_code.upper()}_ANNOTATION_FILE \\\n')
+                    script_file_id.write(f'                --annotation2=NONE \\\n')
+                script_file_id.write(f'                --nonann=${current_code.upper()}_NON_ANNOTATED_TRANSCRIPT_FILE \\\n')
+                script_file_id.write( '                --verbose=N \\\n')
+                script_file_id.write( '                --trace=N\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error annotate-sequences.py $RC; fi\n')
+                script_file_id.write( '        echo "Annotation is done."\n')
+                if len(database_list) == 1:
+                    if current_code == 'nt':
+                        script_file_id.write( '        ANNOTATION_FILE_TMP=$NT_VIRIDIPLANTAE_ANNOTATION_FILE.tmp\n')
+                        script_file_id.write( '        echo "Deleting the header record of $NT_VIRIDIPLANTAE_ANNOTATION_FILE ..."\n')
+                        script_file_id.write( '        /usr/bin/time \\\n')
+                        script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                        script_file_id.write( '            tail -n +2 $NT_VIRIDIPLANTAE_ANNOTATION_FILE > $ANNOTATION_FILE_TMP\n')
+                    else:
+                        script_file_id.write(f'        ANNOTATION_FILE_TMP=${current_code.upper()}_ANNOTATION_FILE.tmp\n')
+                        script_file_id.write(f'        echo "Deleting the header record of ${current_code.upper()}_ANNOTATION_FILE ..."\n')
+                        script_file_id.write( '        /usr/bin/time \\\n')
+                        script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                        script_file_id.write(f'            tail -n +2 ${current_code.upper()}_ANNOTATION_FILE > $ANNOTATION_FILE_TMP\n')
+                    script_file_id.write( '        RC=$?\n')
+                    script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error tail $RC; fi\n')
+                    script_file_id.write( '        echo "Record is deleted."\n')
+                    script_file_id.write( '        echo "Creating plant annotation file ..."\n')
+                    script_file_id.write( '        /usr/bin/time \\\n')
+                    script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                    script_file_id.write( '            merge-annotation-files.py \\\n')
+                    script_file_id.write( '            --file1=$ANNOTATION_FILE_TMP \\\n')
+                    script_file_id.write(f'            --type1={database_type_dict[database_list[0]]} \\\n')
+                    script_file_id.write( '            --file2=NONE \\\n')
+                    script_file_id.write( '            --type2=NONE \\\n')
+                    script_file_id.write( '            --operation=SAVE1 \\\n')
+                    script_file_id.write( '            --mfile=$PLANT_ANNOTATION_FILE \\\n')
+                    script_file_id.write( '            --header=Y \\\n')
+                    script_file_id.write( '            --verbose=N \\\n')
+                    script_file_id.write( '            --trace=N\n')
+                    script_file_id.write( '        RC=$?\n')
+                    script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error merge-annotation-files.py $RC; fi\n')
+                    script_file_id.write( '        echo "File is created."\n')
+                    script_file_id.write( '        echo "Deleting temporal file  ..."\n')
+                    script_file_id.write( '        /usr/bin/time \\\n')
+                    script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                    script_file_id.write( '            rm $ANNOTATION_FILE_TMP\n')
+                    script_file_id.write( '        RC=$?\n')
+                    script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error rm $RC; fi\n')
+                    script_file_id.write( '        echo "File is deleted."\n')
+                script_file_id.write( '        touch $STEP_STATUS\n')
+                script_file_id.write( '    fi\n')
+                script_file_id.write( '}\n')
+            if len(database_list) > 1:
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function merge_alignment_files\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    cd $OUTPUT_DIR\n')
+                script_file_id.write( '    STEP_STATUS=$STATUS_DIR/merge_alignment_files.ok\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "MERGER OF ALIGNMENT FILES"\n')
+                script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+                script_file_id.write( '        echo "This step was previously run."\n')
+                script_file_id.write( '    else\n')
+                script_file_id.write( '        echo "Merging alignment files ..."\n')
+                script_file_id.write( '        /usr/bin/time \\\n')
+                script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '            merge-xml-files.py \\\n')
+                blast_xml_list = []
+                for database_code in database_list:
+                    blast_xml_list.append(f'${database_code.upper()}_BLAST_XML')
+                script_file_id.write(f'                --list={",".join(blast_xml_list)} \\\n')
+                script_file_id.write( '                --relationships=$TOA_TRANSCRIPTOME_RELATIONSHIP_FILE \\\n')
+                script_file_id.write( '                --relationships2=NONE \\\n')
+                script_file_id.write( '                --mfile=$MERGED_BLAST_XML \\\n')
+                script_file_id.write( '                --verbose=N \\\n')
+                script_file_id.write( '                --trace=N\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error merge-xml-files.py $RC; fi\n')
+                script_file_id.write( '        echo "Files are merged."\n')
+                script_file_id.write( '        touch $STEP_STATUS\n')
+                script_file_id.write( '    fi\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function merge_annotation_files\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    cd $OUTPUT_DIR\n')
+                script_file_id.write( '    STEP_STATUS=$STATUS_DIR/merge_annotation_files.ok\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "MERGER OF PLANT ANNOTATION FILES"\n')
+                script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+                script_file_id.write( '        echo "This step was previously run."\n')
+                script_file_id.write( '    else\n')
+                for database_code in database_list2:
+                    script_file_id.write(f'        {database_code.upper()}_ANNOTATION_FILE_TMP=${database_code.upper()}_ANNOTATION_FILE".tmp"\n')
+                    script_file_id.write(f'        {database_code.upper()}_ANNOTATION_FILE_SORTED=${database_code.upper()}_ANNOTATION_FILE".sorted"\n')
+                tmp_file_list = []
+                for i in range(len(database_list2) - 2):
+                    script_file_id.write(f'        MERGED_ANNOTATION_FILE_TMP{i + 1}=$MERGED_ANNOTATION_FILE".tmp{i + 1}"\n')
+                    tmp_file_list.append(f'$MERGED_ANNOTATION_FILE_TMP{i + 1}')
+                script_file_id.write(f'        echo "Deleting the header record of `basename ${database_list2[0].upper()}_ANNOTATION_FILE` ..."\n')
+                script_file_id.write( '        /usr/bin/time \\\n')
+                script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write(f'            tail -n +2 ${database_list2[0].upper()}_ANNOTATION_FILE > ${database_list2[0].upper()}_ANNOTATION_FILE_TMP\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error tail $RC; fi\n')
+                script_file_id.write( '        echo "Record is deleted."\n')
+                script_file_id.write(f'        echo "Sorting data records of `basename ${database_list2[0].upper()}_ANNOTATION_FILE` ..."\n')
+                script_file_id.write( '        /usr/bin/time \\\n')
+                script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write(f'            sort --field-separator=";" --key=2,5 < ${database_list2[0].upper()}_ANNOTATION_FILE_TMP > ${database_list2[0].upper()}_ANNOTATION_FILE_SORTED\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error sort $RC; fi\n')
+                script_file_id.write( '        echo "Records are sorted."\n')
+                script_file_id.write(f'        echo "Deleting the header record of `basename ${database_list2[1].upper()}_ANNOTATION_FILE` ..."\n')
+                script_file_id.write( '        /usr/bin/time \\\n')
+                script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write(f'            tail -n +2 ${database_list2[1].upper()}_ANNOTATION_FILE > ${database_list2[1].upper()}_ANNOTATION_FILE_TMP\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        echo "Record is deleted."\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error tail $RC; fi\n')
+                script_file_id.write(f'        echo "Sorting data records of `basename ${database_list2[1].upper()}_ANNOTATION_FILE` ..."\n')
+                script_file_id.write( '        /usr/bin/time \\\n')
+                script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write(f'            sort --field-separator=";" --key=2,5 < ${database_list2[1].upper()}_ANNOTATION_FILE_TMP > ${database_list2[1].upper()}_ANNOTATION_FILE_SORTED\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error sort $RC; fi\n')
+                script_file_id.write( '        echo "Records are sorted."\n')
+                script_file_id.write(f'        echo "Merging `basename ${database_list2[0].upper()}_ANNOTATION_FILE` and `basename ${database_list2[1].upper()}_ANNOTATION_FILE` ..."\n')
+                script_file_id.write( '        /usr/bin/time \\\n')
+                script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '            merge-annotation-files.py \\\n')
+                script_file_id.write(f'                --file1=${database_list2[0].upper()}_ANNOTATION_FILE_SORTED \\\n')
+                script_file_id.write(f'                --type1={database_type_dict[database_list[0]]} \\\n')
+                script_file_id.write(f'                --file2=${database_list2[1].upper()}_ANNOTATION_FILE_SORTED \\\n')
+                script_file_id.write(f'                --type2={database_type_dict[database_list[1]]} \\\n')
+                script_file_id.write( '                --operation=1AND2 \\\n')
+                if len(database_list2) > 2:
+                    script_file_id.write( '                --mfile=$MERGED_ANNOTATION_FILE_TMP1 \\\n')
+                    script_file_id.write( '                --header=N \\\n')
+                else:
+                    script_file_id.write( '                --mfile=$PLANT_ANNOTATION_FILE \\\n')
+                    script_file_id.write( '                --header=Y \\\n')
+                script_file_id.write( '                --verbose=N \\\n')
+                script_file_id.write( '                --trace=N\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error merge-annotation-files.py $RC; fi\n')
+                script_file_id.write( '        echo "Files are merged."\n')
+                script_file_id.write(f'        echo "Deleting temporal files of `basename ${database_list2[0].upper()}_ANNOTATION_FILE` ..."\n')
+                script_file_id.write( '        /usr/bin/time \\\n')
+                script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write(f'            rm ${database_list2[0].upper()}_ANNOTATION_FILE_TMP ${database_list2[0].upper()}_ANNOTATION_FILE_SORTED\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error rm $RC; fi\n')
+                script_file_id.write( '        echo "Files are deleted."\n')
+                script_file_id.write(f'        echo "Deleting temporal files of `basename ${database_list2[1].upper()}_ANNOTATION_FILE` ..."\n')
+                script_file_id.write( '        /usr/bin/time \\\n')
+                script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write(f'            rm ${database_list2[1].upper()}_ANNOTATION_FILE_TMP ${database_list2[1].upper()}_ANNOTATION_FILE_SORTED\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error rm $RC; fi\n')
+                script_file_id.write( '        echo "Files are deleted."\n')
+                for i in range(2, len(database_list2)):
+                    script_file_id.write(f'        echo "Deleting the header record of `basename ${database_list2[i].upper()}_ANNOTATION_FILE` ..."\n')
+                    script_file_id.write( '        /usr/bin/time \\\n')
+                    script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                    script_file_id.write(f'            tail -n +2 ${database_list2[i].upper()}_ANNOTATION_FILE > ${database_list2[i].upper()}_ANNOTATION_FILE_TMP\n')
+                    script_file_id.write( '        RC=$?\n')
+                    script_file_id.write( '        echo "Record is deleted."\n')
+                    script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error tail $RC; fi\n')
+                    script_file_id.write(f'        echo "Sorting data records of `basename ${database_list2[i].upper()}_ANNOTATION_FILE` ..."\n')
+                    script_file_id.write( '        /usr/bin/time \\\n')
+                    script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                    script_file_id.write(f'            sort --field-separator=";" --key=2,5 < ${database_list2[i].upper()}_ANNOTATION_FILE_TMP > ${database_list2[i].upper()}_ANNOTATION_FILE_SORTED\n')
+                    script_file_id.write( '        RC=$?\n')
+                    script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error sort $RC; fi\n')
+                    script_file_id.write( '        echo "Records are sorted."\n')
+                    script_file_id.write(f'        echo "Adding annotation of `basename ${database_list2[i].upper()}_ANNOTATION_FILE` to the merged annotation file ..."\n')
+                    script_file_id.write( '        /usr/bin/time \\\n')
+                    script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                    script_file_id.write( '            merge-annotation-files.py \\\n')
+                    script_file_id.write(f'                --file1=$MERGED_ANNOTATION_FILE_TMP{i - 1} \\\n')
+                    script_file_id.write( '                --type1=MERGER \\\n')
+                    script_file_id.write(f'                --file2=${database_list2[i].upper()}_ANNOTATION_FILE_SORTED \\\n')
+                    script_file_id.write(f'                --type2={database_type_dict[database_list[i]]} \\\n')
+                    script_file_id.write( '                --operation=1AND2 \\\n')
+                    if i < len(database_list2) - 1:
+                        script_file_id.write(f'                --mfile=$MERGED_ANNOTATION_FILE_TMP{i} \\\n')
+                        script_file_id.write( '                --header=N \\\n')
+                    else:
+                        script_file_id.write( '                --mfile=$PLANT_ANNOTATION_FILE \\\n')
+                        script_file_id.write( '                --header=Y \\\n')
+                    script_file_id.write( '                --verbose=N \\\n')
+                    script_file_id.write( '                --trace=N\n')
+                    script_file_id.write( '        RC=$?\n')
+                    script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error merge-annotation-files.py $RC; fi\n')
+                    script_file_id.write( '        echo "Files are merged."\n')
+                    script_file_id.write(f'        echo "Deleting temporal files of `basename ${database_list2[i].upper()}_ANNOTATION_FILE` ..."\n')
+                    script_file_id.write( '        /usr/bin/time \\\n')
+                    script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                    script_file_id.write(f'            rm ${database_list2[i].upper()}_ANNOTATION_FILE_TMP ${database_list2[i].upper()}_ANNOTATION_FILE_SORTED\n')
+                    script_file_id.write( '        RC=$?\n')
+                    script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error rm $RC; fi\n')
+                    script_file_id.write( '        echo "Files are deleted."\n')
+                script_file_id.write( '        echo "Deleting temporal annotation files ..."\n')
+                script_file_id.write( '        /usr/bin/time \\\n')
+                script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write(f'            rm {" ".join(tmp_file_list)}\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error rm $RC; fi\n')
+                script_file_id.write( '        echo "Files are deleted."\n')
+                script_file_id.write( '        touch $STEP_STATUS\n')
+                script_file_id.write( '    fi\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function split_merged_plant_annotation_file\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    cd $OUTPUT_DIR\n')
+                script_file_id.write( '    STEP_STATUS=$STATUS_DIR/split_merged_plant_annotation_file.ok\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "SPLIT OF MERGED PLANT ANNOTATION FILE"\n')
+                script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+                script_file_id.write( '        echo "This step was previously run."\n')
+                script_file_id.write( '    else\n')
+                script_file_id.write( '        echo "Splitting merged file `basename $PLANT_ANNOTATION_FILE` ..."\n')
+                script_file_id.write( '        /usr/bin/time \\\n')
+                script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '            split-annotation-file.py \\\n')
+                script_file_id.write( '                --annotation=$PLANT_ANNOTATION_FILE \\\n')
+                script_file_id.write( '                --type=MERGER \\\n')
+                script_file_id.write( '                --header=Y \\\n')
+                script_file_id.write( '                --rnum=250000 \\\n')
+                script_file_id.write( '                --verbose=N \\\n')
+                script_file_id.write( '                --trace=N\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error split-annotation-file.py $RC; fi\n')
+                script_file_id.write( '        echo "File is splitted."\n')
+                script_file_id.write( '        touch $STEP_STATUS\n')
                 script_file_id.write( '    fi\n')
                 script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function calculate_annotation_stats'))
+            script_file_id.write( 'function purge_transcriptome\n')
             script_file_id.write( '{\n')
-            script_file_id.write(f'    cd {current_run_dir}\n')
-            script_file_id.write( '{0}\n'.format('    STEP_STATUS=$STATUS_DIR/calculate_annotation_stats.ok'))
+            script_file_id.write( '    cd $OUTPUT_DIR\n')
+            script_file_id.write( '    STEP_STATUS=$STATUS_DIR/purge_transcriptome.ok\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "CALCULATE ANNOTATION STATISTICS"'))
-            script_file_id.write( '{0}\n'.format('    if [ -f $STEP_STATUS ]; then'))
-            script_file_id.write( '{0}\n'.format('        echo "This step was previously run."'))
+            script_file_id.write( '    echo "PURGE TRANSCRIPTOME REMOVING NON-ANNOTATED TRANSCRIPTS"\n')
+            script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+            script_file_id.write( '        echo "This step was previously run."\n')
             script_file_id.write( '    else\n')
-            script_file_id.write( '{0}\n'.format('        echo "Calculating stats ..."'))
-            script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-            script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-            script_file_id.write( '{0}\n'.format('            calculate-annotation-stats.py \\'))
-            script_file_id.write( '{0}\n'.format('                --db=$TOA_DB \\'))
-            script_file_id.write( '{0}\n'.format('                --transcriptome=$TRANSCRIPTOME_FILE \\'))
-            script_file_id.write( '{0}\n'.format('                --peptides=NONE \\'))
-            script_file_id.write( '{0}\n'.format('                --dslist={0} \\'.format(','.join(all_database_list))))
-            script_file_id.write( '{0}\n'.format('                --nonannlist={0} \\'.format(','.join(non_annotation_file_list))))
-            if len(plant_database_list) > 1:
-                script_file_id.write( '{0}\n'.format('                --annotation=$PLANT_ANNOTATION_FILE \\'))
-                script_file_id.write( '{0}\n'.format('                --type=MERGER \\'))
+            script_file_id.write( '        echo "Purging transcriptome files ..."\n')
+            script_file_id.write( '        /usr/bin/time \\\n')
+            script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+            script_file_id.write( '            merge-fasta-files.py \\\n')
+            script_file_id.write( '                --file1=$REIDENTIFIED_TRANSCRIPTOME_FILE \\\n')
+            script_file_id.write(f'                --file2=${database_list[len(database_list) - 1].upper()}_NON_ANNOTATED_TRANSCRIPT_FILE \\\n')
+            script_file_id.write( '                --mfile=$PURGED_TRANSCRIPTOME_FILE \\\n')
+            script_file_id.write( '                --operation=1LESS2 \\\n')
+            script_file_id.write( '                --relationships=$TOA_TRANSCRIPTOME_RELATIONSHIP_FILE \\\n')
+            script_file_id.write( '                --verbose=N \\\n')
+            script_file_id.write( '                --trace=N\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error merge-fasta-files.py $RC; fi\n')
+            script_file_id.write( '        echo "Transcriptome is purged."\n')
+            script_file_id.write( '        touch $STEP_STATUS\n')
+            script_file_id.write( '    fi\n')
+            script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write( 'function calculate_annotation_stats\n')
+            script_file_id.write( '{\n')
+            script_file_id.write( '    cd $OUTPUT_DIR\n')
+            script_file_id.write( '    STEP_STATUS=$STATUS_DIR/calculate_annotation_stats.ok\n')
+            script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write( '    echo "CALCULATE ANNOTATION STATISTICS"\n')
+            script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+            script_file_id.write( '        echo "This step was previously run."\n')
+            script_file_id.write( '    else\n')
+            script_file_id.write( '        echo "Calculating stats ..."\n')
+            script_file_id.write( '        /usr/bin/time \\\n')
+            script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+            script_file_id.write( '            calculate-annotation-stats.py \\\n')
+            script_file_id.write( '                --db=$TOA_DB \\\n')
+            script_file_id.write( '                --transcriptome=$TRANSCRIPTOME_FILE \\\n')
+            script_file_id.write( '                --peptides=NONE \\\n')
+            script_file_id.write(f'                --dslist={",".join(database_list)} \\\n')
+            script_file_id.write(f'                --nonannlist={",".join(non_annotation_file_list)} \\\n')
+            if len(database_list) > 1:
+                script_file_id.write( '                --annotation=$PLANT_ANNOTATION_FILE \\\n')
+                script_file_id.write( '                --type=MERGER \\\n')
             else:
-                script_file_id.write( '{0}\n'.format('                --annotation=${0}_ANNOTATION_FILE \\'.format(plant_database_list[0].upper())))
-                script_file_id.write( '{0}\n'.format('                --type={0} \\'.format(database_type_dict[plant_database_list[0]])))
-            script_file_id.write( '{0}\n'.format('                --stats=$ANNOTATION_STATS_FILE \\'))
-            script_file_id.write( '{0}\n'.format('                --verbose=N \\'))
-            script_file_id.write( '{0}\n'.format('                --trace=N'))
-            script_file_id.write( '{0}\n'.format('        RC=$?'))
-            script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error calculate-annotation-stats.py $RC; fi'))
-            script_file_id.write( '{0}\n'.format('        echo "Stats are calculated."'))
-            script_file_id.write( '{0}\n'.format('        touch $STEP_STATUS'))
+                script_file_id.write(f'                --annotation=${database_list[0].upper()}_ANNOTATION_FILE \\\n')
+                script_file_id.write(f'                --type={database_type_dict[database_list[0]]} \\\n')
+            script_file_id.write( '                --stats=$ANNOTATION_STATS_FILE \\\n')
+            script_file_id.write( '                --verbose=N \\\n')
+            script_file_id.write( '                --trace=N\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error calculate-annotation-stats.py $RC; fi\n')
+            script_file_id.write( '        echo "Stats are calculated."\n')
+            script_file_id.write( '        touch $STEP_STATUS\n')
             script_file_id.write( '    fi\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
@@ -8687,37 +9539,36 @@ def build_nucleotide_pipeline_script(cluster_name, current_run_dir):
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
             script_file_id.write( '\n')
-            script_file_id.write( '{0}\n'.format('# re-identify sequences of the transcriptome file'))
-            script_file_id.write( '{0}\n'.format('reidentify_sequences'))
+            script_file_id.write( '# re-identify sequences of the transcriptome file\n')
+            script_file_id.write( 'reidentify_transcript_sequences\n')
             script_file_id.write( '\n')
-            for i in range(len(all_database_list)):
-                current_code = all_database_list[i]
-                previus_code = all_database_list[i - 1] if i > 0 else ''
+            for i in range(len(database_list)):
+                current_code = database_list[i]
+                previus_code = database_list[i - 1] if i > 0 else ''
                 if i == 0:
-                    script_file_id.write( '{0}\n'.format('# complete transcriptome -> {0}'.format(current_code)))
+                    script_file_id.write(f'# complete transcriptome -> {current_code}\n')
                 else:
-                    script_file_id.write( '{0}\n'.format('# transcripts not annotated with {0} -> {1}'.format(previus_code, current_code)))
-                script_file_id.write( '{0}\n'.format('align_transcripts_{0}_proteome'.format(current_code)))
-                script_file_id.write( '{0}\n'.format('load_alignment_{0}_proteome'.format(current_code)))
-                script_file_id.write( '{0}\n'.format('annotate_transcripts_{0}'.format(current_code)))
+                    script_file_id.write(f'# transcripts not annotated with {previus_code} -> {current_code}\n')
+                script_file_id.write(f'align_transcripts_{current_code}_proteome\n')
+                script_file_id.write(f'load_alignment_{current_code}_proteome\n')
+                script_file_id.write(f'annotate_transcripts_{current_code}\n')
                 script_file_id.write( '\n')
-            if len(plant_database_list) > 1:
-                script_file_id.write( '{0}\n'.format('# merged plant files'))
-                script_file_id.write( '{0}\n'.format('merge_plant_alignment_files'))
-                script_file_id.write( '{0}\n'.format('merge_plant_annotation_files'))
-                script_file_id.write( '{0}\n'.format('# -- split_merged_plant_annotation_file'))
+            if len(database_list) > 1:
+                script_file_id.write( '# merged files\n')
+                script_file_id.write( 'merge_alignment_files\n')
+                script_file_id.write( 'merge_annotation_files\n')
+                script_file_id.write( '# -- split_merged_plant_annotation_file\n')
                 script_file_id.write( '\n')
-            if all_database_list[0] != 'nt_remainder':
-                script_file_id.write( '{0}\n'.format('# transcriptome with plant transcripts'))
-                script_file_id.write( '{0}\n'.format('purge_transcriptome'))
-                script_file_id.write( '\n')
-            script_file_id.write( '{0}\n'.format('# annotation statistics'))
-            script_file_id.write( '{0}\n'.format('calculate_annotation_stats'))
+            script_file_id.write( '# transcriptome with plant transcripts\n')
+            script_file_id.write( 'purge_transcriptome\n')
+            script_file_id.write( '\n')
+            script_file_id.write( '# annotation statistics\n')
+            script_file_id.write( 'calculate_annotation_stats\n')
             script_file_id.write( '\n')
             script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created.'.format(get_nucleotide_pipeline_script()))
+        error_list.append(f'*** ERROR: The file {get_nucleotide_pipeline_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -8741,10 +9592,10 @@ def build_nucleotide_pipeline_starter(current_run_dir):
         with open(get_nucleotide_pipeline_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_nucleotide_pipeline_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_nucleotide_pipeline_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_nucleotide_pipeline_starter()))
+        error_list.append(f'*** ERROR: The file {get_nucleotide_pipeline_starter()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -8754,11 +9605,11 @@ def build_nucleotide_pipeline_starter(current_run_dir):
 
 def get_nucleotide_pipeline_script():
     '''
-    Get the script path in the local computer to process a nucleotide pipeline.
+    Get the script path to process a nucleotide pipeline.
     '''
 
     # assign the script path
-    nucleotide_pipeline_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_pipeline_nucleotide_code())
+    nucleotide_pipeline_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_pipeline_nucleotide_code()}-process.sh'
 
     # return the script path
     return nucleotide_pipeline_script
@@ -8767,11 +9618,11 @@ def get_nucleotide_pipeline_script():
 
 def get_nucleotide_pipeline_starter():
     '''
-    Get the starter path in the local computer to process a nucleotide pipeline.
+    Get the starter path to process a nucleotide pipeline.
     '''
 
     # assign the starter path
-    nucleotide_pipeline_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_pipeline_nucleotide_code())
+    nucleotide_pipeline_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_pipeline_nucleotide_code()}-process-starter.sh'
 
     # return the starter path
     return nucleotide_pipeline_starter
@@ -8802,57 +9653,60 @@ def build_aminoacid_pipeline_script(cluster_name, current_run_dir):
     assembly_type = pipeline_option_dict['identification']['assembly_type']
     reference_dataset_id = pipeline_option_dict['identification']['reference_dataset_id']
     transcriptome_file = pipeline_option_dict['identification']['transcriptome_file']
-    thread_number = pipeline_option_dict['BLAST parameters']['thread_number']
-    e_value = pipeline_option_dict['BLAST parameters']['e_value']
-    max_target_seqs = pipeline_option_dict['BLAST parameters']['max_target_seqs']
-    max_hsps = pipeline_option_dict['BLAST parameters']['max_hsps']
-    qcov_hsp_perc = pipeline_option_dict['BLAST parameters']['qcov_hsp_perc']
+    alignment_tool = pipeline_option_dict['pipeline parameters']['alignment_tool']
+    threads = pipeline_option_dict['pipeline parameters']['threads']
+    blastplus_evalue = pipeline_option_dict['BLAST+ parameters']['evalue']
+    blastplus_max_target_seqs = pipeline_option_dict['BLAST+ parameters']['max_target_seqs']
+    blastplus_max_hsps = pipeline_option_dict['BLAST+ parameters']['max_hsps']
+    blastplus_qcov_hsp_perc = pipeline_option_dict['BLAST+ parameters']['qcov_hsp_perc']
+    blastplus_other_parameters_blastp = pipeline_option_dict['BLAST+ parameters']['other_parameters_blastp']
+    diamond_evalue = pipeline_option_dict['DIAMOND parameters']['evalue']
+    diamond_max_target_seqs = pipeline_option_dict['DIAMOND parameters']['max-target-seqs']
+    diamond_max_hsps = pipeline_option_dict['DIAMOND parameters']['max-hsps']
+    diamond_other_parameters_blastp = pipeline_option_dict['DIAMOND parameters']['other_parameters_blastp']
 
     # get the all selected database list
-    all_database_list = get_selected_database_list(xlib.get_toa_process_pipeline_aminoacid_code())
-
-    # change code "nt_complete" by "nr_remainder"
-    if all_database_list[len(all_database_list) - 1] == 'nr_complete':
-        all_database_list[len(all_database_list) - 1] = 'nr_remainder'
-
-    # get the plant database list
-    plant_database_list = all_database_list.copy()
-    if 'nr_remainder' in plant_database_list:
-        plant_database_list.remove('nr_remainder')
+    database_list = get_selected_database_list(xlib.get_toa_process_pipeline_aminoacid_code())
 
     # get the database type dictionary
     database_type_dict = {}
-    for i in range(len(all_database_list)):
-        if all_database_list[i] in ['gymno_01', 'dicots_04', 'monocots_04']:
-            database_type_dict[all_database_list[i]] = 'PLAZA'
-        elif all_database_list[i] == 'refseq_plant':
-            database_type_dict[all_database_list[i]] = 'REFSEQ'
-        elif all_database_list[i] in ['nr_viridiplantae', 'nr_remainder']:
-            database_type_dict[all_database_list[i]] = 'NR'
+    for i in range(len(database_list)):
+        if database_list[i] in ['gymno_01', 'dicots_04', 'monocots_04']:
+            database_type_dict[database_list[i]] = 'PLAZA'
+        elif database_list[i] == 'refseq_plant':
+            database_type_dict[database_list[i]] = 'REFSEQ'
+        elif database_list[i] in ['nr']:
+            database_type_dict[database_list[i]] = 'NR'
+
+    # get the database list for the merger of plant annotation files
+    database_list2 = database_list.copy()
+    for i in range(len(database_list2)):
+        if database_list2[i] == 'nr':
+            database_list2[i] = 'nr_viridiplantae'
 
     # set the transcriptome file path
     if OK:
         if assembly_origin == 'NGSCLOUD':
             if assembly_software == xlib.get_soapdenovotrans_code():
                 if assembly_type == 'CONTIGS':
-                    transcriptome_file = '{0}/{1}-{2}.contig'.format(xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id), experiment_id, assembly_dataset_id)
+                    transcriptome_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)}/{experiment_id}-{assembly_dataset_id}.contig'
                 elif  assembly_type == 'SCAFFOLDS':
-                    transcriptome_file = '{0}/{1}-{2}.scafSeq'.format(xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id), experiment_id, assembly_dataset_id)
+                    transcriptome_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)}/{experiment_id}-{assembly_dataset_id}.scafSeq'
             elif assembly_software == xlib.get_transabyss_code():
-                transcriptome_file = '{0}/transabyss-final.fa'.format(xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id))
+                transcriptome_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)}/transabyss-final.fa'
             elif assembly_software == xlib.get_trinity_code():
-                transcriptome_file = '{0}/Trinity.fasta'.format(xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id))
+                transcriptome_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)}/Trinity.fasta'
             elif assembly_software == xlib.get_cd_hit_est_code():
-                transcriptome_file = '{0}/clustered-transcriptome.fasta'.format(xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id))
+                transcriptome_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)}/clustered-transcriptome.fasta'
             elif assembly_software == xlib.get_transcript_filter_code():
-                transcriptome_file = '{0}/filtered-transcriptome.fasta'.format(xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id))
+                transcriptome_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)}/filtered-transcriptome.fasta'
         elif assembly_origin == 'EXTERNAL':
             transcriptome_file = xlib.get_cluster_reference_file(reference_dataset_id, transcriptome_file)
 
     # get the non annotation file list
     non_annotation_file_list = []
-    for database in all_database_list:
-        non_annotation_file_list.append('${0}_NON_ANNOTATED_PEPTIDE_FILE'.format(database.upper()))
+    for database in database_list:
+        non_annotation_file_list.append(f'${database.upper()}_NON_ANNOTATED_PEPTIDE_FILE')
 
     # write the script
     try:
@@ -8861,18 +9715,27 @@ def build_aminoacid_pipeline_script(cluster_name, current_run_dir):
         with open(get_aminoacid_pipeline_script(), mode='w', encoding='iso-8859-1', newline='\n') as script_file_id:
             script_file_id.write( '#!/bin/bash\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('# transcriptome file'))
-            script_file_id.write( '{0}\n'.format('TRANSCRIPTOME_FILE={0}'.format(transcriptome_file)))
+            script_file_id.write( '# transcriptome file\n')
+            script_file_id.write(f'TRANSCRIPTOME_FILE={transcriptome_file}\n')
             script_file_id.write( '\n')
-            script_file_id.write( '{0}\n'.format('# BLAST parameters'))
-            script_file_id.write( '{0}\n'.format('NUM_THREADS={0}'.format(thread_number)))
-            script_file_id.write( '{0}\n'.format('E_VALUE={0}'.format(e_value)))
-            script_file_id.write( '{0}\n'.format('MAX_TARGET_SEQS={0}'.format(max_target_seqs)))
-            script_file_id.write( '{0}\n'.format('MAX_HSPS={0}'.format(max_hsps)))
-            script_file_id.write( '{0}\n'.format('QCOV_HSP_PERC={0}'.format(qcov_hsp_perc)))
+            script_file_id.write( '# pipeline parameters\n')
+            script_file_id.write(f'THREADS={threads}\n')
             script_file_id.write( '\n')
-            script_file_id.write( '{0}\n'.format('# output directory'))
-            script_file_id.write( '{0}\n'.format('OUTPUT_DIR={0}'.format(current_run_dir)))
+            script_file_id.write( '# BLAST+ parameters\n')
+            script_file_id.write(f'BLASTPLUS_EVALUE={blastplus_evalue}\n')
+            script_file_id.write(f'BLASTPLUS_MAX_TARGET_SEQS={blastplus_max_target_seqs}\n')
+            script_file_id.write(f'BLASTPLUS_MAX_HSPS={blastplus_max_hsps}\n')
+            script_file_id.write(f'BLASTPLUS_QCOV_HSP_PERC={blastplus_qcov_hsp_perc}\n')
+            script_file_id.write(f'BLASTPLUS_OTHER_PARAMETERS_BLASTP="{blastplus_other_parameters_blastp}"\n')
+            script_file_id.write( '\n')
+            script_file_id.write( '# DIAMOND parameters\n')
+            script_file_id.write(f'DIAMOND_EVALUE={diamond_evalue}\n')
+            script_file_id.write(f'DIAMOND_MAX_TARGET_SEQS={diamond_max_target_seqs}\n')
+            script_file_id.write(f'DIAMOND_MAX_HSPS={diamond_max_hsps}\n')
+            script_file_id.write(f'DIAMOND_OTHER_PARAMETERS_BLASTP="{diamond_other_parameters_blastp}"\n')
+            script_file_id.write( '\n')
+            script_file_id.write( '# output directory\n')
+            script_file_id.write(f'OUTPUT_DIR={current_run_dir}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             with open(get_toa_config_file(), mode='r', encoding='iso-8859-1', newline='\n') as toa_config_file_id:
                 records = toa_config_file_id.readlines()
@@ -8885,7 +9748,9 @@ def build_aminoacid_pipeline_script(cluster_name, current_run_dir):
             script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
             script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('export PATH={0}:{1}:$PATH'.format(toa_config_dict['MINICONDA3_BIN_DIR'], toa_config_dict['TOA_DIR'])))
+            script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+            script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+            script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
             script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -8894,7 +9759,7 @@ def build_aminoacid_pipeline_script(cluster_name, current_run_dir):
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('mkdir --parents $STATS_DIR'))
+            script_file_id.write( 'mkdir --parents $STATS_DIR\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function init\n')
             script_file_id.write( '{\n')
@@ -8908,463 +9773,556 @@ def build_aminoacid_pipeline_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "HOST IP: $HOST_IP"\n')
             script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "TRANSCRIPTOME FILE: $TRANSCRIPTOME_FILE"'))
-            script_file_id.write( '{0}\n'.format('    echo "ALIGNMENT DATASETS: {0}"'.format(','.join(all_database_list))))
-            script_file_id.write( '{0}\n'.format('    echo "NUM_THREADS: $NUM_THREADS"'))
-            script_file_id.write( '{0}\n'.format('    echo "E_VALUE: $E_VALUE"'))
-            script_file_id.write( '{0}\n'.format('    echo "MAX_TARGET_SEQS: $MAX_TARGET_SEQS"'))
-            script_file_id.write( '{0}\n'.format('    echo "MAX_HSPS: $MAX_HSPS"'))
-            script_file_id.write( '{0}\n'.format('    echo "QCOV_HSP_PERC: $QCOV_HSP_PERC"'))
+            script_file_id.write( '    echo "TRANSCRIPTOME FILE: $TRANSCRIPTOME_FILE"\n')
+            script_file_id.write( '    echo "$SEP"\n')
+            database_list_text = ','.join(database_list)
+            script_file_id.write(f'    echo "ALIGNMENT DATASETS: {database_list_text}"\n')
+            script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write(f'    echo "ALIGNMENT TOOLS (blastp): {alignment_tool}"\n')
+            script_file_id.write( '    echo "THREADS: $THREADS"\n')
+            script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write( '    echo "BLAST+ EVALUE: $BLASTPLUS_EVALUE"\n')
+            script_file_id.write( '    echo "BLAST+ MAX_TARGET_SEQS: $BLASTPLUS_MAX_TARGET_SEQS"\n')
+            script_file_id.write( '    echo "BLAST+ MAX_HSPS: $BLASTPLUS_MAX_HSPS"\n')
+            script_file_id.write( '    echo "BLAST+ QCOV_HSP_PERC: $BLASTPLUS_QCOV_HSP_PERC"\n')
+            script_file_id.write( '    echo "BLAST+ BLASTP OTHER PARAMETERS: $BLASTPLUS_OTHER_PARAMETERS_BLASTP"\n')
+            script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write( '    echo "DIAMOND EVALUE: $DIAMOND_EVALUE"\n')
+            script_file_id.write( '    echo "DIAMOND MAX_TARGET_SEQS: $DIAMOND_MAX_TARGET_SEQS"\n')
+            script_file_id.write( '    echo "DIAMOND MAX_HSPS: $DIAMOND_MAX_HSPS"\n')
+            script_file_id.write( '    echo "DIAMOND BLASTP OTHER PARAMETERS: $DIAMOND_OTHER_PARAMETERS_BLASTP"\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function extract_orfs'))
+            script_file_id.write( 'function reidentify_transcript_sequences\n')
             script_file_id.write( '{\n')
-            script_file_id.write(f'    cd {current_run_dir}\n')
-            script_file_id.write( '{0}\n'.format('    STEP_STATUS=$STATUS_DIR/extract_orfs.ok'))
+            script_file_id.write( '    cd $OUTPUT_DIR\n')
+            script_file_id.write(f'    STEP_STATUS=$STATUS_DIR/reidentify_transcript_sequences.ok\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "EXTRACT THE LONG OPEN READING FRAMES"'))
-            script_file_id.write( '{0}\n'.format('    if [ -f $STEP_STATUS ]; then'))
-            script_file_id.write( '{0}\n'.format('        echo "This step was previously run."'))
+            script_file_id.write( '    echo "RE-INDENTIFY SEQUENCES OF THE TRANSCRIPTOME FILE"\n')
+            script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+            script_file_id.write( '        echo "This step was previously run."\n')
             script_file_id.write( '    else\n')
-            script_file_id.write(f'        source activate {xlib.get_transdecoder_anaconda_code()}\n')
-            script_file_id.write( '{0}\n'.format('        echo "Extracting ORFs ..."'))
-            script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-            script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-            script_file_id.write( '{0}\n'.format('            TransDecoder.LongOrfs \\'))
-            script_file_id.write( '{0}\n'.format('                -t $TRANSCRIPTOME_FILE \\'))
-            script_file_id.write( '{0}\n'.format('                -m 100 \\'))
-            script_file_id.write( '{0}\n'.format('                --output_dir $TRANSDECODER_OUTPUT_DIR'))
-            script_file_id.write( '{0}\n'.format('        RC=$?'))
-            script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error TransDecoder.LongOrfs $RC; fi'))
-            script_file_id.write( '{0}\n'.format('        echo "ORFs are extracted."'))
-            script_file_id.write( '{0}\n'.format('        conda deactivate'))
-            script_file_id.write( '{0}\n'.format('        touch $STEP_STATUS'))
+            script_file_id.write( '        echo "Re-identifing sequences ..."\n')
+            script_file_id.write( '        /usr/bin/time \\\n')
+            script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+            script_file_id.write( '            reid-fasta-file.py \\\n')
+            script_file_id.write( '                --fasta=$TRANSCRIPTOME_FILE \\\n')
+            script_file_id.write( '                --type=NT \\\n')
+            script_file_id.write( '                --out=$REIDENTIFIED_TRANSCRIPTOME_FILE \\\n')
+            script_file_id.write( '                --relationships=$TOA_TRANSCRIPTOME_RELATIONSHIP_FILE \\\n')
+            script_file_id.write( '                --verbose=N \\\n')
+            script_file_id.write( '                --trace=N\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error reid-fasta-file.py $RC; fi\n')
+            script_file_id.write( '        echo "Sequences are re-identified."\n')
+            script_file_id.write( '        touch $STEP_STATUS\n')
             script_file_id.write( '    fi\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function predict_coding_regions'))
+            script_file_id.write( 'function extract_orfs\n')
             script_file_id.write( '{\n')
-            script_file_id.write(f'    cd {current_run_dir}\n')
-            script_file_id.write( '{0}\n'.format('    STEP_STATUS=$STATUS_DIR/predict_coding_regions.ok'))
+            script_file_id.write( '    cd $OUTPUT_DIR\n')
+            script_file_id.write( '    STEP_STATUS=$STATUS_DIR/extract_orfs.ok\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "PREDICT THE LIKELY CODING REGIONS"'))
-            script_file_id.write( '{0}\n'.format('    if [ -f $STEP_STATUS ]; then'))
-            script_file_id.write( '{0}\n'.format('        echo "This step was previously run."'))
+            script_file_id.write( '    echo "EXTRACT THE LONG OPEN READING FRAMES"\n')
+            script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+            script_file_id.write( '        echo "This step was previously run."\n')
             script_file_id.write( '    else\n')
-            script_file_id.write(f'        source activate {xlib.get_transdecoder_anaconda_code()}\n')
-            script_file_id.write( '{0}\n'.format('        echo "Predicting codign regions ..."'))
-            script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-            script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-            script_file_id.write( '{0}\n'.format('            TransDecoder.Predict \\'))
-            script_file_id.write( '{0}\n'.format('                -t $TRANSCRIPTOME_FILE \\'))
-            script_file_id.write( '{0}\n'.format('                --output_dir $TRANSDECODER_OUTPUT_DIR'))
-            script_file_id.write( '{0}\n'.format('        RC=$?'))
-            script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error TransDecoder.Predict $RC; fi'))
-            script_file_id.write( '{0}\n'.format('        echo "Coding regions are predicted."'))
-            script_file_id.write( '{0}\n'.format('        conda deactivate'))
-            script_file_id.write( '{0}\n'.format('        touch $STEP_STATUS'))
+            script_file_id.write( '        source activate transdecoder\n')
+            script_file_id.write( '        echo "Extracting ORFs ..."\n')
+            script_file_id.write( '        /usr/bin/time \\\n')
+            script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+            script_file_id.write( '            TransDecoder.LongOrfs \\\n')
+            script_file_id.write( '                -t $REIDENTIFIED_TRANSCRIPTOME_FILE \\\n')
+            script_file_id.write( '                -m 100 \\\n')
+            script_file_id.write( '                --output_dir $TRANSDECODER_OUTPUT_DIR\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error TransDecoder.LongOrfs $RC; fi\n')
+            script_file_id.write( '        echo "ORFs are extracted."\n')
+            script_file_id.write( '        conda deactivate\n')
+            script_file_id.write( '        touch $STEP_STATUS\n')
             script_file_id.write( '    fi\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function reidentify_sequences'))
+            script_file_id.write( 'function predict_coding_regions\n')
             script_file_id.write( '{\n')
-            script_file_id.write(f'    cd {current_run_dir}\n')
-            script_file_id.write( '{0}\n'.format('    STEP_STATUS=$STATUS_DIR/reidentify_sequences.ok'))
+            script_file_id.write( '    cd $OUTPUT_DIR\n')
+            script_file_id.write( '    STEP_STATUS=$STATUS_DIR/predict_coding_regions.ok\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "RE-INDENTIFY SEQUENCES OF THE PEPTIDE FILE"'))
-            script_file_id.write( '{0}\n'.format('    if [ -f $STEP_STATUS ]; then'))
-            script_file_id.write( '{0}\n'.format('        echo "This step was previously run."'))
+            script_file_id.write( '    echo "PREDICT THE LIKELY CODING REGIONS"\n')
+            script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+            script_file_id.write( '        echo "This step was previously run."\n')
             script_file_id.write( '    else\n')
-            script_file_id.write( '{0}\n'.format('        echo "Re-identifing sequences ..."'))
-            script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-            script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-            script_file_id.write( '{0}\n'.format('            reid-fasta-file.py \\'))
-            script_file_id.write( '{0}\n'.format('                --fasta=$PEPTIDE_FILE \\'))
-            script_file_id.write( '{0}\n'.format('                --out=$REIDENTIFIED_PEPTIDE_FILE \\'))
-            script_file_id.write( '{0}\n'.format('                --relationships=$RELATIONSHIP_FILE \\'))
-            script_file_id.write( '{0}\n'.format('                --verbose=N \\'))
-            script_file_id.write( '{0}\n'.format('                --trace=N'))
-            script_file_id.write( '{0}\n'.format('        RC=$?'))
-            script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error reid-fasta-file.py $RC; fi'))
-            script_file_id.write( '{0}\n'.format('        echo "Sequences are re-identified."'))
-            script_file_id.write( '{0}\n'.format('        touch $STEP_STATUS'))
+            script_file_id.write( '        source activate transdecoder\n')
+            script_file_id.write( '        echo "Predicting codign regions ..."\n')
+            script_file_id.write( '        /usr/bin/time \\\n')
+            script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+            script_file_id.write( '            TransDecoder.Predict \\\n')
+            script_file_id.write( '                -t $REIDENTIFIED_TRANSCRIPTOME_FILE \\\n')
+            script_file_id.write( '                --output_dir $TRANSDECODER_OUTPUT_DIR\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error TransDecoder.Predict $RC; fi\n')
+            script_file_id.write( '        echo "Coding regions are predicted."\n')
+            script_file_id.write( '        conda deactivate\n')
+            script_file_id.write( '        touch $STEP_STATUS\n')
             script_file_id.write( '    fi\n')
             script_file_id.write( '}\n')
-            for i in range(len(all_database_list)):
-                current_code = all_database_list[i]
-                previus_code = all_database_list[i - 1] if i > 0 else ''
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write( 'function reidentify_peptide_sequences\n')
+            script_file_id.write( '{\n')
+            script_file_id.write( '    cd $OUTPUT_DIR\n')
+            script_file_id.write( '    STEP_STATUS=$STATUS_DIR/reidentify_peptide_sequences.ok\n')
+            script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write( '    echo "RE-INDENTIFY SEQUENCES OF THE PEPTIDE FILE"\n')
+            script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+            script_file_id.write( '        echo "This step was previously run."\n')
+            script_file_id.write( '    else\n')
+            script_file_id.write( '        echo "Re-identifing sequences ..."\n')
+            script_file_id.write( '        /usr/bin/time \\\n')
+            script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+            script_file_id.write( '            reid-fasta-file.py \\\n')
+            script_file_id.write( '                --fasta=$PEPTIDE_FILE \\\n')
+            script_file_id.write( '                --type=AA \\\n')
+            script_file_id.write( '                --out=$REIDENTIFIED_PEPTIDE_FILE \\\n')
+            script_file_id.write( '                --relationships=$TOA_TRANSDECODER_RELATIONSHIP_FILE \\\n')
+            script_file_id.write( '                --verbose=N \\\n')
+            script_file_id.write( '                --trace=N\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error reid-fasta-file.py $RC; fi\n')
+            script_file_id.write( '        echo "Sequences are re-identified."\n')
+            script_file_id.write( '        touch $STEP_STATUS\n')
+            script_file_id.write( '    fi\n')
+            script_file_id.write( '}\n')
+            for i in range(len(database_list)):
+                current_code = database_list[i]
+                previus_code = database_list[i - 1] if i > 0 else ''
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function align_peptides_{0}_proteome'.format(current_code)))
+                script_file_id.write(f'function align_peptides_{current_code}_proteome\n')
                 script_file_id.write( '{\n')
-                script_file_id.write(f'    cd {current_run_dir}\n')
-                script_file_id.write( '{0}\n'.format('    STEP_STATUS=$STATUS_DIR/align_peptides_{0}_proteome.ok'.format(current_code)))
+                script_file_id.write( '    cd $OUTPUT_DIR\n')
+                script_file_id.write(f'    STEP_STATUS=$STATUS_DIR/align_peptides_{current_code}_proteome.ok\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "ALIGNMENT OF PEPTIDES TO {0} PROTEOME"'.format(current_code.upper())))
-                script_file_id.write( '{0}\n'.format('    if [ -f $STEP_STATUS ]; then'))
-                script_file_id.write( '{0}\n'.format('        echo "This step was previously run."'))
+                script_file_id.write(f'    echo "ALIGNMENT OF PEPTIDES TO {current_code.upper()} PROTEOME"\n')
+                script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+                script_file_id.write( '        echo "This step was previously run."\n')
                 script_file_id.write( '    else\n')
-                script_file_id.write(f'        source activate {xlib.get_blastplus_anaconda_code()}\n')
-                script_file_id.write( '{0}\n'.format('        echo "Aligning peptides ..."'))
-                if current_code in ['gymno_01', 'dicots_04', 'monocots_04', 'refseq_plant']:
-                    script_file_id.write( '{0}\n'.format('        export BLASTDB=${0}_PROTEOME_DB_DIR'.format(current_code.upper())))
-                elif current_code in ['nr_viridiplantae', 'nr_remainder']:
-                    script_file_id.write( '{0}\n'.format('        export BLASTDB=$NR_DB_DIR'))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('            blastp \\'))
-                script_file_id.write( '{0}\n'.format('                -num_threads $NUM_THREADS \\'))
-                if current_code in ['gymno_01', 'dicots_04', 'monocots_04', 'refseq_plant']:
-                    script_file_id.write( '{0}\n'.format('                -db ${0}_PROTEOME_DB_NAME \\'.format(current_code.upper())))
-                elif current_code in ['nr_viridiplantae', 'nr_remainder']:
-                    script_file_id.write( '{0}\n'.format('                -db $NR_DB_NAME \\'))
-                if i == 0:
-                    script_file_id.write( '{0}\n'.format('                -query $REIDENTIFIED_PEPTIDE_FILE \\'))
-                else:
-                    script_file_id.write( '{0}\n'.format('                -query ${0}_NON_ANNOTATED_PEPTIDE_FILE \\'.format(previus_code.upper())))
-                if current_code == 'nr_viridiplantae':
-                    script_file_id.write( '{0}\n'.format('                -gilist $PROTEIN_VIRIDIPLANTAE_GI_LIST \\'))
-                script_file_id.write( '{0}\n'.format('                -evalue $E_VALUE \\'))
-                script_file_id.write( '{0}\n'.format('                -max_target_seqs $MAX_TARGET_SEQS \\'))
-                script_file_id.write( '{0}\n'.format('                -max_hsps $MAX_HSPS \\'))
-                script_file_id.write( '{0}\n'.format('                -qcov_hsp_perc $QCOV_HSP_PERC \\'))
-                script_file_id.write( '{0}\n'.format('                -outfmt 5 \\'))
-                if current_code == 'nr_remainder':
-                    script_file_id.write( '{0}\n'.format('                -out $REIDENTIFIED_NR_REMAINDER_BLAST_XML'))
-                else:
-                    script_file_id.write( '{0}\n'.format('                -out ${0}_BLAST_XML'.format(current_code.upper())))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error blastx $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Alignment is done."'))
-                script_file_id.write( '{0}\n'.format('        conda deactivate'))
-                if current_code == 'nr_remainder':
-                    script_file_id.write( '{0}\n'.format('        echo "Restoring sequence identifications in alignment file ..."'))
-                    script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                    script_file_id.write( '{0}\n'.format('            restore-ids.py \\'))
-                    script_file_id.write( '{0}\n'.format('                --in=$REIDENTIFIED_NR_REMAINDER_BLAST_XML \\'))
-                    script_file_id.write( '{0}\n'.format('                --format=XML \\'))
-                    script_file_id.write( '{0}\n'.format('                --relationships=$RELATIONSHIP_FILE \\'))
-                    script_file_id.write( '{0}\n'.format('                --out=$NR_REMAINDER_BLAST_XML \\'))
-                    script_file_id.write( '{0}\n'.format('                --verbose=N \\'))
-                    script_file_id.write( '{0}\n'.format('                --trace=N'))
-                    script_file_id.write( '{0}\n'.format('        RC=$?'))
-                    script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error restore-ids.py $RC; fi'))
-                    script_file_id.write( '{0}\n'.format('        echo "Identifications are restored."'))
-                if len(plant_database_list) == 1 and current_code != 'nr_remainder':
-                    script_file_id.write( '{0}\n'.format('        echo "Creating plant alignment file ..."'))
-                    script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                    script_file_id.write( '{0}\n'.format('           cp ${0}_BLAST_XML $REIDENTIFIED_PLANT_BLAST_XML'.format(current_code.upper())))
-                    script_file_id.write( '{0}\n'.format('        RC=$?'))
-                    script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error cp $RC; fi'))
-                    script_file_id.write( '{0}\n'.format('        echo "File is created."'))
-                    script_file_id.write( '{0}\n'.format('        echo "Restoring sequence identifications in merged alignment file ..."'))
-                    script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                    script_file_id.write( '{0}\n'.format('            restore-ids.py \\'))
-                    script_file_id.write( '{0}\n'.format('                --in=$REIDENTIFIED_PLANT_BLAST_XML \\'))
-                    script_file_id.write( '{0}\n'.format('                --format=XML \\'))
-                    script_file_id.write( '{0}\n'.format('                --relationships=$RELATIONSHIP_FILE \\'))
-                    script_file_id.write( '{0}\n'.format('                --out=$PLANT_BLAST_XML \\'))
-                    script_file_id.write( '{0}\n'.format('                --verbose=N \\'))
-                    script_file_id.write( '{0}\n'.format('                --trace=N'))
-                    script_file_id.write( '{0}\n'.format('        RC=$?'))
-                    script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error restore-ids.py $RC; fi'))
-                    script_file_id.write( '{0}\n'.format('        echo "Identifications are restored."'))
-                script_file_id.write( '{0}\n'.format('        touch $STEP_STATUS'))
-                script_file_id.write( '    fi\n')
-                script_file_id.write( '}\n')
-                script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function load_alignment_{0}_proteome'.format(current_code)))
-                script_file_id.write( '{\n')
-                script_file_id.write(f'    cd {current_run_dir}\n')
-                script_file_id.write( '{0}\n'.format('    STEP_STATUS=$STATUS_DIR/load_alignment_{0}_proteome.ok'.format(current_code)))
-                script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "LOAD OF PEPTIDE ALIGNMENT TO {0} PROTEOME INTO TOA DATABASE"'.format(current_code.upper())))
-                script_file_id.write( '{0}\n'.format('    if [ -f $STEP_STATUS ]; then'))
-                script_file_id.write( '{0}\n'.format('        echo "This step was previously run."'))
-                script_file_id.write( '    else\n')
-                script_file_id.write( '{0}\n'.format('        echo "Loading alignmnet data ..."'))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('            load-blast-data.py \\'))
-                script_file_id.write( '{0}\n'.format('                --db=$TOA_DB \\'))
-                script_file_id.write( '{0}\n'.format('                --dataset={0} \\'.format(current_code)))
-                script_file_id.write( '{0}\n'.format('                --format=5 \\'))
-                if current_code == 'nr_remainder':
-                    script_file_id.write( '{0}\n'.format('                --blast=$REIDENTIFIED_NR_REMAINDER_BLAST_XML \\'))
-                else:
-                    script_file_id.write( '{0}\n'.format('                --blast=${0}_BLAST_XML \\'.format(current_code.upper())))
-                script_file_id.write( '{0}\n'.format('                --verbose=N \\'))
-                script_file_id.write( '{0}\n'.format('                --trace=N'))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error load-blast-data.py $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Data are loaded."'))
-                script_file_id.write( '{0}\n'.format('        touch $STEP_STATUS'))
-                script_file_id.write( '    fi\n')
-                script_file_id.write( '}\n')
-                script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function annotate_peptides_{0}'.format(current_code)))
-                script_file_id.write( '{\n')
-                script_file_id.write(f'    cd {current_run_dir}\n')
-                script_file_id.write( '{0}\n'.format('    STEP_STATUS=$STATUS_DIR/annotate_peptides_{0}.ok'.format(current_code)))
-                script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "ANNOTATION OF PEPTIDES WITH {0}"'.format(current_code.upper())))
-                script_file_id.write( '{0}\n'.format('    if [ -f $STEP_STATUS ]; then'))
-                script_file_id.write( '{0}\n'.format('        echo "This step was previously run."'))
-                script_file_id.write( '    else\n')
-                script_file_id.write( '{0}\n'.format('        echo "Annotating peptides ..."'))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('            annotate-sequences.py \\'))
-                script_file_id.write( '{0}\n'.format('                --db=$TOA_DB \\'))
-                script_file_id.write( '{0}\n'.format('                --dataset={0} \\'.format(current_code)))
-                if i == 0:
-                    script_file_id.write( '{0}\n'.format('                --seqs=$REIDENTIFIED_PEPTIDE_FILE \\'))
-                else:
-                    script_file_id.write( '{0}\n'.format('                --seqs=${0}_NON_ANNOTATED_PEPTIDE_FILE \\'.format(previus_code.upper())))
-                script_file_id.write( '{0}\n'.format('                --relationships=$RELATIONSHIP_FILE \\'))
-                script_file_id.write( '{0}\n'.format('                --annotation=${0}_ANNOTATION_FILE \\'.format(current_code.upper())))
-                script_file_id.write( '{0}\n'.format('                --nonann=${0}_NON_ANNOTATED_PEPTIDE_FILE \\'.format(current_code.upper())))
-                script_file_id.write( '{0}\n'.format('                --verbose=N \\'))
-                script_file_id.write( '{0}\n'.format('                --trace=N'))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error annotate-sequences.py $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Annotation is done."'))
-                if len(plant_database_list) == 1 and current_code != 'nr_remainder':
-                    script_file_id.write( '{0}\n'.format('        echo "Creating plant annotation file ..."'))
-                    script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                    script_file_id.write( '{0}\n'.format('            cp ${0}_ANNOTATION_FILE $PLANT_ANNOTATION_FILE'.format(current_code.upper())))
-                    script_file_id.write( '{0}\n'.format('        RC=$?'))
-                    script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error cp $RC; fi'))
-                    script_file_id.write( '{0}\n'.format('        echo "File is created."'))
-                script_file_id.write( '{0}\n'.format('        touch $STEP_STATUS'))
-                script_file_id.write( '    fi\n')
-                script_file_id.write( '}\n')
-            if len(plant_database_list) > 1:
-                script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function merge_plant_alignment_files'))
-                script_file_id.write( '{\n')
-                script_file_id.write(f'    cd {current_run_dir}\n')
-                script_file_id.write( '{0}\n'.format('    STEP_STATUS=$STATUS_DIR/merge_plant_alignment_files.ok'))
-                script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "MERGER OF PLANT ALIGNMENT FILES"'))
-                script_file_id.write( '{0}\n'.format('    if [ -f $STEP_STATUS ]; then'))
-                script_file_id.write( '{0}\n'.format('        echo "This step was previously run."'))
-                script_file_id.write( '    else\n')
-                script_file_id.write( '{0}\n'.format('        echo "Merging alignment files ..."'))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('            merge-xml-files.py \\'))
-                plant_blast_xml_list = []
-                for database_code in plant_database_list:
-                    plant_blast_xml_list.append('${0}_BLAST_XML'.format(database_code.upper()))
-                script_file_id.write( '{0}\n'.format('                --list={0} \\'.format(','.join(plant_blast_xml_list))))
-                script_file_id.write( '{0}\n'.format('                --relationships=NONE \\'))
-                script_file_id.write( '{0}\n'.format('                --mfile=$REIDENTIFIED_PLANT_BLAST_XML \\'))
-                script_file_id.write( '{0}\n'.format('                --verbose=N \\'))
-                script_file_id.write( '{0}\n'.format('                --trace=N'))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error merge-xml-files.py $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Files are merged."'))
-                script_file_id.write( '{0}\n'.format('        echo "Restoring sequence identifications in merged alignment file ..."'))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write( '{0}\n'.format('            restore-ids.py \\'))
-                script_file_id.write( '{0}\n'.format('                --in=$REIDENTIFIED_PLANT_BLAST_XML \\'))
-                script_file_id.write( '{0}\n'.format('                --format=XML \\'))
-                script_file_id.write( '{0}\n'.format('                --relationships=$RELATIONSHIP_FILE \\'))
-                script_file_id.write( '{0}\n'.format('                --out=$PLANT_BLAST_XML \\'))
-                script_file_id.write( '{0}\n'.format('                --verbose=N \\'))
-                script_file_id.write( '{0}\n'.format('                --trace=N'))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error restore-ids.py $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Identifications are restored."'))
-                script_file_id.write( '{0}\n'.format('        touch $STEP_STATUS'))
-                script_file_id.write( '    fi\n')
-                script_file_id.write( '}\n')
-                script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function merge_plant_annotation_files'))
-                script_file_id.write( '{\n')
-                script_file_id.write(f'    cd {current_run_dir}\n')
-                script_file_id.write( '{0}\n'.format('    STEP_STATUS=$STATUS_DIR/merge_plant_annotation_files.ok'))
-                script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "MERGER OF PLANT ANNOTATION FILES"'))
-                script_file_id.write( '{0}\n'.format('    if [ -f $STEP_STATUS ]; then'))
-                script_file_id.write( '{0}\n'.format('        echo "This step was previously run."'))
-                script_file_id.write( '    else\n')
-                for database_code in plant_database_list:
-                    script_file_id.write( '{0}\n'.format('        {0}_ANNOTATION_FILE_TMP=${0}_ANNOTATION_FILE".tmp"'.format(database_code.upper())))
-                    script_file_id.write( '{0}\n'.format('        {0}_ANNOTATION_FILE_SORTED=${0}_ANNOTATION_FILE".sorted"'.format(database_code.upper())))
-                tmp_file_list = []
-                for i in range(len(plant_database_list) - 2):
-                    script_file_id.write( '{0}\n'.format('        MERGED_ANNOTATION_FILE_TMP{0}=$MERGED_ANNOTATION_FILE".tmp{0}"'.format(i + 1)))
-                    tmp_file_list.append('$MERGED_ANNOTATION_FILE_TMP{0}'.format(i + 1))
-                script_file_id.write( '{0}\n'.format('        echo "Deleting the header record of `basename ${0}_ANNOTATION_FILE` ..."'.format(plant_database_list[0].upper())))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('            tail --lines=+2 ${0}_ANNOTATION_FILE > ${0}_ANNOTATION_FILE_TMP'.format(plant_database_list[0].upper())))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error tail $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Records are deleted."'))
-                script_file_id.write( '{0}\n'.format('        echo "Sorting data records of `basename ${0}_ANNOTATION_FILE` ..."'.format(plant_database_list[0].upper())))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('            sort --field-separator=";" --key=1,2 --key=4,4 --key=6,6 < ${0}_ANNOTATION_FILE_TMP > ${0}_ANNOTATION_FILE_SORTED'.format(plant_database_list[0].upper())))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error sort $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Records are sorted."'))
-                script_file_id.write( '{0}\n'.format('        echo "Deleting the header record of `basename ${0}_ANNOTATION_FILE` ..."'.format(plant_database_list[1].upper())))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('            tail --lines=+2 ${0}_ANNOTATION_FILE > ${0}_ANNOTATION_FILE_TMP'.format(plant_database_list[1].upper())))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        echo "Records are deleted."'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error tail $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Sorting data records of `basename ${0}_ANNOTATION_FILE` ..."'.format(plant_database_list[1].upper())))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('            sort --field-separator=";" --key=1,2 --key=4,4 --key=6,6 < ${0}_ANNOTATION_FILE_TMP > ${0}_ANNOTATION_FILE_SORTED'.format(plant_database_list[1].upper())))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error sort $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Records are sorted."'))
-                script_file_id.write( '{0}\n'.format('        echo "Merging `basename ${0}_ANNOTATION_FILE` and `basename ${1}_ANNOTATION_FILE` ..."'.format(plant_database_list[0].upper(), plant_database_list[1].upper())))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('            merge-annotation-files.py \\'))
-                script_file_id.write( '{0}\n'.format('                --file1=${0}_ANNOTATION_FILE_SORTED \\'.format(plant_database_list[0].upper())))
-                script_file_id.write( '{0}\n'.format('                --type1={0} \\'.format(database_type_dict[plant_database_list[0]])))
-                script_file_id.write( '{0}\n'.format('                --file2=${0}_ANNOTATION_FILE_SORTED \\'.format(plant_database_list[1].upper())))
-                script_file_id.write( '{0}\n'.format('                --type2={0} \\'.format(database_type_dict[plant_database_list[1]])))
-                if len(plant_database_list) > 2:
-                    script_file_id.write( '{0}\n'.format('                --mfile=$MERGED_ANNOTATION_FILE_TMP1 \\'))
-                    script_file_id.write( '{0}\n'.format('                --header=N \\'))
-                else:
-                    script_file_id.write( '{0}\n'.format('                --mfile=$PLANT_ANNOTATION_FILE \\'))
-                    script_file_id.write( '{0}\n'.format('                --header=Y \\'))
-                script_file_id.write( '{0}\n'.format('                --verbose=N \\'))
-                script_file_id.write( '{0}\n'.format('                --trace=N'))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error merge-annotation-files.py $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Files are merged."'))
-                script_file_id.write( '{0}\n'.format('        echo "Deleting temporal files of `basename ${0}_ANNOTATION_FILE` ..."'.format(plant_database_list[0].upper())))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('            rm ${0}_ANNOTATION_FILE_TMP ${0}_ANNOTATION_FILE_SORTED'.format(plant_database_list[0].upper())))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error rm $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Files are deleted."'))
-                script_file_id.write( '{0}\n'.format('        echo "Deleting temporal files of `basename ${0}_ANNOTATION_FILE` ..."'.format(plant_database_list[1].upper())))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('            rm ${0}_ANNOTATION_FILE_TMP ${0}_ANNOTATION_FILE_SORTED'.format(plant_database_list[1].upper())))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error rm $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Files are deleted."'))
-                for i in range(2, len(plant_database_list)):
-                    script_file_id.write( '{0}\n'.format('        echo "Deleting the header record of `basename ${0}_ANNOTATION_FILE` ..."'.format(plant_database_list[i].upper())))
-                    script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                    script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                    script_file_id.write( '{0}\n'.format('            tail --lines=+2 ${0}_ANNOTATION_FILE > ${0}_ANNOTATION_FILE_TMP'.format(plant_database_list[i].upper())))
-                    script_file_id.write( '{0}\n'.format('        RC=$?'))
-                    script_file_id.write( '{0}\n'.format('        echo "Records are deleted."'))
-                    script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error tail $RC; fi'))
-                    script_file_id.write( '{0}\n'.format('        echo "Sorting data records of `basename ${0}_ANNOTATION_FILE` ..."'.format(plant_database_list[i].upper())))
-                    script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                    script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                    script_file_id.write( '{0}\n'.format('            sort --field-separator=";" --key=1,2 --key=4,4 --key=6,6 < ${0}_ANNOTATION_FILE_TMP > ${0}_ANNOTATION_FILE_SORTED'.format(plant_database_list[i].upper())))
-                    script_file_id.write( '{0}\n'.format('        RC=$?'))
-                    script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error sort $RC; fi'))
-                    script_file_id.write( '{0}\n'.format('        echo "Records are sorted."'))
-                    script_file_id.write( '{0}\n'.format('        echo "Adding annotation of `basename ${0}_ANNOTATION_FILE` to the merged annotation file ..."'.format(plant_database_list[i].upper())))
-                    script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                    script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                    script_file_id.write( '{0}\n'.format('            merge-annotation-files.py \\'))
-                    script_file_id.write( '{0}\n'.format('                --file1=$MERGED_ANNOTATION_FILE_TMP{} \\'.format(i - 1)))
-                    script_file_id.write( '{0}\n'.format('                --type1=MERGER \\'))
-                    script_file_id.write( '{0}\n'.format('                --file2=${0}_ANNOTATION_FILE_SORTED \\'.format(plant_database_list[i].upper())))
-                    script_file_id.write( '{0}\n'.format('                --type2={0} \\'.format(database_type_dict[plant_database_list[i]])))
-                    if i < len(plant_database_list) - 1:
-                        script_file_id.write( '{0}\n'.format('                --mfile=$MERGED_ANNOTATION_FILE_TMP{0} \\'.format(i)))
-                        script_file_id.write( '{0}\n'.format('                --header=N \\'))
+                script_file_id.write( '        source activate blast\n')
+                script_file_id.write( '        echo "Aligning peptides ..."\n')
+                if alignment_tool == xlib.get_blastplus_name():
+                    script_file_id.write(f'        export BLASTDB=${current_code.upper()}_BLASTPLUS_DB_DIR\n')
+                    script_file_id.write( '        /usr/bin/time \\\n')
+                    script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                    script_file_id.write( '            blastp \\\n')
+                    script_file_id.write( '                -num_threads $THREADS \\\n')
+                    script_file_id.write(f'                -db ${current_code.upper()}_BLASTPLUS_DB_NAME \\\n')
+                    if i == 0:
+                        script_file_id.write( '                -query $REIDENTIFIED_PEPTIDE_FILE \\\n')
                     else:
-                        script_file_id.write( '{0}\n'.format('                --mfile=$PLANT_ANNOTATION_FILE \\'))
-                        script_file_id.write( '{0}\n'.format('                --header=Y \\'))
-                    script_file_id.write( '{0}\n'.format('                --verbose=N \\'))
-                    script_file_id.write( '{0}\n'.format('                --trace=N'))
-                    script_file_id.write( '{0}\n'.format('        RC=$?'))
-                    script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error merge-annotation-files.py $RC; fi'))
-                    script_file_id.write( '{0}\n'.format('        echo "Files are merged."'))
-                    script_file_id.write( '{0}\n'.format('        echo "Deleting temporal files of `basename ${0}_ANNOTATION_FILE` ..."'.format(plant_database_list[i].upper())))
-                    script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                    script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                    script_file_id.write( '{0}\n'.format('            rm ${0}_ANNOTATION_FILE_TMP ${0}_ANNOTATION_FILE_SORTED'.format(plant_database_list[i].upper())))
-                    script_file_id.write( '{0}\n'.format('        RC=$?'))
-                    script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error rm $RC; fi'))
-                    script_file_id.write( '{0}\n'.format('        echo "Files are deleted."'))
-                script_file_id.write( '{0}\n'.format('        echo "Deleting temporal annotation files ..."'))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('            rm {0}'.format(' '.join(tmp_file_list))))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error rm $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "Files are deleted."'))
-                script_file_id.write( '{0}\n'.format('        touch $STEP_STATUS'))
+                        script_file_id.write(f'                -query ${previus_code.upper()}_NON_ANNOTATED_PEPTIDE_FILE \\\n')
+                    script_file_id.write( '                -evalue $BLASTPLUS_EVALUE \\\n')
+                    script_file_id.write( '                -max_target_seqs $BLASTPLUS_MAX_TARGET_SEQS \\\n')
+                    script_file_id.write( '                -max_hsps $BLASTPLUS_MAX_HSPS \\\n')
+                    script_file_id.write( '                -qcov_hsp_perc $BLASTPLUS_QCOV_HSP_PERC \\\n')
+                    script_file_id.write( '                -outfmt 5 \\\n')
+                    if blastplus_other_parameters_blastp.upper() != 'NONE':
+                        parameter_list = [x.strip() for x in blastplus_other_parameters_blastp.split(';')]
+                        for parameter in parameter_list:
+                            if parameter.find('=') > 0:
+                                pattern = r'^--(.+)=(.+)$'
+                                mo = re.search(pattern, parameter)
+                                parameter_name = mo.group(1).strip()
+                                parameter_value = mo.group(2).strip()
+                                script_file_id.write(f'                -{parameter_name} {parameter_value} \\\n')
+                            else:
+                                pattern = r'^--(.+)$'
+                                mo = re.search(pattern, parameter)
+                                parameter_name = mo.group(1).strip()
+                                script_file_id.write(f'                -{parameter_name} \\\n')
+                    script_file_id.write(f'                -out ${current_code.upper()}_BLAST_XML\n')
+                    script_file_id.write( '        RC=$?\n')
+                    script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error blastp $RC; fi\n')
+                    script_file_id.write( '        echo "Alignment is done."\n')
+                    script_file_id.write( '        conda deactivate\n')
+                elif alignment_tool == xlib.get_diamond_name():
+                    if i == 0:
+                        script_file_id.write( '        if [[ -s $REIDENTIFIED_PEPTIDE_FILE ]]; then\n')
+                    else:
+                        script_file_id.write(f'        if [[ -s ${previus_code.upper()}_NON_ANNOTATED_PEPTIDE_FILE ]]; then\n')
+                    script_file_id.write( '            source activate diamond\n')
+                    script_file_id.write( '            /usr/bin/time \\\n')
+                    script_file_id.write(f'                --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                    script_file_id.write( '                diamond blastp \\\n')
+                    script_file_id.write( '                    --threads $THREADS \\\n')
+                    script_file_id.write(f'                    --db ${current_code.upper()}_DIAMOND_DB_FILE \\\n')
+                    if i == 0:
+                        script_file_id.write( '                    --query $REIDENTIFIED_PEPTIDE_FILE \\\n')
+                    else:
+                        script_file_id.write(f'                    --query ${previus_code.upper()}_NON_ANNOTATED_PEPTIDE_FILE \\\n')
+                    script_file_id.write( '                    --evalue $DIAMOND_EVALUE \\\n')
+                    script_file_id.write( '                    --max-target-seqs $DIAMOND_MAX_TARGET_SEQS \\\n')
+                    script_file_id.write( '                    --max-hsps $DIAMOND_MAX_HSPS \\\n')
+                    if diamond_other_parameters_blastp.upper() != 'NONE':
+                        parameter_list = [x.strip() for x in diamond_other_parameters_blastp.split(';')]
+                        for parameter in parameter_list:
+                            if parameter.find('=') > 0:
+                                pattern = r'^--(.+)=(.+)$'
+                                mo = re.search(pattern, parameter)
+                                parameter_name = mo.group(1).strip()
+                                parameter_value = mo.group(2).strip()
+                                script_file_id.write(f'                --{parameter_name} {parameter_value} \\\n')
+                            else:
+                                pattern = r'^--(.+)$'
+                                mo = re.search(pattern, parameter)
+                                parameter_name = mo.group(1).strip()
+                                script_file_id.write(f'                --{parameter_name} \\\n')
+                    script_file_id.write( '                    --outfmt 5 \\\n')
+                    script_file_id.write(f'                    --out ${current_code.upper()}_BLAST_XML\n')
+                    script_file_id.write( '            RC=$?\n')
+                    script_file_id.write( '            if [ $RC -ne 0 ]; then manage_error diamond-blastp $RC; fi\n')
+                    script_file_id.write( '        else\n')
+                    script_file_id.write(f'            touch ${current_code.upper()}_BLAST_XML\n')
+                    script_file_id.write( '        fi\n')
+                    script_file_id.write( '        echo "Alignment is done."\n')
+                    script_file_id.write( '        conda deactivate\n')
+                if len(database_list) == 1:
+                    script_file_id.write( '        echo "Restoring sequence identifications in alignment file ..."\n')
+                    script_file_id.write( '        /usr/bin/time \\\n')
+                    script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                    script_file_id.write( '            restore-ids.py \\\n')
+                    script_file_id.write(f'                --in=${current_code.upper()}_BLAST_XML \\\n')
+                    script_file_id.write( '                --format=XML \\\n')
+                    script_file_id.write( '                --relationships=$TOA_TRANSCRIPTOME_RELATIONSHIP_FILE \\\n')
+                    script_file_id.write( '                --relationships2=$TOA_TRANSDECODER_RELATIONSHIP_FILE \\\n')
+                    script_file_id.write( '                --out=$MERGED_BLAST_XML \\\n')
+                    script_file_id.write( '                --verbose=N \\\n')
+                    script_file_id.write( '                --trace=N\n')
+                    script_file_id.write( '        RC=$?\n')
+                    script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error restore-ids.py $RC; fi\n')
+                    script_file_id.write( '        echo "Identifications are restored."\n')
+                script_file_id.write( '        touch $STEP_STATUS\n')
                 script_file_id.write( '    fi\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function split_merged_plant_annotation_file'))
+                script_file_id.write(f'function load_alignment_{current_code}_proteome\n')
                 script_file_id.write( '{\n')
-                script_file_id.write(f'    cd {current_run_dir}\n')
-                script_file_id.write( '{0}\n'.format('    STEP_STATUS=$STATUS_DIR/split_merged_plant_annotation_file.ok'))
+                script_file_id.write( '    cd $OUTPUT_DIR\n')
+                script_file_id.write(f'    STEP_STATUS=$STATUS_DIR/load_alignment_{current_code}_proteome.ok\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "SPLIT OF MERGED PLANT ANNOTATION FILE"'))
-                script_file_id.write( '{0}\n'.format('    if [ -f $STEP_STATUS ]; then'))
-                script_file_id.write( '{0}\n'.format('        echo "This step was previously run."'))
+                script_file_id.write(f'    echo "LOAD OF PEPTIDE ALIGNMENT TO {current_code.upper()} PROTEOME INTO TOA DATABASE"\n')
+                script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+                script_file_id.write( '        echo "This step was previously run."\n')
                 script_file_id.write( '    else\n')
-                script_file_id.write( '{0}\n'.format('        echo "Splitting merged file `basename $PLANT_ANNOTATION_FILE` ..."'))
-                script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('            split-annotation-file.py \\'))
-                script_file_id.write( '{0}\n'.format('                --annotation=$PLANT_ANNOTATION_FILE \\'))
-                script_file_id.write( '{0}\n'.format('                --type=MERGER \\'))
-                script_file_id.write( '{0}\n'.format('                --header=Y \\'))
-                script_file_id.write( '{0}\n'.format('                --rnum=250000 \\'))
-                script_file_id.write( '{0}\n'.format('                --verbose=N \\'))
-                script_file_id.write( '{0}\n'.format('                --trace=N'))
-                script_file_id.write( '{0}\n'.format('        RC=$?'))
-                script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error split-annotation-file.py $RC; fi'))
-                script_file_id.write( '{0}\n'.format('        echo "File is splitted."'))
-                script_file_id.write( '{0}\n'.format('        touch $STEP_STATUS'))
+                script_file_id.write( '        echo "Loading alignmnet data ..."\n')
+                script_file_id.write( '        /usr/bin/time \\\n')
+                script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '            load-blast-data.py \\\n')
+                script_file_id.write( '                --db=$TOA_DB \\\n')
+                script_file_id.write(f'                --dataset={current_code} \\\n')
+                script_file_id.write( '                --format=5 \\\n')
+                script_file_id.write(f'                --blast=${current_code.upper()}_BLAST_XML \\\n')
+                script_file_id.write( '                --verbose=N \\\n')
+                script_file_id.write( '                --trace=N\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error load-blast-data.py $RC; fi\n')
+                script_file_id.write( '        echo "Data are loaded."\n')
+                script_file_id.write( '        touch $STEP_STATUS\n')
+                script_file_id.write( '    fi\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write(f'function annotate_peptides_{current_code}\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    cd $OUTPUT_DIR\n')
+                script_file_id.write(f'    STEP_STATUS=$STATUS_DIR/annotate_peptides_{current_code}.ok\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write(f'    echo "ANNOTATION OF PEPTIDES WITH {current_code.upper()}"\n')
+                script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+                script_file_id.write( '        echo "This step was previously run."\n')
+                script_file_id.write( '    else\n')
+                script_file_id.write( '        echo "Annotating peptides ..."\n')
+                script_file_id.write( '        /usr/bin/time \\\n')
+                script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '            annotate-sequences.py \\\n')
+                script_file_id.write( '                --db=$TOA_DB \\\n')
+                script_file_id.write(f'                --dataset={current_code} \\\n')
+                script_file_id.write(f'                --aligner={alignment_tool} \\\n')
+                if i == 0:
+                    script_file_id.write( '                --seqs=$REIDENTIFIED_PEPTIDE_FILE \\\n')
+                else:
+                    script_file_id.write(f'                --seqs=${previus_code.upper()}_NON_ANNOTATED_PEPTIDE_FILE \\\n')
+                script_file_id.write( '                --relationships=$TOA_TRANSCRIPTOME_RELATIONSHIP_FILE \\\n')
+                script_file_id.write( '                --relationships2=$TOA_TRANSDECODER_RELATIONSHIP_FILE \\\n')
+                if current_code == 'nr':
+                    script_file_id.write(f'                --annotation=$NR_VIRIDIPLANTAE_ANNOTATION_FILE \\\n')
+                    script_file_id.write(f'                --annotation2=$NR_CONTAMINATION_ANNOTATION_FILE \\\n')
+                else:
+                    script_file_id.write(f'                --annotation=${current_code.upper()}_ANNOTATION_FILE \\\n')
+                    script_file_id.write(f'                --annotation2=NONE \\\n')
+                script_file_id.write(f'                --nonann=${current_code.upper()}_NON_ANNOTATED_PEPTIDE_FILE \\\n')
+                script_file_id.write( '                --verbose=N \\\n')
+                script_file_id.write( '                --trace=N\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error annotate-sequences.py $RC; fi\n')
+                script_file_id.write( '        echo "Annotation is done."\n')
+                if len(database_list) == 1:
+                    if current_code == 'nr':
+                        script_file_id.write( '        ANNOTATION_FILE_TMP=$NR_VIRIDIPLANTAE_ANNOTATION_FILE.tmp\n')
+                        script_file_id.write( '        echo "Deleting the header record of $NR_VIRIDIPLANTAE_ANNOTATION_FILE ..."\n')
+                        script_file_id.write( '        /usr/bin/time \\\n')
+                        script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                        script_file_id.write( '            tail -n +2 $NR_VIRIDIPLANTAE_ANNOTATION_FILE > $ANNOTATION_FILE_TMP\n')
+                    else:
+                        script_file_id.write(f'        ANNOTATION_FILE_TMP=${current_code.upper()}_ANNOTATION_FILE.tmp\n')
+                        script_file_id.write(f'        echo "Deleting the header record of ${current_code.upper()}_ANNOTATION_FILE ..."\n')
+                        script_file_id.write( '        /usr/bin/time \\\n')
+                        script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                        script_file_id.write(f'            tail -n +2 ${current_code.upper()}_ANNOTATION_FILE > $ANNOTATION_FILE_TMP\n')
+                    script_file_id.write( '        RC=$?\n')
+                    script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error tail $RC; fi\n')
+                    script_file_id.write( '        echo "Record is deleted."\n')
+                    script_file_id.write( '        echo "Creating plant annotation file ..."\n')
+                    script_file_id.write( '        /usr/bin/time \\\n')
+                    script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                    script_file_id.write( '            merge-annotation-files.py \\\n')
+                    script_file_id.write( '            --file1=$ANNOTATION_FILE_TMP \\\n')
+                    script_file_id.write(f'            --type1={database_type_dict[database_list[0]]} \\\n')
+                    script_file_id.write( '            --file2=NONE \\\n')
+                    script_file_id.write( '            --type2=NONE \\\n')
+                    script_file_id.write( '            --operation=SAVE1 \\\n')
+                    script_file_id.write( '            --mfile=$PLANT_ANNOTATION_FILE \\\n')
+                    script_file_id.write( '            --header=Y \\\n')
+                    script_file_id.write( '            --verbose=N \\\n')
+                    script_file_id.write( '            --trace=N\n')
+                    script_file_id.write( '        RC=$?\n')
+                    script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error merge-annotation-files.py $RC; fi\n')
+                    script_file_id.write( '        echo "File is created."\n')
+                    script_file_id.write( '        echo "Deleting temporal file  ..."\n')
+                    script_file_id.write( '        /usr/bin/time \\\n')
+                    script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                    script_file_id.write( '            rm $ANNOTATION_FILE_TMP\n')
+                    script_file_id.write( '        RC=$?\n')
+                    script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error rm $RC; fi\n')
+                    script_file_id.write( '        echo "File is deleted."\n')
+                script_file_id.write( '        touch $STEP_STATUS\n')
+                script_file_id.write( '    fi\n')
+                script_file_id.write( '}\n')
+            if len(database_list) > 1:
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function merge_alignment_files\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    cd $OUTPUT_DIR\n')
+                script_file_id.write( '    STEP_STATUS=$STATUS_DIR/merge_alignment_files.ok\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "MERGER OF ALIGNMENT FILES"\n')
+                script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+                script_file_id.write( '        echo "This step was previously run."\n')
+                script_file_id.write( '    else\n')
+                script_file_id.write( '        echo "Merging alignment files ..."\n')
+                script_file_id.write( '        /usr/bin/time \\\n')
+                script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '            merge-xml-files.py \\\n')
+                blast_xml_list = []
+                for database_code in database_list:
+                    blast_xml_list.append(f'${database_code.upper()}_BLAST_XML')
+                script_file_id.write(f'                --list={",".join(blast_xml_list)} \\\n')
+                script_file_id.write( '                --relationships=$TOA_TRANSCRIPTOME_RELATIONSHIP_FILE \\\n')
+                script_file_id.write( '                --relationships2=$TOA_TRANSDECODER_RELATIONSHIP_FILE \\\n')
+                script_file_id.write( '                --mfile=$MERGED_BLAST_XML \\\n')
+                script_file_id.write( '                --verbose=N \\\n')
+                script_file_id.write( '                --trace=N\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error merge-xml-files.py $RC; fi\n')
+                script_file_id.write( '        echo "Files are merged."\n')
+                script_file_id.write( '        touch $STEP_STATUS\n')
+                script_file_id.write( '    fi\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function merge_annotation_files\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    cd $OUTPUT_DIR\n')
+                script_file_id.write( '    STEP_STATUS=$STATUS_DIR/merge_annotation_files.ok\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "MERGER OF PLANT ANNOTATION FILES"\n')
+                script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+                script_file_id.write( '        echo "This step was previously run."\n')
+                script_file_id.write( '    else\n')
+                for database_code in database_list2:
+                    script_file_id.write(f'        {database_code.upper()}_ANNOTATION_FILE_TMP=${database_code.upper()}_ANNOTATION_FILE".tmp"\n')
+                    script_file_id.write(f'        {database_code.upper()}_ANNOTATION_FILE_SORTED=${database_code.upper()}_ANNOTATION_FILE".sorted"\n')
+                tmp_file_list = []
+                for i in range(len(database_list2) - 2):
+                    script_file_id.write(f'        MERGED_ANNOTATION_FILE_TMP{i + 1}=$MERGED_ANNOTATION_FILE".tmp{i + 1}"\n')
+                    tmp_file_list.append(f'$MERGED_ANNOTATION_FILE_TMP{i + 1}')
+                script_file_id.write(f'        echo "Deleting the header record of `basename ${database_list2[0].upper()}_ANNOTATION_FILE` ..."\n')
+                script_file_id.write( '        /usr/bin/time \\\n')
+                script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write(f'            tail -n +2 ${database_list2[0].upper()}_ANNOTATION_FILE > ${database_list2[0].upper()}_ANNOTATION_FILE_TMP\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error tail $RC; fi\n')
+                script_file_id.write( '        echo "Record is deleted."\n')
+                script_file_id.write(f'        echo "Sorting data records of `basename ${database_list2[0].upper()}_ANNOTATION_FILE` ..."\n')
+                script_file_id.write( '        /usr/bin/time \\\n')
+                script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write(f'            sort --field-separator=";" --key=2,5 < ${database_list2[0].upper()}_ANNOTATION_FILE_TMP > ${database_list2[0].upper()}_ANNOTATION_FILE_SORTED\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error sort $RC; fi\n')
+                script_file_id.write( '        echo "Records are sorted."\n')
+                script_file_id.write(f'        echo "Deleting the header record of `basename ${database_list2[1].upper()}_ANNOTATION_FILE` ..."\n')
+                script_file_id.write( '        /usr/bin/time \\\n')
+                script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write(f'            tail -n +2 ${database_list2[1].upper()}_ANNOTATION_FILE > ${database_list2[1].upper()}_ANNOTATION_FILE_TMP\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        echo "Record is deleted."\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error tail $RC; fi\n')
+                script_file_id.write(f'        echo "Sorting data records of `basename ${database_list2[1].upper()}_ANNOTATION_FILE` ..."\n')
+                script_file_id.write( '        /usr/bin/time \\\n')
+                script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write(f'            sort --field-separator=";" --key=2,5 < ${database_list2[1].upper()}_ANNOTATION_FILE_TMP > ${database_list2[1].upper()}_ANNOTATION_FILE_SORTED\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error sort $RC; fi\n')
+                script_file_id.write( '        echo "Records are sorted."\n')
+                script_file_id.write(f'        echo "Merging `basename ${database_list2[0].upper()}_ANNOTATION_FILE` and `basename ${database_list2[1].upper()}_ANNOTATION_FILE` ..."\n')
+                script_file_id.write( '        /usr/bin/time \\\n')
+                script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '            merge-annotation-files.py \\\n')
+                script_file_id.write(f'                --file1=${database_list2[0].upper()}_ANNOTATION_FILE_SORTED \\\n')
+                script_file_id.write(f'                --type1={database_type_dict[database_list[0]]} \\\n')
+                script_file_id.write(f'                --file2=${database_list2[1].upper()}_ANNOTATION_FILE_SORTED \\\n')
+                script_file_id.write(f'                --type2={database_type_dict[database_list[1]]} \\\n')
+                script_file_id.write( '                --operation=1AND2 \\\n')
+                if len(database_list2) > 2:
+                    script_file_id.write( '                --mfile=$MERGED_ANNOTATION_FILE_TMP1 \\\n')
+                    script_file_id.write( '                --header=N \\\n')
+                else:
+                    script_file_id.write( '                --mfile=$PLANT_ANNOTATION_FILE \\\n')
+                    script_file_id.write( '                --header=Y \\\n')
+                script_file_id.write( '                --verbose=N \\\n')
+                script_file_id.write( '                --trace=N\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error merge-annotation-files.py $RC; fi\n')
+                script_file_id.write( '        echo "Files are merged."\n')
+                script_file_id.write(f'        echo "Deleting temporal files of `basename ${database_list2[0].upper()}_ANNOTATION_FILE` ..."\n')
+                script_file_id.write( '        /usr/bin/time \\\n')
+                script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write(f'            rm ${database_list2[0].upper()}_ANNOTATION_FILE_TMP ${database_list2[0].upper()}_ANNOTATION_FILE_SORTED\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error rm $RC; fi\n')
+                script_file_id.write( '        echo "Files are deleted."\n')
+                script_file_id.write(f'        echo "Deleting temporal files of `basename ${database_list2[1].upper()}_ANNOTATION_FILE` ..."\n')
+                script_file_id.write( '        /usr/bin/time \\\n')
+                script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write(f'            rm ${database_list2[1].upper()}_ANNOTATION_FILE_TMP ${database_list2[1].upper()}_ANNOTATION_FILE_SORTED\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error rm $RC; fi\n')
+                script_file_id.write( '        echo "Files are deleted."\n')
+                for i in range(2, len(database_list2)):
+                    script_file_id.write(f'        echo "Deleting the header record of `basename ${database_list2[i].upper()}_ANNOTATION_FILE` ..."\n')
+                    script_file_id.write( '        /usr/bin/time \\\n')
+                    script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                    script_file_id.write(f'            tail -n +2 ${database_list2[i].upper()}_ANNOTATION_FILE > ${database_list2[i].upper()}_ANNOTATION_FILE_TMP\n')
+                    script_file_id.write( '        RC=$?\n')
+                    script_file_id.write( '        echo "Record is deleted."\n')
+                    script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error tail $RC; fi\n')
+                    script_file_id.write(f'        echo "Sorting data records of `basename ${database_list2[i].upper()}_ANNOTATION_FILE` ..."\n')
+                    script_file_id.write( '        /usr/bin/time \\\n')
+                    script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                    script_file_id.write(f'            sort --field-separator=";" --key=2,5 < ${database_list2[i].upper()}_ANNOTATION_FILE_TMP > ${database_list2[i].upper()}_ANNOTATION_FILE_SORTED\n')
+                    script_file_id.write( '        RC=$?\n')
+                    script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error sort $RC; fi\n')
+                    script_file_id.write( '        echo "Records are sorted."\n')
+                    script_file_id.write(f'        echo "Adding annotation of `basename ${database_list2[i].upper()}_ANNOTATION_FILE` to the merged annotation file ..."\n')
+                    script_file_id.write( '        /usr/bin/time \\\n')
+                    script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                    script_file_id.write( '            merge-annotation-files.py \\\n')
+                    script_file_id.write(f'                --file1=$MERGED_ANNOTATION_FILE_TMP{i - 1} \\\n')
+                    script_file_id.write( '                --type1=MERGER \\\n')
+                    script_file_id.write(f'                --file2=${database_list2[i].upper()}_ANNOTATION_FILE_SORTED \\\n')
+                    script_file_id.write(f'                --type2={database_type_dict[database_list[i]]} \\\n')
+                    script_file_id.write( '                --operation=1AND2 \\\n')
+                    if i < len(database_list2) - 1:
+                        script_file_id.write(f'                --mfile=$MERGED_ANNOTATION_FILE_TMP{i} \\\n')
+                        script_file_id.write( '                --header=N \\\n')
+                    else:
+                        script_file_id.write( '                --mfile=$PLANT_ANNOTATION_FILE \\\n')
+                        script_file_id.write( '                --header=Y \\\n')
+                    script_file_id.write( '                --verbose=N \\\n')
+                    script_file_id.write( '                --trace=N\n')
+                    script_file_id.write( '        RC=$?\n')
+                    script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error merge-annotation-files.py $RC; fi\n')
+                    script_file_id.write( '        echo "Files are merged."\n')
+                    script_file_id.write(f'        echo "Deleting temporal files of `basename ${database_list2[i].upper()}_ANNOTATION_FILE` ..."\n')
+                    script_file_id.write( '        /usr/bin/time \\\n')
+                    script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                    script_file_id.write(f'            rm ${database_list2[i].upper()}_ANNOTATION_FILE_TMP ${database_list2[i].upper()}_ANNOTATION_FILE_SORTED\n')
+                    script_file_id.write( '        RC=$?\n')
+                    script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error rm $RC; fi\n')
+                    script_file_id.write( '        echo "Files are deleted."\n')
+                script_file_id.write( '        echo "Deleting temporal annotation files ..."\n')
+                script_file_id.write( '        /usr/bin/time \\\n')
+                script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write(f'            rm {" ".join(tmp_file_list)}\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error rm $RC; fi\n')
+                script_file_id.write( '        echo "Files are deleted."\n')
+                script_file_id.write( '        touch $STEP_STATUS\n')
+                script_file_id.write( '    fi\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function split_merged_plant_annotation_file\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    cd $OUTPUT_DIR\n')
+                script_file_id.write( '    STEP_STATUS=$STATUS_DIR/split_merged_plant_annotation_file.ok\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "SPLIT OF MERGED PLANT ANNOTATION FILE"\n')
+                script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+                script_file_id.write( '        echo "This step was previously run."\n')
+                script_file_id.write( '    else\n')
+                script_file_id.write( '        echo "Splitting merged file `basename $PLANT_ANNOTATION_FILE` ..."\n')
+                script_file_id.write( '        /usr/bin/time \\\n')
+                script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '            split-annotation-file.py \\\n')
+                script_file_id.write( '                --annotation=$PLANT_ANNOTATION_FILE \\\n')
+                script_file_id.write( '                --type=MERGER \\\n')
+                script_file_id.write( '                --header=Y \\\n')
+                script_file_id.write( '                --rnum=250000 \\\n')
+                script_file_id.write( '                --verbose=N \\\n')
+                script_file_id.write( '                --trace=N\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error split-annotation-file.py $RC; fi\n')
+                script_file_id.write( '        echo "File is splitted."\n')
+                script_file_id.write( '        touch $STEP_STATUS\n')
                 script_file_id.write( '    fi\n')
                 script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function calculate_annotation_stats'))
+            script_file_id.write( 'function calculate_annotation_stats\n')
             script_file_id.write( '{\n')
-            script_file_id.write(f'    cd {current_run_dir}\n')
-            script_file_id.write( '{0}\n'.format('    STEP_STATUS=$STATUS_DIR/calculate_annotation_stats.ok'))
+            script_file_id.write( '    cd $OUTPUT_DIR\n')
+            script_file_id.write( '    STEP_STATUS=$STATUS_DIR/calculate_annotation_stats.ok\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "CALCULATE ANNOTATION STATISTICS"'))
-            script_file_id.write( '{0}\n'.format('    if [ -f $STEP_STATUS ]; then'))
-            script_file_id.write( '{0}\n'.format('        echo "This step was previously run."'))
+            script_file_id.write( '    echo "CALCULATE ANNOTATION STATISTICS"\n')
+            script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+            script_file_id.write( '        echo "This step was previously run."\n')
             script_file_id.write( '    else\n')
-            script_file_id.write( '{0}\n'.format('        echo "Calculating stats ..."'))
-            script_file_id.write( '{0}\n'.format('        /usr/bin/time \\'))
-            script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-            script_file_id.write( '{0}\n'.format('            calculate-annotation-stats.py \\'))
-            script_file_id.write( '{0}\n'.format('                --db=$TOA_DB \\'))
-            script_file_id.write( '{0}\n'.format('                --transcriptome=$TRANSCRIPTOME_FILE \\'))
-            script_file_id.write( '{0}\n'.format('                --peptides=$PEPTIDE_FILE \\'))
-            script_file_id.write( '{0}\n'.format('                --dslist={0} \\'.format(','.join(all_database_list))))
-            script_file_id.write( '{0}\n'.format('                --nonannlist={0} \\'.format(','.join(non_annotation_file_list))))
-            if len(plant_database_list) > 1:
-                script_file_id.write( '{0}\n'.format('                --annotation=$PLANT_ANNOTATION_FILE \\'))
-                script_file_id.write( '{0}\n'.format('                --type=MERGER \\'))
+            script_file_id.write( '        echo "Calculating stats ..."\n')
+            script_file_id.write( '        /usr/bin/time \\\n')
+            script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+            script_file_id.write( '            calculate-annotation-stats.py \\\n')
+            script_file_id.write( '                --db=$TOA_DB \\\n')
+            script_file_id.write( '                --transcriptome=$TRANSCRIPTOME_FILE \\\n')
+            script_file_id.write( '                --peptides=$PEPTIDE_FILE \\\n')
+            script_file_id.write(f'                --dslist={",".join(database_list)} \\\n')
+            script_file_id.write(f'                --nonannlist={",".join(non_annotation_file_list)} \\\n')
+            if len(database_list) > 1:
+                script_file_id.write( '                --annotation=$PLANT_ANNOTATION_FILE \\\n')
+                script_file_id.write( '                --type=MERGER \\\n')
             else:
-                script_file_id.write( '{0}\n'.format('                --annotation=${0}_ANNOTATION_FILE \\'.format(plant_database_list[0].upper())))
-                script_file_id.write( '{0}\n'.format('                --type={0} \\'.format(database_type_dict[plant_database_list[0]])))
-            script_file_id.write( '{0}\n'.format('                --stats=$ANNOTATION_STATS_FILE \\'))
-            script_file_id.write( '{0}\n'.format('                --verbose=N \\'))
-            script_file_id.write( '{0}\n'.format('                --trace=N'))
-            script_file_id.write( '{0}\n'.format('        RC=$?'))
-            script_file_id.write( '{0}\n'.format('        if [ $RC -ne 0 ]; then manage_error calculate-annotation-stats.py $RC; fi'))
-            script_file_id.write( '{0}\n'.format('        echo "Stats are calculated."'))
-            script_file_id.write( '{0}\n'.format('        touch $STEP_STATUS'))
+                script_file_id.write(f'                --annotation=${database_list[0].upper()}_ANNOTATION_FILE \\\n')
+                script_file_id.write(f'                --type={database_type_dict[database_list[0]]} \\\n')
+            script_file_id.write( '                --stats=$ANNOTATION_STATS_FILE \\\n')
+            script_file_id.write( '                --verbose=N \\\n')
+            script_file_id.write( '                --trace=N\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error calculate-annotation-stats.py $RC; fi\n')
+            script_file_id.write( '        echo "Stats are calculated."\n')
+            script_file_id.write( '        touch $STEP_STATUS\n')
             script_file_id.write( '    fi\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
@@ -9441,39 +10399,40 @@ def build_aminoacid_pipeline_script(cluster_name, current_run_dir):
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
             script_file_id.write( '\n')
-            script_file_id.write( '{0}\n'.format('# extract the long open reading frames'))
-            script_file_id.write( '{0}\n'.format('extract_orfs'))
+            script_file_id.write( '# re-identify sequences of the transcriptome file\n')
+            script_file_id.write( 'reidentify_transcript_sequences\n')
             script_file_id.write( '\n')
-            script_file_id.write( '{0}\n'.format('# extract the long open reading frames'))
-            script_file_id.write( '{0}\n'.format('predict_coding_regions'))
+            script_file_id.write( '# extract the long open reading frames and predict coding regions\n')
+            script_file_id.write( 'extract_orfs\n')
+            script_file_id.write( 'predict_coding_regions\n')
             script_file_id.write( '\n')
-            script_file_id.write( '{0}\n'.format('# re-identify sequences of the peptide file'))
-            script_file_id.write( '{0}\n'.format('reidentify_sequences'))
+            script_file_id.write( '# re-identify sequences of the peptide file\n')
+            script_file_id.write( 'reidentify_peptide_sequences\n')
             script_file_id.write( '\n')
-            for i in range(len(all_database_list)):
-                current_code = all_database_list[i]
-                previus_code = all_database_list[i - 1] if i > 0 else ''
+            for i in range(len(database_list)):
+                current_code = database_list[i]
+                previus_code = database_list[i - 1] if i > 0 else ''
                 if i == 0:
-                    script_file_id.write( '{0}\n'.format('# complete peptide sequences -> {0}'.format(current_code)))
+                    script_file_id.write(f'# complete peptide sequences -> {current_code}\n')
                 else:
-                    script_file_id.write( '{0}\n'.format('# peptide sequences not annotated with {0} -> {1}'.format(previus_code, current_code)))
-                script_file_id.write( '{0}\n'.format('align_peptides_{0}_proteome'.format(current_code)))
-                script_file_id.write( '{0}\n'.format('load_alignment_{0}_proteome'.format(current_code)))
-                script_file_id.write( '{0}\n'.format('annotate_peptides_{0}'.format(current_code)))
+                    script_file_id.write(f'# peptide sequences not annotated with {previus_code} -> {current_code}\n')
+                script_file_id.write(f'align_peptides_{current_code}_proteome\n')
+                script_file_id.write(f'load_alignment_{current_code}_proteome\n')
+                script_file_id.write(f'annotate_peptides_{current_code}\n')
                 script_file_id.write( '\n')
-            if len(plant_database_list) > 1:
-                script_file_id.write( '{0}\n'.format('# merged plant files'))
-                script_file_id.write( '{0}\n'.format('merge_plant_alignment_files'))
-                script_file_id.write( '{0}\n'.format('merge_plant_annotation_files'))
-                script_file_id.write( '{0}\n'.format('# -- split_merged_plant_annotation_file'))
+            if len(database_list) > 1:
+                script_file_id.write( '# merged files\n')
+                script_file_id.write( 'merge_alignment_files\n')
+                script_file_id.write( 'merge_annotation_files\n')
+                script_file_id.write( '# -- split_merged_plant_annotation_file\n')
                 script_file_id.write( '\n')
-            script_file_id.write( '{0}\n'.format('# annotation statistics'))
-            script_file_id.write( '{0}\n'.format('calculate_annotation_stats'))
+            script_file_id.write( '# annotation statistics\n')
+            script_file_id.write( 'calculate_annotation_stats\n')
             script_file_id.write( '\n')
             script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created.'.format(get_aminoacid_pipeline_script()))
+        error_list.append(f'*** ERROR: The file {get_aminoacid_pipeline_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -9497,10 +10456,11 @@ def build_aminoacid_pipeline_starter(current_run_dir):
         with open(get_aminoacid_pipeline_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_aminoacid_pipeline_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_aminoacid_pipeline_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
+
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_aminoacid_pipeline_starter()))
+        error_list.append(f'*** ERROR: The file {get_aminoacid_pipeline_starter()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -9510,11 +10470,11 @@ def build_aminoacid_pipeline_starter(current_run_dir):
 
 def get_aminoacid_pipeline_script():
     '''
-    Get the script path in the local computer to process a amino acid pipeline.
+    Get the script path to process a amino acid pipeline.
     '''
 
     # assign the script path
-    aminoacid_pipeline_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_pipeline_aminoacid_code())
+    aminoacid_pipeline_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_pipeline_aminoacid_code()}-process.sh'
 
     # return the script path
     return aminoacid_pipeline_script
@@ -9523,11 +10483,11 @@ def get_aminoacid_pipeline_script():
 
 def get_aminoacid_pipeline_starter():
     '''
-    Get the starter path in the local computer to process a amino acid pipeline.
+    Get the starter path to process a amino acid pipeline.
     '''
 
     # assign the starter path
-    aminoacid_pipeline_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_toa_process_pipeline_aminoacid_code())
+    aminoacid_pipeline_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_pipeline_aminoacid_code()}-process-starter.sh'
 
     # return the starter path
     return aminoacid_pipeline_starter
@@ -9575,7 +10535,7 @@ def restart_pipeline_process(cluster_name, experiment_id, pipeline_type, pipelin
     # submit the script
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Submitting the process script {0}/{1} ...\n'.format(current_run_dir, os.path.basename(starter)))
+        log.write(f'Submitting the process script {current_run_dir}/{os.path.basename(starter)} ...\n')
         OK = xssh.submit_script(cluster_name, ssh_client, current_run_dir, os.path.basename(starter), log)
 
     # close the SSH client connection
@@ -9599,12 +10559,586 @@ def restart_pipeline_process(cluster_name, experiment_id, pipeline_type, pipelin
 
 #-------------------------------------------------------------------------------
 
+def create_annotation_merger_config_file(experiment_id=xlib.get_toa_result_pipeline_dir(),pipeline_dataset_id_1='toapipelineaa-170101-000000', pipeline_dataset_id_2='toapipelinent-170101-000000', merger_operation='1AND2'):
+    '''
+    Create FastQC config file with the default options. It is necessary
+    update the options in each run.
+    '''
+
+    # initialize the control variable and the error list
+    OK = True
+    error_list = []
+
+    # create the FastQC config file and write the default options
+    try:
+        if not os.path.exists(os.path.dirname(get_annotation_merger_config_file())):
+            os.makedirs(os.path.dirname(get_annotation_merger_config_file()))
+        with open(get_annotation_merger_config_file(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
+            file_id.write( '# You must review the information of this file and update the values with the corresponding ones to the current run.\n')
+            file_id.write( '\n')
+            file_id.write( '# This section has the information identifies the experiment.\n')
+            file_id.write( '[identification]\n')
+            file_id.write( '{0:<50} {1}\n'.format(f'experiment_id = {experiment_id}', '# experiment identification'))
+            file_id.write( '\n')
+            file_id.write( '# This section has the information to set the annotation merger parameters\n')
+            file_id.write( '[annotation merger parameters]\n')
+            file_id.write( '{0:<50} {1}\n'.format(f'pipeline_dataset_id_1 = {pipeline_dataset_id_1}', '# identification of the first pipeline dataset'))
+            file_id.write( '{0:<50} {1}\n'.format(f'pipeline_dataset_id_2 = {pipeline_dataset_id_2}', '# identification of the second pipeline dataset'))
+            file_id.write( '{0:<50} {1}\n'.format(f'merger_operation = {merger_operation}', f'# merger operation: {xlib.get_annotation_merger_operation_code_list_text()}'))
+    except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append(f'*** ERROR: The file {get_annotation_merger_config_file()} can not be recreated')
+        OK = False
+
+    # return the control variable and the error list
+    return (OK, error_list)
+
+#-------------------------------------------------------------------------------
+
+def run_annotation_merger_process(cluster_name, log, function=None):
+    '''
+    Run a annotation merger process.
+    '''
+
+    # initialize the control variable
+    OK = True
+
+    # get the dictionary of TOA configuration
+    toa_config_dict = get_toa_config_dict()
+
+    # warn that the log window does not have to be closed
+    if not isinstance(log, xlib.DevStdOut):
+        log.write('This process might take several minutes. Do not close this window, please wait!\n')
+
+    # check the TOA config file
+    log.write(f'{xlib.get_separator()}\n')
+    log.write(f'Checking the {xlib.get_toa_name()} config file ...\n')
+    OK = os.path.isfile(get_toa_config_file())
+    if OK:
+        log.write('The file is OK.\n')
+    else:
+        log.write(f'*** ERROR: The {get_toa_config_file()} config file does not exist.\n')
+        log.write('Please recreate this file.\n')
+        OK = False
+
+    # check the annotation merger config file
+    if OK:
+        log.write(f'{xlib.get_separator()}\n')
+        log.write(f'Checking the {xlib.get_toa_process_merge_annotations_name()} config file ...\n')
+        (OK, error_list) = check_annotation_merger_config_file(strict=True)
+        if OK:
+            log.write('The file is OK.\n')
+        else:
+            log.write('*** ERROR: The config file is not valid.\n')
+            log.write('Please correct this file or recreate it.\n')
+
+    # create the SSH client connection
+    if OK:
+        log.write(f'{xlib.get_separator()}\n')
+        log.write('Connecting the SSH client ...\n')
+        (OK, error_list, ssh_client) = xssh.create_ssh_client_connection(cluster_name)
+        if OK:
+            log.write('The SSH client is connected.\n')
+        else:
+            for error in error_list:
+                log.write(f'{error}\n')
+
+    # create the SSH transport connection
+    if OK:
+        log.write(f'{xlib.get_separator()}\n')
+        log.write('Connecting the SSH transport ...\n')
+        (OK, error_list, ssh_transport) = xssh.create_ssh_transport_connection(cluster_name)
+        if OK:
+            log.write('The SSH transport is connected.\n')
+        else:
+            for error in error_list:
+                log.write(f'{error}\n')
+
+    # create the SFTP client 
+    if OK:
+        log.write(f'{xlib.get_separator()}\n')
+        log.write('Connecting the SFTP client ...\n')
+        sftp_client = xssh.create_sftp_client(ssh_transport)
+        log.write('The SFTP client is connected.\n')
+
+    # warn that the requirements are being verified 
+    if OK:
+        log.write(f'{xlib.get_separator()}\n')
+        log.write('Checking process requirements ...\n')
+
+    # check the master is running
+    if OK:
+        (master_state_code, master_state_name) = xec2.get_node_state(cluster_name)
+        if master_state_code != 16:
+            log.write(f'*** ERROR: The cluster {cluster_name} is not running. Its state is {master_state_code} ({master_state_name}).\n')
+            OK = False
+
+    # check the TOA is installed
+    if OK:
+        command = f'[ -d {xlib.get_cluster_app_dir()}/{xlib.get_toa_name()} ] && echo RC=0 || echo RC=1'
+        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        if stdout[len(stdout) - 1] != 'RC=0':
+            log.write(f'*** ERROR: {xlib.get_toa_name()} is not installed.\n')
+            OK = False
+
+    # warn that the requirements are OK 
+    if OK:
+        log.write('Process requirements are OK.\n')
+
+    # determine the run directory
+    if OK:
+        log.write(f'{xlib.get_separator()}\n')
+        log.write('Determining the run directory ...\n')
+        current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_toa_result_pipeline_dir(), xlib.get_toa_process_merge_annotations_code())
+
+        # create current run directory
+        command = f'mkdir --parents {current_run_dir}'
+        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        if OK:
+            log.write(f'The directory path is {current_run_dir}.\n')
+        else:
+            log.write(f'*** ERROR: Wrong command ---> {command}\n')
+
+    # build the script
+    if OK:
+        log.write(f'{xlib.get_separator()}\n')
+        script = get_annotation_merger_script()
+        log.write(f'Building the process script {script} ...\n')
+        (OK, error_list) = build_annotation_merger_script(cluster_name, current_run_dir)
+        if OK:
+            log.write('The file is built.\n')
+        else:
+            for error in error_list:
+                log.write(f'{error}\n')
+            log.write('*** ERROR: The file could not be built.\n')
+
+    # upload the script to the cluster
+    if OK:
+        log.write(f'{xlib.get_separator()}\n')
+        log.write(f'Uploading the process script {script} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(script)}'
+        (OK, error_list) = xssh.put_file(sftp_client, script, cluster_path)
+        if OK:
+            log.write('The file is uploaded.\n')
+        else:
+            for error in error_list:
+                log.write(f'{error}\n')
+
+    # set run permision to the script in the cluster
+    if OK:
+        log.write(f'{xlib.get_separator()}\n')
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(script)} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(script)}'
+        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        if OK:
+            log.write('The run permision is set.\n')
+        else:
+            log.write(f'*** ERROR: Wrong command ---> {command}\n')
+
+    # build the script starter
+    if OK:
+        log.write(f'{xlib.get_separator()}\n')
+        starter = get_annotation_merger_starter()
+        log.write(f'Building the process starter {starter} ...\n')
+        (OK, error_list) = build_annotation_merger_starter(current_run_dir)
+        if OK:
+            log.write('The file is built.\n')
+        else:
+            for error in error_list:
+                log.write(f'{error}\n')
+
+    # upload the script starter to the cluster
+    if OK:
+        log.write(f'{xlib.get_separator()}\n')
+        log.write(f'Uploading the process starter {starter} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(starter)}'
+        (OK, error_list) = xssh.put_file(sftp_client, starter, cluster_path)
+        if OK:
+            log.write('The file is uploaded.\n')
+        else:
+            for error in error_list:
+                log.write(f'{error}\n')
+
+    # set run permision to the script starter in the cluster
+    if OK:
+        log.write(f'{xlib.get_separator()}\n')
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(starter)} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(starter)}'
+        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        if OK:
+            log.write('The run permision is set.\n')
+        else:
+            log.write(f'*** ERROR: Wrong command ---> {command}\n')
+
+    # submit the script
+    if OK:
+        log.write(f'{xlib.get_separator()}\n')
+        log.write(f'Submitting the process script {current_run_dir}/{os.path.basename(starter)} ...\n')
+        OK = xssh.submit_script(cluster_name, ssh_client, current_run_dir, os.path.basename(starter), log)
+
+    # warn that the log window can be closed
+    if not isinstance(log, xlib.DevStdOut):
+        log.write(f'{xlib.get_separator()}\n')
+        log.write('You can close this window now.\n')
+
+    # execute final function
+    if function is not None:
+        function()
+
+    # return the control variable
+    return OK
+
+#-------------------------------------------------------------------------------
+
+def check_annotation_merger_config_file(strict):
+    '''
+    Check the FastQC config file of a run.
+    '''
+
+    # initialize the control variable and the error list
+    OK = True
+    error_list = []
+
+    # intitialize variable used when value is not found
+    not_found = '***NOTFOUND***'.upper()
+
+    # get the dictionary of TOA configuration
+    toa_config_dict = get_toa_config_dict()
+
+    # get the option dictionary
+    try:
+        annotation_merger_option_dict = xlib.get_option_dict(get_annotation_merger_config_file())
+    except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append('*** ERROR: The option dictionary could not be built from the config file')
+        OK = False
+    else:
+
+        # get the sections list
+        sections_list = []
+        for section in annotation_merger_option_dict.keys():
+            sections_list.append(section)
+        sections_list.sort()
+
+        # check section "identification"
+        if 'identification' not in sections_list:
+            error_list.append('*** ERROR: the section "identification" is not found.')
+            OK = False
+        else:
+
+            # check section "identification" - key "experiment_id"
+            experiment_id = annotation_merger_option_dict.get('identification', {}).get('experiment_id', not_found)
+            if experiment_id == not_found:
+                error_list.append('*** ERROR: the key "experiment_id" is not found in the section "identification".')
+                OK = False
+
+        # check section "annotation merger parameters"
+        if 'annotation merger parameters' not in sections_list:
+            error_list.append('*** ERROR: the section "annotation merger parameters" is not found.')
+            OK = False
+        else:
+
+            # check section "annotation merger parameters" - key "pipeline_dataset_id_1"
+            pipeline_dataset_id_1 = annotation_merger_option_dict.get('annotation merger parameters', {}).get('pipeline_dataset_id_1', not_found)
+            if pipeline_dataset_id_1 == not_found:
+                error_list.append('*** ERROR: the key "pipeline_dataset_id_1" is not found in the section "annotation merger parameters".')
+                OK = False
+
+            # check section "annotation merger parameters" - key "pipeline_dataset_id_2"
+            pipeline_dataset_id_2 = annotation_merger_option_dict.get('annotation merger parameters', {}).get('pipeline_dataset_id_2', not_found)
+            if pipeline_dataset_id_2 == not_found:
+                error_list.append('*** ERROR: the key "pipeline_dataset_id_2" is not found in the section "annotation merger parameters".')
+                OK = False
+
+            # check if pipeline_dataset_id_1 and pipeline_dataset_id_2 are different 
+            if pipeline_dataset_id_1 == pipeline_dataset_id_2:
+                error_list.append('*** ERROR: the "pipeline_dataset_id_1" and "pipeline_dataset_id_2" values hasve to be different.')
+                OK = False
+
+            # check section "annotation merger parameters" - key "merger_operation"
+            merger_operation = annotation_merger_option_dict.get('annotation merger parameters', {}).get('merger_operation', not_found)
+            if merger_operation == not_found:
+                error_list.append('*** ERROR: the key "merger_operation" is not found in the section "annotation merger parameters".')
+                OK = False
+            elif not xlib.check_code(merger_operation, xlib.get_annotation_merger_operation_code_list(), case_sensitive=False):
+                error_list.append(f'*** ERROR: the key "merger_operation" has to be {xlib.get_annotation_merger_operation_code_list_text()}.')
+                OK = False
+
+    # warn that the results config file is not valid if there are any errors
+    if not OK:
+        error_list.append(f'\nThe {xlib.get_toa_process_merge_annotations_name()} config file is not valid. Please, correct this file or recreate it.')
+
+    # return the control variable and the error list
+    return (OK, error_list)
+
+#-------------------------------------------------------------------------------
+
+def build_annotation_merger_script(cluster_name, current_run_dir):
+    '''
+    Build the script to process a annotation merger.
+    '''
+
+    # initialize the control variable and the error list
+    OK = True
+    error_list = []
+
+    # get the dictionary of TOA configuration.
+    toa_config_dict = get_toa_config_dict()
+
+    # get the pipeline option dictionary
+    pipeline_option_dict = xlib.get_option_dict(get_annotation_merger_config_file())
+
+    # get the options
+    pipeline_dataset_id_1 = pipeline_option_dict['annotation merger parameters']['pipeline_dataset_id_1']
+    pipeline_dataset_id_2 = pipeline_option_dict['annotation merger parameters']['pipeline_dataset_id_2']
+    merger_operation = pipeline_option_dict['annotation merger parameters']['merger_operation']
+
+    # write the script
+    if OK:
+        try:
+            if not os.path.exists(os.path.dirname(get_annotation_merger_script())):
+                os.makedirs(os.path.dirname(get_annotation_merger_script()))
+            with open(get_annotation_merger_script(), mode='w', encoding='iso-8859-1', newline='\n') as script_file_id:
+                script_file_id.write( '#!/bin/bash\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( '# output directory\n')
+                script_file_id.write(f'OUTPUT_DIR={current_run_dir}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                with open(get_toa_config_file(), mode='r', encoding='iso-8859-1', newline='\n') as toa_config_file_id:
+                    records = toa_config_file_id.readlines()
+                    for record in records:
+                        script_file_id.write(record)
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write(f'MINICONDA_BIN_DIR={toa_config_dict["MINICONDA3_BIN_DIR"]}\n')
+                script_file_id.write(f'TOA_DIR={toa_config_dict["TOA_DIR"]}\n')
+                script_file_id.write( 'export PATH=$MINICONDA_BIN_DIR:$TOA_DIR:$PATH\n')
+                script_file_id.write( 'SEP="#########################################"\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
+                script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
+                script_file_id.write(f'SCRIPT_STATUS_WRONG={xlib.get_status_wrong(current_run_dir)}\n')
+                script_file_id.write( 'mkdir -p $STATUS_DIR\n')
+                script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
+                script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'mkdir -p $STATS_DIR\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function init\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    INIT_DATETIME=`date +%s`\n')
+                script_file_id.write( '    FORMATTED_INIT_DATETIME=`date "+%Y-%m-%d %H:%M:%S"`\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "Script started at $FORMATTED_INIT_DATETIME."\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function merge_annotation_files\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    cd $OUTPUT_DIR\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "MERGER OF PLANT ANNOTATION FILES"\n')
+                script_file_id.write(f'    ANNOTATION_FILE_1={toa_config_dict["RESULT_DIR"]}/{xlib.get_toa_result_pipeline_dir()}/{pipeline_dataset_id_1}/`basename $PLANT_ANNOTATION_FILE`\n')
+                script_file_id.write( '    ANNOTATION_FILE_1_TMP=$OUTPUT_DIR/pipeline1-`basename $PLANT_ANNOTATION_FILE`.tmp\n')
+                script_file_id.write( '    ANNOTATION_FILE_1_SORTED=$OUTPUT_DIR/pipeline1-`basename $PLANT_ANNOTATION_FILE`.sorted\n')
+                script_file_id.write(f'    ANNOTATION_FILE_2={toa_config_dict["RESULT_DIR"]}/{xlib.get_toa_result_pipeline_dir()}/{pipeline_dataset_id_2}/`basename $PLANT_ANNOTATION_FILE`\n')
+                script_file_id.write( '    ANNOTATION_FILE_2_TMP=$OUTPUT_DIR/pipeline2-`basename $PLANT_ANNOTATION_FILE`.tmp\n')
+                script_file_id.write( '    ANNOTATION_FILE_2_SORTED=$OUTPUT_DIR/pipeline2-`basename $PLANT_ANNOTATION_FILE`.sorted\n')
+                script_file_id.write( '    echo "Deleting the header record of $ANNOTATION_FILE_1 ..."\n')
+                script_file_id.write( '    /usr/bin/time \\\n')
+                script_file_id.write( '        tail -n +2 $ANNOTATION_FILE_1 > $ANNOTATION_FILE_1_TMP\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error tail $RC; fi\n')
+                script_file_id.write( '    echo "Record is deleted."\n')
+                script_file_id.write( '    echo "Sorting data records of $ANNOTATION_FILE_1 ..."\n')
+                script_file_id.write( '    /usr/bin/time \\\n')
+                script_file_id.write( '        sort --field-separator=";" --key=2,5 < $ANNOTATION_FILE_1_TMP > $ANNOTATION_FILE_1_SORTED\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error sort $RC; fi\n')
+                script_file_id.write( '    echo "Records are sorted."\n')
+                script_file_id.write( '    echo "Deleting the header record of $ANNOTATION_FILE_2 ..."\n')
+                script_file_id.write( '    /usr/bin/time \\\n')
+                script_file_id.write( '        tail -n +2 $ANNOTATION_FILE_2 > $ANNOTATION_FILE_2_TMP\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error tail $RC; fi\n')
+                script_file_id.write( '    echo "Record is deleted."\n')
+                script_file_id.write( '    echo "Sorting data records of $ANNOTATION_FILE_2 ..."\n')
+                script_file_id.write( '    /usr/bin/time \\\n')
+                script_file_id.write( '        sort --field-separator=";" --key=2,5 < $ANNOTATION_FILE_2_TMP > $ANNOTATION_FILE_2_SORTED\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error sort $RC; fi\n')
+                script_file_id.write( '    echo "Records are sorted."\n')
+                script_file_id.write( '    echo "Merging annotation files ..."\n')
+                script_file_id.write( '    /usr/bin/time \\\n')
+                script_file_id.write( '        $MINICONDA_BIN_DIR/python3 $TOA_DIR/merge-annotation-files.py \\\n')
+                script_file_id.write( '        --file1=$ANNOTATION_FILE_1_SORTED \\\n')
+                script_file_id.write( '        --type1=MERGER \\\n')
+                script_file_id.write( '        --file2=$ANNOTATION_FILE_2_SORTED \\\n')
+                script_file_id.write( '        --type2=MERGER \\\n')
+                script_file_id.write(f'        --operation={merger_operation} \\\n')
+                script_file_id.write( '        --mfile=$PLANT_ANNOTATION_FILE \\\n')
+                script_file_id.write( '        --header=Y \\\n')
+                script_file_id.write( '        --verbose=N \\\n')
+                script_file_id.write( '        --trace=N\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error merge-annotation-files.py $RC; fi\n')
+                script_file_id.write( '    echo "Files are merged."\n')
+                script_file_id.write( '    echo "Deleting temporal files  ..."\n')
+                script_file_id.write( '    /usr/bin/time \\\n')
+                script_file_id.write( '        rm $ANNOTATION_FILE_1_TMP $ANNOTATION_FILE_2_TMP $ANNOTATION_FILE_1_SORTED $ANNOTATION_FILE_2_SORTED\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error rm $RC; fi\n')
+                script_file_id.write( '    echo "Files are deleted."\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function calculate_annotation_stats\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    cd $OUTPUT_DIR\n')
+                script_file_id.write( '    STEP_STATUS=$STATUS_DIR/calculate_annotation_stats.ok\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "CALCULATE ANNOTATION STATISTICS"\n')
+                script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
+                script_file_id.write( '        echo "This step was previously run."\n')
+                script_file_id.write( '    else\n')
+                script_file_id.write( '        echo "Calculating stats ..."\n')
+                script_file_id.write( '        /usr/bin/time \\\n')
+                script_file_id.write( '            $MINICONDA_BIN_DIR/python3 $TOA_DIR/calculate-annotation-stats.py \\\n')
+                script_file_id.write( '                --db=$TOA_DB \\\n')
+                script_file_id.write( '                --transcriptome=NONE \\\n')
+                script_file_id.write( '                --peptides=NONE \\\n')
+                script_file_id.write( '                --dslist=NONE \\\n')
+                script_file_id.write( '                --nonannlist=NONE \\\n')
+                script_file_id.write( '                --annotation=$PLANT_ANNOTATION_FILE \\\n')
+                script_file_id.write( '                --type=MERGER \\\n')
+                script_file_id.write( '                --stats=$ANNOTATION_STATS_FILE \\\n')
+                script_file_id.write( '                --verbose=N \\\n')
+                script_file_id.write( '                --trace=N\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error calculate-annotation-stats.py $RC; fi\n')
+                script_file_id.write( '        echo "Stats are calculated."\n')
+                script_file_id.write( '        touch $STEP_STATUS\n')
+                script_file_id.write( '    fi\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function end\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
+                script_file_id.write( '    FORMATTED_END_DATETIME=`date "+%Y-%m-%d %H:%M:%S"`\n')
+                script_file_id.write( '    calculate_duration\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "Script ended OK at $FORMATTED_END_DATETIME with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    touch $SCRIPT_STATUS_OK\n')
+                script_file_id.write( '    exit 0\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function manage_error\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
+                script_file_id.write( '    FORMATTED_END_DATETIME=`date "+%Y-%m-%d %H:%M:%S"`\n')
+                script_file_id.write( '    calculate_duration\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "ERROR: $1 returned error $2"\n')
+                script_file_id.write( '    echo "Script ended WRONG at $FORMATTED_END_DATETIME with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    touch $SCRIPT_STATUS_WRONG\n')
+                script_file_id.write( '    exit 3\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function calculate_duration\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    DURATION=`expr $END_DATETIME - $INIT_DATETIME`\n')
+                script_file_id.write( '    HH=`expr $DURATION / 3600`\n')
+                script_file_id.write( '    MM=`expr $DURATION % 3600 / 60`\n')
+                script_file_id.write( '    SS=`expr $DURATION % 60`\n')
+                script_file_id.write( '    FORMATTED_DURATION=`printf "%03d:%02d:%02d\\n" $HH $MM $SS`\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'init\n')
+                script_file_id.write( 'merge_annotation_files\n')
+                script_file_id.write( 'calculate_annotation_stats\n')
+                script_file_id.write( '\n')
+                script_file_id.write( 'end\n')
+        except Exception as e:
+            error_list.append(f'*** EXCEPTION: "{e}".')
+            error_list.append(f'*** ERROR: The file {get_annotation_merger_script()} can not be created.')
+            OK = False
+
+    # return the control variable and the error list
+    return (OK, error_list)
+
+#-------------------------------------------------------------------------------
+
+def build_annotation_merger_starter(current_run_dir):
+    '''
+    Build the starter of the script to process a annotation merger.
+    '''
+
+    # initialize the control variable and the error list
+    OK = True
+    error_list = []
+
+    # write the starter
+    try:
+        if not os.path.exists(os.path.dirname(get_annotation_merger_starter())):
+            os.makedirs(os.path.dirname(get_annotation_merger_starter()))
+        with open(get_annotation_merger_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
+            file_id.write( '#!/bin/bash\n')
+            file_id.write( '#-------------------------------------------------------------------------------\n')
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_annotation_merger_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
+    except Exception as e:
+        error_list.append(f'*** EXCEPTION: "{e}".')
+        error_list.append(f'*** ERROR: The file {get_annotation_merger_starter()} can not be created.')
+        OK = False
+
+    # return the control variable and the error list
+    return (OK, error_list)
+
+#-------------------------------------------------------------------------------
+
+def get_annotation_merger_config_file():
+    '''
+    Get the annotation merger config file path.
+    '''
+
+    # assign the annotation merger config file path
+    annotation_merger_config_file = f'{xlib.get_config_dir()}/{xlib.get_toa_process_merge_annotations_code()}-config.txt'
+
+    # return the annotation merger config file path
+    return annotation_merger_config_file
+
+#-------------------------------------------------------------------------------
+
+def get_annotation_merger_script():
+    '''
+    Get the script path to process a annotation merger.
+    '''
+
+    # assign the script path
+    annotation_merger_script = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_merge_annotations_code()}-process.sh'
+
+    # return the script path
+    return annotation_merger_script
+
+#-------------------------------------------------------------------------------
+
+def get_annotation_merger_starter():
+    '''
+    Get the starter path to process a annotation merger.
+    '''
+
+    # assign the starter path
+    annotation_merger_starter = f'{xlib.get_temp_dir()}/{xlib.get_toa_process_merge_annotations_code()}-process-starter.sh'
+
+    # return the starter path
+    return annotation_merger_starter
+
+#-------------------------------------------------------------------------------
+
 def get_nucleotide_annotation_database_code_list():
     '''
     Get the code list of "nucleotide_annotation_database".
     '''
 
-    return ['gymno_01', 'dicots_04', 'monocots_04', 'refseq_plant', 'nt_viridiplantae', 'nt_complete']
+    return ['gymno_01', 'dicots_04', 'monocots_04', 'refseq_plant', 'nt']
 
 #-------------------------------------------------------------------------------
 
@@ -9622,7 +11156,7 @@ def get_aminoacid_annotation_database_code_list():
     Get the code list of "aminoacid_annotation_database".
     '''
 
-    return ['gymno_01', 'dicots_04', 'monocots_04', 'refseq_plant', 'nr_viridiplantae', 'nr_complete']
+    return ['gymno_01', 'dicots_04', 'monocots_04', 'refseq_plant', 'nr']
 
 #-------------------------------------------------------------------------------
 

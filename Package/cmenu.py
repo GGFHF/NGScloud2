@@ -57,7 +57,7 @@ def build_menu_main():
         print( '    2. De novo RNA-seq')
         print( '    3. Reference-based RNA-seq')
         print( '    4. RAD-seq')
-        print( '    5. Tree-oriented annotation')
+        print( '    5. Taxonomy-oriented annotation')
         print()
         print( '    6. Datasets')
         print( '    7. Logs')
@@ -400,36 +400,37 @@ def build_menu_bioinfo_software_installation():
         print(f'    8. {xlib.get_cutadapt_name()}')
         print(f'    9. {xlib.get_ddradseqtools_name()}')
         print(f'   10. {xlib.get_detonate_name()}')
-        print(f'   11. {xlib.get_entrez_direct_name()}')
-        print(f'   12. {xlib.get_express_name()}')
-        print(f'   13. {xlib.get_fastqc_name()}')
-        print(f'   14. {xlib.get_gmap_gsnap_name()}')
-        print(f'   15. {xlib.get_hisat2_name()}')
-        print(f'   16. {xlib.get_htseq_name()}')
-        print(f'   17. {xlib.get_ipyrad_name()}')
-        print(f'   18. {xlib.get_kallisto_name()}')
-        print(f'   19. {xlib.get_ngshelper_name()}')
-        print(f'   20. {xlib.get_quast_name()}')
-        print(f'   21. {xlib.get_raddesigner_name()}')
-        print(f'   22. {xlib.get_rnaquast_name()}')
-        print(f'   23. {xlib.get_rsem_name()}')
-        print(f'   24. {xlib.get_samtools_name()}')
-        print(f'   25. {xlib.get_soapdenovo2_name()}')
-        print(f'   26. {xlib.get_soapdenovotrans_name()}')
-        print(f'   27. {xlib.get_star_name()}')
-        print(f'   28. {xlib.get_starcode_name()}')
-        print(f'   29. {xlib.get_toa_name()}')
-        print(f'   30. {xlib.get_tophat_name()}')
-        print(f'   31. {xlib.get_transabyss_name()}')
-        print(f'   32. {xlib.get_transdecoder_name()}')
-        print(f'   33. {xlib.get_transrate_name()}')
-        print(f'   34. {xlib.get_trimmomatic_name()}')
-        print(f'   35. {xlib.get_trinity_name()}')
-        print(f'   36. {xlib.get_vcftools_name()}')
-        print(f'   37. {xlib.get_vcftools_perl_libraries_name()}')
-        print(f'   38. {xlib.get_vsearch_name()}')
+        print(f'   11. {xlib.get_diamond_name()}')
+        print(f'   12. {xlib.get_entrez_direct_name()}')
+        print(f'   13. {xlib.get_express_name()}')
+        print(f'   14. {xlib.get_fastqc_name()}')
+        print(f'   15. {xlib.get_gmap_gsnap_name()}')
+        print(f'   16. {xlib.get_hisat2_name()}')
+        print(f'   17. {xlib.get_htseq_name()}')
+        print(f'   18. {xlib.get_ipyrad_name()}')
+        print(f'   19. {xlib.get_kallisto_name()}')
+        print(f'   20. {xlib.get_ngshelper_name()}')
+        print(f'   21. {xlib.get_quast_name()}')
+        print(f'   22. {xlib.get_raddesigner_name()}')
+        print(f'   23. {xlib.get_rnaquast_name()}')
+        print(f'   24. {xlib.get_rsem_name()}')
+        print(f'   25. {xlib.get_samtools_name()}')
+        print(f'   26. {xlib.get_soapdenovo2_name()}')
+        print(f'   27. {xlib.get_soapdenovotrans_name()}')
+        print(f'   28. {xlib.get_star_name()}')
+        print(f'   29. {xlib.get_starcode_name()}')
+        print(f'   30. {xlib.get_toa_name()}')
+        print(f'   31. {xlib.get_tophat_name()}')
+        print(f'   32. {xlib.get_transabyss_name()}')
+        print(f'   33. {xlib.get_transdecoder_name()}')
+        print(f'   34. {xlib.get_transrate_name()}')
+        print(f'   35. {xlib.get_trimmomatic_name()}')
+        print(f'   36. {xlib.get_trinity_name()}')
+        print(f'   37. {xlib.get_vcftools_name()}')
+        print(f'   38. {xlib.get_vcftools_perl_libraries_name()}')
+        print(f'   39. {xlib.get_vsearch_name()}')
         print()
-        print(f'   39. {xlib.get_r_name()} & analysis packages')
+        print(f'   40. {xlib.get_r_name()} & analysis packages')
         print()
         print( '    X. Return to menu Cloud Control')
         print()
@@ -461,62 +462,64 @@ def build_menu_bioinfo_software_installation():
         elif option == '10':
             cbioinfoapp.form_installation_bioinfo_app(xlib.get_detonate_code())
         elif option == '11':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_entrez_direct_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_diamond_code())
         elif option == '12':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_express_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_entrez_direct_code())
         elif option == '13':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_fastqc_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_express_code())
         elif option == '14':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_gmap_gsnap_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_fastqc_code())
         elif option == '15':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_hisat2_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_gmap_gsnap_code())
         elif option == '16':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_htseq_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_hisat2_code())
         elif option == '17':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_ipyrad_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_htseq_code())
         elif option == '18':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_kallisto_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_ipyrad_code())
         elif option == '19':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_ngshelper_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_kallisto_code())
         elif option == '20':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_quast_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_ngshelper_code())
         elif option == '21':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_raddesigner_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_quast_code())
         elif option == '22':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_rnaquast_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_raddesigner_code())
         elif option == '23':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_rsem_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_rnaquast_code())
         elif option == '24':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_samtools_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_rsem_code())
         elif option == '25':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_soapdenovo2_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_samtools_code())
         elif option == '26':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_soapdenovotrans_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_soapdenovo2_code())
         elif option == '27':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_star_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_soapdenovotrans_code())
         elif option == '28':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_starcode_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_star_code())
         elif option == '29':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_toa_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_starcode_code())
         elif option == '30':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_tophat_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_toa_code())
         elif option == '31':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_transabyss_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_tophat_code())
         elif option == '32':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_transdecoder_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_transabyss_code())
         elif option == '33':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_transrate_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_transdecoder_code())
         elif option == '34':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_trimmomatic_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_transrate_code())
         elif option == '35':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_trinity_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_trimmomatic_code())
         elif option == '36':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_vcftools_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_trinity_code())
         elif option == '37':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_vcftools_perl_libraries_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_vcftools_code())
         elif option == '38':
-            cbioinfoapp.form_installation_bioinfo_app(xlib.get_vsearch_code())
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_vcftools_perl_libraries_code())
         elif option == '39':
+            cbioinfoapp.form_installation_bioinfo_app(xlib.get_vsearch_code())
+        elif option == '40':
              cbioinfoapp.form_installation_bioinfo_app(xlib.get_r_code())
         elif option == 'X':
             break
@@ -3141,7 +3144,7 @@ def build_menu_toa():
 
         # print headers
         clib.clear_screen()
-        clib.print_headers_with_environment('Tree-oriented Annotation')
+        clib.print_headers_with_environment('Taxonomy-oriented Annotation')
 
         # print the menu options
         print( 'Options:')
@@ -3194,7 +3197,7 @@ def build_menu_toa_configuration():
         print(f'    3. Recreate {xlib.get_toa_name()} database')
         # -- print(f'    4. Rebuild {xlib.get_toa_name()} database')
         print()
-        print( '    X. Return to menu Tree-oriented Annotation')
+        print( '    X. Return to menu Taxonomy-oriented Annotation')
         print()
 
         # get the selected option
@@ -3235,17 +3238,18 @@ def build_menu_toa_databases():
         print(f'    4. {xlib.get_toa_data_monocots_04_name()}')
         print()
         print(f'    5. {xlib.get_toa_data_refseq_plant_name()}')
+        # -- print(f'    X. {xlib.get_toa_data_taxonomy_name()}')
         print(f'    6. {xlib.get_toa_data_nt_name()}')
-        print(f'    7. {xlib.get_toa_data_viridiplantae_nucleotide_gi_name()}')
-        print(f'    8. {xlib.get_toa_data_nr_name()}')
-        print(f'    9. {xlib.get_toa_data_viridiplantae_protein_gi_name()}')
-        print(f'    A. {xlib.get_toa_data_gene_name()}')
+        # -- print(f'    X. {xlib.get_toa_data_viridiplantae_nucleotide_gi_name()}')
+        print(f'    7. {xlib.get_toa_data_nr_name()}')
+        # -- print(f'    X. {xlib.get_toa_data_viridiplantae_protein_gi_name()}')
+        print(f'    8. {xlib.get_toa_data_gene_name()}')
         print()
-        print(f'    B. {xlib.get_toa_data_interpro_name()}')
+        print(f'    9. {xlib.get_toa_data_interpro_name()}')
         print()
-        print(f'    C. {xlib.get_toa_data_go_name()}')
+        print(f'    A. {xlib.get_toa_data_go_name()}')
         print()
-        print( '    X. Return to menu Tree-oriented Annotation')
+        print( '    X. Return to menu Taxonomy-oriented Annotation')
         print()
 
         # get the selected option
@@ -3262,19 +3266,21 @@ def build_menu_toa_databases():
             build_menu_toa_monocots_04()
         elif option == '5':
             build_menu_toa_refseq_plant()
+        # -- elif option == 'X':
+        # --     build_menu_toa_taxonomy()
         elif option == '6':
             build_menu_toa_nt()
+        # -- elif option == 'X':
+        # --     build_menu_toa_nucleotide_gi()
         elif option == '7':
-            build_menu_toa_nucleotide_gi()
-        elif option == '8':
             build_menu_toa_nr()
-        elif option == '9':
-            build_menu_toa_protein_gi()
-        elif option == 'A':
+        # -- elif option == 'X':
+        # --     build_menu_toa_protein_gi()
+        elif option == '8':
             build_menu_toa_gene()
-        elif option == 'B':
+        elif option == '9':
             build_menu_toa_interpro()
-        elif option == 'C':
+        elif option == 'A':
             build_menu_toa_go()
         elif option == 'X':
             break
@@ -3470,6 +3476,36 @@ def build_menu_toa_refseq_plant():
 
 #-------------------------------------------------------------------------------
 
+def build_menu_toa_taxonomy():
+    '''
+    Build the menu NCBI Taxonomy.
+    '''
+
+    while True:
+
+        # print headers
+        clib.clear_screen()
+        clib.print_headers_with_environment(xlib.get_toa_data_taxonomy_name())
+
+        # print the menu options
+        print( 'Options:')
+        print()
+        print( '    1. Download taxonomy data from NCBI server')
+        print()
+        print( '    X. Return to menu Genomic databases')
+        print()
+
+        # get the selected option
+        option = input('Input the selected option: ').upper()
+
+        # process the selected option
+        if option == '1':
+            ctoa.form_manage_genomic_database(xlib.get_toa_type_download_data(), xlib.get_toa_data_taxonomy_code())
+        elif option == 'X':
+            break
+
+#-------------------------------------------------------------------------------
+
 def build_menu_toa_nt():
     '''
     Build the menu NCBI BLAST database NT.
@@ -3484,7 +3520,7 @@ def build_menu_toa_nt():
         # print the menu options
         print( 'Options:')
         print()
-        print( '    1. Build BLAST database')
+        print( '    1. Build database for BLAST+')
         print()
         print( '    X. Return to menu Genomic databases')
         print()
@@ -3494,7 +3530,7 @@ def build_menu_toa_nt():
 
         # process the selected option
         if option == '1':
-            ctoa.form_manage_genomic_database(xlib.get_toa_type_build_blastdb(), xlib.get_toa_data_nt_code())
+            ctoa.form_manage_genomic_database(xlib.get_toa_type_build_blastplus_db(), xlib.get_toa_data_nt_code())
         elif option == 'X':
             break
 
@@ -3544,7 +3580,8 @@ def build_menu_toa_nr():
         # print the menu options
         print( 'Options:')
         print()
-        print( '    1. Build BLAST database')
+        print( '    1. Build database for BLAST+')
+        print( '    2. Build database for DIAMOND')
         print()
         print( '    X. Return to menu Genomic databases')
         print()
@@ -3554,7 +3591,9 @@ def build_menu_toa_nr():
 
         # process the selected option
         if option == '1':
-            ctoa.form_manage_genomic_database(xlib.get_toa_type_build_blastdb(), xlib.get_toa_data_nr_code())
+            ctoa.form_manage_genomic_database(xlib.get_toa_type_build_blastplus_db(), xlib.get_toa_data_nr_code())
+        elif option == '2':
+            ctoa.form_manage_genomic_database(xlib.get_toa_type_build_diamond_db(), xlib.get_toa_data_nr_code())
         elif option == 'X':
             break
 
@@ -3706,7 +3745,9 @@ def build_menu_toa_pipelines():
         print(f'    1. {xlib.get_toa_name()} {xlib.get_toa_process_pipeline_nucleotide_name()}')
         print(f'    2. {xlib.get_toa_name()} {xlib.get_toa_process_pipeline_aminoacid_name()}')
         print()
-        print( '    X. Return to menu Tree-oriented Annotation')
+        print(f'    3. Annotation merger of {xlib.get_toa_name()} pipelines')
+        print()
+        print( '    X. Return to menu Taxonomy-oriented Annotation')
         print()
 
         # get the selected option
@@ -3717,6 +3758,8 @@ def build_menu_toa_pipelines():
             build_menu_toa_nucleotide_pipeline()
         elif option == '2':
             build_menu_toa_aminoacid_pipeline()
+        elif option == '3':
+            build_menu_toa_annotation_merger()
         elif option == 'X':
             break
 
@@ -3802,6 +3845,43 @@ def build_menu_toa_aminoacid_pipeline():
 
 #-------------------------------------------------------------------------------
 
+def build_menu_toa_annotation_merger():
+    '''
+    Build the menu annotation merger of TOA pipelines.
+    '''
+
+    while True:
+
+        # print headers
+        clib.clear_screen()
+        clib.print_headers_with_environment(f'Annotation merger of {xlib.get_toa_name()} pipelines')
+
+        # print the menu options
+        print( 'Options:')
+        print()
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
+        print()
+        print( '    3. Run process')
+        print()
+        print(f'    X. Return to menu {xlib.get_toa_name()} pipelines')
+        print()
+
+        # get the selected option
+        option = input('Input the selected option: ').upper()
+
+        # process the selected option
+        if option == '1':
+            ctoa.form_recreate_annotation_merger_config_file()
+        elif option == '2':
+            ctoa.form_edit_pipeline_config_file(xlib.get_toa_process_merge_annotations_code())
+        elif option == '3':
+            ctoa.form_run_pipeline_process(xlib.get_toa_process_merge_annotations_code())
+        elif option == 'X':
+            break
+
+#-------------------------------------------------------------------------------
+
 def build_menu_toa_stats():
     '''
     Build the menu Statistics.
@@ -3831,7 +3911,7 @@ def build_menu_toa_stats():
         print( '    A. MapMan')
         print( '    B. MetaCyc')
         print()
-        print( '    X. Return to menu Tree-oriented Annotation')
+        print( '    X. Return to menu Taxonomy-oriented Annotation')
         print()
 
         # get the selected option

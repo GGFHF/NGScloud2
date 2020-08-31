@@ -698,7 +698,7 @@ def input_reference_dataset_id(ssh_client, allowed_none, help):
     # print the reference identifications in the clusters
     if OK and help:
         if reference_dataset_id_list != []:
-            reference_dataset_id_list_text = str().strip('[]').replace('\'','')
+            reference_dataset_id_list_text = str(reference_dataset_id_list).strip('[]').replace('\'','')
             print(f'Reference dataset ids existing in the cluster: {reference_dataset_id_list_text} ...')
         else:
             OK = False
@@ -1193,7 +1193,10 @@ def input_result_dataset_id(ssh_client, experiment_id, type, app_list, status, h
                 for app in app_list:
                     if app == xlib.get_all_applications_selected_code() or line.startswith(app):
                         result_dataset_id_list.append(line.rstrip('\n'))
+                      
                         break
+            if result_dataset_id_list != []:
+                result_dataset_id_list.sort()
 
     # print the result dataset identifications in the clusters
     if OK and help:
@@ -1246,6 +1249,8 @@ def input_result_dataset_id_list(ssh_client, experiment_id, type, app_list, stat
                     if app == xlib.get_all_applications_selected_code() or line.startswith(app):
                         all_result_dataset_id_list.append(line.rstrip('\n'))
                         break
+            if result_dataset_id_list != []:
+                result_dataset_id_list.sort()
 
     # print the result dataset identifications in the clusters
     if OK and help:

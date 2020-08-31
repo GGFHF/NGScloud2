@@ -28,6 +28,7 @@ import os
 import shutil
 import sys
 
+import xlib
 
 #-------------------------------------------------------------------------------
 
@@ -132,18 +133,20 @@ def main(argv):
     # --             sys.exit(1)
 
     # remove the subdirectory __pycache__
-    try:
-        shutil.rmtree('__pycache__')
-    except:
-        pass
+    # -- try:
+    # --     shutil.rmtree('__pycache__')
+    # -- except:
+    # --     pass
 
     # start the user interface depending on the mode
     import ccloud
     import cmenu
     import gmain
     if args.mode == 'gui' or args.mode is None:
+        print(f'Starting {xlib.get_project_name()} v{xlib.get_project_version()}...')
         main = gmain.Main()
-        main.mainloop()
+        print('Please, press [Ctrl] to continue ...')
+        main.root.mainloop()
     else:
         ccloud.form_set_environment()
         cmenu.build_menu_main()

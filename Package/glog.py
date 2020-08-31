@@ -50,21 +50,22 @@ class FormViewClusterStartLog(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormViewClusterStartLog" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Logs - View the cluster start log'
@@ -87,8 +88,8 @@ class FormViewClusterStartLog(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -109,7 +110,7 @@ class FormViewClusterStartLog(tkinter.Frame):
         self.combobox_cluster_name.grid(row=0, column=1, padx=(5,5), pady=(75,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(42+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*65)
         self.label_fit.grid(row=1, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -122,6 +123,7 @@ class FormViewClusterStartLog(tkinter.Frame):
 
         # link a handler to events
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -167,8 +169,8 @@ class FormViewClusterStartLog(tkinter.Frame):
         '''
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # check if the cluster name selected is different to the previous cluster name
         if self.wrapper_cluster_name.get() != self.cluster_name_ant:
@@ -190,8 +192,8 @@ class FormViewClusterStartLog(tkinter.Frame):
             self.cluster_name_ant = self.wrapper_cluster_name.get()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -214,14 +216,18 @@ class FormViewClusterStartLog(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the list the result logs in the cluster.
         '''
 
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
+
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # check inputs
         OK = self.check_inputs()
@@ -230,8 +236,8 @@ class FormViewClusterStartLog(tkinter.Frame):
             tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
         # get the log file name and build cluster path
         cluster_file_path = f'/home/ubuntu/{os.path.basename(xinstance.get_infrastructure_software_installation_log())}'
@@ -269,21 +275,22 @@ class FormViewSubmissionLogs(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormViewSubmissionLogs" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Logs - View submission logs in the local computer'
@@ -302,8 +309,8 @@ class FormViewSubmissionLogs(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -324,7 +331,7 @@ class FormViewSubmissionLogs(tkinter.Frame):
         self.combobox_local_process_text.grid(row=0, column=1, padx=(5,5), pady=(75,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(35+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*45)
         self.label_fit.grid(row=2, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -337,6 +344,7 @@ class FormViewSubmissionLogs(tkinter.Frame):
 
         # link a handler to events
         self.combobox_local_process_text.bind('<<ComboboxSelected>>', self.combobox_local_process_text_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -406,10 +414,14 @@ class FormViewSubmissionLogs(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the list the submission logs in the local host.
         '''
+
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
 
         # check inputs
         OK = self.check_inputs()
@@ -498,21 +510,22 @@ class FormViewResultLogs(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, parent, main):
+    def __init__(self, main):
         '''
         Execute actions correspending to the creation of a "FormViewResultLogs" instance.
         '''
 
         # save initial parameters in instance variables
-        self.parent = parent
         self.main = main
+        self.root = main.root
+        self.container = main.container
 
         # call the init method of the parent class
-        tkinter.Frame.__init__(self, self.parent)
+        tkinter.Frame.__init__(self, self.container)
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # assign the text of the "head"
         self.head = 'Logs - View result logs in the cluster'
@@ -537,8 +550,8 @@ class FormViewResultLogs(tkinter.Frame):
         self.initialize_inputs()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -567,7 +580,7 @@ class FormViewResultLogs(tkinter.Frame):
         self.combobox_experiment_id.grid(row=1, column=1, padx=(5,5), pady=(45,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(42+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*55)
         self.label_fit.grid(row=2, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
@@ -581,6 +594,7 @@ class FormViewResultLogs(tkinter.Frame):
         # link a handler to events
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
         self.combobox_experiment_id.bind('<<ComboboxSelected>>', self.combobox_experiment_id_selected_item)
+        self.root.bind('<Return>', self.execute)
 
     #---------------
 
@@ -657,8 +671,8 @@ class FormViewResultLogs(tkinter.Frame):
         '''
 
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # check if the cluster name selected is different to the previous cluster name
         if self.wrapper_cluster_name.get() != self.cluster_name_ant:
@@ -683,8 +697,8 @@ class FormViewResultLogs(tkinter.Frame):
         self.populate_combobox_experiment_id()
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
     #---------------
 
@@ -716,14 +730,18 @@ class FormViewResultLogs(tkinter.Frame):
 
     #---------------
 
-    def execute(self):
+    def execute(self, event=None):
         '''
         Execute the list the result logs in the cluster.
         '''
 
+        # if "button_execute" is disabled, exit function
+        if str(self.button_execute['state']) == 'disabled':
+            return
+
         # set cursor to show busy status
-        self.main.config(cursor='watch')
-        self.main.update()
+        self.root.config(cursor='watch')
+        self.root.update()
 
         # check inputs
         OK = self.check_inputs()
@@ -796,6 +814,9 @@ class FormViewResultLogs(tkinter.Frame):
 
                         elif result_dataset_id.startswith(xlib.get_detonate_code()+'-'):
                             bioinfo_app_name = xlib.get_detonate_name()
+
+                        elif result_dataset_id.startswith(xlib.get_diamond_code()+'-'):
+                            bioinfo_app_name = xlib.get_diamond_name()
 
                         elif result_dataset_id.startswith(xlib.get_emboss_code()+'-'):
                             bioinfo_app_name = xlib.get_emboss_name()
@@ -890,12 +911,6 @@ class FormViewResultLogs(tkinter.Frame):
                         elif result_dataset_id.startswith(xlib.get_toa_code()+'-'):
                             bioinfo_app_name = xlib.get_toa_name()
 
-                        elif result_dataset_id.startswith(xlib.get_toa_process_blastdb_nr_code()+'-'):
-                            bioinfo_app_name = xlib.get_toa_process_blastdb_nr_name()
-
-                        elif result_dataset_id.startswith(xlib.get_toa_process_blastdb_nt_code()+'-'):
-                            bioinfo_app_name = xlib.get_toa_process_blastdb_nt_name()
-
                         elif result_dataset_id.startswith(xlib.get_toa_process_download_basic_data_code()+'-'):
                             bioinfo_app_name = xlib.get_toa_process_download_basic_data_name()
 
@@ -916,6 +931,9 @@ class FormViewResultLogs(tkinter.Frame):
 
                         elif result_dataset_id.startswith(xlib.get_toa_process_download_monocots_04_code()+'-'):
                             bioinfo_app_name = xlib.get_toa_process_download_monocots_04_name()
+
+                        elif result_dataset_id.startswith(xlib.get_toa_process_download_taxonomy_code()+'-'):
+                            bioinfo_app_name = xlib.get_toa_process_download_taxonomy_name()
 
                         elif result_dataset_id.startswith(xlib.get_toa_process_gilist_viridiplantae_nucleotide_gi_code()+'-'):
                             bioinfo_app_name = xlib.get_toa_process_gilist_viridiplantae_nucleotide_gi_name()
@@ -943,6 +961,18 @@ class FormViewResultLogs(tkinter.Frame):
 
                         elif result_dataset_id.startswith(xlib.get_toa_process_load_monocots_04_code()+'-'):
                             bioinfo_app_name = xlib.get_toa_process_load_monocots_04_name()
+
+                        elif result_dataset_id.startswith(xlib.get_toa_process_merge_annotations_code()+'-'):
+                            bioinfo_app_name = xlib.get_toa_process_merge_annotations_name()
+
+                        elif result_dataset_id.startswith(xlib.get_toa_process_nr_blastplus_db_code()+'-'):
+                            bioinfo_app_name = xlib.get_toa_process_nr_blastplus_db_name()
+
+                        elif result_dataset_id.startswith(xlib.get_toa_process_nr_diamond_db_code()+'-'):
+                            bioinfo_app_name = xlib.get_toa_process_nr_diamond_db_name()
+
+                        elif result_dataset_id.startswith(xlib.get_toa_process_nt_blastplus_db_code()+'-'):
+                            bioinfo_app_name = xlib.get_toa_process_nt_blastplus_db_name()
 
                         elif result_dataset_id.startswith(xlib.get_toa_process_pipeline_aminoacid_code()+'-'):
                             bioinfo_app_name = xlib.get_toa_process_pipeline_aminoacid_name()
@@ -1039,20 +1069,20 @@ class FormViewResultLogs(tkinter.Frame):
         # build the data dictionary
         if OK:
             data_dict = {}
-            data_dict['experiment_id']= {'text': 'Experiment id. / Process', 'width': 180, 'alignment': 'left'}
+            data_dict['experiment_id']= {'text': 'Experiment id. / Process', 'width': 190, 'alignment': 'left'}
             data_dict['bioinfo_app'] = {'text': 'Bioinfo app / Utility', 'width': 340, 'alignment': 'left'}
             data_dict['result_dataset_id'] = {'text': 'Result dataset', 'width': 225, 'alignment': 'left'}
             data_dict['date'] = {'text': 'Date', 'width': 85, 'alignment': 'right'}
-            data_dict['time'] = {'text': 'Time', 'width': 55, 'alignment': 'right'}
+            data_dict['time'] = {'text': 'Time', 'width': 70, 'alignment': 'right'}
             data_dict['status'] = {'text': 'Status', 'width': 90, 'alignment': 'left'}
 
         # set cursor to show normal status
-        self.main.config(cursor='')
-        self.main.update()
+        self.root.config(cursor='')
+        self.root.update()
 
         # create the dialog Table to show the nodes running
         if OK:
-            dialog_table = gdialogs.DialogTable(self, 'Experiment runs in {0}/{1}'.format(xlib.get_cluster_result_dir(), self.wrapper_experiment_id.get()), 400, 1000, data_list, data_dict, result_dataset_dict, sorted(result_dataset_dict.keys()), 'view_result_logs', [self.wrapper_cluster_name.get()])
+            dialog_table = gdialogs.DialogTable(self, 'Experiment runs in {0}/{1}'.format(xlib.get_cluster_result_dir(), self.wrapper_experiment_id.get()), 400, 1020, data_list, data_dict, result_dataset_dict, sorted(result_dataset_dict.keys()), 'view_result_logs', [self.wrapper_cluster_name.get()])
             self.wait_window(dialog_table)
 
         # close the form

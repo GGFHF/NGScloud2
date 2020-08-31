@@ -1,4 +1,12 @@
-CURRENT VERSION: 2.07
+CURRENT VERSION: 2.08
+
+********************************************************************************
+
+Changes in v2.8 (August 2020)
+
+* Adaptation of the TOA workflow to version x of TOA.
+
+* Some GUI improvements.
 
 ********************************************************************************
 

@@ -300,6 +300,9 @@ def form_list_cluster_experiment_processes():
                 elif result_dataset_id.startswith(xlib.get_detonate_code()+'-'):
                     bioinfo_app_name = xlib.get_detonate_name()
 
+                elif result_dataset_id.startswith(xlib.get_diamond_code()+'-'):
+                    bioinfo_app_name = xlib.get_diamond_name()
+
                 elif result_dataset_id.startswith(xlib.get_emboss_code()+'-'):
                     bioinfo_app_name = xlib.get_emboss_name()
 
@@ -393,12 +396,6 @@ def form_list_cluster_experiment_processes():
                 elif result_dataset_id.startswith(xlib.get_toa_code()+'-'):
                     bioinfo_app_name = xlib.get_toa_name()
 
-                elif result_dataset_id.startswith(xlib.get_toa_process_blastdb_nr_code()+'-'):
-                    bioinfo_app_name = xlib.get_toa_process_blastdb_nr_name()
-
-                elif result_dataset_id.startswith(xlib.get_toa_process_blastdb_nt_code()+'-'):
-                    bioinfo_app_name = xlib.get_toa_process_blastdb_nt_name()
-
                 elif result_dataset_id.startswith(xlib.get_toa_process_download_basic_data_code()+'-'):
                     bioinfo_app_name = xlib.get_toa_process_download_basic_data_name()
 
@@ -419,6 +416,9 @@ def form_list_cluster_experiment_processes():
 
                 elif result_dataset_id.startswith(xlib.get_toa_process_download_monocots_04_code()+'-'):
                     bioinfo_app_name = xlib.get_toa_process_download_monocots_04_name()
+
+                elif result_dataset_id.startswith(xlib.get_toa_process_download_taxonomy_code()+'-'):
+                    bioinfo_app_name = xlib.get_toa_process_download_taxonomy_name()
 
                 elif result_dataset_id.startswith(xlib.get_toa_process_gilist_viridiplantae_nucleotide_gi_code()+'-'):
                     bioinfo_app_name = xlib.get_toa_process_gilist_viridiplantae_nucleotide_gi_name()
@@ -446,6 +446,18 @@ def form_list_cluster_experiment_processes():
 
                 elif result_dataset_id.startswith(xlib.get_toa_process_load_monocots_04_code()+'-'):
                     bioinfo_app_name = xlib.get_toa_process_load_monocots_04_name()
+
+                elif result_dataset_id.startswith(xlib.get_toa_process_merge_annotations_code()+'-'):
+                    bioinfo_app_name = xlib.get_toa_process_merge_annotations_name()
+
+                elif result_dataset_id.startswith(xlib.get_toa_process_nr_blastplus_db_code()+'-'):
+                    bioinfo_app_name = xlib.get_toa_process_nr_blastplus_db_name()
+
+                elif result_dataset_id.startswith(xlib.get_toa_process_nr_diamond_db_code()+'-'):
+                    bioinfo_app_name = xlib.get_toa_process_nr_diamond_db_name()
+
+                elif result_dataset_id.startswith(xlib.get_toa_process_nt_blastplus_db_code()+'-'):
+                    bioinfo_app_name = xlib.get_toa_process_nt_blastplus_db_name()
 
                 elif result_dataset_id.startswith(xlib.get_toa_process_pipeline_aminoacid_code()+'-'):
                     bioinfo_app_name = xlib.get_toa_process_pipeline_aminoacid_name()

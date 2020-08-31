@@ -773,7 +773,7 @@ class DialogLog(tkinter.Toplevel):
         self.button_close.pack(side='left', padx=2, pady=5)
 
         # create "text" and register it with the grid geometry manager
-        self.text = tkinter.Text(self, wrap='none', state='disabled')
+        self.text = tkinter.Text(self, font='Courier 10', wrap='none', state='disabled')
         self.text.pack(expand=True, fill='both')
 
         # create "scrollbar_x" and register it with the pack geometry manager
@@ -941,7 +941,7 @@ class DialogViewer(tkinter.Toplevel):
         self.button_refresh.pack(side='left', padx=2, pady=5)
 
         # create "text" and register it with the grid geometry manager
-        self.text = tkinter.Text(self, wrap='none', state='disabled')
+        self.text = tkinter.Text(self, font='Courier 10', wrap='none', state='disabled')
         self.text.pack(expand='yes', fill='both')
 
         # create "scrollbar_x" and register it with the pack geometry manager
@@ -1189,7 +1189,7 @@ class DialogEditor(tkinter.Toplevel):
         self.button_paste.pack(side='left', padx=2, pady=5)
 
         # create "text" and register it with the grid geometry manager
-        self.text = tkinter.Text(self, wrap='none', undo=True)
+        self.text = tkinter.Text(self, font='Courier 10', wrap='none', undo=True)
         self.text.pack(expand='yes', fill='both')
 
         # create "scrollbar_x" and register it with the pack geometry manager
@@ -1348,7 +1348,6 @@ class DialogAbout(tkinter.Toplevel):
 
     #---------------
 
-
     if sys.platform.startswith('linux'):
         WINDOW_HEIGHT = 310
         WINDOW_WIDTH = 670
@@ -1416,7 +1415,7 @@ class DialogAbout(tkinter.Toplevel):
 
         # create "canvas_photoimage_app" and register it with the grid geometry manager
         self.canvas_photoimage_app = tkinter.Canvas(self)
-        self.canvas_photoimage_app.create_image(128/2, 128/2, image=self.parent.photoimage_app)
+        self.canvas_photoimage_app.create_image(128/2, 128/2, image=self.photoimage_app)
         self.canvas_photoimage_app.config(width=128, height=128)
         self.canvas_photoimage_app.grid(row=1, column=0, rowspan=6, padx=(5,5), pady=(40,5), sticky='nsew')
 
@@ -1445,7 +1444,7 @@ class DialogAbout(tkinter.Toplevel):
         self.label_www2.grid(row=6, column=1, padx=(5,5), pady=(5,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
-        self.label_fit = tkinter.Label(self, text=' '*(0+xlib.get_os_size_fix()))
+        self.label_fit = tkinter.Label(self, text=' '*0)
         self.label_fit.grid(row=7, column=2, padx=(0,0), pady=(20,5), sticky='e')
 
         # create "label_separator" and register it with the grid geometry manager
