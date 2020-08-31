@@ -4,7 +4,7 @@ CURRENT VERSION: 2.08
 
 Changes in v2.8 (August 2020)
 
-* Adaptation of the TOA workflow to version x of TOA.
+* Adaptation of the TOA (Taxonomy-oriented Annotation) workflow to version 0.64 of TOA.
 
 * Some GUI improvements.
 
