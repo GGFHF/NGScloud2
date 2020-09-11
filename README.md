@@ -11,7 +11,7 @@ so it can run in EC2. NScloud2 also has technical improvements as the usage of s
 (they can lead to significant cost savings) or the last instances types (M5, C5 and R5).
 
 Refer to the NGScloud2-manual.pdf in the "Package" folder for installation instructions, a description of
-the software and examples of use (https://github.com/GGFHF/NGScloud/blob/master/Package/NGScloud2-manual.pdf).
+the software and examples of use (https://github.com/GGFHF/NGScloud2/blob/master/Package/NGScloud2-manual.pdf).
 Also, you can see the paper:
 
 Mora-Márquez F, Vázquez-Poletti JL, López de Heredia U (2018).
