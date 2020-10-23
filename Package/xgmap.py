@@ -820,7 +820,7 @@ def create_gsnap_config_file(experiment_id='exp001', reference_dataset_id='NONE'
     OK = True
     error_list = []
 
-    # set the app
+    # set the assembly software
     if assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()):
         assembly_software = xlib.get_soapdenovotrans_code()
     elif assembly_dataset_id.startswith(xlib.get_transabyss_code()):
@@ -833,6 +833,10 @@ def create_gsnap_config_file(experiment_id='exp001', reference_dataset_id='NONE'
         assembly_software = xlib.get_cd_hit_est_code()
     elif assembly_dataset_id.startswith(xlib.get_transcript_filter_code()):
         assembly_software = xlib.get_transcript_filter_code()
+    elif assembly_dataset_id.startswith(xlib.get_soapdenovo2_code()):
+        assembly_software = xlib.get_soapdenovo2_code()
+    elif assembly_dataset_id.startswith(xlib.get_starcode_code()):
+        assembly_software = xlib.get_starcode_code()
     elif assembly_dataset_id.upper() == 'NONE':
         assembly_software = 'NONE'
 
@@ -863,7 +867,7 @@ def create_gsnap_config_file(experiment_id='exp001', reference_dataset_id='NONE'
             file_id.write( '{0:<50} {1}\n'.format(f'experiment_id = {experiment_id}', '# experiment identification'))
             file_id.write( '{0:<50} {1}\n'.format(f'reference_dataset_id = {reference_dataset_id}', '# reference dataset identification or NONE if an assembly is used'))
             file_id.write( '{0:<50} {1}\n'.format(f'reference_file = {reference_file}', '# reference file name or NONE if an assembly is used'))
-            file_id.write( '{0:<50} {1}\n'.format(f'assembly_software = {assembly_software}', f'# assembly software: {get_assembly_software_code_list_text()}; or NONE if a reference is used'))
+            file_id.write( '{0:<50} {1}\n'.format(f'assembly_software = {assembly_software}', f'# assembly software: {get_extended_assembly_software_code_list_text()}; or NONE if a reference is used'))
             file_id.write( '{0:<50} {1}\n'.format(f'assembly_dataset_id = {assembly_dataset_id}', '# assembly dataset identification or NONE if a reference is used'))
             file_id.write( '{0:<50} {1}\n'.format(f'assembly_type = {assembly_type}', f'# assembly type: CONTIGS or SCAFFOLDS in {xlib.get_soapdenovotrans_name()}; NONE in any other case'))
             file_id.write( '{0:<50} {1}\n'.format(f'read_dataset_id = {read_dataset_id}'.format(), '# read dataset identification'))
@@ -1176,8 +1180,8 @@ def check_gsnap_config_file(strict):
             if assembly_software == not_found:
                 error_list.append('*** ERROR: the key "assembly_software" is not found in the section "identification".')
                 OK = False
-            elif assembly_software.upper() != 'NONE' and not xlib.check_code(assembly_software, get_assembly_software_code_list(), case_sensitive=False):
-                error_list.append(f'*** ERROR: the key "assembly_software" has to be {get_assembly_software_code_list_text()}; or NONE if a reference is used.')
+            elif assembly_software.upper() != 'NONE' and not xlib.check_code(assembly_software, get_extended_assembly_software_code_list(), case_sensitive=False):
+                error_list.append(f'*** ERROR: the key "assembly_software" has to be {get_extended_assembly_software_code_list_text()}; or NONE if a reference is used.')
                 OK = False
             else:
                 is_ok_assembly_software = True
@@ -1193,8 +1197,8 @@ def check_gsnap_config_file(strict):
             if assembly_dataset_id == not_found:
                 error_list.append('*** ERROR: the key "assembly_dataset_id" is not found in the section "identification".')
                 OK = False
-            elif assembly_dataset_id.upper() != 'NONE' and not xlib.check_startswith(assembly_dataset_id, get_assembly_software_code_list(), case_sensitive=True):
-                error_list.append(f'*** ERROR: the key "assembly_dataset_id" does not have to start with {get_assembly_software_code_list_text()}.')
+            elif assembly_dataset_id.upper() != 'NONE' and not xlib.check_startswith(assembly_dataset_id, get_extended_assembly_software_code_list(), case_sensitive=True):
+                error_list.append(f'*** ERROR: the key "assembly_dataset_id" does not have to start with {get_extended_assembly_software_code_list_text()}.')
                 OK = False
             else:
                 is_ok_assembly_dataset_id = True
@@ -1209,9 +1213,9 @@ def check_gsnap_config_file(strict):
             if assembly_type == not_found:
                 error_list.append('*** ERROR: the key "assembly_type" is not found in the section "identification".')
                 OK = False
-            elif assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()) and assembly_type.upper() not in ['CONTIGS', 'SCAFFOLDS'] or \
-                not assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()) and assembly_type.upper() != 'NONE':
-                    error_list.append(f'*** ERROR: the key "assembly_type" has to be CONTIGS or SCAFFOLDS in {xlib.get_soapdenovotrans_name()} or NONE in any other case.')
+            elif (assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()) or assembly_dataset_id.startswith(xlib.get_soapdenovo2_code())) and assembly_type.upper() not in ['CONTIGS', 'SCAFFOLDS'] or \
+                not (assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()) or assembly_dataset_id.startswith(xlib.get_soapdenovo2_code())) and assembly_type.upper() != 'NONE':
+                    error_list.append(f'*** ERROR: the key "assembly_type" has to be CONTIGS or SCAFFOLDS in {xlib.get_soapdenovotrans_name()} and {xlib.get_soapdenovo2_name()}; or NONE in any other case.')
                     OK = False
 
             # check section "identification" - key "read_dataset_id"
@@ -1475,13 +1479,13 @@ def build_gsnap_process_script(cluster_name, current_run_dir):
     if reference_dataset_id.upper() != 'NONE':
         cluster_reference_dataset_dir = xlib.get_cluster_reference_dataset_dir(reference_dataset_id)
     else:
-        cluster_reference_dataset_dir = current_run_dir
+        cluster_reference_dataset_dir = xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)
 
     # set the cluster reference file
     if reference_dataset_id.upper() != 'NONE':
         cluster_reference_file = xlib.get_cluster_reference_file(reference_dataset_id, reference_file)
     else:
-        if assembly_software == xlib.get_soapdenovotrans_code():
+        if assembly_software in [xlib.get_soapdenovotrans_code(), xlib.get_soapdenovo2_code()]:
             if assembly_type == 'CONTIGS':
                 cluster_reference_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)}/{experiment_id}-{assembly_dataset_id}.contig'
             elif  assembly_type == 'SCAFFOLDS':
@@ -1496,11 +1500,15 @@ def build_gsnap_process_script(cluster_name, current_run_dir):
             cluster_reference_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)}/clustered-transcriptome.fasta'
         elif assembly_software == xlib.get_transcript_filter_code():
             cluster_reference_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)}/filtered-transcriptome.fasta'
+        elif assembly_software == xlib.get_starcode_code():
+            cluster_reference_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)}/starcode.fasta'
 
     # set the GMAP database name
-    # -- gmap_database = 'gmap_database'
-    reference_file_name, reference_file_extension = os.path.splitext(reference_file)
-    gmap_database = f'{reference_file_name}-gmap_database'
+    if reference_file.upper() != 'NONE':
+        reference_file_name, reference_file_extension = os.path.splitext(reference_file)
+        gmap_database = f'{reference_file_name}-gmap_database'
+    else:
+        gmap_database = 'pseudogenome-gmap_database'
 
     # write the GSMAP process script
     try:
@@ -1538,31 +1546,33 @@ def build_gsnap_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "HOST IP: $HOST_IP"\n')
             script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
-            if reference_dataset_id.upper() != 'NONE' and index_building.upper() == 'YES':
+            if index_building.upper() == 'YES':
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function build_gmap_database\n')
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "Building database ..."\n')
                 script_file_id.write(f'    source activate {xlib.get_gmap_gsnap_anaconda_code()}\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
                 script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
                 script_file_id.write( '        gmap_build \\\n')
-                script_file_id.write(f'            --dir={cluster_reference_dataset_dir} \\\n'.format(''.format()))
-                script_file_id.write(f'            --db={gmap_database} \\\n')
+                script_file_id.write(f'            --dir={cluster_reference_dataset_dir} \\\n')
+                script_file_id.write(f'            --genomedb={gmap_database} \\\n')
                 if kmer.upper() != 'NONE':
                     script_file_id.write(f'            --kmer={kmer} \\\n')
                 script_file_id.write(f'            {cluster_reference_file}\n')
                 script_file_id.write( '    RC=$?\n')
                 script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error gmap_build $RC; fi\n')
                 script_file_id.write( '    conda deactivate\n')
+                script_file_id.write( '    echo "Database is built."\n')
                 script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function run_gsnap_process\n')
             script_file_id.write( '{\n')
             script_file_id.write(f'    cd {current_run_dir}\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '    gsnap --version\n')
+            script_file_id.write( '    echo "Mapping reads ..."\n')
             for i in range(len(read_file_1_list)):
                 # set gunzip, bunzip2, split_output and failed_input values
                 gunzip = False
@@ -1589,9 +1599,8 @@ def build_gsnap_process_script(cluster_name, current_run_dir):
                 script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
                 script_file_id.write(f'        {gsnap_version.lower()} \\\n')
                 script_file_id.write(f'            --nthreads={threads} \\\n')
-                if reference_dataset_id.upper() != 'NONE':
-                    script_file_id.write(f'            --dir={cluster_reference_dataset_dir} \\\n')
-                    script_file_id.write(f'            --db={gmap_database} \\\n')
+                script_file_id.write(f'            --dir={cluster_reference_dataset_dir} \\\n')
+                script_file_id.write(f'            --db={gmap_database} \\\n')
                 if kmer.upper() != 'NONE':
                     script_file_id.write(f'            --kmer={kmer} \\\n')
                 if sampling.upper() != 'NONE':
@@ -1635,6 +1644,7 @@ def build_gsnap_process_script(cluster_name, current_run_dir):
                 script_file_id.write( '    RC=$?\n')
                 script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error gsnap $RC; fi\n')
                 script_file_id.write( '    conda deactivate\n')
+            script_file_id.write( '    echo "Reads are mapped."\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function end\n')
@@ -1709,7 +1719,7 @@ def build_gsnap_process_script(cluster_name, current_run_dir):
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
-            if reference_dataset_id.upper() != 'NONE' and index_building.upper() == 'YES':
+            if index_building.upper() == 'YES':
                 script_file_id.write( 'build_gmap_database\n')
             script_file_id.write( 'run_gsnap_process\n')
             script_file_id.write( 'end\n')
@@ -1804,6 +1814,24 @@ def get_assembly_software_code_list_text():
     '''
 
     return f'{xlib.get_soapdenovotrans_code()} ({xlib.get_soapdenovotrans_name()}) or {xlib.get_transabyss_code()} ({xlib.get_transabyss_name()}) or {xlib.get_trinity_code()} ({xlib.get_trinity_name()}) or {xlib.get_ggtrinity_code()} ({xlib.get_ggtrinity_name()}) or {xlib.get_cd_hit_est_code()} ({xlib.get_cd_hit_est_name()}) or {xlib.get_transcript_filter_code()} ({xlib.get_transcript_filter_name()})'
+
+#-------------------------------------------------------------------------------
+
+def get_extended_assembly_software_code_list():
+    '''
+    Get the code list of "assembly_software".
+    '''
+
+    return [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(),  xlib.get_transcript_filter_code(), xlib.get_soapdenovo2_code(), xlib.get_starcode_name()]
+
+#-------------------------------------------------------------------------------
+
+def get_extended_assembly_software_code_list_text():
+    '''
+    Get the code list of "assembly_software" as text.
+    '''
+
+    return f'{xlib.get_soapdenovotrans_code()} ({xlib.get_soapdenovotrans_name()}) or {xlib.get_transabyss_code()} ({xlib.get_transabyss_name()}) or {xlib.get_trinity_code()} ({xlib.get_trinity_name()}) or {xlib.get_ggtrinity_code()} ({xlib.get_ggtrinity_name()}) or {xlib.get_cd_hit_est_code()} ({xlib.get_cd_hit_est_name()}) or {xlib.get_transcript_filter_code()} ({xlib.get_transcript_filter_name()}) or {xlib.get_soapdenovo2_code()} ({xlib.get_soapdenovo2_name()}) or {xlib.get_starcode_code()} ({xlib.get_starcode_name()})'
 
 #-------------------------------------------------------------------------------
     

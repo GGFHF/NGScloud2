@@ -379,7 +379,12 @@ def get_result_dataset_dict(cluster_name, experiment_id, status, passed_connecti
                 line = line.rstrip('\n')
                 if line != 'lost+found':
                     result_dataset_id = line
-                    if result_dataset_id.startswith(xlib.get_busco_code()+'-'):
+                    if result_dataset_id.startswith(xlib.get_bowtie2_code()+'-'):
+                        mo = re.match(input_pattern.format(xlib.get_bowtie2_code()), result_dataset_id)
+                        date = mo.group(1)
+                        time = mo.group(2)
+                        result_dataset_name = output_pattern.format(xlib.get_bowtie2_name(), date, time)
+                    elif result_dataset_id.startswith(xlib.get_busco_code()+'-'):
                         mo = re.match(input_pattern.format(xlib.get_busco_code()), result_dataset_id)
                         date = mo.group(1)
                         time = mo.group(2)
@@ -439,6 +444,11 @@ def get_result_dataset_dict(cluster_name, experiment_id, status, passed_connecti
                         date = mo.group(1)
                         time = mo.group(2)
                         result_dataset_name = output_pattern.format(xlib.get_gzip_name(), date, time)
+                    elif result_dataset_id.startswith(xlib.get_hisat2_code()+'-'):
+                        mo = re.match(input_pattern.format(xlib.get_hisat2_code()), result_dataset_id)
+                        date = mo.group(1)
+                        time = mo.group(2)
+                        result_dataset_name = output_pattern.format(xlib.get_hisat2_name(), date, time)
                     elif result_dataset_id.startswith(xlib.get_htseq_count_code()+'-'):
                         mo = re.match(input_pattern.format(xlib.get_htseq_count_code()), result_dataset_id)
                         date = mo.group(1)
@@ -576,7 +586,7 @@ def get_result_dataset_name_list(cluster_name, experiment_id, status, app_list, 
     # build the list of the result dataset names
     for result_dataset_id in result_dataset_dict.keys():
         for app in app_list:
-            if app == xlib.get_all_applications_selected_code() or result_dataset_id.startswith(app):
+            if app == xlib.get_all_applications_selected_code() or result_dataset_id.startswith(f'{app}-'):
                 result_dataset_name_list.append(result_dataset_dict[result_dataset_id]['result_dataset_name'])
                 break
 

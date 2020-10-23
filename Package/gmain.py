@@ -528,7 +528,7 @@ class Main():
         self.menu_starcode.add_command(label='Recreate config file', command=self.recreate_starcode_config_file)
         self.menu_starcode.add_command(label='Edit config file', command=self.edit_starcode_config_file)
         self.menu_starcode.add_separator()
-        self.menu_starcode.add_command(label='Run read clustering process', command=self.run_starcode_process)
+        self.menu_starcode.add_command(label='Run pseudo assembly process', command=self.run_starcode_process)
 
         # create "menu_soapdenovo2" and add its menu items
         self.menu_soapdenovo2 = tkinter.Menu(self.menu_bar, tearoff=0)
@@ -536,7 +536,7 @@ class Main():
         self.menu_soapdenovo2.add_command(label='Edit config file', command=self.edit_soapdenovo2_config_file)
         self.menu_soapdenovo2.add_separator()
         self.menu_soapdenovo2.add_command(label='Run assembly process', command=self.run_soapdenovo2_process)
-        self.menu_soapdenovo2.add_command(label='Restart assembly process', command=self.restart_soapdenovo2_process)
+        self.menu_soapdenovo2.add_command(label='Restart pseudo assembly process', command=self.restart_soapdenovo2_process)
 
         # create "menu_soapdenovotrans" and add its menu items
         self.menu_soapdenovotrans = tkinter.Menu(self.menu_bar, tearoff=0)
@@ -646,6 +646,10 @@ class Main():
         self.menu_denovo_rnaseq_quantitation.add_cascade(label=xlib.get_express_name(), menu=self.menu_express)
         self.menu_denovo_rnaseq_quantitation.add_cascade(label=xlib.get_kallisto_name(), menu=self.menu_kallisto)
 
+        # create "menu_denovo_rnaseq_variant_calling" and add its menu items
+        self.menu_denovo_rnaseq_variant_calling = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_denovo_rnaseq_variant_calling.add_cascade(label=xlib.get_variant_calling_name(), menu=self.menu_variant_calling)
+
         # create "menu_denovo_rnaseq_annotation" and add its menu items
         self.menu_denovo_rnaseq_annotation = tkinter.Menu(self.menu_bar, tearoff=0)
         self.menu_denovo_rnaseq_annotation.add_cascade(label=f'{xlib.get_transcriptome_blastx_name()} ({xlib.get_ngshelper_name()} package)', menu=self.menu_transcriptome_blastx)
@@ -665,6 +669,8 @@ class Main():
         self.menu_denovo_rnaseq.add_separator()
         self.menu_denovo_rnaseq.add_cascade(label='Quantitation', menu=self.menu_denovo_rnaseq_quantitation)
         self.menu_denovo_rnaseq.add_separator()
+        self.menu_denovo_rnaseq.add_cascade(label='Variant calling', menu=self.menu_denovo_rnaseq_variant_calling)
+        self.menu_denovo_rnaseq.add_separator()
         self.menu_denovo_rnaseq.add_cascade(label='Annotation', menu=self.menu_denovo_rnaseq_annotation)
 
         # link "menu_denovo_rnaseq" with "menu_bar"
@@ -679,11 +685,6 @@ class Main():
         self.menu_reference_based_rnaseq_trimming.add_cascade(label=xlib.get_cutadapt_name(), menu=self.menu_cutadapt)
         self.menu_reference_based_rnaseq_trimming.add_cascade(label=xlib.get_trimmomatic_name(), menu=self.menu_trimmomatic)
 
-        # create "menu_reference_based_rnaseq_assembly" add add its menu items
-        self.menu_reference_based_rnaseq_assembly = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_reference_based_rnaseq_assembly.add_cascade(label=f'{xlib.get_cufflinks_cuffmerge_name()} ({xlib.get_cufflinks_name()} package)', menu=self.menu_cufflinks_cuffmerge)
-        self.menu_reference_based_rnaseq_assembly.add_cascade(label=f'{xlib.get_ggtrinity_name()} ({xlib.get_trinity_name()} package)', menu=self.menu_ggtrinity)
-
         # create "menu_reference_based_rnaseq_read_alignment" add add its menu items
         self.menu_reference_based_rnaseq_read_alignment = tkinter.Menu(self.menu_bar, tearoff=0)
         self.menu_reference_based_rnaseq_read_alignment.add_cascade(label=xlib.get_bowtie2_name(), menu=self.menu_bowtie2)
@@ -691,6 +692,11 @@ class Main():
         self.menu_reference_based_rnaseq_read_alignment.add_cascade(label=xlib.get_hisat2_name(), menu=self.menu_hisat2)
         self.menu_reference_based_rnaseq_read_alignment.add_cascade(label=xlib.get_star_name(), menu=self.menu_star)
         self.menu_reference_based_rnaseq_read_alignment.add_cascade(label=xlib.get_tophat_name(), menu=self.menu_tophat)
+
+        # create "menu_reference_based_rnaseq_assembly" add add its menu items
+        self.menu_reference_based_rnaseq_assembly = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_reference_based_rnaseq_assembly.add_cascade(label=f'{xlib.get_cufflinks_cuffmerge_name()} ({xlib.get_cufflinks_name()} package)', menu=self.menu_cufflinks_cuffmerge)
+        self.menu_reference_based_rnaseq_assembly.add_cascade(label=f'{xlib.get_ggtrinity_name()} ({xlib.get_trinity_name()} package)', menu=self.menu_ggtrinity)
 
         # create "menu_reference_based_rnaseq_transcriptome_alignment" add add its menu items
         self.menu_reference_based_rnaseq_transcriptome_alignment = tkinter.Menu(self.menu_bar, tearoff=0)
@@ -714,9 +720,10 @@ class Main():
         self.menu_reference_based_rnaseq.add_cascade(label='Read quality', menu=self.menu_reference_based_rnaseq_read_quality)
         self.menu_reference_based_rnaseq.add_cascade(label='Trimming', menu=self.menu_reference_based_rnaseq_trimming)
         self.menu_reference_based_rnaseq.add_separator()
+        self.menu_reference_based_rnaseq.add_cascade(label='Read alignment', menu=self.menu_reference_based_rnaseq_read_alignment)
+        self.menu_reference_based_rnaseq.add_separator()
         self.menu_reference_based_rnaseq.add_cascade(label='Assembly', menu=self.menu_reference_based_rnaseq_assembly)
         self.menu_reference_based_rnaseq.add_separator()
-        self.menu_reference_based_rnaseq.add_cascade(label='Read alignment', menu=self.menu_reference_based_rnaseq_read_alignment)
         self.menu_reference_based_rnaseq.add_cascade(label='Transcriptome alignment', menu=self.menu_reference_based_rnaseq_transcriptome_alignment)
         self.menu_reference_based_rnaseq.add_separator()
         self.menu_reference_based_rnaseq.add_cascade(label='Quantitation', menu=self.menu_reference_based_rnaseq_quantitation)
@@ -756,13 +763,10 @@ class Main():
         self.menu_radseq_trimming.add_cascade(label=xlib.get_cutadapt_name(), menu=self.menu_cutadapt)
         self.menu_radseq_trimming.add_cascade(label=xlib.get_trimmomatic_name(), menu=self.menu_trimmomatic)
 
-        # create "menu_read_clustering" and add its menu items
-        self.menu_radseq_read_clustering = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_radseq_read_clustering.add_cascade(label=xlib.get_starcode_name(), menu=self.menu_starcode)
-
         # create "menu_pseudo_assembly" and add its menu items
         self.menu_radseq_pseudo_assembly = tkinter.Menu(self.menu_bar, tearoff=0)
         self.menu_radseq_pseudo_assembly.add_cascade(label=xlib.get_soapdenovo2_name(), menu=self.menu_soapdenovo2)
+        self.menu_radseq_pseudo_assembly.add_cascade(label=xlib.get_starcode_name(), menu=self.menu_starcode)
 
         # create "menu_radseq_read_alignment" add add its menu items
         self.menu_radseq_read_alignment = tkinter.Menu(self.menu_bar, tearoff=0)
@@ -788,7 +792,6 @@ class Main():
         self.menu_radseq.add_separator()
         self.menu_radseq.add_cascade(label='Read quality', menu=self.menu_radseq_read_quality)
         self.menu_radseq.add_cascade(label='Trimming', menu=self.menu_radseq_trimming)
-        self.menu_radseq.add_cascade(label='Read clustering', menu=self.menu_radseq_read_clustering)
         self.menu_radseq.add_separator()
         self.menu_radseq.add_cascade(label='Pseudo assembly', menu=self.menu_radseq_pseudo_assembly)
         self.menu_radseq.add_separator()

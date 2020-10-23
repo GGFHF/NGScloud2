@@ -553,7 +553,9 @@ def build_menu_denovo_rnaseq():
         print()
         print( '    8. Quantitation')
         print()
-        print( '    9. Annotation')
+        print( '    9. Variant calling')
+        print()
+        print( '    A. Annotation')
         print()
         print( '    X. Return to menu Main')
         print()
@@ -579,6 +581,8 @@ def build_menu_denovo_rnaseq():
         elif option == '8':
             build_menu_denovo_rnaseq_quantitation()
         elif option == '9':
+            build_menu_denovo_rnaseq_variant_calling()
+        elif option == 'A':
             build_menu_denovo_rnaseq_annotation()
         elif option == 'X':
             break
@@ -853,6 +857,36 @@ def build_menu_denovo_rnaseq_quantitation():
 
 #-------------------------------------------------------------------------------
 
+def build_menu_denovo_rnaseq_variant_calling():
+    '''
+    Build the menu De novo RNA-seq - Variant calling.
+    '''
+
+    while True:
+
+        # print headers
+        clib.clear_screen()
+        clib.print_headers_with_environment('De novo RNA-seq - Variant calling')
+
+        # print the menu options
+        print( 'Options:')
+        print()
+        print(f'    1. {xlib.get_variant_calling_name()} ({xlib.get_ddradseqtools_name()} package)')
+        print()
+        print( '    X. Return to menu De novo RNA-seq')
+        print()
+
+        # get the selected option
+        option = input('Input the selected option: ').upper()
+
+        # process the selected option
+        if option == '1':
+            build_menu_variant_calling()
+        elif option == 'X':
+            break
+
+#-------------------------------------------------------------------------------
+
 def build_menu_denovo_rnaseq_annotation():
     '''
     Build the menu De novo RNA-seq - Annotation.
@@ -900,9 +934,10 @@ def build_menu_reference_based_rnaseq():
         print( '    1. Read quality')
         print( '    2. Trimming')
         print()
-        print( '    3. Assembly')
+        print( '    3. Read alignment')
         print()
-        print( '    4. Read alignment')
+        print( '    4. Assembly')
+        print()
         print( '    5. Transcriptome alignment')
         print()
         print( '    6. Quantitation')
@@ -922,9 +957,9 @@ def build_menu_reference_based_rnaseq():
         elif option == '2':
             build_menu_reference_based_rnaseq_trimming()
         elif option == '3':
-            build_menu_reference_based_rnaseq_assembly()
-        elif option == '4':
             build_menu_reference_based_rnaseq_read_alignment()
+        elif option == '4':
+            build_menu_reference_based_rnaseq_assembly()
         elif option == '5':
             build_menu_reference_based_rnaseq_transcriptome_alignment()
         elif option == '6':
@@ -1001,39 +1036,6 @@ def build_menu_reference_based_rnaseq_trimming():
 
 #-------------------------------------------------------------------------------
 
-def build_menu_reference_based_rnaseq_assembly():
-    '''
-    Build the menu Reference-based RNA-seq - Assembly.
-    '''
-
-    while True:
-
-        # print headers
-        clib.clear_screen()
-        clib.print_headers_with_environment('Reference-based RNA-seq - Assembly')
-
-        # print the menu options
-        print( 'Options:')
-        print()
-        print(f'    1. {xlib.get_cufflinks_cuffmerge_name()} ({xlib.get_cufflinks_name()} package)')
-        print(f'    2. {xlib.get_ggtrinity_name()} ({xlib.get_trinity_name()} package)')
-        print()
-        print( '    X. Return to menu Reference-based RNA-seq')
-        print()
-
-        # get the selected option
-        option = input('Input the selected option: ').upper()
-
-        # process the selected option
-        if option == '1':
-            build_menu_cufflinks_cuffmerge()
-        elif option == '2':
-            build_menu_ggtrinity()
-        elif option == 'X':
-            break
-
-#-------------------------------------------------------------------------------
-
 def build_menu_reference_based_rnaseq_read_alignment():
     '''
     Build the menu Reference-based RNA-seq - Read alignment.
@@ -1071,6 +1073,39 @@ def build_menu_reference_based_rnaseq_read_alignment():
             build_menu_star()
         elif option == '5':
             build_menu_tophat()
+        elif option == 'X':
+            break
+
+#-------------------------------------------------------------------------------
+
+def build_menu_reference_based_rnaseq_assembly():
+    '''
+    Build the menu Reference-based RNA-seq - Assembly.
+    '''
+
+    while True:
+
+        # print headers
+        clib.clear_screen()
+        clib.print_headers_with_environment('Reference-based RNA-seq - Assembly')
+
+        # print the menu options
+        print( 'Options:')
+        print()
+        print(f'    1. {xlib.get_cufflinks_cuffmerge_name()} ({xlib.get_cufflinks_name()} package)')
+        print(f'    2. {xlib.get_ggtrinity_name()} ({xlib.get_trinity_name()} package)')
+        print()
+        print( '    X. Return to menu Reference-based RNA-seq')
+        print()
+
+        # get the selected option
+        option = input('Input the selected option: ').upper()
+
+        # process the selected option
+        if option == '1':
+            build_menu_cufflinks_cuffmerge()
+        elif option == '2':
+            build_menu_ggtrinity()
         elif option == 'X':
             break
 
@@ -1185,7 +1220,7 @@ def build_menu_reference_based_rnaseq_variant_calling():
         print()
         print(f'    1. {xlib.get_variant_calling_name()} ({xlib.get_ddradseqtools_name()} package)')
         print()
-        print( '    X. Return to menu RAD-seq')
+        print( '    X. Return to menu Reference-based RNA-seq')
         print()
 
         # get the selected option
@@ -1221,15 +1256,14 @@ def build_menu_radseq():
         print()
         print( '    5. Read quality')
         print( '    6. Trimming')
-        print( '    7. Read clustering')
         print()
-        print( '    8. Pseudo assembly')
+        print( '    7. Pseudo assembly')
         print()
-        print( '    9. Read alignment')
+        print( '    8. Read alignment')
         print()
-        print( '    A. Variant calling')
+        print( '    9. Variant calling')
         print()
-        print( '    B. Pipelines')
+        print( '    A. Pipelines')
         print()
         print( '    X. Return to menu Main')
         print()
@@ -1251,14 +1285,12 @@ def build_menu_radseq():
         elif option == '6':
             build_menu_radseq_trimming()
         elif option == '7':
-            build_menu_radseq_read_clustering()
-        elif option == '8':
             build_menu_radseq_pseudo_assembly()
-        elif option == '9':
+        elif option == '8':
             build_menu_radseq_read_alignment()
-        elif option == 'A':
+        elif option == '9':
             build_menu_radseq_variant_calling()
-        elif option == 'B':
+        elif option == 'A':
             build_menu_radseq_pipelines()
         elif option == 'X':
             break
@@ -1460,36 +1492,6 @@ def build_menu_radseq_trimming():
 
 #-------------------------------------------------------------------------------
 
-def build_menu_radseq_read_clustering():
-    '''
-    Build the menu RAD-seq - Read clustering.
-    '''
-
-    while True:
-
-        # print headers
-        clib.clear_screen()
-        clib.print_headers_with_environment('RAD-seq - Read clustering')
-
-        # print the menu options
-        print( 'Options:')
-        print()
-        print(f'    1. {xlib.get_starcode_name()}')
-        print()
-        print( '    X. Return to menu RAD-seq')
-        print()
-
-        # get the selected option
-        option = input('Input the selected option: ').upper()
-
-        # process the selected option
-        if option == '1':
-            build_menu_starcode()
-        elif option == 'X':
-            break
-
-#-------------------------------------------------------------------------------
-
 def build_menu_radseq_read_alignment():
     '''
     Build the menu RAD-seq - Read alignment.
@@ -1541,6 +1543,7 @@ def build_menu_radseq_pseudo_assembly():
         print( 'Options:')
         print()
         print(f'    1. {xlib.get_soapdenovo2_name()}')
+        print(f'    2. {xlib.get_starcode_name()}')
         print()
         print( '    X. Return to menu RAD-seq')
         print()
@@ -1551,6 +1554,8 @@ def build_menu_radseq_pseudo_assembly():
         # process the selected option
         if option == '1':
             build_menu_soapdenovo2()
+        elif option == '2':
+            build_menu_starcode()
         elif option == 'X':
             break
 
@@ -2519,7 +2524,7 @@ def build_menu_soapdenovo2():
         print( '    1. Recreate config file')
         print( '    2. Edit config file')
         print()
-        print( '    3. Run assembly process')
+        print( '    3. Run pseudo assembly process')
         print( '       (CAUTION: before running a process, the config file should be updated)')
         print( '    4. Restart assembly process')
         print()
@@ -2639,10 +2644,10 @@ def build_menu_starcode():
         print( '    1. Recreate config file')
         print( '    2. Edit config file')
         print()
-        print( '    3. Run clustering process')
+        print( '    3. Run pseudo assembly process')
         print( '       (CAUTION: before running a process, the config file should be updated)')
         print()
-        print( '    X. Return to menu Read clustering')
+        print( '    X. Return to menu Pseudo assembly')
         print()
 
         # get the selected option

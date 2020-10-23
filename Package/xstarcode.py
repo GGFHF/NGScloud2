@@ -53,31 +53,31 @@ def create_starcode_config_file(experiment_id='exp001', read_dataset_id=xlib.get
         with open(get_starcode_config_file(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '# You must review the information of this file and update the values with the corresponding ones to the current run.\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# The files have to be located in the cluster directory {0}/experiment_id/read_dataset_id'.format(xlib.get_cluster_read_dir())))
-            file_id.write( '{0}\n'.format('# The experiment_id and read_dataset_id names are fixed in the identification section.'))
+            file_id.write(f'# The files have to be located in the cluster directory {xlib.get_cluster_read_dir()}/experiment_id/read_dataset_id\n')
+            file_id.write( '# The experiment_id and read_dataset_id names are fixed in the identification section.\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# You can consult the parameters and trimming sets of starcode and their meaning in "https://github.com/gui11aume/starcode".'))
+            file_id.write( '# You can consult the parameters and trimming sets of starcode and their meaning in "https://github.com/gui11aume/starcode".\n')
             file_id.write( '\n')
             file_id.write( '# This section has the information identifies the experiment.\n')
             file_id.write( '[identification]\n')
             file_id.write( '{0:<50} {1}\n'.format(f'experiment_id = {experiment_id}', '# experiment identification'))
             file_id.write( '{0:<50} {1}\n'.format(f'read_dataset_id = {read_dataset_id}', '# read dataset identification'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information to set the starcode parameters.'))
-            file_id.write( '{0}\n'.format('[starcode parameters]'))
+            file_id.write( '# This section has the information to set the starcode parameters.\n')
+            file_id.write( '[starcode parameters]\n')
             file_id.write( '{0:<50} {1}\n'.format('threads = 4', '# number of threads for use'))
             file_id.write( '{0:<50} {1}\n'.format('distance = AUTO', '# maximum Levenshtein distance for clustering (AUTO is computed as min(8, 2 + [median seq length]/30))'))
-            file_id.write( '{0:<50} {1}\n'.format('spheres = NO', '# perform sphere clustering algorithm instead of the default message passing algorithm: {0}'.format(get_spheres_code_list_text())))
+            file_id.write( '{0:<50} {1}\n'.format('spheres = NO', f'# perform sphere clustering algorithm instead of the default message passing algorithm: {get_spheres_code_list_text()}'))
             file_id.write( '{0:<50} {1}\n'.format('cluster_ratio = 5', '# minimum sequence count ratio to cluster two matching sequences (it only applies to message passing algorithm)'))
-            file_id.write( '{0:<50} {1}\n'.format('non_redundant = NO', '# remove redundant sequences from the output: {0}'.format(get_non_redundant_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('print_clusters = NO', '# add a third column to the output containing the sequences associated with each cluster: {0}'.format(get_print_clusters_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('seq_id = NO', '# show the clustered sequence numbers (1-based) following the original input order: {0}'.format(get_seq_id_code_list_text())))
+            file_id.write( '{0:<50} {1}\n'.format('non_redundant = NO', f'# remove redundant sequences from the output: {get_non_redundant_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format('print_clusters = NO', f'# add a third column to the output containing the sequences associated with each cluster: {get_print_clusters_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format('seq_id = NO', f'# show the clustered sequence numbers (1-based) following the original input order: {get_seq_id_code_list_text()}'))
             file_id.write( '\n')
             file_id.write( '# This section has the global information of all libraries.\n')
             file_id.write( '[library]\n')
             file_id.write( '{0:<50} {1}\n'.format( 'format = FASTQ', f'# format: {get_format_code_list_text()}'))
             file_id.write( '{0:<50} {1}\n'.format(f'read_type = {read_type}', f'# read type: {get_read_type_code_list_text()}'))
-            file_id.write( '{0:<50} {1}\n'.format('concatenate_files = NO', '# concatenate files building one file (SE) or two files (PE): {0}'.format(get_concatenate_files_code_list_text())))
+            file_id.write( '{0:<50} {1}\n'.format( 'concatenate_files = NO', f'# concatenate files building one file (SE) or two files (PE): {get_concatenate_files_code_list_text()}'))
             for i in range(len(file_1_list)):
                 file_id.write( '\n')
                 if i == 0:
@@ -94,7 +94,7 @@ def create_starcode_config_file(experiment_id='exp001', read_dataset_id=xlib.get
                     file_id.write( '# The section identification has to be library-n (n is an integer not repeated)\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be recreated'.format(get_starcode_config_file()))
+        error_list.append(f'*** ERROR: The file {get_starcode_config_file()} can not be recreated')
         OK = False
 
     # return the control variable and the error list
@@ -122,7 +122,7 @@ def run_starcode_process(cluster_name, log, function=None):
 
     # check the starcode config file
     log.write(f'{xlib.get_separator()}\n')
-    log.write('Checking the {0} config file ...\n'.format(xlib.get_starcode_name()))
+    log.write(f'Checking the {xlib.get_starcode_name()} config file ...\n')
     (OK, error_list) = check_starcode_config_file(strict=True)
     if OK:
         log.write('The file is OK.\n')
@@ -176,10 +176,10 @@ def run_starcode_process(cluster_name, log, function=None):
         (OK, error_list, is_installed) = xbioinfoapp.is_installed_anaconda_package(xlib.get_starcode_anaconda_code(), cluster_name, True, ssh_client)
         if OK:
             if not is_installed:
-                log.write('*** ERROR: {0} is not installed.\n'.format(xlib.get_starcode_name()))
+                log.write(f'*** ERROR: {xlib.get_starcode_name()} is not installed.\n')
                 OK = False
         else:
-            log.write('*** ERROR: The verification of {0} installation could not be performed.\n'.format(xlib.get_starcode_name()))
+            log.write(f'*** ERROR: The verification of {xlib.get_starcode_name()} installation could not be performed.\n')
 
     # warn that the requirements are OK 
     if OK:
@@ -200,7 +200,7 @@ def run_starcode_process(cluster_name, log, function=None):
     # build the starcode process script
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process script {0} ...\n'.format(get_starcode_process_script()))
+        log.write(f'Building the process script {get_starcode_process_script()} ...\n')
         (OK, error_list) = build_starcode_process_script(cluster_name, current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -210,8 +210,8 @@ def run_starcode_process(cluster_name, log, function=None):
     # upload the starcode process script to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process script {0} to the directory {1} ...\n'.format(get_starcode_process_script(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_starcode_process_script()))
+        log.write(f'Uploading the process script {get_starcode_process_script()} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_starcode_process_script())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_starcode_process_script(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -222,8 +222,8 @@ def run_starcode_process(cluster_name, log, function=None):
     # set run permision to the starcode process script in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_starcode_process_script())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_starcode_process_script()))
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_starcode_process_script())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_starcode_process_script())}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
@@ -233,7 +233,7 @@ def run_starcode_process(cluster_name, log, function=None):
     # build the starcode process starter
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process starter {0} ...\n'.format(get_starcode_process_starter()))
+        log.write(f'Building the process starter {get_starcode_process_starter()} ...\n')
         (OK, error_list) = build_starcode_process_starter(current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -243,8 +243,8 @@ def run_starcode_process(cluster_name, log, function=None):
     # upload the starcode process starter to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process starter {0} to the directory {1} ...\n'.format(get_starcode_process_starter(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_starcode_process_starter()))
+        log.write(f'Uploading the process starter {get_starcode_process_starter()} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_starcode_process_starter())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_starcode_process_starter(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -255,8 +255,8 @@ def run_starcode_process(cluster_name, log, function=None):
     # set run permision to the starcode process starter in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_starcode_process_starter())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_starcode_process_starter()))
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_starcode_process_starter())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_starcode_process_starter())}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
@@ -266,7 +266,7 @@ def run_starcode_process(cluster_name, log, function=None):
     # submit the starcode process
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Submitting the process script {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_starcode_process_starter())))
+        log.write(f'Submitting the process script {current_run_dir}/{os.path.basename(get_starcode_process_starter())} ...\n')
         OK = xssh.submit_script(cluster_name, ssh_client, current_run_dir, os.path.basename(get_starcode_process_starter()), log)
 
     # close the SSH transport connection
@@ -372,7 +372,7 @@ def check_starcode_config_file(strict):
                 error_list.append('*** ERROR: the key "spheres" is not found in the section "starcode parameters".')
                 OK = False
             elif not xlib.check_code(spheres, get_spheres_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "spheres" has to be {0}.'.format(get_spheres_code_list_text()))
+                error_list.append(f'*** ERROR: the key "spheres" has to be {get_spheres_code_list_text()}.')
                 OK = False
 
             # check section "starcode parameters" - key "cluster_ratio"
@@ -390,7 +390,7 @@ def check_starcode_config_file(strict):
                 error_list.append('*** ERROR: the key "non_redundant" is not found in the section "starcode parameters".')
                 OK = False
             elif not xlib.check_code(non_redundant, get_non_redundant_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "non_redundant" has to be {0}.'.format(get_non_redundant_code_list_text()))
+                error_list.append(f'*** ERROR: the key "non_redundant" has to be {get_non_redundant_code_list_text()}.')
                 OK = False
 
             # check section "starcode parameters" - key "print_clusters"
@@ -399,7 +399,7 @@ def check_starcode_config_file(strict):
                 error_list.append('*** ERROR: the key "print_clusters" is not found in the section "starcode parameters".')
                 OK = False
             elif not xlib.check_code(print_clusters, get_print_clusters_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "print_clusters" has to be {0}.'.format(get_print_clusters_code_list_text()))
+                error_list.append(f'*** ERROR: the key "print_clusters" has to be {get_print_clusters_code_list_text()}.')
                 OK = False
 
             # check section "starcode parameters" - key "seq_id"
@@ -408,7 +408,7 @@ def check_starcode_config_file(strict):
                 error_list.append('*** ERROR: the key "seq_id" is not found in the section "starcode parameters".')
                 OK = False
             elif not xlib.check_code(seq_id, get_seq_id_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "seq_id" has to be {0}.'.format(get_seq_id_code_list_text()))
+                error_list.append(f'*** ERROR: the key "seq_id" has to be {get_seq_id_code_list_text()}.')
                 OK = False
 
         # check section "library"
@@ -441,7 +441,7 @@ def check_starcode_config_file(strict):
                 error_list.append('*** ERROR: the key "concatenate_files" is not found in the section "library".')
                 OK = False
             elif not xlib.check_code(concatenate_files, get_concatenate_files_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "concatenate_files" has to be {0}.'.format(get_concatenate_files_code_list_text()))
+                error_list.append(f'*** ERROR: the key "concatenate_files" has to be {get_concatenate_files_code_list_text()}.')
                 OK = False
 
         # check section "library-1"
@@ -475,7 +475,7 @@ def check_starcode_config_file(strict):
 
     # warn that the results config file is not valid if there are any errors
     if not OK:
-        error_list.append('\nThe {0} config file is not valid. Please, correct this file or recreate it.'.format(xlib.get_starcode_name()))
+        error_list.append(f'\nThe {xlib.get_starcode_name()} config file is not valid. Please, correct this file or recreate it.')
 
     # return the control variable and the error list
     return (OK, error_list)
@@ -523,10 +523,10 @@ def build_starcode_process_script(cluster_name, current_run_dir):
     for section in sections_list:
         if re.match('^library-[0-9]+$', section):
             read_file_1 = starcode_option_dict[section]['read_file_1']
-            file_name_1_list.append('{0}/{1}'.format(input_read_dir, read_file_1))
+            file_name_1_list.append(f'{input_read_dir}/{read_file_1}')
             if read_type == 'PE':
                 read_file_2 = starcode_option_dict[section]['read_file_2']
-                file_name_2_list.append('{0}/{1}'.format(input_read_dir, read_file_2))
+                file_name_2_list.append(f'{input_read_dir}/{read_file_2}')
 
     # write the starcode process script
     try:
@@ -541,10 +541,10 @@ def build_starcode_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
             script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('STARCODE_PATH={0}/{1}/envs/{2}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name(), xlib.get_starcode_anaconda_code())))
-            script_file_id.write( '{0}\n'.format('PATH=$STARCODE_PATH:$PATH'))
-            script_file_id.write( '{0}\n'.format('cd {0}/{1}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name())))
-            script_file_id.write( '{0}\n'.format('source activate {0}'.format(xlib.get_starcode_anaconda_code())))
+            script_file_id.write(f'STARCODE_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/envs/{xlib.get_starcode_anaconda_code()}/bin\n')
+            script_file_id.write( 'PATH=$STARCODE_PATH:$PATH\n')
+            script_file_id.write(f'cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
+            script_file_id.write(f'source activate {xlib.get_starcode_anaconda_code()}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
             script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -552,6 +552,8 @@ def build_starcode_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'mkdir --parents $STATUS_DIR\n')
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write(f'CURRENT_DIR={current_run_dir}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function init\n')
             script_file_id.write( '{\n')
@@ -565,65 +567,210 @@ def build_starcode_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "HOST IP: $HOST_IP"\n')
             script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
-            if concatenate_files == 'YES':
+            if concatenate_files == 'NO':
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function concatenate_files'))
+                script_file_id.write( 'function run_initial_starcode_process\n')
                 script_file_id.write( '{\n')
-                script_file_id.write( '{0}\n'.format('    mkdir --parents {0}'.format(current_run_dir)))
-                script_file_id.write(f'    cd {current_run_dir}\n')
+                script_file_id.write( '    cd $CURRENT_DIR\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Concatenate the files of the library ..."'))
-                if format == 'FASTQ':
-                    concatenated_library_1 = '{0}/concatenated_library_1.fastq'.format(current_run_dir)
-                elif format == 'FASTA':
-                    concatenated_library_1 = '{0}/concatenated_library_1.fasta'.format(current_run_dir)
-                script_file_id.write( '{0}\n'.format('    cat {0} > {1}'.format(' '.join(file_name_1_list), concatenated_library_1)))
-                file_name_1_list = [concatenated_library_1]
-                if read_type == 'PE':
-                    if format == 'FASTQ':
-                        concatenated_library_2 = '{0}/concatenated_library_2.fastq'.format(current_run_dir)
-                    elif format == 'FASTA':
-                        concatenated_library_2 = '{0}/concatenated_library_2.fasta'.format(current_run_dir)
-                    script_file_id.write( '{0}\n'.format('    cat {0} > {1}'.format(' '.join(file_name_2_list), concatenated_library_2)))
-                    file_name_2_list = [concatenated_library_2]
-                script_file_id.write( '{0}\n'.format('    echo "The concatenation is done."'))
+                script_file_id.write( '    echo "Running initial Starcode process"\n')
+                script_file_id.write( '    starcode --version\n')
+                for i in range(len(file_name_1_list)):
+                        script_file_id.write( '    echo "$SEP"\n')
+                        script_file_id.write( '    /usr/bin/time \\\n')
+                        script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
+                        script_file_id.write( '        starcode \\\n')
+                        script_file_id.write(f'            --threads={threads} \\\n')
+                        if distance != 'AUTO':
+                            script_file_id.write(f'            --distance {distance} \\\n')
+                        if spheres == 'YES':
+                            script_file_id.write( '            --spheres \\\n')
+                        if spheres == 'NO':
+                            script_file_id.write(f'            --cluster-ratio {cluster_ratio} \\\n')
+                        if non_redundant == 'YES':
+                            script_file_id.write( '            --non-redundant \\\n')
+                        if print_clusters == 'YES':
+                            script_file_id.write( '            --print-clusters \\\n')
+                        if seq_id == 'YES':
+                            script_file_id.write( '            --seq-id \\\n')
+                        if read_type == 'SE':
+                            script_file_id.write(f'            --input {file_name_1_list[i]} \\\n')
+                        elif read_type == 'PE':
+                            script_file_id.write(f'            --input1 {file_name_1_list[i]} \\\n')
+                            script_file_id.write(f'            --input2 {file_name_2_list[i]} \\\n')
+                        if read_type == 'PE' and non_redundant == 'YES':
+                            script_file_id.write(f'            --output1 $CURRENT_DIR/starcode-initial-output-1-{i}.txt \\\n')
+                            script_file_id.write(f'            --output2 $CURRENT_DIR/starcode-initial-output-2-{i}.txt\n')
+                        else:
+                            script_file_id.write(f'            --output $CURRENT_DIR/starcode-initial-output-{i}.txt\n')
+                        script_file_id.write( '    RC=$?\n')
+                        script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error starcode $RC; fi\n')
+                script_file_id.write( '    echo "Starcode is processed"\n')
                 script_file_id.write( '}\n')
-            script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function run_starcode_process'))
-            script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    mkdir --parents {0}'.format(current_run_dir)))
-            script_file_id.write(f'    cd {current_run_dir}\n')
-            script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    starcode --version'))
-            for i in range(len(file_name_1_list)):
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function concatenate_intermediate_starcode_files\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    cd $CURRENT_DIR\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                if read_type == 'SE':
+                    script_file_id.write( '    echo "Concatenate the intermediate Starcode files ..."\n')
+                    output_file_list = []
+                    for i in range(len(file_name_1_list)):
+                        output_file_list.append(f'$CURRENT_DIR/starcode-initial-output-{i}.txt')
+                    script_file_id.write(f'    cat {" ".join(output_file_list)} > starcode-initial-output-concatenated.txt\n')
+                    script_file_id.write( '    echo "The concatenation is done."\n')
+                elif read_type == 'PE':
+                    pass
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function build_intermediate_fasta_file\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    cd $CURRENT_DIR\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                if read_type == 'SE':
+                    script_file_id.write( '    echo "Building the intermediate FASTA file ..."\n')
+                    script_file_id.write( '    i=0\n')
+                    script_file_id.write(f'    FASTA_FILE=$CURRENT_DIR/starcode-intermediate.fasta\n')
+                    script_file_id.write( '    touch $FASTA_FILE\n')
+                    script_file_id.write(f'    for STARCODE_RECORD in $(cut -f 1 $CURRENT_DIR/starcode-initial-output-concatenated.txt); do\n')
+                    script_file_id.write( '        ((i++))\n')
+                    script_file_id.write( '        echo ">seq$i" >>$FASTA_FILE \n')
+                    script_file_id.write( '        echo "$STARCODE_RECORD" >>$FASTA_FILE \n')
+                    script_file_id.write( '    done\n')
+                    script_file_id.write( '    echo "The files are built."\n')
+                elif read_type == 'PE':
+                    pass
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function run_final_starcode_process\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    cd $CURRENT_DIR\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                if read_type == 'SE':
+                    script_file_id.write( '    echo "Running final Starcode process"\n')
                     script_file_id.write( '    echo "$SEP"\n')
                     script_file_id.write( '    /usr/bin/time \\\n')
                     script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                    script_file_id.write( '{0}\n'.format('        starcode \\'))
-                    script_file_id.write( '{0}\n'.format('            --threads={0} \\'.format(threads)))
+                    script_file_id.write( '        starcode \\\n')
+                    script_file_id.write(f'            --threads={threads} \\\n')
                     if distance != 'AUTO':
-                        script_file_id.write( '{0}\n'.format('            --distance={0} \\'.format(distance)))
+                        script_file_id.write(f'            --distance {distance} \\\n')
                     if spheres == 'YES':
-                        script_file_id.write( '{0}\n'.format('            --spheres \\'))
+                        script_file_id.write( '            --spheres \\\n')
                     if spheres == 'NO':
-                        script_file_id.write( '{0}\n'.format('            --cluster-ratio={0} \\'.format(cluster_ratio)))
+                        script_file_id.write(f'            --cluster-ratio {cluster_ratio} \\\n')
                     if non_redundant == 'YES':
-                        script_file_id.write( '{0}\n'.format('            --non-redundant \\'))
+                        script_file_id.write( '            --non-redundant \\\n')
                     if print_clusters == 'YES':
-                        script_file_id.write( '{0}\n'.format('            --print-clusters \\'))
+                        script_file_id.write( '            --print-clusters \\\n')
                     if seq_id == 'YES':
-                        script_file_id.write( '{0}\n'.format('            --seq-id \\'))
-                    if read_type == 'SE':
-                        script_file_id.write( '{0}\n'.format('            --input={0} \\'.format(file_name_1_list[i])))
-                        script_file_id.write( '{0}\n'.format('            --output={0}/starcode-{1}'.format(current_run_dir, os.path.basename(file_name_1_list[i]))))
-                    elif read_type == 'PE':
-                        script_file_id.write( '{0}\n'.format('            --input1={0} \\'.format(file_name_1_list[i])))
-                        script_file_id.write( '{0}\n'.format('            --input2={0} \\'.format(file_name_2_list[i])))
-                        script_file_id.write( '{0}\n'.format('            --output1={0}/starcode-{1} \\'.format(current_run_dir, os.path.basename(file_name_1_list[i]))))
-                        script_file_id.write( '{0}\n'.format('            --output2={0}/starcode-{1}'.format(current_run_dir, os.path.basename(file_name_2_list[i]))))
+                        script_file_id.write( '            --seq-id \\\n')
+                    script_file_id.write(f'            --input starcode-intermediate.fasta \\\n')
+                    script_file_id.write(f'            --output $CURRENT_DIR/starcode-final-output.txt\n')
                     script_file_id.write( '    RC=$?\n')
-                    script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error starcode $RC; fi'))
-            script_file_id.write( '}\n')
+                    script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error starcode $RC; fi\n')
+                    script_file_id.write( '    echo "Starcode is processed"\n')
+                elif read_type == 'PE':
+                    pass
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function build_final_fasta_file\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    cd $CURRENT_DIR\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                if read_type == 'SE':
+                    script_file_id.write( '    echo "Building the final FASTA file ..."\n')
+                    script_file_id.write( '    i=0\n')
+                    script_file_id.write( '    FASTA_FILE=$CURRENT_DIR/starcode.fasta\n')
+                    script_file_id.write( '    touch $FASTA_FILE\n')
+                    script_file_id.write( '    for STARCODE_RECORD in $(cut -f 1 $CURRENT_DIR/starcode-final-output.txt); do\n')
+                    script_file_id.write( '        ((i++))\n')
+                    script_file_id.write( '        echo ">seq$i" >>$FASTA_FILE \n')
+                    script_file_id.write( '        echo "$STARCODE_RECORD" >>$FASTA_FILE \n')
+                    script_file_id.write( '    done\n')
+                    script_file_id.write( '    echo "The file is built."\n')
+                elif read_type == 'PE':
+                    pass
+                script_file_id.write( '}\n')
+            elif concatenate_files == 'YES':
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function concatenate_input_files\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    cd $CURRENT_DIR\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "Concatenate the files of the library ..."\n')
+                if format == 'FASTQ':
+                    concatenated_library_1 = f'$CURRENT_DIR/concatenated_library_1.fastq'
+                elif format == 'FASTA':
+                    concatenated_library_1 = f'$CURRENT_DIR/concatenated_library_1.fasta'
+                script_file_id.write(f'    cat {" ".join(file_name_1_list)} > {concatenated_library_1}\n')
+                file_name_1_list = [concatenated_library_1]
+                if read_type == 'PE':
+                    if format == 'FASTQ':
+                        concatenated_library_2 = f'$CURRENT_DIR/concatenated_library_2.fastq'
+                    elif format == 'FASTA':
+                        concatenated_library_2 = f'$CURRENT_DIR/concatenated_library_2.fasta'
+                    script_file_id.write(f'    cat {" ".join(file_name_2_list)} > {concatenated_library_2}\n')
+                    file_name_2_list = [concatenated_library_2]
+                script_file_id.write( '    echo "The concatenation is done."\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function run_starcode_process\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    cd $CURRENT_DIR\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "Running Starcode process"\n')
+                script_file_id.write( '    starcode --version\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    /usr/bin/time \\\n')
+                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
+                script_file_id.write( '        starcode \\\n')
+                script_file_id.write(f'            --threads={threads} \\\n')
+                if distance != 'AUTO':
+                    script_file_id.write(f'            --distance {distance} \\\n')
+                if spheres == 'YES':
+                    script_file_id.write( '            --spheres \\\n')
+                if spheres == 'NO':
+                    script_file_id.write(f'            --cluster-ratio {cluster_ratio} \\\n')
+                if non_redundant == 'YES':
+                    script_file_id.write( '            --non-redundant \\\n')
+                if print_clusters == 'YES':
+                    script_file_id.write( '            --print-clusters \\\n')
+                if seq_id == 'YES':
+                    script_file_id.write( '            --seq-id \\\n')
+                if read_type == 'SE':
+                    script_file_id.write(f'            --input {concatenated_library_1} \\\n')
+                elif read_type == 'PE':
+                    script_file_id.write(f'            --input1 {concatenated_library_1} \\\n')
+                    script_file_id.write(f'            --input2 {concatenated_library_2} \\\n')
+                if read_type == 'PE' and non_redundant == 'YES':
+                    script_file_id.write(f'            --output1 $CURRENT_DIR/starcode-output-1.txt \\\n')
+                    script_file_id.write(f'            --output2 $CURRENT_DIR/starcode-output-2.txt\n')
+                else:
+                    script_file_id.write(f'            --output $CURRENT_DIR/starcode-output.txt\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error starcode $RC; fi\n')
+                script_file_id.write( '    echo "Starcode is processed"\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function build_fasta_file\n')
+                script_file_id.write( '{\n')
+                script_file_id.write( '    cd $CURRENT_DIR\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                if read_type == 'SE':
+                    script_file_id.write( '    echo "Building the final FASTA file ..."\n')
+                    script_file_id.write( '    i=0\n')
+                    script_file_id.write( '    FASTA_FILE=$CURRENT_DIR/starcode.fasta\n')
+                    script_file_id.write( '    touch $FASTA_FILE\n')
+                    script_file_id.write( '    for STARCODE_RECORD in $(cut -f 1 $CURRENT_DIR/starcode-output.txt); do\n')
+                    script_file_id.write( '        ((i++))\n')
+                    script_file_id.write( '        echo ">seq$i" >>$FASTA_FILE \n')
+                    script_file_id.write( '        echo "$STARCODE_RECORD" >>$FASTA_FILE \n')
+                    script_file_id.write( '    done\n')
+                    script_file_id.write( '    echo "The file is built."\n')
+                elif read_type == 'PE':
+                    pass
+                script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function end\n')
             script_file_id.write( '{\n')
@@ -697,13 +844,20 @@ def build_starcode_process_script(cluster_name, current_run_dir):
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
-            if concatenate_files == 'YES':
-                script_file_id.write( '{0}\n'.format('concatenate_files'))
-            script_file_id.write( '{0}\n'.format('run_starcode_process'))
+            if concatenate_files == 'NO':
+                script_file_id.write( 'run_initial_starcode_process\n')
+                script_file_id.write( 'concatenate_intermediate_starcode_files\n')
+                script_file_id.write( 'build_intermediate_fasta_file\n')
+                script_file_id.write( 'run_final_starcode_process\n')
+                script_file_id.write( 'build_final_fasta_file\n')
+            elif concatenate_files == 'YES':
+                script_file_id.write( 'concatenate_input_files\n')
+                script_file_id.write( 'run_starcode_process\n')
+                script_file_id.write( 'build_fasta_file\n')
             script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_starcode_process_script()))
+        error_list.append(f'*** ERROR: The file {get_starcode_process_script()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -727,10 +881,10 @@ def build_starcode_process_starter(current_run_dir):
         with open(get_starcode_process_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_starcode_process_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_starcode_process_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_starcode_process_starter()))
+        error_list.append(f'*** ERROR: The file {get_starcode_process_starter()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -744,7 +898,7 @@ def get_starcode_config_file():
     '''
 
     # assign the starcode config file path
-    starcode_config_file = '{0}/{1}-config.txt'.format(xlib.get_config_dir(), xlib.get_starcode_code())
+    starcode_config_file = f'{xlib.get_config_dir()}/{xlib.get_starcode_code()}-config.txt'
 
     # return the starcode config file path
     return starcode_config_file
@@ -757,7 +911,7 @@ def get_starcode_process_script():
     '''
 
     # assign the starcode script path
-    starcode_process_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_starcode_code())
+    starcode_process_script = f'{xlib.get_temp_dir()}/{xlib.get_starcode_code()}-process.sh'
 
     # return the starcode script path
     return starcode_process_script
@@ -770,7 +924,7 @@ def get_starcode_process_starter():
     '''
 
     # assign the starcode process starter path
-    starcode_process_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_starcode_code())
+    starcode_process_starter = f'{xlib.get_temp_dir()}/{xlib.get_starcode_code()}-process-starter.sh'
 
     # return the starcode starter path
     return starcode_process_starter
@@ -890,7 +1044,8 @@ def get_read_type_code_list():
     Get the code list of "read_type".
     '''
 
-    return ['SE', 'PE']
+    # -- return ['SE', 'PE']
+    return ['SE']
 
 #-------------------------------------------------------------------------------
     
@@ -899,7 +1054,8 @@ def get_read_type_code_list_text():
     Get the code list of "read_type" as text.
     '''
 
-    return 'SE (single-end) or PE (pair-end)'
+    # -- return 'SE (single-end) or PE (pair-end)'
+    return 'SE (single-end)'
 
 #-------------------------------------------------------------------------------
 

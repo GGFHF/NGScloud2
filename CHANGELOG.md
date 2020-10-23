@@ -1,4 +1,14 @@
-CURRENT VERSION: 2.08
+CURRENT VERSION: 2.09
+
+********************************************************************************
+
+Changes in v2.09 (October 2020)
+
+* *De novo* RNAseq improvements: new variant calling step
+
+* Some GUI improvements.
+
+* Fixation of minor problems.
 
 ********************************************************************************
 

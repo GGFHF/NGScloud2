@@ -264,6 +264,9 @@ def form_list_cluster_experiment_processes():
                 elif result_dataset_id.startswith(xlib.get_blastplus_code()+'-'):
                     bioinfo_app_name = xlib.get_blastplus_name()
 
+                elif result_dataset_id.startswith(xlib.get_bcftools_code()+'-'):
+                    bioinfo_app_name = xlib.get_bcftools_name()
+
                 elif result_dataset_id.startswith(xlib.get_bowtie2_code()+'-'):
                     bioinfo_app_name = xlib.get_bowtie2_name()
                 
@@ -509,6 +512,12 @@ def form_list_cluster_experiment_processes():
 
                 elif result_dataset_id.startswith(xlib.get_variant_calling_code()+'-'):
                     bioinfo_app_name = xlib.get_variant_calling_name()
+
+                elif result_dataset_id.startswith(xlib.get_vcftools_code()+'-'):
+                    bioinfo_app_name = xlib.get_vcftools_name()
+
+                elif result_dataset_id.startswith(xlib.get_vcftools_perl_libraries_code()+'-'):
+                    bioinfo_app_name = xlib.get_vcftools_perl_libraries_name()
 
                 elif result_dataset_id.startswith(xlib.get_vsearch_code()+'-'):
                     bioinfo_app_name = xlib.get_vsearch_name()

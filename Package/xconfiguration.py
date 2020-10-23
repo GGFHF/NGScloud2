@@ -443,7 +443,7 @@ def create_ngscloud_config_file(user_id, access_key_id, secret_access_key, email
                 file_id.write( 'channel = bioconda\n')
                 file_id.write( '\n')
                 file_id.write(f'[bioinfoapp {xlib.get_blastplus_name()}]\n')
-                file_id.write( 'version = any\n')
+                file_id.write( 'version = 2.9.0\n')
                 file_id.write(f'url = {xlib.get_anaconda_url()}\n')
                 file_id.write( 'channel = bioconda\n')
                 file_id.write( '\n')

@@ -146,7 +146,7 @@ def install_ddradseqtools(cluster_name, log, function=None):
     if OK:
         log.write(f'{xlib.get_separator()}\n')
         log.write('Determining the run directory in the cluster ...\n')
-        current_run_dir = xlib.get_cluster_current_run_dir('installation', xlib.get_ddradseqtools_code())
+        current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_toa_result_installation_dir(), xlib.get_ddradseqtools_code())
         command = f'mkdir --parents {current_run_dir}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
@@ -3201,7 +3201,7 @@ def get_ddradseq_simulation_process_starter():
 
 #-------------------------------------------------------------------------------
 
-def create_variant_calling_config_file(reference_dataset_id='Athaliana', reference_file='Arabidopsis_thaliana.TAIR10.dna.toplevel.fa', experiment_id='exp001', alignment_dataset_id='hisat2-170101-235959'):
+def create_variant_calling_config_file(experiment_id='exp001', reference_dataset_id='Athaliana', reference_file='Arabidopsis_thaliana.TAIR10.dna.toplevel.fa', assembly_dataset_id='NONE', assembly_type='NONE', alignment_dataset_id='hisat2-170101-235959'):
     '''
     Create Variant calling config file with the default options. It is necessary
     update the options in each run.
@@ -3210,6 +3210,26 @@ def create_variant_calling_config_file(reference_dataset_id='Athaliana', referen
     # initialize the control variable and the error list
     OK = True
     error_list = []
+
+    # set the assembly software
+    if assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()):
+        assembly_software = xlib.get_soapdenovotrans_code()
+    elif assembly_dataset_id.startswith(xlib.get_transabyss_code()):
+        assembly_software = xlib.get_transabyss_code()
+    elif assembly_dataset_id.startswith(xlib.get_trinity_code()):
+        assembly_software = xlib.get_trinity_code()
+    elif assembly_dataset_id.startswith(xlib.get_ggtrinity_code()):
+        assembly_software = xlib.get_ggtrinity_code()
+    elif assembly_dataset_id.startswith(xlib.get_cd_hit_est_code()):
+        assembly_software = xlib.get_cd_hit_est_code()
+    elif assembly_dataset_id.startswith(xlib.get_transcript_filter_code()):
+        assembly_software = xlib.get_transcript_filter_code()
+    elif assembly_dataset_id.startswith(xlib.get_soapdenovo2_code()):
+        assembly_software = xlib.get_soapdenovo2_code()
+    elif assembly_dataset_id.startswith(xlib.get_starcode_code()):
+        assembly_software = xlib.get_starcode_code()
+    elif assembly_dataset_id.upper() == 'NONE':
+        assembly_software = 'NONE'
 
     # set the alignment
     if alignment_dataset_id.startswith(xlib.get_bowtie2_code()):
@@ -3248,8 +3268,11 @@ def create_variant_calling_config_file(reference_dataset_id='Athaliana', referen
             file_id.write( '# This section has the information identifies the experiment.\n')
             file_id.write( '[identification]\n')
             file_id.write( '{0:<50} {1}\n'.format(f'experiment_id = {experiment_id}', '# experiment identification'))
-            file_id.write( '{0:<50} {1}\n'.format(f'reference_dataset_id = {reference_dataset_id}', '# reference dataset identification'))
-            file_id.write( '{0:<50} {1}\n'.format(f'reference_file = {reference_file}', '# reference file name'))
+            file_id.write( '{0:<50} {1}\n'.format(f'reference_dataset_id = {reference_dataset_id}', '# reference dataset identification or NONE if an assembly is used'))
+            file_id.write( '{0:<50} {1}\n'.format(f'reference_file = {reference_file}', '# reference file name or NONE if an assembly is used'))
+            file_id.write( '{0:<50} {1}\n'.format(f'assembly_software = {assembly_software}', f'# assembly software: {get_extended_assembly_software_code_list_text()}; or NONE if a reference is used'))
+            file_id.write( '{0:<50} {1}\n'.format(f'assembly_dataset_id = {assembly_dataset_id}', '# assembly dataset identification or NONE if a reference is used'))
+            file_id.write( '{0:<50} {1}\n'.format(f'assembly_type = {assembly_type}', f'# assembly type: CONTIGS or SCAFFOLDS in {xlib.get_soapdenovotrans_name()}; NONE in any other case'))
             file_id.write( '{0:<50} {1}\n'.format(f'alignment_software = {alignment_software}', f'# alignment software: {get_alignment_software_code_list_text()}'))
             file_id.write( '{0:<50} {1}\n'.format(f'alignment_dataset_id = {alignment_dataset_id}', '# alignment dataset identification'))
             file_id.write( '\n')
@@ -3552,15 +3575,70 @@ def check_variant_calling_config_file(strict):
 
             # check section "identification" - key "reference_dataset_id"
             reference_dataset_id = variant_calling_option_dict.get('identification', {}).get('reference_dataset_id', not_found)
+            is_ok_reference_dataset_id = False
             if reference_dataset_id == not_found:
                 error_list.append('*** ERROR: the key "reference_dataset_id" is not found in the section "identification".')
                 OK = False
+            else:
+                is_ok_reference_dataset_id = True
 
             # check section "identification" - key "reference_file"
             reference_file = variant_calling_option_dict.get('identification', {}).get('reference_file', not_found)
+            is_ok_reference_file = False
             if reference_file == not_found:
                 error_list.append('*** ERROR: the key "reference_file" is not found in the section "identification".')
                 OK = False
+            else:
+                is_ok_reference_file = True
+
+            # check that "reference_file" has to be NONE if "reference_dataset_id" is NONE
+            if is_ok_reference_dataset_id and is_ok_reference_file and reference_dataset_id.upper() == 'NONE' and reference_file.upper() != 'NONE':
+                error_list.append('*** ERROR: "reference_file" has to be NONE if "reference_dataset_id" is NONE.')
+                OK = False
+
+            # check section "identification" - key "assembly_software"
+            assembly_software = variant_calling_option_dict.get('identification', {}).get('assembly_software', not_found)
+            is_ok_assembly_software = False
+            if assembly_software == not_found:
+                error_list.append('*** ERROR: the key "assembly_software" is not found in the section "identification".')
+                OK = False
+            elif assembly_software.upper() != 'NONE' and not xlib.check_code(assembly_software, get_extended_assembly_software_code_list(), case_sensitive=False):
+                error_list.append(f'*** ERROR: the key "assembly_software" has to be {get_extended_assembly_software_code_list_text()}; or NONE if a reference is used.')
+                OK = False
+            else:
+                is_ok_assembly_software = True
+
+            # check that "assembly_software" has to be NONE if "reference_dataset_id" is not NONE, and vice versa
+            if is_ok_reference_dataset_id and is_ok_assembly_software and (reference_dataset_id.upper() == 'NONE' and assembly_software.upper() == 'NONE' or reference_dataset_id.upper() != 'NONE' and assembly_software.upper() != 'NONE'):
+                error_list.append('*** ERROR: "assembly_software" has to be NONE if "reference_dataset_id" is not NONE, and vice versa.')
+                OK = False
+
+            # check section "identification" - key "assembly_dataset_id"
+            assembly_dataset_id = variant_calling_option_dict.get('identification', {}).get('assembly_dataset_id', not_found)
+            is_ok_assembly_dataset_id = False
+            if assembly_dataset_id == not_found:
+                error_list.append('*** ERROR: the key "assembly_dataset_id" is not found in the section "identification".')
+                OK = False
+            elif assembly_dataset_id.upper() != 'NONE' and not xlib.check_startswith(assembly_dataset_id, get_extended_assembly_software_code_list(), case_sensitive=True):
+                error_list.append(f'*** ERROR: the key "assembly_dataset_id" does not have to start with {get_extended_assembly_software_code_list_text()}.')
+                OK = False
+            else:
+                is_ok_assembly_dataset_id = True
+
+            # check that "assembly_dataset_id" has to be NONE if "assembly_software" is NONE
+            if is_ok_assembly_software and is_ok_assembly_dataset_id and assembly_software.upper() == 'NONE' and assembly_dataset_id.upper() != 'NONE':
+                error_list.append('*** ERROR: "assembly_dataset_id" has to be NONE if "assembly_software" is NONE.')
+                OK = False
+
+            # check section "identification" - key "assembly_type"
+            assembly_type = variant_calling_option_dict.get('identification', {}).get('assembly_type', not_found)
+            if assembly_type == not_found:
+                error_list.append('*** ERROR: the key "assembly_type" is not found in the section "identification".')
+                OK = False
+            elif (assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()) or assembly_dataset_id.startswith(xlib.get_soapdenovo2_code())) and assembly_type.upper() not in ['CONTIGS', 'SCAFFOLDS'] or \
+                not (assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()) or assembly_dataset_id.startswith(xlib.get_soapdenovo2_code())) and assembly_type.upper() != 'NONE':
+                    error_list.append(f'*** ERROR: the key "assembly_type" has to be CONTIGS or SCAFFOLDS in {xlib.get_soapdenovotrans_name()} and {xlib.get_soapdenovo2_name()}; or NONE in any other case.')
+                    OK = False
 
             # check section "identification" - key "alignment_software"
             alignment_software = variant_calling_option_dict.get('identification', {}).get('alignment_software', not_found)
@@ -3674,6 +3752,9 @@ def build_variant_calling_process_script(cluster_name, current_run_dir):
     experiment_id = variant_calling_option_dict['identification']['experiment_id']
     reference_dataset_id = variant_calling_option_dict['identification']['reference_dataset_id']
     reference_file = variant_calling_option_dict['identification']['reference_file']
+    assembly_software = variant_calling_option_dict['identification']['assembly_software']
+    assembly_dataset_id = variant_calling_option_dict['identification']['assembly_dataset_id']
+    assembly_type = variant_calling_option_dict['identification']['assembly_type']
     alignment_software = variant_calling_option_dict['identification']['alignment_software']
     alignment_dataset_id = variant_calling_option_dict['identification']['alignment_dataset_id']
     vcf_merger = variant_calling_option_dict['Variant calling parameters']['vcf-merger']
@@ -3682,8 +3763,27 @@ def build_variant_calling_process_script(cluster_name, current_run_dir):
     multiallelic_caller = variant_calling_option_dict['bcftools call parameters']['multiallelic-caller']
     other_parameters = variant_calling_option_dict['bcftools call parameters']['other_parameters']
 
-    # set genome file path
-    genome_file = xlib.get_cluster_reference_file(reference_dataset_id, reference_file)
+    # set the cluster reference file
+    if reference_dataset_id.upper() != 'NONE':
+        cluster_reference_file = xlib.get_cluster_reference_file(reference_dataset_id, reference_file)
+    else:
+        if assembly_software in [xlib.get_soapdenovotrans_code(), xlib.get_soapdenovo2_code()]:
+            if assembly_type == 'CONTIGS':
+                cluster_reference_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)}/{experiment_id}-{assembly_dataset_id}.contig'
+            elif  assembly_type == 'SCAFFOLDS':
+                cluster_reference_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)}/{experiment_id}-{assembly_dataset_id}.scafSeq'
+        elif assembly_software == xlib.get_transabyss_code():
+            cluster_reference_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)}/transabyss-final.fa'
+        elif assembly_software == xlib.get_trinity_code():
+            cluster_reference_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)}/Trinity.fasta'
+        elif assembly_software == xlib.get_ggtrinity_code():
+            cluster_reference_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)}/Trinity-GG.fasta'
+        elif assembly_software == xlib.get_cd_hit_est_code():
+            cluster_reference_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)}/clustered-transcriptome.fasta'
+        elif assembly_software == xlib.get_transcript_filter_code():
+            cluster_reference_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)}/filtered-transcriptome.fasta'
+        elif assembly_software == xlib.get_starcode_code():
+            cluster_reference_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)}/starcode.fasta'
 
     # set the alignment file paths
     if alignment_software == xlib.get_bowtie2_code():
@@ -3691,7 +3791,8 @@ def build_variant_calling_process_script(cluster_name, current_run_dir):
         bam_files = '$BAM_DIR/alignment.bam'
     elif alignment_software == xlib.get_gsnap_code():
         sam_files = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id)}/*-split.concordant_uniq'
-        bam_files = '$BAM_DIR/*-split.concordant_uniq.bam'
+        sam_files_2 = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id)}/*-split.uniq'
+        bam_files = '$BAM_DIR/*.bam'
     elif alignment_software == xlib.get_hisat2_code():
         sam_files = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id)}/alignment.sam'
         bam_files = '$BAM_DIR/alignment.bam'
@@ -3779,6 +3880,10 @@ def build_variant_calling_process_script(cluster_name, current_run_dir):
                 script_file_id.write( '    else\n')
                 script_file_id.write(f'        source activate {xlib.get_samtools_anaconda_code()}\n')
                 script_file_id.write(f'        ls {sam_files} > sam-files.txt\n')
+                if alignment_software == xlib.get_gsnap_code():
+                    script_file_id.write(f'        if ! [ -s sam-files.txt ]; then\n')
+                    script_file_id.write(f'            ls {sam_files_2} > sam-files.txt\n')
+                    script_file_id.write(f'        fi\n')
                 script_file_id.write( '        while read FILE_SAM; do\n')
                 if alignment_software == xlib.get_gsnap_code():
                     script_file_id.write( '            FILE_BAM=$BAM_DIR/`basename $FILE_SAM`.bam\n')
@@ -3879,7 +3984,7 @@ def build_variant_calling_process_script(cluster_name, current_run_dir):
             script_file_id.write( '        ls $BAM_DIR/*.sorted.bam > sorted-bam-files.txt\n')
             script_file_id.write( '        while read FILE_SORTED_BAM; do\n')
             script_file_id.write( '            FILE_VCF=$VCF_DIR/`basename $FILE_SORTED_BAM | sed "s|.sorted.bam|.vcf|g"`\n')
-            script_file_id.write(f'            bcftools mpileup --output-type u --fasta-ref {genome_file} $FILE_SORTED_BAM | bcftools call {bcftools_call_parameter} - > $FILE_VCF\n')
+            script_file_id.write(f'            bcftools mpileup --output-type u --fasta-ref {cluster_reference_file} $FILE_SORTED_BAM | bcftools call {bcftools_call_parameter} - > $FILE_VCF\n')
             script_file_id.write( '            RC=$?\n')
             script_file_id.write( '            if [ $RC -ne 0 ]; then manage_error bcftools-mpileup_bcftools-call $RC; fi\n')
             script_file_id.write( '        done < sorted-bam-files.txt\n')
@@ -4272,6 +4377,24 @@ def get_pcrdistribution_code_list_text():
     '''
 
     return str(get_pcrdistribution_code_list()).strip('[]').replace('\'','').replace(',', ' or')
+
+#-------------------------------------------------------------------------------
+
+def get_extended_assembly_software_code_list():
+    '''
+    Get the code list of "assembly_software".
+    '''
+
+    return [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(),  xlib.get_transcript_filter_code(), xlib.get_soapdenovo2_code(), xlib.get_starcode_name()]
+
+#-------------------------------------------------------------------------------
+
+def get_extended_assembly_software_code_list_text():
+    '''
+    Get the code list of "assembly_software" as text.
+    '''
+
+    return f'{xlib.get_soapdenovotrans_code()} ({xlib.get_soapdenovotrans_name()}) or {xlib.get_transabyss_code()} ({xlib.get_transabyss_name()}) or {xlib.get_trinity_code()} ({xlib.get_trinity_name()}) or {xlib.get_ggtrinity_code()} ({xlib.get_ggtrinity_name()}) or {xlib.get_cd_hit_est_code()} ({xlib.get_cd_hit_est_name()}) or {xlib.get_transcript_filter_code()} ({xlib.get_transcript_filter_name()}) or {xlib.get_soapdenovo2_code()} ({xlib.get_soapdenovo2_name()}) or {xlib.get_starcode_code()} ({xlib.get_starcode_name()})'
 
 #-------------------------------------------------------------------------------
     

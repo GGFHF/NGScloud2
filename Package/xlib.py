@@ -61,7 +61,7 @@ def get_project_version():
     Get the project name.
     '''
 
-    return '2.08'
+    return '2.09'
 
 #-------------------------------------------------------------------------------
     
@@ -1614,7 +1614,7 @@ def get_vcftools_perl_libraries_code():
     Get the VCFtools Perl libraries code used to identify its processes.
     '''
 
-    return 'vcftools-perl'
+    return 'vcfperl'
 
 #-------------------------------------------------------------------------------
 

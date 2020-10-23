@@ -964,10 +964,11 @@ class FormRecreateBowtie2ConfigFile(tkinter.Frame):
         self.combobox_experiment_id['values'] = []
         self.wrapper_experiment_id.set('')
         self.combobox_assembly_dataset['values'] = []
-        self.wrapper_assembly_dataset.set('')
-        self.assembly_dataset_id = None
+        self.wrapper_assembly_dataset.set('NONE')
+        self.combobox_assembly_dataset['state'] = 'disabled'
+        self.assembly_dataset_id = 'NONE'
         self.combobox_assembly_type['values'] = []
-        self.wrapper_assembly_type.set('')
+        self.wrapper_assembly_type.set('NONE')
         self.combobox_assembly_type['state'] = 'disabled'
         self.combobox_read_dataset['values'] = []
         self.wrapper_read_dataset.set('')
@@ -1083,7 +1084,7 @@ class FormRecreateBowtie2ConfigFile(tkinter.Frame):
         self.wrapper_assembly_dataset.set('')
 
         # get the list of the assembly_dataset dataset names
-        app_list = [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(), xlib.get_transcript_filter_code()]
+        app_list = [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(), xlib.get_transcript_filter_code(), xlib.get_soapdenovo2_code(), xlib.get_starcode_code()]
         (OK, error_list, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # load the assembly dataset names in the combobox
@@ -1177,23 +1178,37 @@ class FormRecreateBowtie2ConfigFile(tkinter.Frame):
         self.root.config(cursor='watch')
         self.root.update()
 
-        # load data in "combobox_reference_file"
+        # load data in "combobox_reference_file", "combobox_assembly_dataset" and "combobox_assembly_type"
         if self.wrapper_reference_dataset.get() == 'NONE':
             self.combobox_reference_file['values'] = ['NONE']
             self.wrapper_reference_file.set('NONE')
+            self.assembly_dataset_id = ''
+            self.combobox_assembly_dataset['state'] = 'readonly'
+            self.combobox_assembly_dataset['values'] = []
+            self.wrapper_assembly_dataset.set('')
+            self.combobox_assembly_type['state'] = 'readonly'
+            self.combobox_assembly_type['values'] = []
+            self.wrapper_assembly_type.set('')
+            self.combobox_assembly_type['state'] = 'disabled'
+
         else:
             self.populate_combobox_reference_file()
+            self.assembly_dataset_id = 'NONE'
+            self.combobox_assembly_dataset['state'] = 'readonly'
+            self.combobox_assembly_dataset['values'] = ['NONE']
+            self.wrapper_assembly_dataset.set('NONE')
+            self.combobox_assembly_dataset['state'] = 'disabled'
+            self.combobox_assembly_type['state'] = 'readonly'
+            self.combobox_assembly_type['values'] = ['NONE']
+            self.wrapper_assembly_type.set('NONE')
+            self.combobox_assembly_type['state'] = 'disabled'
 
-        # load data in "combobox_assembly_dataset" if an item is selected in the "combobox_experiment_id"
-        if self.assembly_dataset_id != None:
-            if self.wrapper_reference_dataset.get() == 'NONE':
-                self.populate_combobox_assembly_dataset()
-            else:
-                self.combobox_assembly_dataset['values'] = ['NONE']
-                self.wrapper_assembly_dataset.set('NONE')
-                self.assembly_dataset_id = 'NONE'
-                self.combobox_assembly_type['values'] = ['NONE']
-                self.wrapper_assembly_type.set('NONE')
+        # load data in "combobox_experiment_id"
+        self.populate_combobox_experiment_id()
+
+        # clear data in "combobox_read_dataset"
+        self.combobox_read_dataset['values'] = []
+        self.wrapper_read_dataset.set('')
 
         # set cursor to show normal status
         self.root.config(cursor='')
@@ -1222,12 +1237,6 @@ class FormRecreateBowtie2ConfigFile(tkinter.Frame):
         # load data in "combobox_assembly_dataset"
         if self.wrapper_reference_dataset.get() == 'NONE':
             self.populate_combobox_assembly_dataset()
-        else:
-            self.combobox_assembly_dataset['values'] = ['NONE']
-            self.wrapper_assembly_dataset.set('NONE')
-            self.assembly_dataset_id = 'NONE'
-            self.combobox_assembly_type['values'] = ['NONE']
-            self.wrapper_assembly_type.set('NONE')
 
         # load data in "combobox_read_dataset"
         self.populate_combobox_read_dataset()
@@ -1247,11 +1256,12 @@ class FormRecreateBowtie2ConfigFile(tkinter.Frame):
         (OK, error_list, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
 
         # load data in "combobox_assembly_type"
-        if self.assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()):
+        if self.assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()) or self.assembly_dataset_id.startswith(xlib.get_soapdenovo2_code()):
+            self.combobox_assembly_type['state'] = 'readonly'
             self.combobox_assembly_type['values'] = ['CONTIGS', 'SCAFFOLDS']
             self.wrapper_assembly_type.set('')
+        elif self.assembly_dataset_id.startswith(xlib.get_transabyss_code()) or self.assembly_dataset_id.startswith(xlib.get_trinity_code()) or self.assembly_dataset_id.startswith(xlib.get_ggtrinity_code()) or self.assembly_dataset_id.startswith(xlib.get_cd_hit_est_code()) or self.assembly_dataset_id.startswith(xlib.get_transcript_filter_code()) or self.assembly_dataset_id.startswith(xlib.get_starcode_code()):
             self.combobox_assembly_type['state'] = 'readonly'
-        elif self.assembly_dataset_id.startswith(xlib.get_transabyss_code()) or self.assembly_dataset_id.startswith(xlib.get_trinity_code()) or self.assembly_dataset_id.startswith(xlib.get_ggtrinity_code()) or self.assembly_dataset_id.startswith(xlib.get_cd_hit_est_code()) or self.assembly_dataset_id.startswith(xlib.get_transcript_filter_code()):
             self.combobox_assembly_type['values'] = ['NONE']
             self.wrapper_assembly_type.set('NONE')
             self.combobox_assembly_type['state'] = 'disabled'
@@ -6578,10 +6588,11 @@ class FormRecreateGsnapConfigFile(tkinter.Frame):
         self.combobox_experiment_id['values'] = []
         self.wrapper_experiment_id.set('')
         self.combobox_assembly_dataset['values'] = []
-        self.wrapper_assembly_dataset.set('')
-        self.assembly_dataset_id = None
+        self.wrapper_assembly_dataset.set('NONE')
+        self.combobox_assembly_dataset['state'] = 'disabled'
+        self.assembly_dataset_id = 'NONE'
         self.combobox_assembly_type['values'] = []
-        self.wrapper_assembly_type.set('')
+        self.wrapper_assembly_type.set('NONE')
         self.combobox_assembly_type['state'] = 'disabled'
         self.combobox_read_dataset['values'] = []
         self.wrapper_read_dataset.set('')
@@ -6697,7 +6708,7 @@ class FormRecreateGsnapConfigFile(tkinter.Frame):
         self.wrapper_assembly_dataset.set('')
 
         # get the list of the assembly_dataset dataset names
-        app_list = [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(), xlib.get_transcript_filter_code()]
+        app_list = [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(), xlib.get_transcript_filter_code(), xlib.get_soapdenovo2_code(), xlib.get_starcode_code()]
         (OK, error_list, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # load the assembly dataset names in the combobox
@@ -6791,23 +6802,37 @@ class FormRecreateGsnapConfigFile(tkinter.Frame):
         self.root.config(cursor='watch')
         self.root.update()
 
-        # load data in "combobox_reference_file"
+        # load data in "combobox_reference_file", "combobox_assembly_dataset" and "combobox_assembly_type"
         if self.wrapper_reference_dataset.get() == 'NONE':
             self.combobox_reference_file['values'] = ['NONE']
             self.wrapper_reference_file.set('NONE')
+            self.assembly_dataset_id = ''
+            self.combobox_assembly_dataset['state'] = 'readonly'
+            self.combobox_assembly_dataset['values'] = []
+            self.wrapper_assembly_dataset.set('')
+            self.combobox_assembly_type['state'] = 'readonly'
+            self.combobox_assembly_type['values'] = []
+            self.wrapper_assembly_type.set('')
+            self.combobox_assembly_type['state'] = 'disabled'
+
         else:
             self.populate_combobox_reference_file()
+            self.assembly_dataset_id = 'NONE'
+            self.combobox_assembly_dataset['state'] = 'readonly'
+            self.combobox_assembly_dataset['values'] = ['NONE']
+            self.wrapper_assembly_dataset.set('NONE')
+            self.combobox_assembly_dataset['state'] = 'disabled'
+            self.combobox_assembly_type['state'] = 'readonly'
+            self.combobox_assembly_type['values'] = ['NONE']
+            self.wrapper_assembly_type.set('NONE')
+            self.combobox_assembly_type['state'] = 'disabled'
 
-        # load data in "combobox_assembly_dataset" if an item is selected in the "combobox_experiment_id"
-        if self.assembly_dataset_id != None:
-            if self.wrapper_reference_dataset.get() == 'NONE':
-                self.populate_combobox_assembly_dataset()
-            else:
-                self.combobox_assembly_dataset['values'] = ['NONE']
-                self.wrapper_assembly_dataset.set('NONE')
-                self.assembly_dataset_id = 'NONE'
-                self.combobox_assembly_type['values'] = ['NONE']
-                self.wrapper_assembly_type.set('NONE')
+        # load data in "combobox_experiment_id"
+        self.populate_combobox_experiment_id()
+
+        # clear data in "combobox_read_dataset"
+        self.combobox_read_dataset['values'] = []
+        self.wrapper_read_dataset.set('')
 
         # set cursor to show normal status
         self.root.config(cursor='')
@@ -6836,12 +6861,6 @@ class FormRecreateGsnapConfigFile(tkinter.Frame):
         # load data in "combobox_assembly_dataset"
         if self.wrapper_reference_dataset.get() == 'NONE':
             self.populate_combobox_assembly_dataset()
-        else:
-            self.combobox_assembly_dataset['values'] = ['NONE']
-            self.wrapper_assembly_dataset.set('NONE')
-            self.assembly_dataset_id = 'NONE'
-            self.combobox_assembly_type['values'] = ['NONE']
-            self.wrapper_assembly_type.set('NONE')
 
         # load data in "combobox_read_dataset"
         self.populate_combobox_read_dataset()
@@ -6861,11 +6880,12 @@ class FormRecreateGsnapConfigFile(tkinter.Frame):
         (OK, error_list, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
 
         # load data in "combobox_assembly_type"
-        if self.assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()):
+        if self.assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code() or self.assembly_dataset_id.startswith(xlib.get_soapdenovo2_code())):
+            self.combobox_assembly_type['state'] = 'readonly'
             self.combobox_assembly_type['values'] = ['CONTIGS', 'SCAFFOLDS']
             self.wrapper_assembly_type.set('')
+        elif self.assembly_dataset_id.startswith(xlib.get_transabyss_code()) or self.assembly_dataset_id.startswith(xlib.get_trinity_code()) or self.assembly_dataset_id.startswith(xlib.get_ggtrinity_code()) or self.assembly_dataset_id.startswith(xlib.get_cd_hit_est_code()) or self.assembly_dataset_id.startswith(xlib.get_transcript_filter_code()) or self.assembly_dataset_id.startswith(xlib.get_starcode_code()):
             self.combobox_assembly_type['state'] = 'readonly'
-        elif self.assembly_dataset_id.startswith(xlib.get_transabyss_code()) or self.assembly_dataset_id.startswith(xlib.get_trinity_code()) or self.assembly_dataset_id.startswith(xlib.get_ggtrinity_code()) or self.assembly_dataset_id.startswith(xlib.get_cd_hit_est_code()) or self.assembly_dataset_id.startswith(xlib.get_transcript_filter_code()):
             self.combobox_assembly_type['values'] = ['NONE']
             self.wrapper_assembly_type.set('NONE')
             self.combobox_assembly_type['state'] = 'disabled'
@@ -15358,7 +15378,8 @@ class FormRecreateStarcodeConfigFile(tkinter.Frame):
         self.wrapper_read_type.set('')
 
         # load the list of the read dataset names in the combobox
-        self.combobox_read_type['values'] =['Single-end', 'Paired-end']
+        # -- self.combobox_read_type['values'] =['Single-end', 'Paired-end']
+        self.combobox_read_type['values'] =['Single-end']
 
     #---------------
 
@@ -19267,6 +19288,10 @@ class FormRecreateVariantCallingConfigFile(tkinter.Frame):
         self.wrapper_reference_file.trace('w', self.check_inputs)
         self.wrapper_experiment_id = tkinter.StringVar()
         self.wrapper_experiment_id.trace('w', self.check_inputs)
+        self.wrapper_assembly_dataset = tkinter.StringVar()
+        self.wrapper_assembly_dataset.trace('w', self.check_inputs)
+        self.wrapper_assembly_type = tkinter.StringVar()
+        self.wrapper_assembly_type.trace('w', self.check_inputs)
         self.wrapper_alignment_dataset = tkinter.StringVar()
         self.wrapper_alignment_dataset.trace('w', self.check_inputs)
 
@@ -19292,61 +19317,79 @@ class FormRecreateVariantCallingConfigFile(tkinter.Frame):
 
         # create "label_cluster_name" and register it with the grid geometry manager
         self.label_cluster_name = tkinter.Label(self, text='Cluster name')
-        self.label_cluster_name.grid(row=0, column=0, padx=(15,5), pady=(75,5), sticky='e')
+        self.label_cluster_name.grid(row=0, column=0, padx=(15,5), pady=(45,5), sticky='e')
 
         # create "combobox_cluster_name" and register it with the grid geometry manager
         self.combobox_cluster_name = tkinter.ttk.Combobox(self, width=20, height=4, state='readonly', textvariable=self.wrapper_cluster_name)
-        self.combobox_cluster_name.grid(row=0, column=1, padx=(5,5), pady=(75,5), sticky='w')
+        self.combobox_cluster_name.grid(row=0, column=1, padx=(5,5), pady=(45,5), sticky='w')
 
         # create "label_reference_dataset" and register it with the grid geometry manager
         self.label_reference_dataset = tkinter.Label(self, text='Reference dataset')
-        self.label_reference_dataset.grid(row=1, column=0, padx=(15,5), pady=(45,5), sticky='e')
+        self.label_reference_dataset.grid(row=1, column=0, padx=(15,5), pady=(35,5), sticky='e')
 
         # create "combobox_reference_dataset" and register it with the grid geometry manager
         self.combobox_reference_dataset = tkinter.ttk.Combobox(self, width=45, height=4, state='readonly', textvariable=self.wrapper_reference_dataset)
-        self.combobox_reference_dataset.grid(row=1, column=1, padx=(5,5), pady=(45,5), sticky='w')
+        self.combobox_reference_dataset.grid(row=1, column=1, padx=(5,5), pady=(35,5), sticky='w')
 
         # create "label_reference_file" and register it with the grid geometry manager
         self.label_reference_file = tkinter.Label(self, text='Reference file')
-        self.label_reference_file.grid(row=2, column=0, padx=(15,5), pady=(45,5), sticky='e')
+        self.label_reference_file.grid(row=2, column=0, padx=(15,5), pady=(35,5), sticky='e')
 
         # create "combobox_reference_file" and register it with the grid geometry manager
         self.combobox_reference_file = tkinter.ttk.Combobox(self, width=45, height=4, state='readonly', textvariable=self.wrapper_reference_file)
-        self.combobox_reference_file.grid(row=2, column=1, padx=(5,5), pady=(45,5), sticky='w')
+        self.combobox_reference_file.grid(row=2, column=1, padx=(5,5), pady=(35,5), sticky='w')
 
         # create "label_experiment_id" and register it with the grid geometry manager
         self.label_experiment_id = tkinter.Label(self, text='Experiment id.')
-        self.label_experiment_id.grid(row=3, column=0, padx=(15,5), pady=(45,5), sticky='e')
+        self.label_experiment_id.grid(row=3, column=0, padx=(15,5), pady=(35,5), sticky='e')
 
         # create "combobox_experiment_id" and register it with the grid geometry manager
         self.combobox_experiment_id = tkinter.ttk.Combobox(self, width=30, height=4, state='readonly', textvariable=self.wrapper_experiment_id)
-        self.combobox_experiment_id.grid(row=3, column=1, padx=(5,5), pady=(45,5), sticky='w')
+        self.combobox_experiment_id.grid(row=3, column=1, padx=(5,5), pady=(35,5), sticky='w')
+
+        # create "label_assembly_dataset" and register it with the grid geometry manager
+        self.label_assembly_dataset = tkinter.Label(self, text='Assembly dataset')
+        self.label_assembly_dataset.grid(row=4, column=0, padx=(15,5), pady=(35,5), sticky='e')
+
+        # create "combobox_assembly_dataset" and register it with the grid geometry manager
+        self.combobox_assembly_dataset = tkinter.ttk.Combobox(self, width=45, height=4, state='readonly', textvariable=self.wrapper_assembly_dataset)
+        self.combobox_assembly_dataset.grid(row=4, column=1, padx=(5,5), pady=(35,5), sticky='w')
+
+        # create "label_assembly_type" and register it with the grid geometry manager
+        self.label_assembly_type = tkinter.Label(self, text='Assembly type')
+        self.label_assembly_type.grid(row=5, column=0, padx=(15,5), pady=(35,5), sticky='e')
+
+        # create "combobox_assembly_type" and register it with the grid geometry manager
+        self.combobox_assembly_type = tkinter.ttk.Combobox(self, width=20, height=4, state='readonly', textvariable=self.wrapper_assembly_type)
+        self.combobox_assembly_type.grid(row=5, column=1, padx=(5,5), pady=(35,5), sticky='w')
 
         # create "label_alignment_dataset" and register it with the grid geometry manager
         self.label_alignment_dataset = tkinter.Label(self, text='Alignment dataset')
-        self.label_alignment_dataset.grid(row=4, column=0, padx=(15,5), pady=(45,5), sticky='e')
+        self.label_alignment_dataset.grid(row=6, column=0, padx=(15,5), pady=(35,5), sticky='e')
 
         # create "combobox_alignment_dataset" and register it with the grid geometry manager
         self.combobox_alignment_dataset = tkinter.ttk.Combobox(self, width=45, height=4, state='readonly', textvariable=self.wrapper_alignment_dataset)
-        self.combobox_alignment_dataset.grid(row=4, column=1, padx=(5,5), pady=(45,5), sticky='w')
+        self.combobox_alignment_dataset.grid(row=6, column=1, padx=(5,5), pady=(35,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
         self.label_fit = tkinter.Label(self, text=' '*48)
-        self.label_fit.grid(row=5, column=2, padx=(0,0), pady=(45,5), sticky='e')
+        self.label_fit.grid(row=7, column=2, padx=(0,0), pady=(35,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
         self.button_execute = tkinter.ttk.Button(self, text='Execute', command=self.execute, state='disabled')
-        self.button_execute.grid(row=5, column=3, padx=(0,5), pady=(45,5), sticky='e')
+        self.button_execute.grid(row=7, column=3, padx=(0,5), pady=(35,5), sticky='e')
 
         # create "button_close" and register it with the grid geometry manager
         self.button_close = tkinter.ttk.Button(self, text='Close', command=self.close)
-        self.button_close.grid(row=5, column=4, padx=(5,5), pady=(45,5), sticky='w')
+        self.button_close.grid(row=7, column=4, padx=(5,5), pady=(35,5), sticky='w')
 
         # link a handler to events
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
         self.combobox_reference_dataset.bind('<<ComboboxSelected>>', self.combobox_reference_dataset_selected_item)
         self.combobox_reference_file.bind('<<ComboboxSelected>>', self.combobox_reference_file_selected_item)
         self.combobox_experiment_id.bind('<<ComboboxSelected>>', self.combobox_experiment_id_selected_item)
+        self.combobox_assembly_dataset.bind('<<ComboboxSelected>>', self.combobox_assembly_dataset_selected_item)
+        self.combobox_assembly_type.bind('<<ComboboxSelected>>', self.combobox_assembly_type_selected_item)
         self.combobox_alignment_dataset.bind('<<ComboboxSelected>>', self.combobox_alignment_dataset_selected_item)
         self.root.bind('<Return>', self.execute)
 
@@ -19364,9 +19407,16 @@ class FormRecreateVariantCallingConfigFile(tkinter.Frame):
         self.wrapper_reference_file.set('')
         self.combobox_experiment_id['values'] = []
         self.wrapper_experiment_id.set('')
+        self.combobox_assembly_dataset['values'] = []
+        self.wrapper_assembly_dataset.set('NONE')
+        self.combobox_assembly_dataset['state'] = 'disabled'
+        self.assembly_dataset_id = 'NONE'
+        self.combobox_assembly_type['values'] = []
+        self.wrapper_assembly_type.set('NONE')
+        self.combobox_assembly_type['state'] = 'disabled'
         self.combobox_alignment_dataset['values'] = []
         self.wrapper_alignment_dataset.set('')
-        self.alignment_dataset_id = None
+        self.alignment_dataset_id = ''
 
         # populate data in comboboxes
         self.populate_combobox_cluster_name()
@@ -19411,7 +19461,7 @@ class FormRecreateVariantCallingConfigFile(tkinter.Frame):
         (OK, error_list, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
-        self.combobox_reference_dataset['values'] = sorted(reference_dataset_name_list)
+        self.combobox_reference_dataset['values'] = ['NONE'] + sorted(reference_dataset_name_list)
 
     #---------------
 
@@ -19459,6 +19509,23 @@ class FormRecreateVariantCallingConfigFile(tkinter.Frame):
 
         # load the experiment identifications in the combobox
         self.combobox_experiment_id['values'] = sorted(experiment_id_list)
+
+    #---------------
+
+    def populate_combobox_assembly_dataset(self):
+        '''
+        Populate data in "combobox_assembly_dataset".
+        '''
+
+        # clear the value selected in the combobox
+        self.wrapper_assembly_dataset.set('')
+
+        # get the list of the assembly_dataset dataset names
+        app_list = [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(), xlib.get_transcript_filter_code(), xlib.get_soapdenovo2_code(), xlib.get_starcode_code()]
+        (OK, error_list, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+
+        # load the assembly dataset names in the combobox
+        self.combobox_assembly_dataset['values'] = sorted(assembly_dataset_name_list)
 
     #---------------
 
@@ -19536,8 +19603,41 @@ class FormRecreateVariantCallingConfigFile(tkinter.Frame):
         self.root.config(cursor='watch')
         self.root.update()
 
-        # load data in "combobox_reference_file"
-        self.populate_combobox_reference_file()
+        # load data in "combobox_reference_file", "combobox_assembly_dataset" and "combobox_assembly_type"
+        if self.wrapper_reference_dataset.get() == 'NONE':
+            self.combobox_reference_file['values'] = ['NONE']
+            self.wrapper_reference_file.set('NONE')
+
+            self.assembly_dataset_id = ''
+            self.combobox_assembly_dataset['state'] = 'readonly'
+            self.combobox_assembly_dataset['values'] = []
+            self.wrapper_assembly_dataset.set('')
+
+            self.combobox_assembly_type['state'] = 'readonly'
+            self.combobox_assembly_type['values'] = []
+            self.wrapper_assembly_type.set('')
+            self.combobox_assembly_type['state'] = 'disabled'
+
+        else:
+            self.populate_combobox_reference_file()
+
+            self.assembly_dataset_id = 'NONE'
+            self.combobox_assembly_dataset['state'] = 'readonly'
+            self.combobox_assembly_dataset['values'] = ['NONE']
+            self.wrapper_assembly_dataset.set('NONE')
+            self.combobox_assembly_dataset['state'] = 'disabled'
+
+            self.combobox_assembly_type['state'] = 'readonly'
+            self.combobox_assembly_type['values'] = ['NONE']
+            self.wrapper_assembly_type.set('NONE')
+            self.combobox_assembly_type['state'] = 'disabled'
+
+        # load data in "combobox_experiment_id"
+        self.populate_combobox_experiment_id()
+
+        # clear data in "combobox_alignment_dataset"
+        self.combobox_alignment_dataset['values'] = []
+        self.wrapper_alignment_dataset.set('')
 
         # set cursor to show normal status
         self.root.config(cursor='')
@@ -19563,12 +19663,46 @@ class FormRecreateVariantCallingConfigFile(tkinter.Frame):
         self.root.config(cursor='watch')
         self.root.update()
 
+        # load data in "combobox_assembly_dataset"
+        if self.wrapper_reference_dataset.get() == 'NONE':
+            self.populate_combobox_assembly_dataset()
+
         # load data in "combobox_alignment_dataset"
         self.populate_combobox_alignment_dataset()
 
         # set cursor to show normal status
         self.root.config(cursor='')
         self.root.update()
+
+    #---------------
+
+    def combobox_assembly_dataset_selected_item(self, event=None):
+        '''
+        Process the event when an item of "combobox_assembly_dataset" has been selected
+        '''
+
+        # get the assembly_dataset dataset identification
+        (OK, error_list, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+
+        # load data in "combobox_assembly_type"
+        if self.assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()) or self.assembly_dataset_id.startswith(xlib.get_soapdenovo2_code()):
+            self.combobox_assembly_type['state'] = 'readonly'
+            self.combobox_assembly_type['values'] = ['CONTIGS', 'SCAFFOLDS']
+            self.wrapper_assembly_type.set('')
+        elif self.assembly_dataset_id.startswith(xlib.get_transabyss_code()) or self.assembly_dataset_id.startswith(xlib.get_trinity_code()) or self.assembly_dataset_id.startswith(xlib.get_ggtrinity_code()) or self.assembly_dataset_id.startswith(xlib.get_cd_hit_est_code()) or self.assembly_dataset_id.startswith(xlib.get_transcript_filter_code()) or self.assembly_dataset_id.startswith(xlib.get_starcode_code()):
+            self.combobox_assembly_type['state'] = 'readonly'
+            self.combobox_assembly_type['values'] = ['NONE']
+            self.wrapper_assembly_type.set('NONE')
+            self.combobox_assembly_type['state'] = 'disabled'
+
+    #---------------
+
+    def combobox_assembly_type_selected_item(self, event=None):
+        '''
+        Process the event when an item of "combobox_assembly_type" has been selected
+        '''
+
+        pass
 
     #---------------
 
@@ -19592,7 +19726,7 @@ class FormRecreateVariantCallingConfigFile(tkinter.Frame):
         OK = True
 
         # check if "button_execute" has to be enabled or disabled
-        if self.wrapper_cluster_name.get() != '' and self.wrapper_reference_dataset.get() != '' and self.wrapper_reference_file.get() != '' and self.wrapper_experiment_id.get() != ''  and self.wrapper_alignment_dataset.get() != '':
+        if self.wrapper_cluster_name.get() != '' and self.wrapper_reference_dataset.get() != '' and self.wrapper_reference_file.get() != '' and self.wrapper_experiment_id.get() != '' and self.wrapper_assembly_dataset.get() != '' and self.wrapper_assembly_type.get() != '' and self.wrapper_alignment_dataset.get() != '':
             self.button_execute['state'] = 'enable'
         else:
             self.button_execute['state'] = 'disabled'
@@ -19624,7 +19758,7 @@ class FormRecreateVariantCallingConfigFile(tkinter.Frame):
 
         # recreate the Variant calling config file
         if OK:
-            (OK, error_list) = xddradseqtools.create_variant_calling_config_file(self.wrapper_reference_dataset.get(), self.wrapper_reference_file.get(), self.wrapper_experiment_id.get(), self.alignment_dataset_id)
+            (OK, error_list) = xddradseqtools.create_variant_calling_config_file(self.wrapper_experiment_id.get(), self.wrapper_reference_dataset.get(), self.wrapper_reference_file.get(), self.assembly_dataset_id, self.wrapper_assembly_type.get(), self.alignment_dataset_id)
             if not OK:
                 message = ''
                 for error in error_list:

@@ -146,7 +146,7 @@ def install_transrate(cluster_name, log, function=None):
     if OK:
         log.write(f'{xlib.get_separator()}\n')
         log.write('Determining the run directory in the cluster ...\n')
-        current_run_dir = xlib.get_cluster_current_run_dir('installation', xlib.get_transrate_code())
+        current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_toa_result_installation_dir(), xlib.get_transrate_code())
         command = f'mkdir --parents {current_run_dir}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:

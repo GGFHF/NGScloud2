@@ -3461,7 +3461,8 @@ def form_recreate_starcode_config_file():
 
     # get the read type
     if OK:
-        read_type = cinputs.input_read_type()
+        # -- read_type = cinputs.input_read_type()
+        read_type = cinputs.input_code(text='Read type (SE)?: ', code_list=['SE'], default_code='SE').upper()
 
     # get the specific_chars to identify files when the read type is paired 
     if OK:
@@ -4309,6 +4310,24 @@ def form_recreate_variant_calling_config_file():
         for error in error_list:
             print(error)
 
+    # get the reference dataset identification
+    if OK:
+        reference_dataset_id = cinputs.input_reference_dataset_id(ssh_client, allowed_none=True, help=True)
+        if reference_dataset_id == '':
+            print(f'WARNING: The cluster {cluster_name} does not have reference datasets. NONE is assumed as value You have to select an assembly dataset.')
+            reference_dataset_id = 'NONE'
+
+    # get the reference file
+    if OK:
+        if reference_dataset_id != 'NONE':
+            reference_file = cinputs.input_reference_file(ssh_client, reference_dataset_id, help=True)
+            if reference_file == '':
+                print(f'WARNING: The reference dataset {reference_dataset_id} does not have reference files.')
+                OK = False
+
+        else:
+            reference_file = 'NONE'
+
     # get the experiment identification
     if OK:
         experiment_id = cinputs.input_experiment_id(ssh_client, help=True)
@@ -4316,26 +4335,33 @@ def form_recreate_variant_calling_config_file():
             print(f'WARNING: The cluster {cluster_name} does not have experiment data.')
             OK = False
 
-    # get the reference dataset identification
-    if OK:
-        reference_dataset_id = cinputs.input_reference_dataset_id(ssh_client, allowed_none=False, help=True)
-        if reference_dataset_id == '':
-            print(f'ERROR: The cluster {cluster_name} does not have reference datasets.')
-            OK = False
-
-    # get the reference file
-    if OK:
-        reference_file = cinputs.input_reference_file(ssh_client, reference_dataset_id, help=True)
-        if reference_file == '':
-            print(f'ERROR: The reference dataset {reference_dataset_id} does not have reference files.')
-            OK = False
-
     # get the assembly dataset identification
     if OK:
+        if reference_dataset_id == 'NONE':
+            app_list = [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(), xlib.get_transcript_filter_code(), xlib.get_soapdenovo2_code(), xlib.get_starcode_code()]
+            assembly_dataset_id = cinputs.input_result_dataset_id(ssh_client, experiment_id, 'assembly', app_list, 'uncompressed', help=True)
+            if assembly_dataset_id == '':
+                print(f'WARNING: The cluster {cluster_name} does not have assembly datasets.')
+                OK = False
+        else:
+            assembly_dataset_id = 'NONE'
+
+    # get the assembly type
+    if OK:
+        if reference_dataset_id == 'NONE':
+            if assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()) or assembly_dataset_id.startswith(xlib.get_soapdenovo2_code()):
+                assembly_type = cinputs.input_assembly_type(help=True)
+            elif assembly_dataset_id.startswith(xlib.get_transabyss_code()) or assembly_dataset_id.startswith(xlib.get_trinity_code()) or assembly_dataset_id.startswith(xlib.get_ggtrinity_code()) or assembly_dataset_id.startswith(xlib.get_cd_hit_est_code()) or assembly_dataset_id.startswith(xlib.get_transcript_filter_code()):
+                assembly_type = 'NONE'
+        else:
+            assembly_type = 'NONE'
+
+    # get the alignment dataset identification
+    if OK:
         app_list = [xlib.get_bowtie2_code(), xlib.get_gsnap_code(), xlib.get_hisat2_code(), xlib.get_star_code(), xlib.get_tophat_code()]
-        assembly_dataset_id = cinputs.input_result_dataset_id(ssh_client, experiment_id, 'alignment', app_list, 'uncompressed', help=True)
-        if assembly_dataset_id == '':
-            print(f'WARNING: The cluster {cluster_name} does not have assembly datasets.')
+        alignment_dataset_id = cinputs.input_result_dataset_id(ssh_client, experiment_id, 'alignment', app_list, 'uncompressed', help=True)
+        if alignment_dataset_id == '':
+            print(f'ERROR: The cluster {cluster_name} does not have alignment datasets.')
             OK = False
 
     # recreate the Variant calling config file
@@ -4347,7 +4373,7 @@ def form_recreate_variant_calling_config_file():
 
         # recreate the config file
         if OK:
-            (OK, error_list) = xddradseqtools.create_variant_calling_config_file(reference_dataset_id, reference_file, experiment_id, assembly_dataset_id)
+            (OK, error_list) = xddradseqtools.create_variant_calling_config_file(experiment_id, reference_dataset_id, reference_file, assembly_dataset_id, assembly_type, alignment_dataset_id)
             if OK:
                 print('The file is recreated.')
             else:

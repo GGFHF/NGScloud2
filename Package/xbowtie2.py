@@ -59,6 +59,10 @@ def create_bowtie2_config_file(experiment_id='exp001', reference_dataset_id='NON
         assembly_software = xlib.get_cd_hit_est_code()
     elif assembly_dataset_id.startswith(xlib.get_transcript_filter_code()):
         assembly_software = xlib.get_transcript_filter_code()
+    elif assembly_dataset_id.startswith(xlib.get_soapdenovo2_code()):
+        assembly_software = xlib.get_soapdenovo2_code()
+    elif assembly_dataset_id.startswith(xlib.get_starcode_code()):
+        assembly_software = xlib.get_starcode_code()
     elif assembly_dataset_id.upper() == 'NONE':
         assembly_software = 'NONE'
 
@@ -89,7 +93,7 @@ def create_bowtie2_config_file(experiment_id='exp001', reference_dataset_id='NON
             file_id.write( '{0:<50} {1}\n'.format(f'experiment_id = {experiment_id}', '# experiment identification'))
             file_id.write( '{0:<50} {1}\n'.format(f'reference_dataset_id = {reference_dataset_id}', '# reference dataset identification or NONE if an assembly is used'))
             file_id.write( '{0:<50} {1}\n'.format(f'reference_file = {reference_file}', '# reference file name or NONE if an assembly is used'))
-            file_id.write( '{0:<50} {1}\n'.format(f'assembly_software = {assembly_software}', f'# assembly software: {get_assembly_software_code_list_text()}; or NONE if a reference is used'))
+            file_id.write( '{0:<50} {1}\n'.format(f'assembly_software = {assembly_software}', f'# assembly software: {get_extended_assembly_software_code_list_text()}; or NONE if a reference is used'))
             file_id.write( '{0:<50} {1}\n'.format(f'assembly_dataset_id = {assembly_dataset_id}', '# assembly dataset identification or NONE if a reference is used'))
             file_id.write( '{0:<50} {1}\n'.format(f'assembly_type = {assembly_type}', f'# assembly type: CONTIGS or SCAFFOLDS in {xlib.get_soapdenovotrans_name()}; NONE in any other case'))
             file_id.write( '{0:<50} {1}\n'.format(f'read_dataset_id = {read_dataset_id}'.format(), '# read dataset identification'))
@@ -401,8 +405,8 @@ def check_bowtie2_config_file(strict):
             if assembly_software == not_found:
                 error_list.append('*** ERROR: the key "assembly_software" is not found in the section "identification".')
                 OK = False
-            elif assembly_software.upper() != 'NONE' and not xlib.check_code(assembly_software, get_assembly_software_code_list(), case_sensitive=False):
-                error_list.append(f'*** ERROR: the key "assembly_software" has to be {get_assembly_software_code_list_text()}; or NONE if a reference is used.')
+            elif assembly_software.upper() != 'NONE' and not xlib.check_code(assembly_software, get_extended_assembly_software_code_list(), case_sensitive=False):
+                error_list.append(f'*** ERROR: the key "assembly_software" has to be {get_extended_assembly_software_code_list_text()}; or NONE if a reference is used.')
                 OK = False
             else:
                 is_ok_assembly_software = True
@@ -418,8 +422,8 @@ def check_bowtie2_config_file(strict):
             if assembly_dataset_id == not_found:
                 error_list.append('*** ERROR: the key "assembly_dataset_id" is not found in the section "identification".')
                 OK = False
-            elif assembly_dataset_id.upper() != 'NONE' and not xlib.check_startswith(assembly_dataset_id, get_assembly_software_code_list(), case_sensitive=True):
-                error_list.append(f'*** ERROR: the key "assembly_dataset_id" does not have to start with {get_assembly_software_code_list_text()}.')
+            elif assembly_dataset_id.upper() != 'NONE' and not xlib.check_startswith(assembly_dataset_id, get_extended_assembly_software_code_list(), case_sensitive=True):
+                error_list.append(f'*** ERROR: the key "assembly_dataset_id" does not have to start with {get_extended_assembly_software_code_list_text()}.')
                 OK = False
             else:
                 is_ok_assembly_dataset_id = True
@@ -434,9 +438,9 @@ def check_bowtie2_config_file(strict):
             if assembly_type == not_found:
                 error_list.append('*** ERROR: the key "assembly_type" is not found in the section "identification".')
                 OK = False
-            elif assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()) and assembly_type.upper() not in ['CONTIGS', 'SCAFFOLDS'] or \
-                not assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()) and assembly_type.upper() != 'NONE':
-                    error_list.append(f'*** ERROR: the key "assembly_type" has to be CONTIGS or SCAFFOLDS in {xlib.get_soapdenovotrans_name()} or NONE in any other case.')
+            elif (assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()) or assembly_dataset_id.startswith(xlib.get_soapdenovo2_code())) and assembly_type.upper() not in ['CONTIGS', 'SCAFFOLDS'] or \
+                not (assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()) or assembly_dataset_id.startswith(xlib.get_soapdenovo2_code())) and assembly_type.upper() != 'NONE':
+                    error_list.append(f'*** ERROR: the key "assembly_type" has to be CONTIGS or SCAFFOLDS in {xlib.get_soapdenovotrans_name()} and {xlib.get_soapdenovo2_name()}; or NONE in any other case.')
                     OK = False
 
             # check section "identification" - key "read_dataset_id"
@@ -704,13 +708,14 @@ def build_bowtie2_process_script(cluster_name, current_run_dir):
     if reference_dataset_id.upper() != 'NONE':
         cluster_reference_dataset_dir = xlib.get_cluster_reference_dataset_dir(reference_dataset_id)
     else:
-        cluster_reference_dataset_dir = xlib.get_cluster_reference_dataset_dir('asemblies')
+        # -- cluster_reference_dataset_dir = xlib.get_cluster_reference_dataset_dir('asemblies')
+        cluster_reference_dataset_dir = xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)
 
     # set the cluster reference file
     if reference_dataset_id.upper() != 'NONE':
         cluster_reference_file = xlib.get_cluster_reference_file(reference_dataset_id, reference_file)
     else:
-        if assembly_software == xlib.get_soapdenovotrans_code():
+        if assembly_software in [xlib.get_soapdenovotrans_code(), xlib.get_soapdenovo2_code()]:
             if assembly_type == 'CONTIGS':
                 cluster_reference_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)}/{experiment_id}-{assembly_dataset_id}.contig'
             elif  assembly_type == 'SCAFFOLDS':
@@ -725,6 +730,8 @@ def build_bowtie2_process_script(cluster_name, current_run_dir):
             cluster_reference_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)}/clustered-transcriptome.fasta'
         elif assembly_software == xlib.get_transcript_filter_code():
             cluster_reference_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)}/filtered-transcriptome.fasta'
+        elif assembly_software == xlib.get_starcode_code():
+            cluster_reference_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)}/starcode.fasta'
 
     # set the directory and basename of the index Bowtie2
     if reference_dataset_id.upper() != 'NONE':
@@ -794,13 +801,12 @@ def build_bowtie2_process_script(cluster_name, current_run_dir):
                 script_file_id.write(f'    source activate {xlib.get_bowtie2_anaconda_code()}\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "Building index ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
                 script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
                 script_file_id.write( '        bowtie2-build \\\n')
                 script_file_id.write(f'            --threads {threads} \\\n')
                 script_file_id.write( '            -f \\\n')
-                if large_index.upper() == 'YES':
-                    script_file_id.write( '            --large-index \\\n')
                 script_file_id.write(f'            {cluster_reference_file} \\\n')
                 script_file_id.write(f'            {bowtie2_index_basename}\n')
                 script_file_id.write( '    RC=$?\n')
@@ -812,6 +818,7 @@ def build_bowtie2_process_script(cluster_name, current_run_dir):
                 script_file_id.write( '    RC=$?\n')
                 script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error mv $RC; fi\n')
                 script_file_id.write( '    conda deactivate\n')
+                script_file_id.write( '    echo "Index is built."\n')
                 script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function run_bowtie2_process\n')
@@ -821,6 +828,7 @@ def build_bowtie2_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write( '    bowtie2 --version\n')
             script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write( '    echo "Mapping reads ..."\n')
             script_file_id.write( '    /usr/bin/time \\\n')
             script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
             script_file_id.write( '        bowtie2 \\\n')
@@ -855,7 +863,7 @@ def build_bowtie2_process_script(cluster_name, current_run_dir):
             elif format.upper() == 'FASTA':
                 script_file_id.write( '            -f \\\n')
             if read_type.upper() == 'SE':
-                script_file_id.write(f'            -U {",".join(read_file_1_list)}\n')
+                script_file_id.write(f'            -U {",".join(read_file_1_list)} \\\n')
             elif read_type.upper() == 'PE':
                 script_file_id.write(f'            -1 {",".join(read_file_1_list)} \\\n')
                 script_file_id.write(f'            -2 {",".join(read_file_2_list)} \\\n')
@@ -870,6 +878,7 @@ def build_bowtie2_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    RC=$?\n')
             script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error bowtie2 $RC; fi\n')
             script_file_id.write( '    conda deactivate\n')
+            script_file_id.write( '    echo "Reads are mapped."\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function end\n')
@@ -1024,21 +1033,21 @@ def get_bowtie2_process_starter():
 
 #-------------------------------------------------------------------------------
 
-def get_assembly_software_code_list():
+def get_extended_assembly_software_code_list():
     '''
     Get the code list of "assembly_software".
     '''
 
-    return [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(),  xlib.get_transcript_filter_code()]
+    return [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(),  xlib.get_transcript_filter_code(), xlib.get_soapdenovo2_code(), xlib.get_starcode_name()]
 
 #-------------------------------------------------------------------------------
 
-def get_assembly_software_code_list_text():
+def get_extended_assembly_software_code_list_text():
     '''
     Get the code list of "assembly_software" as text.
     '''
 
-    return f'{xlib.get_soapdenovotrans_code()} ({xlib.get_soapdenovotrans_name()}) or {xlib.get_transabyss_code()} ({xlib.get_transabyss_name()}) or {xlib.get_trinity_code()} ({xlib.get_trinity_name()}) or {xlib.get_ggtrinity_code()} ({xlib.get_ggtrinity_name()}) or {xlib.get_cd_hit_est_code()} ({xlib.get_cd_hit_est_name()}) or {xlib.get_transcript_filter_code()} ({xlib.get_transcript_filter_name()})'
+    return f'{xlib.get_soapdenovotrans_code()} ({xlib.get_soapdenovotrans_name()}) or {xlib.get_transabyss_code()} ({xlib.get_transabyss_name()}) or {xlib.get_trinity_code()} ({xlib.get_trinity_name()}) or {xlib.get_ggtrinity_code()} ({xlib.get_ggtrinity_name()}) or {xlib.get_cd_hit_est_code()} ({xlib.get_cd_hit_est_name()}) or {xlib.get_transcript_filter_code()} ({xlib.get_transcript_filter_name()}) or {xlib.get_soapdenovo2_code()} ({xlib.get_soapdenovo2_name()}) or {xlib.get_starcode_code()} ({xlib.get_starcode_name()})'
 
 #-------------------------------------------------------------------------------
 

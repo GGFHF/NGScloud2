@@ -984,24 +984,6 @@ def get_hisat2_process_starter():
 
 #-------------------------------------------------------------------------------
 
-def get_assembly_software_code_list():
-    '''
-    Get the code list of "assembly_software".
-    '''
-
-    return [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(),  xlib.get_transcript_filter_code()]
-
-#-------------------------------------------------------------------------------
-
-def get_assembly_software_code_list_text():
-    '''
-    Get the code list of "assembly_software" as text.
-    '''
-
-    return f'{xlib.get_soapdenovotrans_code()} ({xlib.get_soapdenovotrans_name()}) or {xlib.get_transabyss_code()} ({xlib.get_transabyss_name()}) or {xlib.get_trinity_code()} ({xlib.get_trinity_name()}) or {xlib.get_ggtrinity_code()} ({xlib.get_ggtrinity_name()}) or {xlib.get_cd_hit_est_code()} ({xlib.get_cd_hit_est_name()}) or {xlib.get_transcript_filter_code()} ({xlib.get_transcript_filter_name()})'
-
-#-------------------------------------------------------------------------------
-
 def get_index_building_code_list():
     '''
     Get the code list of "index_building".
