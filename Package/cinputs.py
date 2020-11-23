@@ -69,6 +69,38 @@ def input_code(text, code_list, default_code):
 
 #-------------------------------------------------------------------------------
 
+def input_option_to_code_list(text, data_type, code_list):
+    '''
+    Input a option to a code list.
+    '''
+
+    # initialize the option list
+    option_list = []
+
+    # input and check the option of every code
+    OK = False
+    while not OK:
+        print(text)
+        for code in code_list:
+            option = ''
+            while option == '':
+                option = input(f'     {data_type} of {code}: ')
+            option_list.append(option)
+        print()
+        for i in range(len(code_list)):
+            print(f'{code_list[i]}\t{option_list[i]}')
+        print(f'')
+        agree = ''
+        while agree not in ['y', 'n']:
+            agree = input(f'Do you agree with these {data_type} values? (y or n): ').lower()
+        if agree == 'y':
+            OK = True
+
+    # return the option list
+    return option_list
+
+#-------------------------------------------------------------------------------
+
 def input_int(text, default=None, minimum=(-sys.maxsize - 1), maximum=sys.maxsize):
     '''
     Input a integer number.
@@ -688,7 +720,7 @@ def input_reference_dataset_id(ssh_client, allowed_none, help):
     # get the reference dataset identifications
     if help:
         command = f'ls {xlib.get_cluster_reference_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -744,7 +776,7 @@ def input_reference_file(ssh_client, reference_dataset_id, help):
     # get the reference files of the reference dataset identification
     if help:
         command = f'find {xlib.get_cluster_reference_dataset_dir(reference_dataset_id)} -maxdepth 1 -type f'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -795,7 +827,7 @@ def input_transcriptome_file(ssh_client, reference_dataset_id, help):
     # get the files of the reference dataset identification
     if help:
         command = f'find {xlib.get_cluster_reference_dataset_dir(reference_dataset_id)} -maxdepth 1 -type f'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -846,7 +878,7 @@ def input_gtf_file(ssh_client, reference_dataset_id, help):
     # get the GTF files of the reference dataset identification
     if help:
         command = f'find {xlib.get_cluster_reference_dataset_dir(reference_dataset_id)} -maxdepth 1 -type f'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -897,7 +929,7 @@ def input_reference_file2(ssh_client, reference_dataset_id, type, allowed_none, 
     # get the splice site files of the reference dataset identification
     if help:
         command = f'find {xlib.get_cluster_reference_dataset_dir(reference_dataset_id)} -maxdepth 1 -type f'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -956,7 +988,7 @@ def input_database_dataset_id(ssh_client, help):
     # get the database dataset identifications
     if help:
         command = f'ls {xlib.get_cluster_database_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -1007,7 +1039,7 @@ def input_protein_database_name(ssh_client, database_dataset_id, help):
     # get the list of the database file names
     if help:
         command = f'ls {xlib.get_cluster_database_dataset_dir(database_dataset_id)}/*phr'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -1021,7 +1053,7 @@ def input_protein_database_name(ssh_client, database_dataset_id, help):
         protein_database_name_list = []
         pattern = re.compile('^.*[0-9][0-9]$')
         for database_file_name in database_file_name_list:
-            file_name, file_extension = os.path.splitext(database_file_name)
+            (file_name, _) = os.path.splitext(database_file_name)
             if pattern.match(file_name):
                 database_name = file_name[:-3]
             else:
@@ -1067,7 +1099,7 @@ def input_experiment_id(ssh_client, help):
     # get the experiment/process identifications
     if help:
         command = f'ls {xlib.get_cluster_result_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -1118,7 +1150,7 @@ def input_read_dataset_id(ssh_client, experiment_id, help):
     # get the read dataset identifications of the experiment
     if help:
         command = f'ls {xlib.get_cluster_read_dir()}/{experiment_id}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 read_dataset_id_list.append(line.rstrip('\n'))
@@ -1187,7 +1219,7 @@ def input_result_dataset_id(ssh_client, experiment_id, type, app_list, status, h
             command = f'cd {xlib.get_cluster_result_dir()}/{experiment_id}; for list in `ls`; do ls -ld $list | grep -v ^- > /dev/null && echo $list; done;'
         elif status == 'compressed':
             command = f'cd {xlib.get_cluster_result_dir()}/{experiment_id}; for list in `ls`; do ls -ld $list | grep -v ^d > /dev/null && echo $list; done;'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 for app in app_list:
@@ -1242,15 +1274,15 @@ def input_result_dataset_id_list(ssh_client, experiment_id, type, app_list, stat
             command = f'cd {xlib.get_cluster_result_dir()}/{experiment_id}; for list in `ls`; do ls -ld $list | grep -v ^- > /dev/null && echo $list; done;'
         elif status == 'compressed':
             command = f'cd {xlib.get_cluster_result_dir()}/{experiment_id}; for list in `ls`; do ls -ld $list | grep -v ^d > /dev/null && echo $list; done;'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 for app in app_list:
                     if app == xlib.get_all_applications_selected_code() or line.startswith(app):
                         all_result_dataset_id_list.append(line.rstrip('\n'))
                         break
-            if result_dataset_id_list != []:
-                result_dataset_id_list.sort()
+            if all_result_dataset_id_list != []:
+                all_result_dataset_id_list.sort()
 
     # print the result dataset identifications in the clusters
     if OK and help:
@@ -1499,7 +1531,7 @@ def input_batch_job_id(ssh_client, help):
 
     # get the batch job dictionary and the batch job identification list
     if help:
-        (OK, error_list, batch_job_dict) = xcluster.get_batch_job_dict(ssh_client)
+        (OK, _, batch_job_dict) = xcluster.get_batch_job_dict(ssh_client)
 
     # build the list of identifications of the batch jobs
     if OK and help:

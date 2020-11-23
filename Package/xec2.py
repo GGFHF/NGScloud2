@@ -315,7 +315,7 @@ def create_keypair(keypair_file, keypair_name, region_name):
                 os.makedirs(keypair_dir)
             except Exception as e:
                 error_list.append(f'*** EXCEPTION: "{e}".')
-                error_list.append('** ERROR: The directory {0} can not be created.'.format(keypair_dir))
+                error_list.append(f'** ERROR: The directory {keypair_dir} can not be created.')
                 OK = False
 
     # save the unencrypted PEM encoded RSA private key in a file
@@ -324,10 +324,10 @@ def create_keypair(keypair_file, keypair_name, region_name):
             if os.path.isfile(keypair_file):
                 os.chmod(keypair_file, stat.S_IWUSR)
             with open(keypair_file, mode='w', encoding='iso-8859-1', newline='\n') as file_id:
-                file_id.write( '{0}'.format(keypair_rsa))
+                file_id.write(keypair_rsa)
             os.chmod(keypair_file, stat.S_IRUSR)
         except Exception as e:
-            error_list.append('*** ERROR: The file {0} can not be created'.format(keypair_file))
+            error_list.append(f'*** ERROR: The file {keypair_file} can not be created')
             OK = False
 
     # get the SHA-1 digest of the DER encoded private key
@@ -341,10 +341,10 @@ def create_keypair(keypair_file, keypair_name, region_name):
             if os.path.isfile(keypair_fingerprint_file):
                 os.chmod(keypair_fingerprint_file, stat.S_IWUSR)
             with open(keypair_fingerprint_file, mode='w', encoding='iso-8859-1', newline='\n') as file_id:
-                file_id.write( '{0}'.format(keypair_fingerprint))
+                file_id.write(keypair_fingerprint)
             os.chmod(keypair_fingerprint_file, stat.S_IRUSR)
         except Exception as e:
-            error_list.append('*** ERROR: The file {0} can not be created'.format(keypair_fingerprint_file))
+            error_list.append(f'*** ERROR: The file {keypair_fingerprint_file} can not be created')
             OK = False
 
     # return the control variable and the error list
@@ -392,7 +392,7 @@ def delete_keypair(keypair_file, keypair_name, region_name):
                 os.remove(keypair_file)
             except Exception as e:
                 error_list.append(f'*** EXCEPTION: "{e}".')
-                error_list.append('*** WARNING: The file {0} can not be removed.'.format(keypair_file))
+                error_list.append(f'*** WARNING: The file {keypair_file} can not be removed.')
 
     # delete the file that contains the SHA-1 digest of the DER encoded private key
     if OK:
@@ -402,7 +402,7 @@ def delete_keypair(keypair_file, keypair_name, region_name):
                 os.chmod(keypair_fingerprint_file, stat.S_IWUSR)
                 os.remove(keypair_fingerprint_file)
             except Exception as e:
-                error_list.append('*** WARNING: The file {0} can not be removed.'.format(keypair_fingerprint_file))
+                error_list.append(f'*** WARNING: The file {keypair_fingerprint_file} can not be removed.')
 
     # return the control variable and the error list
     return (OK, error_list)
@@ -414,7 +414,7 @@ def build_security_group_name(instance_type):
     Build the security group name from the instance type.
     '''
 
-    return '@sc-{0}-{1}'.format(xconfiguration.environment, instance_type)
+    return f'@sc-{xconfiguration.environment}-{instance_type}'
 
 #-------------------------------------------------------------------------------
 
@@ -476,7 +476,7 @@ def create_security_group(name):
                      'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
                 ])
         except Exception as e:
-            error_list.append('*** ERROR: Boto3 - {0}'.format(e))
+            error_list.append(f'*** ERROR: Boto3 - {e}')
             OK = False
 
     # return the control variable, error list and security group identification
@@ -731,7 +731,7 @@ def create_instance(instance_type, instance_name, security_group_id, root_volume
                             },
                         },
                     ],
-                    ImageId='ami-04b9e92b5572fa0d1',
+                    ImageId=get_ubuntu_ami_id(current_region_name),
                     InstanceType=instance_type,
                     KeyName=xconfiguration.get_ngscloud_key(),
                     MaxCount=1,
@@ -759,7 +759,7 @@ def create_instance(instance_type, instance_name, security_group_id, root_volume
                     InstanceMarketOptions=instance_market_options_dict
                 )
         except Exception as e:
-            error_list.append('*** ERROR: Boto3 - {0}'.format(e))
+            error_list.append(f'*** ERROR: Boto3 - {e}')
             OK = False
 
     # get the instance identification
@@ -865,7 +865,7 @@ def get_cluster_mode(cluster_name):
                     # if the instance has a security group corresponding to the cluster
                     if inst.security_groups is not None:
                         for security_group in inst.security_groups:
-                            if security_group['GroupName'] == '@sc-{0}'.format(cluster_name):
+                            if security_group['GroupName'] == f'@sc-{cluster_name}':
                                 # check that the instance is the master or the instance
                                 if inst.tags is not None:
                                     for tag in inst.tags:
@@ -927,7 +927,7 @@ def get_running_cluster_list(only_environment_cluster=True, volume_creator_inclu
                             # if the instance has a security group created by StarCluster
                             if inst.security_groups is not None:
                                 for security_group in inst.security_groups:
-                                    if not only_environment_cluster or only_environment_cluster and security_group['GroupName'].startswith('@sc-{0}-'.format(xconfiguration.environment)):
+                                    if not only_environment_cluster or only_environment_cluster and security_group['GroupName'].startswith(f'@sc-{xconfiguration.environment}-'):
                                         # add the cluster_name to the running cluster list
                                         cluster_name = security_group['GroupName'][4:]
                                         if volume_creator_included or (not volume_creator_included and cluster_name != xlib.get_volume_creator_name()):
@@ -990,13 +990,13 @@ def get_node_dict():
                 instance_type = inst.instance_type
                 state_code = inst.state['Code']
                 state_name = inst.state['Name']
-                state = '{0} ({1})'.format(state_code, state_name)
+                state = f'{state_code} ({state_name})'
                 security_group_list = inst.security_groups
                 public_ip_address = inst.public_ip_address
                 public_dns_name = inst.public_dns_name
                 launch_time = inst.launch_time
                 image_id = inst.image_id
-                node_key = '{0}-{1}-{2}-{3}'.format(security_group_name, zone_name, node_name, node_id)
+                node_key = f'{security_group_name}-{zone_name}-{node_name}-{node_id}'
                 node_dict[node_key] = {'security_group_name': security_group_name, 'zone_name': zone_name, 'node_name': node_name, 'node_id': node_id, 'instance_type': instance_type, 'state_code': state_code, 'state_name': state_name, 'state': state, 'security_group_list': security_group_list, 'public_ip_address': public_ip_address, 'public_dns_name': public_dns_name, 'launch_time': launch_time, 'image_id': image_id}
             except:
                 pass
@@ -1068,7 +1068,7 @@ def get_cluster_node_list(cluster_name):
                 security_group_found = False
                 if inst.security_groups is not None:
                     for security_group in inst.security_groups:
-                        if security_group['GroupName'] == '@sc-{0}'.format(cluster_name):
+                        if security_group['GroupName'] == f'@sc-{cluster_name}':
                             security_group_found = True
                 # if verification is OK, add node name to cluster node list
                 if security_group_found:
@@ -1137,7 +1137,7 @@ def get_node_id(cluster_name, node_name=None):
                 security_group_found = False
                 if inst.security_groups is not None:
                     for security_group in inst.security_groups:
-                        if security_group['GroupName'] == '@sc-{0}'.format(cluster_name):
+                        if security_group['GroupName'] == f'@sc-{cluster_name}':
                             security_group_found = True
                 # check that the current instance has the node name
                 node_name_found = False
@@ -1205,7 +1205,7 @@ def get_node_state(cluster_name, node_name=None):
                 security_group_found = False
                 if inst.security_groups is not None:
                     for security_group in inst.security_groups:
-                        if security_group['GroupName'] == '@sc-{0}'.format(cluster_name):
+                        if security_group['GroupName'] == f'@sc-{cluster_name}':
                             security_group_found = True
                 # check that the current instance has the node name
                 node_name_found = False
@@ -1611,7 +1611,7 @@ def get_volume_dict():
             state = vol.state
             attachments = vol.attachments
             attachments_number = len(attachments)
-            volume_key = '{0}-{1}-{2}'.format(zone_name, volume_name, volume_id)
+            volume_key = f'{zone_name}-{volume_name}-{volume_id}'
             volumes_dict[volume_key] = {'zone_name': zone_name, 'volume_name': volume_name, 'volume_id': volume_id, 'volume_type': volume_type, 'size': size, 'state': state, 'attachments': attachments, 'attachments_number': attachments_number}
 
     # return the volumes dictionary
@@ -2188,16 +2188,17 @@ def get_ubuntu_ami_id(region_name):
 
     # build the Ubuntu AMI dictionary
     ubuntu_ami_dict = {
+        'af-south-1': get_unknown_ami_id(),
         'ap-east-1': 'ami-868bcff7', 
         'ap-northeast-1': 'ami-01f90b0460589991e',
         'ap-northeast-2': 'ami-096e3ded41e3bda6a',
-        'ap-northeast-3': 'ami-0942fd36e1571cbdf', 
         'ap-south-1': 'ami-0d11056c10bfdde69', 
         'ap-southeast-1': 'ami-07ce5f60a39f1790e', 
         'ap-southeast-2': 'ami-04c7af7de7ad468f0', 
         'ca-central-1': 'ami-064efdb82ae15e93f', 
         'eu-central-1': 'ami-0718a1ae90971ce4d', 
         'eu-north-1': 'ami-0e850e0e9c20d9deb', 
+        'eu-south-1': get_unknown_ami_id(),
         'eu-west-1': 'ami-07042e91d04b1c30d', 
         'eu-west-2': 'ami-04cc79dd5df3bffca', 
         'eu-west-3': 'ami-0c367ebddcf279dc6', 

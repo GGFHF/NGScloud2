@@ -129,7 +129,7 @@ def form_list_submission_logs():
         try:
             pattern = r'^(.+)\-(.+)\-(.+)\-(.+).txt$'
             mo = re.search(pattern, log_file)
-            environment = mo.group(1).strip()
+            # -- environment = mo.group(1).strip()
             submission_process_id = mo.group(2).strip()
             yymmdd = mo.group(3)
             hhmmss = mo.group(4)
@@ -232,7 +232,7 @@ def form_list_cluster_experiment_processes():
     # get the result dataset list of the experiment
     if OK:
         command = f'cd  {xlib.get_cluster_result_dir()}/{experiment_id}; for list in `ls`; do ls -ld $list | grep -v ^- > /dev/null && echo $list; done;'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             result_dataset_id_list = []
             for line in stdout:
@@ -287,6 +287,9 @@ def form_list_cluster_experiment_processes():
 
                 elif result_dataset_id.startswith(xlib.get_cufflinks_cuffmerge_code()+'-'):
                     bioinfo_app_name = xlib.get_cufflinks_cuffmerge_name()
+
+                elif result_dataset_id.startswith(xlib.get_cuffnorm_code()+'-'):
+                    bioinfo_app_name = xlib.get_cuffnorm_name()
 
                 elif result_dataset_id.startswith(xlib.get_cuffquant_code()+'-'):
                     bioinfo_app_name = xlib.get_cuffquant_name()

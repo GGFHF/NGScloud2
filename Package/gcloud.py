@@ -479,6 +479,9 @@ class FormCreateConfigFiles(tkinter.Frame):
             # create the Cufflinks-Cuffmerge config file
             (OK, error_list) = xcufflinks.create_cufflinks_cuffmerge_config_file()
 
+            # create the Cuffnorm config file
+            (OK, error_list) = xcufflinks.create_cuffnorm_config_file()
+
             # create the Cuffquant config file
             (OK, error_list) = xcufflinks.create_cuffquant_config_file()
 
@@ -3217,7 +3220,7 @@ class FormShowStatusBatchJobs(tkinter.Frame):
 
         # get the batch job dictionary
         if OK:
-            (OK, error_list, batch_job_dict) = xcluster.get_batch_job_dict(self.ssh_client)
+            (OK, _, batch_job_dict) = xcluster.get_batch_job_dict(self.ssh_client)
 
         # check if there are any batch jobs
         if OK:
@@ -4241,7 +4244,7 @@ class FormCreateVolume(tkinter.Frame):
 
         # load initial data in inputs
         self.wrapper_volume_name.set('')
-        self.wrapper_volume_type_text.set('standard HDD')
+        self.wrapper_volume_type_text.set('cold HDD')
         self.volume_type_id = xec2.get_volume_type_id(self.wrapper_volume_type_text.get())
         self.minimum_size = self.volume_type_dict[self.volume_type_id]['minimum_size']
         self.maximum_size = self.volume_type_dict[self.volume_type_id]['maximum_size']

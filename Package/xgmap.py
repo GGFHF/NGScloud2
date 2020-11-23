@@ -100,7 +100,8 @@ def create_gmap_config_file(experiment_id='exp001', reference_dataset_id='NONE',
             file_id.write( '{0:<50} {1}\n'.format( 'input-buffer-size = 1000', '# size of input buffer'))
             file_id.write( '{0:<50} {1}\n'.format( 'output-buffer-size = 1000', '# size of buffer size in queries for output thread'))
             file_id.write( '{0:<50} {1}\n'.format( 'prunelevel = 0', f'# pruning level: {get_prunelevel_code_list_text()}'))
-            file_id.write( '{0:<50} {1}\n'.format( 'format = COMPRESS', f'# format for output: {get_gmap_output_format_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format( 'format = GFF3_GENE', f'# format for output: {get_gmap_output_format_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format( 'npaths = 1', '# maximum number of paths to show (if 1, without chimeric alignments; if 0, a single alignment plus chimeric alignments)'))
             file_id.write( '{0:<50} {1}\n'.format( 'other_parameters = NONE', '# additional parameters to the previous ones or NONE'))
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
@@ -191,6 +192,16 @@ def run_gmap_process(cluster_name, log, function=None):
         else:
             log.write(f'*** ERROR: The verification of {xlib.get_gmap_name()} installation could not be performed.\n')
 
+    # check SAMtools is installed
+    if OK:
+        (OK, error_list, is_installed) = xbioinfoapp.is_installed_anaconda_package(xlib.get_samtools_anaconda_code(), cluster_name, True, ssh_client)
+        if OK:
+            if not is_installed:
+                log.write(f'*** ERROR: {xlib.get_samtools_name()} is not installed.\n')
+                OK = False
+        else:
+            log.write(f'*** ERROR: The verification of {xlib.get_samtools_name()} installation could not be performed.\n')
+
     # warn that the requirements are OK 
     if OK:
         log.write('Process requirements are OK.\n')
@@ -201,7 +212,7 @@ def run_gmap_process(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(experiment_id, xlib.get_gmap_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -234,7 +245,7 @@ def run_gmap_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_gmap_process_script())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_gmap_process_script())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -267,7 +278,7 @@ def run_gmap_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_gmap_process_starter())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_gmap_process_starter())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -473,8 +484,17 @@ def check_gmap_config_file(strict):
                 error_list.append(f'*** ERROR: the key "format" has to be {get_gmap_output_format_code_list_text()}.')
                 OK = False
 
+            # check section "GMAP parameters" - key "npaths"
+            npaths = gmap_option_dict.get('GMAP parameters', {}).get('npaths', not_found)
+            if npaths == not_found:
+                error_list.append('*** ERROR: the key "npaths" is not found in the section "GMAP parameters".')
+                OK = False
+            elif not xlib.check_int(npaths, minimum=1):
+                error_list.append('*** ERROR: the key "npaths" has to be an integer number greater than or equal to 1.')
+                OK = False
+
             # check section "GMAP parameters" - key "other_parameters"
-            not_allowed_parameters_list = ['nthreads', 'kmer', 'sampling', 'input-buffer-size', 'output-buffer-size', 'prunelevel', 'compress', 'summary', 'align', 'format', 'ordered']
+            not_allowed_parameters_list = ['nthreads', 'kmer', 'sampling', 'input-buffer-size', 'output-buffer-size', 'prunelevel', 'compress', 'summary', 'align', 'format', 'npaths', 'ordered']
             other_parameters = gmap_option_dict.get('GMAP parameters', {}).get('other_parameters', not_found)
             if other_parameters == not_found:
                 error_list.append('*** ERROR: the key "other_parameters" is not found in the section "GMAP parameters".')
@@ -520,6 +540,7 @@ def build_gmap_process_script(cluster_name, current_run_dir):
     output_buffer_size = gmap_option_dict['GMAP parameters']['output-buffer-size']
     prunelevel = gmap_option_dict['GMAP parameters']['prunelevel']
     format = gmap_option_dict['GMAP parameters']['format']
+    npaths = gmap_option_dict['GMAP parameters']['npaths']
     other_parameters = gmap_option_dict['GMAP parameters']['other_parameters']
 
     # set the cluster reference dataset directory
@@ -529,7 +550,7 @@ def build_gmap_process_script(cluster_name, current_run_dir):
     cluster_reference_file = xlib.get_cluster_reference_file(reference_dataset_id, reference_file)
 
     # set the GMAP database name
-    reference_file_name, reference_file_extension = os.path.splitext(reference_file)
+    (reference_file_name, _) = os.path.splitext(reference_file)
     gmap_database = f'{reference_file_name}-gmap_database'
 
     # set the transcriptome file path
@@ -550,7 +571,7 @@ def build_gmap_process_script(cluster_name, current_run_dir):
         transcriptome_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)}/filtered-transcriptome.fasta'
 
     # set the output file path
-    output_file = 'gmap_output_fasta'
+    output_file = f'gmap_output_{format.lower()}'
 
     # write the GMAP process script
     try:
@@ -565,9 +586,8 @@ def build_gmap_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
             script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write(f'GMAP_GSNAP_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/envs/{xlib.get_gmap_gsnap_anaconda_code()}/bin\n')
             script_file_id.write(f'MINICONDA3_BIN_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-            script_file_id.write( 'PATH=$GMAP_GSNAP_PATH:$MINICONDA3_BIN_PATH:$PATH\n')
+            script_file_id.write(f'export PATH=$MINICONDA3_BIN_PATH:$PATH\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
             script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -575,6 +595,8 @@ def build_gmap_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'mkdir --parents $STATUS_DIR\n')
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write(f'CURRENT_DIR={current_run_dir}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function init\n')
             script_file_id.write( '{\n')
@@ -588,35 +610,44 @@ def build_gmap_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "HOST IP: $HOST_IP"\n')
             script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write( 'function print_gmap_version\n')
+            script_file_id.write( '{\n')
+            script_file_id.write(f'    source activate {xlib.get_gmap_gsnap_anaconda_code()}\n')
+            script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write( '    gmap --version\n')
+            script_file_id.write( '    conda deactivate\n')
+            script_file_id.write( '}\n')
             if index_building.upper() == 'YES':
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( 'function build_gmap_database\n')
+                script_file_id.write( 'function build_gmap_indexes\n')
                 script_file_id.write( '{\n')
-                script_file_id.write(f'    cd {current_run_dir}\n')
-                script_file_id.write( '    echo "$SEP"\n')
                 script_file_id.write(f'    source activate {xlib.get_gmap_gsnap_anaconda_code()}\n')
+                script_file_id.write( '    cd $CURRENT_DIR\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "Building indexes ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
                 script_file_id.write( '        gmap_build \\\n')
                 script_file_id.write(f'            --dir={cluster_reference_dataset_dir} \\\n')
-                script_file_id.write(f'            --db={gmap_database} \\\n')
+                script_file_id.write(f'            --genomedb={gmap_database} \\\n')
                 if kmer.upper() != 'NONE':
                     script_file_id.write(f'            --kmer={kmer} \\\n')
-                script_file_id.write(f'            {cluster_reference_file}\n'.format(''.format()))
+                script_file_id.write(f'            {cluster_reference_file}\n')
                 script_file_id.write( '    RC=$?\n')
                 script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error gmap_build $RC; fi\n')
+                script_file_id.write( '    echo "Indexes are built."\n')
                 script_file_id.write( '    conda deactivate\n')
                 script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function run_gmap_process\n')
             script_file_id.write( '{\n')
-            script_file_id.write(f'    cd {current_run_dir}\n')
-            script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '    gmap --version\n')
-            script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write(f'    source activate {xlib.get_gmap_gsnap_anaconda_code()}\n')
+            script_file_id.write( '    cd $CURRENT_DIR\n')
+            script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write( '    echo "Mapping assembly ..."\n')
             script_file_id.write( '    /usr/bin/time \\\n')
-            script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
+            script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
             script_file_id.write(f'        {gmap_version.lower()} \\\n')
             script_file_id.write(f'            --nthreads={threads} \\\n')
             script_file_id.write(f'            --dir={cluster_reference_dataset_dir} \\\n')
@@ -636,6 +667,7 @@ def build_gmap_process_script(cluster_name, current_run_dir):
                 script_file_id.write( '            --align \\\n')
             else:
                 script_file_id.write(f'            --format={format.lower()} \\\n')
+            script_file_id.write(f'            --npaths={npaths} \\\n')
             script_file_id.write( '            --ordered \\\n')
             if other_parameters.upper() != 'NONE':
                 parameter_list = [x.strip() for x in other_parameters.split(';')]
@@ -655,6 +687,7 @@ def build_gmap_process_script(cluster_name, current_run_dir):
             script_file_id.write(f'            > {output_file}\n')
             script_file_id.write( '    RC=$?\n')
             script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error gmap $RC; fi\n')
+            script_file_id.write( '    echo "Assembly is mapped."\n')
             script_file_id.write( '    conda deactivate\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
@@ -730,8 +763,9 @@ def build_gmap_process_script(cluster_name, current_run_dir):
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
+            script_file_id.write( 'print_gmap_version\n')
             if index_building.upper() == 'YES':
-                script_file_id.write(f'build_gmap_database\n')
+                script_file_id.write(f'build_gmap_indexes\n')
             script_file_id.write( 'run_gmap_process\n')
             script_file_id.write( 'end\n')
     except Exception as e:
@@ -1006,7 +1040,7 @@ def run_gsnap_process(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(experiment_id, xlib.get_gsnap_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -1039,7 +1073,7 @@ def run_gsnap_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_gsnap_process_script())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_gsnap_process_script())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -1072,7 +1106,7 @@ def run_gsnap_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_gsnap_process_starter())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_gsnap_process_starter())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -1505,7 +1539,7 @@ def build_gsnap_process_script(cluster_name, current_run_dir):
 
     # set the GMAP database name
     if reference_file.upper() != 'NONE':
-        reference_file_name, reference_file_extension = os.path.splitext(reference_file)
+        (reference_file_name, _) = os.path.splitext(reference_file)
         gmap_database = f'{reference_file_name}-gmap_database'
     else:
         gmap_database = 'pseudogenome-gmap_database'
@@ -1523,9 +1557,8 @@ def build_gsnap_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
             script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write(f'GMAP_GSNAP_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/envs/{xlib.get_gmap_gsnap_anaconda_code()}/bin\n')
             script_file_id.write(f'MINICONDA3_BIN_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-            script_file_id.write( 'PATH=$GMAP_GSNAP_PATH:$MINICONDA3_BIN_PATH:$PATH\n')
+            script_file_id.write(f'export PATH=$MINICONDA3_BIN_PATH:$PATH\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
             script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -1533,6 +1566,8 @@ def build_gsnap_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'mkdir --parents $STATUS_DIR\n')
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write(f'CURRENT_DIR={current_run_dir}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function init\n')
             script_file_id.write( '{\n')
@@ -1548,14 +1583,15 @@ def build_gsnap_process_script(cluster_name, current_run_dir):
             script_file_id.write( '}\n')
             if index_building.upper() == 'YES':
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( 'function build_gmap_database\n')
+                script_file_id.write( 'function build_gmap_indexes\n')
                 script_file_id.write( '{\n')
-                script_file_id.write(f'    cd {current_run_dir}\n')
+                script_file_id.write(f'    source activate {xlib.get_gmap_gsnap_anaconda_code()}\n')
+                script_file_id.write( '    cd $CURRENT_DIR\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '    echo "Building database ..."\n')
+                script_file_id.write( '    echo "Building indexes ..."\n')
                 script_file_id.write(f'    source activate {xlib.get_gmap_gsnap_anaconda_code()}\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
                 script_file_id.write( '        gmap_build \\\n')
                 script_file_id.write(f'            --dir={cluster_reference_dataset_dir} \\\n')
                 script_file_id.write(f'            --genomedb={gmap_database} \\\n')
@@ -1565,16 +1601,18 @@ def build_gsnap_process_script(cluster_name, current_run_dir):
                 script_file_id.write( '    RC=$?\n')
                 script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error gmap_build $RC; fi\n')
                 script_file_id.write( '    conda deactivate\n')
-                script_file_id.write( '    echo "Database is built."\n')
+                script_file_id.write( '    echo "Indexes are built."\n')
+                script_file_id.write( '    conda deactivate\n')
                 script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function run_gsnap_process\n')
             script_file_id.write( '{\n')
-            script_file_id.write(f'    cd {current_run_dir}\n')
+            script_file_id.write(f'    source activate {xlib.get_gmap_gsnap_anaconda_code()}\n')
+            script_file_id.write( '    cd $CURRENT_DIR\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write( '    echo "Mapping reads ..."\n')
             for i in range(len(read_file_1_list)):
-                # set gunzip, bunzip2, split_output and failed_input values
+                # set file names for the library
                 gunzip = False
                 bunzip2 = False
                 if read_file_1_list[i].endswith('.gz'):
@@ -1592,11 +1630,11 @@ def build_gsnap_process_script(cluster_name, current_run_dir):
                     basename = f'{current_run_dir}/{os.path.basename(basename)}'
                 split_output = f'{basename}-split'
                 failed_input = f'{basename}-failed'
-                # write the gsnap run instructions
+                # write the instructions for the library
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write(f'    source activate {xlib.get_gmap_gsnap_anaconda_code()}\n')
+                script_file_id.write(f'    echo "Mapping reads of {basename} ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
                 script_file_id.write(f'        {gsnap_version.lower()} \\\n')
                 script_file_id.write(f'            --nthreads={threads} \\\n')
                 script_file_id.write(f'            --dir={cluster_reference_dataset_dir} \\\n')
@@ -1620,16 +1658,16 @@ def build_gsnap_process_script(cluster_name, current_run_dir):
                 script_file_id.write(f'            --failed-input={failed_input} \\\n')
                 if other_parameters.upper() != 'NONE':
                     parameter_list = [x.strip() for x in other_parameters.split(';')]
-                    for i in range(len(parameter_list)):
-                        if parameter_list[i].find('=') > 0:
+                    for j in range(len(parameter_list)):
+                        if parameter_list[j].find('=') > 0:
                             pattern = r'^--(.+)=(.+)$'
-                            mo = re.search(pattern, parameter_list[i])
+                            mo = re.search(pattern, parameter_list[j])
                             parameter_name = mo.group(1).strip()
                             parameter_value = mo.group(2).strip()
                             script_file_id.write(f'            --{parameter_name}={parameter_value} \\\n')
                         else:
                             pattern = r'^--(.+)$'
-                            mo = re.search(pattern, parameter_list[i])
+                            mo = re.search(pattern, parameter_list[j])
                             parameter_name = mo.group(1).strip()
                             script_file_id.write(f'            --{parameter_name} \\\n')
                 if gunzip:
@@ -1643,8 +1681,51 @@ def build_gsnap_process_script(cluster_name, current_run_dir):
                     script_file_id.write(f'            {read_file_2_list[i]}\n')
                 script_file_id.write( '    RC=$?\n')
                 script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error gsnap $RC; fi\n')
-                script_file_id.write( '    conda deactivate\n')
-            script_file_id.write( '    echo "Reads are mapped."\n')
+                script_file_id.write( '    echo "Reads are mapped."\n')
+            script_file_id.write( '    conda deactivate\n')
+            script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write( 'function convert_sam2bam\n')
+            script_file_id.write( '{\n')
+            script_file_id.write( '    cd $CURRENT_DIR\n')
+            script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write( '    echo "Converting SAM files to BAM format ..."\n')
+            script_file_id.write(f'    source activate {xlib.get_samtools_anaconda_code()}\n')
+            script_file_id.write( '    ls *-split.concordant_uniq *-split.uniq > sam-files.txt\n')
+            script_file_id.write( '    while read FILE_SAM; do\n')
+            script_file_id.write( '        FILE_BAM=$FILE_SAM".bam"\n')
+            script_file_id.write( '        echo "Converting file $FILE_SAM to BAM format ..."\n')
+            script_file_id.write(f'        samtools view --threads {threads} -b -S -o $FILE_BAM $FILE_SAM\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error samtools-view $RC; fi\n')
+            script_file_id.write( '        echo "$FILE_BAM is created."\n')
+            script_file_id.write( '    done < sam-files.txt\n')
+            script_file_id.write( '    conda deactivate\n')
+            script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write( 'function sort_and_index_bam_files\n')
+            script_file_id.write( '{\n')
+            script_file_id.write( '    cd $CURRENT_DIR\n')
+            script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write(f'    source activate {xlib.get_samtools_anaconda_code()}\n')
+            script_file_id.write( '    ls *.bam > bam-files.txt\n')
+            script_file_id.write( '    while read FILE_BAM; do\n')
+            script_file_id.write( '        FILE_SORTED_BAM=`basename $FILE_BAM | sed "s|.bam|.sorted.bam|g"`\n')
+            script_file_id.write( '        echo "Sorting and indexing $FILE_BAM ..."\n')
+            script_file_id.write(f'        samtools sort --threads {threads} $FILE_BAM -o $FILE_SORTED_BAM\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error samtools-sort $RC; fi\n')
+            script_file_id.write(f'        samtools index -@ {threads} $FILE_SORTED_BAM\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error samtools-index $RC; fi\n')
+            script_file_id.write( '        echo "$FILE_SORTED_BAM is created."\n')
+            script_file_id.write( '        echo "Deleting file $FILE_BAM ..."\n')
+            script_file_id.write( '        rm -f $FILE_BAM\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error rm $RC; fi\n')
+            script_file_id.write( '        echo "$FILE_BAM is deleted."\n')
+            script_file_id.write( '    done < bam-files.txt\n')
+            script_file_id.write( '    conda deactivate\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function end\n')
@@ -1720,8 +1801,10 @@ def build_gsnap_process_script(cluster_name, current_run_dir):
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
             if index_building.upper() == 'YES':
-                script_file_id.write( 'build_gmap_database\n')
+                script_file_id.write( 'build_gmap_indexes\n')
             script_file_id.write( 'run_gsnap_process\n')
+            script_file_id.write( 'convert_sam2bam\n')
+            script_file_id.write( 'sort_and_index_bam_files\n')
             script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
@@ -1912,7 +1995,7 @@ def get_gmap_output_format_code_list():
     Get the code list of "format".
     '''
 
-    return ['COMPRESS', 'SUMMARY', 'ALIGN', 'PLS', 'GFF3_GENE', 'SPLICESITES', 'INTRONS', 'MAP_EXONS', 'MAP_RANGES', 'COORDS']
+    return ['ALIGN', 'COMPRESS', 'SUMMARY', 'SAMPE', 'SAMSE', 'BEDPE', 'GFF3_GENE', 'GFF3_MATCH_CDNA', 'GFF3_MATCH_EST', 'PLS', 'SPLICESITES', 'INTRONS', 'MAP_EXONS', 'MAP_RANGES', 'COORDS']
 
 #-------------------------------------------------------------------------------
     

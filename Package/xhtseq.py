@@ -53,53 +53,63 @@ def create_htseq_count_config_file(experiment_id='exp001', reference_dataset_id=
         with open(get_htseq_count_config_file(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '# You must review the information of this file and update the values with the corresponding ones to the current run.\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# The reference and annotation files have to be located in the cluster directory {0}/experiment_id/reference_dataset_id'.format(xlib.get_cluster_reference_dir())))
-            file_id.write( '{0}\n'.format('# The experiment_id, reference_dataset_id, and annotation_file names are fixed in the identification section.'))
-            file_id.write( '{0}\n'.format('# The alignment files have to be located in the cluster directory {0}/experiment_id/alignment_dataset_id'.format(xlib.get_cluster_result_dir())))
+            file_id.write(f'# The reference and annotation files have to be located in the cluster directory {xlib.get_cluster_reference_dir()}/experiment_id/reference_dataset_id\n')
+            file_id.write( '# The experiment_id, reference_dataset_id, and annotation_file names are fixed in the identification section.\n')
+            file_id.write(f'# The alignment files have to be located in the cluster directory {xlib.get_cluster_result_dir()}/experiment_id/alignment_dataset_id\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# You can consult the parameters of htseq_count and their meaning in "https://github.com/simon-anders/htseq".'))
+            file_id.write( '# You can consult the parameters of htseq_count and their meaning in "https://github.com/simon-anders/htseq".\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# In section "htseq-count parameters", the key "other_parameters" allows you to input additional parameters in the format:'))
+            file_id.write( '# In section "htseq-count parameters", the key "other_parameters" allows you to input additional parameters in the format:\n')
             file_id.write( '#\n')
             file_id.write( '#    other_parameters = --parameter-1[=value-1][; --parameter-2[=value-2][; ...; --parameter-n[=value-n]]]\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# parameter-i is a parameter name of TopHat and value-i a valid value of parameter-i, e.g.'))
+            file_id.write( '# parameter-i is a parameter name of TopHat and value-i a valid value of parameter-i, e.g.\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('#    other_parameters = --max-reads-in-buffer=30000000'))
+            file_id.write( '#    other_parameters = --max-reads-in-buffer=30000000\n')
             file_id.write( '\n')
             file_id.write( '# This section has the information identifies the experiment.\n')
             file_id.write( '[identification]\n')
             file_id.write( '{0:<50} {1}\n'.format(f'experiment_id = {experiment_id}', '# experiment identification'))
             file_id.write( '{0:<50} {1}\n'.format(f'reference_dataset_id = {reference_dataset_id}', '# reference dataset identification'))
-            file_id.write( '{0:<50} {1}\n'.format('annotation_file = {0}'.format(annotation_file), '# reference annotation file name'))
+            file_id.write( '{0:<50} {1}\n'.format(f'annotation_file = {annotation_file}', '# reference annotation file name'))
             for i in range(len(alignment_dataset_id_list)):
                 # set the alignment software
                 alignment_dataset_id = alignment_dataset_id_list[i]
-                if alignment_dataset_id.startswith(xlib.get_star_code()):
+                if alignment_dataset_id.startswith(xlib.get_bowtie2_code()):
+                    alignment_software = xlib.get_bowtie2_code()
+                elif alignment_dataset_id.startswith(xlib.get_gsnap_code()):
+                    alignment_software = xlib.get_gsnap_code()
+                elif alignment_dataset_id.startswith(xlib.get_hisat2_code()):
+                    alignment_software = xlib.get_hisat2_code()
+                elif alignment_dataset_id.startswith(xlib.get_star_code()):
                     alignment_software = xlib.get_star_code()
                 elif alignment_dataset_id.startswith(xlib.get_tophat_code()):
                     alignment_software = xlib.get_tophat_code()
                 # write the alignment dataset section
                 file_id.write( '\n')
                 if i == 0:
-                    file_id.write( '{0}\n'.format('# This section has the information of the first alignment dataset.'))
-                file_id.write( '{0}\n'.format('[alignment-dataset-{0}]'.format(i + 1)))
-                file_id.write( '{0:<50} {1}\n'.format('alignment_software = {0}'.format(alignment_software), '# alignment software: {0}'.format(get_alignment_software_code_list_text())))
-                file_id.write( '{0:<50} {1}\n'.format('alignment_dataset_id = {0}'.format(alignment_dataset_id), '# alignment dataset identification'))
+                    file_id.write( '# This section has the information of the first alignment dataset.\n')
+                file_id.write(f'[alignment-dataset-{i + 1}]\n')
+                file_id.write( '{0:<50} {1}\n'.format(f'alignment_software = {alignment_software}', f'# alignment software: {get_alignment_software_code_list_text()}'))
+                file_id.write( '{0:<50} {1}\n'.format(f'alignment_dataset_id = {alignment_dataset_id}', '# alignment dataset identification'))
                 if i == 0:
                     file_id.write( '\n')
-                    file_id.write( '{0}\n'.format('# If there are more alignment datasets, you have to repeat the section alignment-dataset-1 with the data of each dataset.'))
-                    file_id.write( '{0}\n'.format('# The section identification has to be alignment-dataset-n (n is an integer not repeated)'))
+                    file_id.write( '# If there are more alignment datasets, you have to repeat the section alignment-dataset-1 with the data of each dataset.\n')
+                    file_id.write( '# The section identification has to be alignment-dataset-n (n is an integer not repeated)\n')
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information to set the htseq-count parameters'))
-            file_id.write( '{0}\n'.format('[htseq-count parameters]'))
-            file_id.write( '{0:<50} {1}\n'.format('stranded = YES', '# whether the data is from a strand-specific assay: {0}'.format(get_stranded_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('mode = UNION', '# mode to handle reads overlapping more than one feature: {0}'.format(get_mode_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('nonunique = NONE', '# Mode to handle reads that align to or are assigned to more than one feature in the overlap mode of choice: {0}'.format(get_nonunique_code_list_text())))
+            file_id.write( '# This section has the information to set the htseq-count parameters\n')
+            file_id.write( '[htseq-count parameters]\n')
+            file_id.write( '{0:<50} {1}\n'.format( 'nprocesses = 4', '# number of CPU for use'))
+            file_id.write( '{0:<50} {1}\n'.format( 'stranded = YES', f'# whether the data is from a strand-specific assay: {get_stranded_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format( 'minaqual = 10', '# skip all reads with MAPQ (5th column in BAM file) alignment quality lower than the given minimum value'))
+            file_id.write( '{0:<50} {1}\n'.format( 'type = exon', '# feature type (3rd column in GTF file) to be used, all features of other type are ignored'))
+            file_id.write( '{0:<50} {1}\n'.format( 'idattr = gene_id', '# GTF file feature id used to identity the counts in the output table'))
+            file_id.write( '{0:<50} {1}\n'.format( 'mode = UNION', f'# mode to handle reads overlapping more than one feature: {get_mode_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format( 'nonunique = NONE', f'# Mode to handle reads that align to or are assigned to more than one feature in the overlap mode of choice: {get_nonunique_code_list_text()}'))
             file_id.write( '{0:<50} {1}\n'.format( 'other_parameters = NONE', '# additional parameters to the previous ones or NONE'))
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be recreated'.format(get_htseq_count_config_file()))
+        error_list.append(f'*** ERROR: The file {get_htseq_count_config_file()} can not be recreated')
         OK = False
 
     # return the control variable and the error list
@@ -127,7 +137,7 @@ def run_htseq_count_process(cluster_name, log, function=None):
 
     # check the htseq-count config file
     log.write(f'{xlib.get_separator()}\n')
-    log.write('Checking the {0} config file ...\n'.format(xlib.get_htseq_count_name()))
+    log.write(f'Checking the {xlib.get_htseq_count_name()} config file ...\n')
     (OK, error_list) = check_htseq_count_config_file(strict=True)
     if OK:
         log.write('The file is OK.\n')
@@ -181,10 +191,10 @@ def run_htseq_count_process(cluster_name, log, function=None):
         (OK, error_list, is_installed) = xbioinfoapp.is_installed_anaconda_package(xlib.get_htseq_anaconda_code(), cluster_name, True, ssh_client)
         if OK:
             if not is_installed:
-                log.write('*** ERROR: {0} is not installed.\n'.format(xlib.get_htseq_name()))
+                log.write(f'*** ERROR: {xlib.get_htseq_name()} is not installed.\n')
                 OK = False
         else:
-            log.write('*** ERROR: The verification of {0} installation could not be performed.\n'.format(xlib.get_htseq_name()))
+            log.write(f'*** ERROR: The verification of {xlib.get_htseq_name()} installation could not be performed.\n')
 
     # warn that the requirements are OK 
     if OK:
@@ -196,7 +206,7 @@ def run_htseq_count_process(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(experiment_id, xlib.get_htseq_count_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -205,7 +215,7 @@ def run_htseq_count_process(cluster_name, log, function=None):
     # build the htseq-count process script
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process script {0} ...\n'.format(get_htseq_count_process_script()))
+        log.write(f'Building the process script {get_htseq_count_process_script()} ...\n')
         (OK, error_list) = build_htseq_count_process_script(cluster_name, current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -215,8 +225,8 @@ def run_htseq_count_process(cluster_name, log, function=None):
     # upload the htseq-count process script to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process script {0} to the directory {1} ...\n'.format(get_htseq_count_process_script(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_htseq_count_process_script()))
+        log.write(f'Uploading the process script {get_htseq_count_process_script()} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_htseq_count_process_script())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_htseq_count_process_script(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -227,9 +237,9 @@ def run_htseq_count_process(cluster_name, log, function=None):
     # set run permision to the htseq-count process script in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_htseq_count_process_script())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_htseq_count_process_script()))
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_htseq_count_process_script())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_htseq_count_process_script())}'
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -238,7 +248,7 @@ def run_htseq_count_process(cluster_name, log, function=None):
     # build the htseq-count process starter
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process starter {0} ...\n'.format(get_htseq_count_process_starter()))
+        log.write(f'Building the process starter {get_htseq_count_process_starter()} ...\n')
         (OK, error_list) = build_htseq_count_process_starter(current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -248,8 +258,8 @@ def run_htseq_count_process(cluster_name, log, function=None):
     # upload the htseq-count process starter to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process starter {0} to the directory {1} ...\n'.format(get_htseq_count_process_starter(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_htseq_count_process_starter()))
+        log.write(f'Uploading the process starter {get_htseq_count_process_starter()} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_htseq_count_process_starter())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_htseq_count_process_starter(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -260,9 +270,9 @@ def run_htseq_count_process(cluster_name, log, function=None):
     # set run permision to the htseq-count process starter in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_htseq_count_process_starter())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_htseq_count_process_starter()))
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_htseq_count_process_starter())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_htseq_count_process_starter())}'
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -271,7 +281,7 @@ def run_htseq_count_process(cluster_name, log, function=None):
     # submit the htseq-count process
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Submitting the process script {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_htseq_count_process_starter())))
+        log.write(f'Submitting the process script {current_run_dir}/{os.path.basename(get_htseq_count_process_starter())} ...\n')
         OK = xssh.submit_script(cluster_name, ssh_client, current_run_dir, os.path.basename(get_htseq_count_process_starter()), log)
 
     # close the SSH transport connection
@@ -376,19 +386,19 @@ def check_htseq_count_config_file(strict):
                     # check section "alignment-dataset-n" - key "alignment_software"
                     alignment_software = htseq_count_option_dict.get(section, {}).get('alignment_software', not_found)
                     if alignment_software == not_found:
-                        error_list.append('*** ERROR: the key "alignment_software" is not found in the section "{0}".'.format(section))
+                        error_list.append(f'*** ERROR: the key "alignment_software" is not found in the section "{section}".')
                         OK = False
                     elif not xlib.check_code(alignment_software, get_alignment_software_code_list(), case_sensitive=False):
-                        error_list.append('*** ERROR: the key "alignment_software" has to be {0}.'.format(get_alignment_software_code_list_text()))
+                        error_list.append(f'*** ERROR: the key "alignment_software" has to be {get_alignment_software_code_list_text()}.')
                         OK = False
 
                     # check section "alignment-dataset-n" - key "alignment_dataset_id"
                     alignment_dataset_id = htseq_count_option_dict.get(section, {}).get('alignment_dataset_id', not_found)
                     if alignment_dataset_id == not_found:
-                        error_list.append('*** ERROR: the key "alignment_dataset_id" is not found in the section "{0}".'.format(section))
+                        error_list.append(f'*** ERROR: the key "alignment_dataset_id" is not found in the section "{section}".')
                         OK = False
                     elif not xlib.check_startswith(alignment_dataset_id, get_alignment_software_code_list(), case_sensitive=True):
-                        error_list.append('*** ERROR: the key "alignment_dataset_id" has to start with {0}.'.format(get_alignment_software_code_list_text()))
+                        error_list.append(f'*** ERROR: the key "alignment_dataset_id" has to start with {get_alignment_software_code_list_text()}.')
                         OK = False
 
         # check section "htseq-count parameters"
@@ -397,13 +407,43 @@ def check_htseq_count_config_file(strict):
             OK = False
         else:
 
+            # check section "htseq-count parameters" - key "nprocesses"
+            nprocesses = htseq_count_option_dict.get('htseq-count parameters', {}).get('nprocesses', not_found)
+            if nprocesses == not_found:
+                error_list.append('*** ERROR: the key "nprocesses" is not found in the section "htseq-count parameters".')
+                OK = False
+            elif not xlib.check_int(nprocesses, minimum=1):
+                error_list.append('*** ERROR: the key "nprocesses" has to be an integer number greater than or equal to 1.')
+                OK = False
+
             # check section "htseq-count parameters" - key "stranded"
             stranded = htseq_count_option_dict.get('htseq-count parameters', {}).get('stranded', not_found)
             if stranded == not_found:
                 error_list.append('*** ERROR: the key "stranded" is not found in the section "htseq-count parameters".')
                 OK = False
             elif not xlib.check_code(stranded, get_stranded_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "stranded" has to be {0}.'.format(get_stranded_code_list_text()))
+                error_list.append(f'*** ERROR: the key "stranded" has to be {get_stranded_code_list_text()}.')
+                OK = False
+
+            # check section "htseq-count parameters" - key "minaqual"
+            minaqual = htseq_count_option_dict.get('htseq-count parameters', {}).get('minaqual', not_found)
+            if minaqual == not_found:
+                error_list.append('*** ERROR: the key "minaqual" is not found in the section "htseq-count parameters".')
+                OK = False
+            elif not xlib.check_int(minaqual):
+                error_list.append('*** ERROR: the key "minaqual" has to be an integer number.')
+                OK = False
+
+            # check section "htseq-count parameters" - key "type"
+            type = htseq_count_option_dict.get('htseq-count parameters', {}).get('type', not_found)
+            if type == not_found:
+                error_list.append('*** ERROR: the key "type" is not found in the section "htseq-count parameters".')
+                OK = False
+
+            # check section "htseq-count parameters" - key "idattr"
+            idattr = htseq_count_option_dict.get('htseq-count parameters', {}).get('idattr', not_found)
+            if idattr == not_found:
+                error_list.append('*** ERROR: the key "idattr" is not found in the section "htseq-count parameters".')
                 OK = False
 
             # check section "htseq-count parameters" - key "mode"
@@ -412,7 +452,7 @@ def check_htseq_count_config_file(strict):
                 error_list.append('*** ERROR: the key "mode" is not found in the section "htseq-count parameters".')
                 OK = False
             elif not xlib.check_code(mode, get_mode_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "mode" has to be {0}.'.format(get_mode_code_list_text()))
+                error_list.append(f'*** ERROR: the key "mode" has to be {get_mode_code_list_text()}.')
                 OK = False
 
             # check section "htseq-count parameters" - key "nonunique"
@@ -421,11 +461,11 @@ def check_htseq_count_config_file(strict):
                 error_list.append('*** ERROR: the key "nonunique" is not found in the section "htseq-count parameters".')
                 OK = False
             elif not xlib.check_code(nonunique, get_nonunique_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "nonunique" has to be {0}.'.format(get_nonunique_code_list_text()))
+                error_list.append(f'*** ERROR: the key "nonunique" has to be {get_nonunique_code_list_text()}.')
                 OK = False
 
             # check section "htseq-count parameters" - key "other_parameters"
-            not_allowed_parameters_list = ['format', 'stranded', 'mode', 'nonunique', 'quiet']
+            not_allowed_parameters_list = ['nprocesses', 'format', 'stranded', 'minaqual', 'type', 'idattr', 'mode', 'nonunique', 'quiet']
             other_parameters = htseq_count_option_dict.get('htseq-count parameters', {}).get('other_parameters', not_found)
             if other_parameters == not_found:
                 error_list.append('*** ERROR: the key "other_parameters" is not found in the section "htseq-count parameters".')
@@ -436,7 +476,7 @@ def check_htseq_count_config_file(strict):
 
     # warn that the results config file is not valid if there are any errors
     if not OK:
-        error_list.append('\nThe {0} config file is not valid. Please, correct this file or recreate it.'.format(xlib.get_htseq_count_name()))
+        error_list.append(f'\nThe {xlib.get_htseq_count_name()} config file is not valid. Please, correct this file or recreate it.')
 
     # return the control variable and the error list
     return (OK, error_list)
@@ -459,7 +499,11 @@ def build_htseq_count_process_script(cluster_name, current_run_dir):
     experiment_id = htseq_count_option_dict['identification']['experiment_id']
     reference_dataset_id = htseq_count_option_dict['identification']['reference_dataset_id']
     annotation_file = htseq_count_option_dict['identification']['annotation_file']
+    nprocesses = htseq_count_option_dict['htseq-count parameters']['nprocesses']
     stranded = htseq_count_option_dict['htseq-count parameters']['stranded']
+    minaqual = htseq_count_option_dict['htseq-count parameters']['minaqual']
+    type = htseq_count_option_dict['htseq-count parameters']['type']
+    idattr = htseq_count_option_dict['htseq-count parameters']['idattr']
     mode = htseq_count_option_dict['htseq-count parameters']['mode']
     nonunique = htseq_count_option_dict['htseq-count parameters']['nonunique']
     other_parameters = htseq_count_option_dict['htseq-count parameters']['other_parameters']
@@ -495,10 +539,8 @@ def build_htseq_count_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
             script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('HTSEQ_PATH={0}/{1}/envs/{2}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name(), xlib.get_htseq_anaconda_code())))
-            script_file_id.write( '{0}\n'.format('export PATH=$HTSEQ_PATH:$PATH'))
-            script_file_id.write( '{0}\n'.format('cd {0}/{1}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name())))
-            script_file_id.write( '{0}\n'.format('source activate {0}'.format(xlib.get_htseq_anaconda_code())))
+            script_file_id.write(f'MINICONDA3_BIN_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
+            script_file_id.write(f'export PATH=$MINICONDA3_BIN_PATH:$PATH\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
             script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -506,6 +548,8 @@ def build_htseq_count_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'mkdir --parents $STATUS_DIR\n')
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write(f'CURRENT_DIR={current_run_dir}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function init\n')
             script_file_id.write( '{\n')
@@ -520,19 +564,32 @@ def build_htseq_count_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function run_htseq_count_process'))
+            script_file_id.write( 'function print_htseq_count_version\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    mkdir --parents {0}'.format(current_run_dir)))
-            script_file_id.write(f'    cd {current_run_dir}\n')
+            script_file_id.write(f'    source activate {xlib.get_htseq_anaconda_code()}\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "htseq-count process for counting redads ..."'))
+            script_file_id.write( '    # -- htseq-count --version\n')
+            script_file_id.write( '    conda deactivate\n')
+            script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write( 'function run_htseq_count_process\n')
+            script_file_id.write( '{\n')
+            script_file_id.write(f'    source activate {xlib.get_htseq_anaconda_code()}\n')
+            script_file_id.write( '    cd $CURRENT_DIR\n')
+            script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write( '    echo "Counting reads ..."\n')
             script_file_id.write( '    /usr/bin/time \\\n')
-            script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-            script_file_id.write( '{0}\n'.format('        htseq-count \\'))
-            script_file_id.write( '{0}\n'.format('            --format=bam \\'))
-            script_file_id.write( '{0}\n'.format('            --stranded={0} \\'.format(stranded.lower())))
-            script_file_id.write( '{0}\n'.format('            --mode={0} \\'.format(mode.lower())))
-            script_file_id.write( '{0}\n'.format('            --nonunique={0} \\'.format(nonunique.lower())))
+            script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+            script_file_id.write( '        htseq-count \\\n')
+            script_file_id.write(f'            --nprocesses={nprocesses} \\\n')
+            script_file_id.write( '            --format=bam \\\n')
+            script_file_id.write(f'            --stranded={stranded.lower()} \\\n')
+            script_file_id.write(f'            --minaqual={minaqual} \\\n')
+            script_file_id.write(f'            --type={type} \\\n')
+            script_file_id.write(f'            --idattr={idattr} \\\n')
+            script_file_id.write(f'            --mode={mode.lower()} \\\n')
+            script_file_id.write(f'            --nonunique={nonunique.lower()} \\\n')
+            script_file_id.write( '            --quiet \\\n')
             if other_parameters.upper() != 'NONE':
                 parameter_list = [x.strip() for x in other_parameters.split(';')]
                 for i in range(len(parameter_list)):
@@ -548,14 +605,14 @@ def build_htseq_count_process_script(cluster_name, current_run_dir):
                         parameter_name = mo.group(1).strip()
                         script_file_id.write(f'            --{parameter_name} \\\n')
             for i in range(len(alignment_dataset_id_list)):
-                if alignment_software_list[i] == xlib.get_star_code():
-                    alignment_file = '{0}/starAligned.sortedByCoord.out.bam'.format(xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id_list[i]))
-                elif alignment_software_list[i] == xlib.get_tophat_code():
-                    alignment_file = '{0}/accepted_hits.bam'.format(xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id_list[i]))
-                script_file_id.write( '{0}\n'.format('            {0} \\'.format(alignment_file)))
-            script_file_id.write( '{0}\n'.format('            {0}'.format(annotation_file)))
+                alignment_files = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id_list[i])}/*.sorted.bam'
+                script_file_id.write(f'            {alignment_files} \\\n')
+            script_file_id.write(f'            {annotation_file} \\\n')
+            script_file_id.write(f'            > read-count.txt\n')
             script_file_id.write( '    RC=$?\n')
-            script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error htseq-count $RC; fi'))
+            script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error htseq-count $RC; fi\n')
+            script_file_id.write( '    echo "Reads are counted."\n')
+            script_file_id.write( '    conda deactivate\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function end\n')
@@ -630,11 +687,12 @@ def build_htseq_count_process_script(cluster_name, current_run_dir):
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
-            script_file_id.write( '{0}\n'.format('run_htseq_count_process'))
+            script_file_id.write( 'print_htseq_count_version\n')
+            script_file_id.write( 'run_htseq_count_process\n')
             script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_htseq_count_process_script()))
+        error_list.append(f'*** ERROR: The file {get_htseq_count_process_script()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -658,10 +716,10 @@ def build_htseq_count_process_starter(current_run_dir):
         with open(get_htseq_count_process_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_htseq_count_process_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_htseq_count_process_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_htseq_count_process_starter()))
+        error_list.append(f'*** ERROR: The file {get_htseq_count_process_starter()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -675,7 +733,7 @@ def get_htseq_count_config_file():
     '''
 
     # assign the htseq-count config file path
-    htseq_count_config_file = '{0}/{1}-config.txt'.format(xlib.get_config_dir(), xlib.get_htseq_count_code())
+    htseq_count_config_file = f'{xlib.get_config_dir()}/{xlib.get_htseq_count_code()}-config.txt'
 
     # return the htseq-count config file path
     return htseq_count_config_file
@@ -688,7 +746,7 @@ def get_htseq_count_process_script():
     '''
 
     # assign the htseq-count script path
-    htseq_count_process_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_htseq_count_code())
+    htseq_count_process_script = f'{xlib.get_temp_dir()}/{xlib.get_htseq_count_code()}-process.sh'
 
     # return the htseq-count script path
     return htseq_count_process_script
@@ -701,7 +759,7 @@ def get_htseq_count_process_starter():
     '''
 
     # assign the htseq-count process starter path
-    htseq_count_process_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_htseq_count_code())
+    htseq_count_process_starter = f'{xlib.get_temp_dir()}/{xlib.get_htseq_count_code()}-process-starter.sh'
 
     # return the htseq-count starter path
     return htseq_count_process_starter
@@ -713,7 +771,7 @@ def get_alignment_software_code_list():
     Get the code list of "alignment_software".
     '''
 
-    return [xlib.get_star_code(), xlib.get_tophat_code()]
+    return [xlib.get_bowtie2_code(), xlib.get_gsnap_code(), xlib.get_hisat2_code(), xlib.get_star_code(), xlib.get_tophat_code()]
 
 #-------------------------------------------------------------------------------
     
@@ -722,7 +780,7 @@ def get_alignment_software_code_list_text():
     Get the code list of "alignment_software" as text.
     '''
 
-    return '{0} ({1}) or {2} ({3})'.format(xlib.get_star_code(), xlib.get_star_name(), xlib.get_tophat_code(), xlib.get_tophat_name())
+    return f'{xlib.get_bowtie2_code()} ({xlib.get_bowtie2_name()}) or {xlib.get_gsnap_code()} ({xlib.get_gsnap_name()}) or {xlib.get_hisat2_code()} ({xlib.get_hisat2_name()}) or {xlib.get_star_code()} ({xlib.get_star_name()}) or {xlib.get_tophat_code()} ({xlib.get_tophat_name()})'
 
 #-------------------------------------------------------------------------------
     
@@ -767,7 +825,7 @@ def get_nonunique_code_list():
     Get the code list of "nonunique".
     '''
 
-    return ['NONE', 'ALL']
+    return ['NONE', 'ALL', 'FRACTION', 'RANDOM']
 
 #-------------------------------------------------------------------------------
     

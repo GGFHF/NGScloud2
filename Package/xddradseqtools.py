@@ -60,7 +60,7 @@ def is_installed_ddradseqtools(cluster_name, passed_connection, ssh_client):
     # check the ddRADseqTools directory is created
     if OK:
         command = f'[ -d {xlib.get_cluster_app_dir()}/{xlib.get_ddradseqtools_name()} ] && echo RC=0 || echo RC=1'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] == 'RC=0':
             OK = True
             is_installed = True
@@ -132,7 +132,7 @@ def install_ddradseqtools(cluster_name, log, function=None):
     # check the app directory is created
     if OK:
         command = f'[ -d {xlib.get_cluster_app_dir()} ] && echo RC=0 || echo RC=1'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] != 'RC=0':
             log.write('*** ERROR: There is not any volume mounted in the directory.\n')
             log.write(f'You have to link a volume in the mounting point {xlib.get_cluster_app_dir()} for the cluster {cluster_name}.\n')
@@ -148,7 +148,7 @@ def install_ddradseqtools(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_toa_result_installation_dir(), xlib.get_ddradseqtools_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -181,7 +181,7 @@ def install_ddradseqtools(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_ddradseqtools_installation_script())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_ddradseqtools_installation_script())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -214,7 +214,7 @@ def install_ddradseqtools(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_ddradseqtools_installation_starter())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_ddradseqtools_installation_starter())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -257,7 +257,7 @@ def build_ddradseqtools_installation_script(cluster_name, current_run_dir):
     error_list = []
 
     # get the version and download URL of ddRADseqTools
-    (ddradseqtools_version, ddradseqtools_url, ddradseqtools_channel) = xconfiguration.get_bioinfo_app_data(xlib.get_ddradseqtools_name())
+    (_, ddradseqtools_url, _) = xconfiguration.get_bioinfo_app_data(xlib.get_ddradseqtools_name())
 
     # write the ddRADseqTools installation script
     try:
@@ -792,7 +792,7 @@ def is_restriction_enzyme_code(enzyme_id, restriction_enzyme_dict):
     OK = True
 
     try:
-        restriction_site_seq = restriction_enzyme_dict[enzyme_id]
+        _ = restriction_enzyme_dict[enzyme_id]
     except:
         OK = False
 
@@ -1388,7 +1388,7 @@ def run_rsitesearch_process(cluster_name, log, function=None):
     # check the ddRADseqTools is installed
     if OK:
         command = f'[ -d {xlib.get_cluster_app_dir()}/{xlib.get_ddradseqtools_name()} ] && echo RC=0 || echo RC=1'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] != 'RC=0':
             log.write(f'*** ERROR: {xlib.get_ddradseqtools_name()} is not installed.\n')
             OK = False
@@ -1403,7 +1403,7 @@ def run_rsitesearch_process(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_design_dataset_name(), xlib.get_rsitesearch_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -1450,7 +1450,7 @@ def run_rsitesearch_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_rsitesearch_process_script())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_rsitesearch_process_script())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -1484,7 +1484,7 @@ def run_rsitesearch_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_rsitesearch_process_starter())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_rsitesearch_process_starter())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -2047,7 +2047,7 @@ def run_ddradseq_simulation_process(cluster_name, log, function=None):
     # check the ddRADseq simulation is installed
     if OK:
         command = f'[ -d {xlib.get_cluster_app_dir()}/{xlib.get_ddradseqtools_name()} ] && echo RC=0 || echo RC=1'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] != 'RC=0':
             log.write(f'*** ERROR: {xlib.get_ddradseqtools_name()} is not installed.\n')
             OK = False
@@ -2062,7 +2062,7 @@ def run_ddradseq_simulation_process(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_design_dataset_name(), xlib.get_ddradseq_simulation_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -2133,7 +2133,7 @@ def run_ddradseq_simulation_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_ddradseq_simulation_process_script())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_ddradseq_simulation_process_script())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -2167,7 +2167,7 @@ def run_ddradseq_simulation_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_ddradseq_simulation_process_starter())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_ddradseq_simulation_process_starter())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -3278,13 +3278,14 @@ def create_variant_calling_config_file(experiment_id='exp001', reference_dataset
             file_id.write( '\n')
             file_id.write( '# This section has the information to set the Variant calling parameters\n')
             file_id.write( '[Variant calling parameters]\n')
+            file_id.write( '{0:<50} {1}\n'.format('threads = 4', '# number of threads for use'))
             file_id.write( '{0:<50} {1}\n'.format( 'vcf-merger = NO', f'# merger of the VCF files: {get_vcf_merger_code_list_text()}'))
             file_id.write( '\n')
             file_id.write( '# This section has the information to set the bcftools call parameters\n')
             file_id.write( '[bcftools call parameters]\n')
             file_id.write( '{0:<50} {1}\n'.format( 'variants-only = YES', f'# output variant sites only: {get_variants_only_code_list_text()}'))
             file_id.write( '{0:<50} {1}\n'.format( 'consensus-caller = YES', f'# the old samtools calling model (conflicts with multiallelic-caller): {get_consensus_caller_code_list_text()}'))
-            file_id.write( '{0:<50} {1}\n'.format( 'multiallelic-caller = NO', f'#  the alternative model for multiallelic and rare-variant calling  (conflicts with consensus-caller): {get_multiallelic_caller_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format( 'multiallelic-caller = NO', f'# the alternative model for multiallelic and rare-variant calling  (conflicts with consensus-caller): {get_multiallelic_caller_code_list_text()}'))
             file_id.write( '{0:<50} {1}\n'.format( 'other_parameters = NONE', '# additional parameters to the previous ones or NONE'))
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
@@ -3370,20 +3371,10 @@ def run_variant_calling_process(cluster_name, log, function=None):
     # check the ddRADseqTools is installed
     if OK:
         command = f'[ -d {xlib.get_cluster_app_dir()}/{xlib.get_ddradseqtools_name()} ] && echo RC=0 || echo RC=1'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] != 'RC=0':
             log.write(f'*** ERROR: {xlib.get_ddradseqtools_name()} is not installed.\n')
             OK = False
-
-    # check SAMtools is installed
-    if OK:
-        (OK, error_list, is_installed) = xbioinfoapp.is_installed_anaconda_package(xlib.get_samtools_anaconda_code(), cluster_name, True, ssh_client)
-        if OK:
-            if not is_installed:
-                log.write(f'*** ERROR: {xlib.get_samtools_name()} is not installed.\n')
-                OK = False
-        else:
-            log.write(f'*** ERROR: The verification of {xlib.get_samtools_name()} installation could not be performed.\n')
 
     # check BCFtools is installed
     if OK:
@@ -3425,7 +3416,7 @@ def run_variant_calling_process(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(experiment_id, xlib.get_variant_calling_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -3460,7 +3451,7 @@ def run_variant_calling_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_variant_calling_process_script())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_variant_calling_process_script())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -3494,7 +3485,7 @@ def run_variant_calling_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_variant_calling_process_starter())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_variant_calling_process_starter())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -3664,6 +3655,15 @@ def check_variant_calling_config_file(strict):
             OK = False
         else:
 
+            # check section "Variant calling parameters" - key "threads"
+            threads = variant_calling_option_dict.get('Variant calling parameters', {}).get('threads', not_found)
+            if threads == not_found:
+                error_list.append('*** ERROR: the key "threads" is not found in the section "Variant calling parameters".')
+                OK = False
+            elif not xlib.check_int(threads, minimum=1):
+                error_list.append('*** ERROR: the key "threads" has to be an integer number greater than or equal to 1.')
+                OK = False
+
             # check section "Variant calling parameters" - key "vcf-merger"
             vcf_merger = variant_calling_option_dict.get('Variant calling parameters', {}).get('vcf-merger', not_found)
             if vcf_merger == not_found:
@@ -3755,8 +3755,9 @@ def build_variant_calling_process_script(cluster_name, current_run_dir):
     assembly_software = variant_calling_option_dict['identification']['assembly_software']
     assembly_dataset_id = variant_calling_option_dict['identification']['assembly_dataset_id']
     assembly_type = variant_calling_option_dict['identification']['assembly_type']
-    alignment_software = variant_calling_option_dict['identification']['alignment_software']
+    # -- alignment_software = variant_calling_option_dict['identification']['alignment_software']
     alignment_dataset_id = variant_calling_option_dict['identification']['alignment_dataset_id']
+    threads = variant_calling_option_dict['Variant calling parameters']['threads']
     vcf_merger = variant_calling_option_dict['Variant calling parameters']['vcf-merger']
     variants_only = variant_calling_option_dict['bcftools call parameters']['variants-only']
     consensus_caller = variant_calling_option_dict['bcftools call parameters']['consensus-caller']
@@ -3785,21 +3786,8 @@ def build_variant_calling_process_script(cluster_name, current_run_dir):
         elif assembly_software == xlib.get_starcode_code():
             cluster_reference_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)}/starcode.fasta'
 
-    # set the alignment file paths
-    if alignment_software == xlib.get_bowtie2_code():
-        sam_files = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id)}/alignment.sam'
-        bam_files = '$BAM_DIR/alignment.bam'
-    elif alignment_software == xlib.get_gsnap_code():
-        sam_files = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id)}/*-split.concordant_uniq'
-        sam_files_2 = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id)}/*-split.uniq'
-        bam_files = '$BAM_DIR/*.bam'
-    elif alignment_software == xlib.get_hisat2_code():
-        sam_files = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id)}/alignment.sam'
-        bam_files = '$BAM_DIR/alignment.bam'
-    elif alignment_software == xlib.get_star_code():
-        bam_files = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id)}/*-Aligned.sortedByCoord.out.bam'
-    elif alignment_software == xlib.get_tophat_code():
-        bam_files = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id)}/accepted_hits.bam'
+    # set the alignment file path
+    sorted_bam_files = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id)}/*.sorted.bam'
 
     # set parameters of bcftools call
     bcftools_call_parameter = ''
@@ -3848,8 +3836,6 @@ def build_variant_calling_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write(f'CURRENT_DIR={current_run_dir}\n')
-            script_file_id.write( 'BAM_DIR=$CURRENT_DIR/BAM\n')
-            script_file_id.write( 'if [ ! -d "$BAM_DIR" ]; then mkdir --parents $BAM_DIR; fi\n')
             script_file_id.write( 'BED_DIR=$CURRENT_DIR/BED\n')
             script_file_id.write( 'if [ ! -d "$BED_DIR" ]; then mkdir --parents $BED_DIR; fi\n')
             script_file_id.write( 'VCF_DIR=$CURRENT_DIR/VCF\n')
@@ -3868,86 +3854,6 @@ def build_variant_calling_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            if alignment_software in [xlib.get_bowtie2_code(), xlib.get_gsnap_code(), xlib.get_hisat2_code()]:
-                script_file_id.write( 'function convert_sam2bam\n')
-                script_file_id.write( '{\n')
-                script_file_id.write( '    cd $CURRENT_DIR\n')
-                script_file_id.write( '    STEP_STATUS=$STATUS_DIR/convert_sam2bam.ok\n')
-                script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '    echo "Converting SAM files to BAM format ..."\n')
-                script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
-                script_file_id.write( '        echo "This step was previously run."\n')
-                script_file_id.write( '    else\n')
-                script_file_id.write(f'        source activate {xlib.get_samtools_anaconda_code()}\n')
-                script_file_id.write(f'        ls {sam_files} > sam-files.txt\n')
-                if alignment_software == xlib.get_gsnap_code():
-                    script_file_id.write(f'        if ! [ -s sam-files.txt ]; then\n')
-                    script_file_id.write(f'            ls {sam_files_2} > sam-files.txt\n')
-                    script_file_id.write(f'        fi\n')
-                script_file_id.write( '        while read FILE_SAM; do\n')
-                if alignment_software == xlib.get_gsnap_code():
-                    script_file_id.write( '            FILE_BAM=$BAM_DIR/`basename $FILE_SAM`.bam\n')
-                else:
-                    script_file_id.write( '            FILE_BAM=$BAM_DIR/`basename $FILE_SAM | sed "s|.sam|.bam|g"`\n')
-                script_file_id.write( '            samtools view -b -S -o $FILE_BAM $FILE_SAM\n')
-                script_file_id.write( '            RC=$?\n')
-                script_file_id.write( '            if [ $RC -ne 0 ]; then manage_error samtools-view $RC; fi\n')
-                script_file_id.write( '        done < sam-files.txt\n')
-                script_file_id.write( '        conda deactivate\n')
-                script_file_id.write( '        echo "SAM files are converted."\n')
-                script_file_id.write( '        touch $STEP_STATUS\n')
-                script_file_id.write( '    fi\n')
-                script_file_id.write( '}\n')
-                script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( 'function get_alignment_stats\n')
-            script_file_id.write( '{\n')
-            script_file_id.write( '    cd $CURRENT_DIR\n')
-            script_file_id.write( '    STEP_STATUS=$STATUS_DIR/get_alignment_stats.ok\n')
-            script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '    echo "Getting alignment statistic ..."\n')
-            script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
-            script_file_id.write( '        echo "This step was previously run."\n')
-            script_file_id.write( '    else\n')
-            script_file_id.write(f'        source activate {xlib.get_samtools_anaconda_code()}\n')
-            script_file_id.write(f'        ls {bam_files} > bam-files.txt\n')
-            script_file_id.write( '        while read FILE_SAM; do\n')
-            script_file_id.write( '            FILE_BAM_STATS=$BAM_DIR/`basename $FILE_BAM | sed "s|.bam|.bam-stats.txt|g"`\n')
-            script_file_id.write( '            samtools flagstat $FILE_BAM >$FILE_BAM_STATS\n')
-            script_file_id.write( '            RC=$?\n')
-            script_file_id.write( '            if [ $RC -ne 0 ]; then manage_error samtools-flagstat $RC; fi\n')
-            script_file_id.write( '        done < sam-files.txt\n')
-            script_file_id.write( '        conda deactivate\n')
-            script_file_id.write( '        echo "Statistics are got."\n')
-            script_file_id.write( '        touch $STEP_STATUS\n')
-            script_file_id.write( '    fi\n')
-            script_file_id.write( '}\n')
-            script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( 'function sort_and_index_bam_files\n')
-            script_file_id.write( '{\n')
-            script_file_id.write( '    cd $CURRENT_DIR\n')
-            script_file_id.write( '    STEP_STATUS=$STATUS_DIR/sort_and_index_bam_files.ok\n')
-            script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '    echo "Sorting and indexing BAM files ..."\n')
-            script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
-            script_file_id.write( '        echo "This step was previously run."\n')
-            script_file_id.write( '    else\n')
-            script_file_id.write(f'        source activate {xlib.get_samtools_anaconda_code()}\n')
-            script_file_id.write(f'        ls {bam_files} > bam-files.txt\n')
-            script_file_id.write( '        while read FILE_BAM; do\n')
-            script_file_id.write( '            FILE_SORTED_BAM=$BAM_DIR/`basename $FILE_BAM | sed "s|.bam|.sorted.bam|g"`\n')
-            script_file_id.write( '            samtools sort $FILE_BAM -o $FILE_SORTED_BAM\n')
-            script_file_id.write( '            RC=$?\n')
-            script_file_id.write( '            if [ $RC -ne 0 ]; then manage_error samtools-sort $RC; fi\n')
-            script_file_id.write( '            samtools index $FILE_SORTED_BAM\n')
-            script_file_id.write( '            RC=$?\n')
-            script_file_id.write( '            if [ $RC -ne 0 ]; then manage_error samtools-index $RC; fi\n')
-            script_file_id.write( '        done < bam-files.txt\n')
-            script_file_id.write( '        conda deactivate\n')
-            script_file_id.write( '        echo "BAM files are sorted and indexed."\n')
-            script_file_id.write( '        touch $STEP_STATUS\n')
-            script_file_id.write( '    fi\n')
-            script_file_id.write( '}\n')
-            script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function convert_bam2bed\n')
             script_file_id.write( '{\n')
             script_file_id.write( '    cd $CURRENT_DIR\n')
@@ -3958,7 +3864,7 @@ def build_variant_calling_process_script(cluster_name, current_run_dir):
             script_file_id.write( '        echo "This step was previously run."\n')
             script_file_id.write( '    else\n')
             script_file_id.write(f'        source activate {xlib.get_bedtools_anaconda_code()}\n')
-            script_file_id.write(f'        ls {bam_files} > bam-files.txt\n')
+            script_file_id.write(f'        ls {sorted_bam_files} > bam-files.txt\n')
             script_file_id.write( '        while read FILE_BAM; do\n')
             script_file_id.write( '            FILE_BED=$BED_DIR/`basename $FILE_BAM | sed "s|.bam|.bed|g"`\n')
             script_file_id.write( '            bedtools bamtobed -i $FILE_BAM > $FILE_BED\n')
@@ -3981,10 +3887,10 @@ def build_variant_calling_process_script(cluster_name, current_run_dir):
             script_file_id.write( '        echo "This step was previously run."\n')
             script_file_id.write( '    else\n')
             script_file_id.write(f'        source activate {xlib.get_bcftools_anaconda_code()}\n')
-            script_file_id.write( '        ls $BAM_DIR/*.sorted.bam > sorted-bam-files.txt\n')
+            script_file_id.write(f'        ls {sorted_bam_files} > sorted-bam-files.txt\n')
             script_file_id.write( '        while read FILE_SORTED_BAM; do\n')
             script_file_id.write( '            FILE_VCF=$VCF_DIR/`basename $FILE_SORTED_BAM | sed "s|.sorted.bam|.vcf|g"`\n')
-            script_file_id.write(f'            bcftools mpileup --output-type u --fasta-ref {cluster_reference_file} $FILE_SORTED_BAM | bcftools call {bcftools_call_parameter} - > $FILE_VCF\n')
+            script_file_id.write(f'            bcftools mpileup --threads {threads} --output-type u --fasta-ref {cluster_reference_file} $FILE_SORTED_BAM | bcftools call {bcftools_call_parameter} - > $FILE_VCF\n')
             script_file_id.write( '            RC=$?\n')
             script_file_id.write( '            if [ $RC -ne 0 ]; then manage_error bcftools-mpileup_bcftools-call $RC; fi\n')
             script_file_id.write( '        done < sorted-bam-files.txt\n')
@@ -4006,7 +3912,7 @@ def build_variant_calling_process_script(cluster_name, current_run_dir):
             script_file_id.write( '        ls $VCF_DIR/*.vcf > vcf-files.txt\n')
             script_file_id.write(f'        source activate {xlib.get_tabix_anaconda_code()}\n')
             script_file_id.write( '        while read FILE_VCF; do\n')
-            script_file_id.write( '            bgzip $FILE_VCF\n')
+            script_file_id.write(f'            bgzip $FILE_VCF\n')
             script_file_id.write( '            RC=$?\n')
             script_file_id.write( '            if [ $RC -ne 0 ]; then manage_error bgzip $RC; fi\n')
             script_file_id.write( '        done < vcf-files.txt\n')
@@ -4055,7 +3961,7 @@ def build_variant_calling_process_script(cluster_name, current_run_dir):
                 script_file_id.write( '        echo "File number: $FILENUM"\n')
                 script_file_id.write( '        if [ "$FILENUM" -gt 1 ]; then\n')
                 script_file_id.write(f'            source activate {xlib.get_bcftools_anaconda_code()}\n')
-                script_file_id.write( '            bcftools merge --merge all --output-type z $VCF_DIR/*.vcf.gz > $VCF_DIR/merged_samples.vcf.gz\n')
+                script_file_id.write(f'            bcftools merge --threads {threads} --merge all --output-type z $VCF_DIR/*.vcf.gz > $VCF_DIR/merged_samples.vcf.gz\n')
                 script_file_id.write( '            RC=$?\n')
                 script_file_id.write( '            if [ $RC -ne 0 ]; then manage_error vcfutils.pl $RC; fi\n')
                 script_file_id.write( '            conda deactivate\n')
@@ -4081,7 +3987,7 @@ def build_variant_calling_process_script(cluster_name, current_run_dir):
             script_file_id.write( '        while read COMPRESSED_FILE_VCF; do\n')
             script_file_id.write( '            STATS_FILE=`echo $COMPRESSED_FILE_VCF | sed "s|.vcf.gz|.vcf-stats.txt|g"`\n')
             script_file_id.write( '            PLOT_DIR=`echo $COMPRESSED_FILE_VCF | sed "s|.vcf.gz|-stats-plots|g"`\n')
-            script_file_id.write( '            bcftools stats $COMPRESSED_FILE_VCF > $STATS_FILE\n')
+            script_file_id.write(f'            bcftools stats --threads {threads} $COMPRESSED_FILE_VCF > $STATS_FILE\n')
             script_file_id.write( '            RC=$?\n')
             script_file_id.write( '            if [ $RC -ne 0 ]; then manage_error bcftools-stats $RC; fi\n')
             script_file_id.write( '            plot-vcfstats --prefix $PLOT_DIR $STATS_FILE\n')
@@ -4166,10 +4072,6 @@ def build_variant_calling_process_script(cluster_name, current_run_dir):
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
-            if alignment_software in [xlib.get_bowtie2_code(), xlib.get_gsnap_code(), xlib.get_hisat2_code()]:
-                script_file_id.write( 'convert_sam2bam\n')
-            script_file_id.write( 'get_alignment_stats\n')
-            script_file_id.write( 'sort_and_index_bam_files\n')
             script_file_id.write( 'convert_bam2bed\n')
             script_file_id.write( 'convert_bam2vcf\n')
             script_file_id.write( 'compress_vcf_files\n')

@@ -447,7 +447,7 @@ class FormViewSubmissionLogs(tkinter.Frame):
                     try:
                         pattern = r'^(.+)\-(.+)\-(.+)\-(.+).txt$'
                         mo = re.search(pattern, line)
-                        environment = mo.group(1)
+                        # -- environment = mo.group(1)
                         local_process_id = mo.group(2).strip()
                         yymmdd = mo.group(3)
                         hhmmss = mo.group(4)
@@ -647,7 +647,7 @@ class FormViewResultLogs(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_result_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -753,7 +753,7 @@ class FormViewResultLogs(tkinter.Frame):
         if OK:
             # -- command = 'ls {0}/{1}'.format(xlib.get_cluster_result_dir(), self.wrapper_experiment_id.get())
             command = 'cd  {0}/{1}; for list in `ls`; do ls -ld $list | grep -v ^- > /dev/null && echo $list; done;'.format(xlib.get_cluster_result_dir(), self.wrapper_experiment_id.get())
-            (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 result_dataset_dict = {}
                 for line in stdout:
@@ -763,13 +763,12 @@ class FormViewResultLogs(tkinter.Frame):
                         try:
                             pattern = r'^(.+)\-(.+)\-(.+)$'
                             mo = re.search(pattern, result_dataset_id)
-                            bioinfo_app_code = mo.group(1).strip()
+                            # -- bioinfo_app_code = mo.group(1).strip()
                             yymmdd = mo.group(2)
                             hhmmss = mo.group(3)
                             date = '20{0}-{1}-{2}'.format(yymmdd[:2], yymmdd[2:4], yymmdd[4:])
                             time = '{0}:{1}:{2}'.format(hhmmss[:2], hhmmss[2:4], hhmmss[4:])
                         except:
-                            bioinfo_app_code = 'xxx'
                             date = '0000-00-00'
                             time = '00:00:00'
 
@@ -802,6 +801,9 @@ class FormViewResultLogs(tkinter.Frame):
 
                         elif result_dataset_id.startswith(xlib.get_cufflinks_cuffmerge_code()+'-'):
                             bioinfo_app_name = xlib.get_cufflinks_cuffmerge_name()
+
+                        elif result_dataset_id.startswith(xlib.get_cuffnorm_code()+'-'):
+                            bioinfo_app_name = xlib.get_cuffnorm_name()
 
                         elif result_dataset_id.startswith(xlib.get_cuffquant_code()+'-'):
                             bioinfo_app_name = xlib.get_cuffquant_name()
@@ -1042,14 +1044,14 @@ class FormViewResultLogs(tkinter.Frame):
 
                         status_ok_file = xlib.get_status_ok('{0}/{1}/{2}'.format(xlib.get_cluster_result_dir(), self.wrapper_experiment_id.get(), result_dataset_id))
                         command = '[ -f {0} ] && echo RC=0 || echo RC=1'.format(status_ok_file)
-                        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+                        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
                         if stdout[len(stdout) - 1] == 'RC=0':
                             status_ok = True
                         else:
                             status_ok = False
                         status_wrong_file = xlib.get_status_wrong('{0}/{1}/{2}'.format(xlib.get_cluster_result_dir(), self.wrapper_experiment_id.get(), result_dataset_id))
                         command = '[ -f {0} ] && echo RC=0 || echo RC=1'.format(status_wrong_file)
-                        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+                        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
                         if stdout[len(stdout) - 1] == 'RC=0':
                             status_wrong = True
                         else:

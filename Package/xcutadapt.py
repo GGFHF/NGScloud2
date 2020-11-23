@@ -55,17 +55,17 @@ def create_cutadapt_config_file(experiment_id='exp001', read_dataset_id=xlib.get
             file_id.write( '# You must review the information of this file and update the values with the corresponding ones to the current run.\n')
             file_id.write( '#\n')
             file_id.write(f'# The read files have to be located in the cluster directory {xlib.get_cluster_read_dir()}/experiment_id/read_dataset_id\n')
-            file_id.write( '{0}\n'.format('# The experiment_id and read_dataset_id are fixed in the identification section.'))
+            file_id.write( '# The experiment_id and read_dataset_id are fixed in the identification section.\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# You can consult the parameters of cutadapt and their meaning in "https://pachterlab.github.io/kallisto/".'))
+            file_id.write( '# You can consult the parameters of cutadapt and their meaning in "https://pachterlab.github.io/kallisto/".\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# In section "cutadapt parameters", the key "other_parameters" allows you to input additional parameters in the format:'))
+            file_id.write( '# In section "cutadapt parameters", the key "other_parameters" allows you to input additional parameters in the format:\n')
             file_id.write( '#\n')
             file_id.write( '#    other_parameters = --parameter-1[=value-1][; --parameter-2[=value-2][; ...; --parameter-n[=value-n]]]\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# parameter-i is a parameter name of Cufflinks and value-i a valid value of parameter-i, e.g.'))
+            file_id.write( '# parameter-i is a parameter name of Cufflinks and value-i a valid value of parameter-i, e.g.\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('#    other_parameters = --bias; --bootstrap-samples=0'))
+            file_id.write( '#    other_parameters = --bias; --bootstrap-samples=0\n')
             file_id.write( '\n')
             file_id.write( '# This section has the information identifies the experiment.\n')
             file_id.write( '[identification]\n')
@@ -73,19 +73,19 @@ def create_cutadapt_config_file(experiment_id='exp001', read_dataset_id=xlib.get
             file_id.write( '{0:<50} {1}\n'.format(f'read_dataset_id = {read_dataset_id}', '# read dataset identification'))
             file_id.write( '\n')
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information to set the cutadapt parameters'))
-            file_id.write( '{0}\n'.format('[cutadapt parameters]'))
-            file_id.write( '{0:<50} {1}\n'.format('cores = 0', '# number of cores to use; with 0, the number of available cores will be automatically detected'))
-            file_id.write( '{0:<50} {1}\n'.format('adapter = ACGT', "# sequence of an adapter ligated to the 3' end (paired data: of the first read)"))
+            file_id.write( '# This section has the information to set the cutadapt parameters\n')
+            file_id.write( '[cutadapt parameters]\n')
+            file_id.write( '{0:<50} {1}\n'.format( 'cores = 0', '# number of cores to use; with 0, the number of available cores will be automatically detected'))
+            file_id.write( '{0:<50} {1}\n'.format( 'adapter = ACGT', "# sequence of an adapter ligated to the 3' end (paired data: of the first read)"))
             if read_type == 'SE':
-                file_id.write( '{0:<50} {1}\n'.format('adapter_pe = NONE', "# PE: sequence of an adapter ligated to the 3' end of the second read; SE: always NONE"))
+                file_id.write( '{0:<50} {1}\n'.format( 'adapter_pe = NONE', "# PE: sequence of an adapter ligated to the 3' end of the second read; SE: always NONE"))
             elif read_type == 'PE':
-                file_id.write( '{0:<50} {1}\n'.format('adapter_pe = TGCA', "# PE: sequence of an adapter ligated to the 3' end of the second read; SE: always NONE"))
-            file_id.write( '{0:<50} {1}\n'.format('front = NONE', "# sequence of an adapter ligated to the 5' end (PE: of the first read) or NONE"))
-            file_id.write( '{0:<50} {1}\n'.format('front_pe = NONE', "# PE: sequence of an adapter ligated to the 3' end of the second read or NONE; SE: always NONE"))
-            file_id.write( '{0:<50} {1}\n'.format('anywhere = NONE', "# sequence of an adapter that may be ligated to the 5' or 3' end (PE: of the first read) or NONE"))
-            file_id.write( '{0:<50} {1}\n'.format('anywhere_pe = NONE', "# PE: sequence of an adapter that may be ligated to the 5' or 3' end of the second read or NONE; SE: always NONE"))
-            file_id.write( '{0:<50} {1}\n'.format('other_parameters = NONE', '# quant step - additional parameters to the previous ones or NONE'))
+                file_id.write( '{0:<50} {1}\n'.format( 'adapter_pe = TGCA', "# PE: sequence of an adapter ligated to the 3' end of the second read; SE: always NONE"))
+            file_id.write( '{0:<50} {1}\n'.format( 'front = NONE', "# sequence of an adapter ligated to the 5' end (PE: of the first read) or NONE"))
+            file_id.write( '{0:<50} {1}\n'.format( 'front_pe = NONE', "# PE: sequence of an adapter ligated to the 3' end of the second read or NONE; SE: always NONE"))
+            file_id.write( '{0:<50} {1}\n'.format( 'anywhere = NONE', "# sequence of an adapter that may be ligated to the 5' or 3' end (PE: of the first read) or NONE"))
+            file_id.write( '{0:<50} {1}\n'.format( 'anywhere_pe = NONE', "# PE: sequence of an adapter that may be ligated to the 5' or 3' end of the second read or NONE; SE: always NONE"))
+            file_id.write( '{0:<50} {1}\n'.format( 'other_parameters = NONE', '# quant step - additional parameters to the previous ones or NONE'))
             file_id.write( '\n')
             file_id.write( '# This section has the global information of all libraries.\n')
             file_id.write( '[library]\n')
@@ -107,7 +107,7 @@ def create_cutadapt_config_file(experiment_id='exp001', read_dataset_id=xlib.get
                     file_id.write( '# The section identification has to be library-n (n is an integer not repeated)\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be recreated'.format(get_cutadapt_config_file()))
+        error_list.append(f'*** ERROR: The file {get_cutadapt_config_file()} can not be recreated')
         OK = False
 
     # return the control variable and the error list
@@ -135,7 +135,7 @@ def run_cutadapt_process(cluster_name, log, function=None):
 
     # check the cutadapt config file
     log.write(f'{xlib.get_separator()}\n')
-    log.write('Checking the {0} config file ...\n'.format(xlib.get_cutadapt_name()))
+    log.write(f'Checking the {xlib.get_cutadapt_name()} config file ...\n')
     (OK, error_list) = check_cutadapt_config_file(strict=True)
     if OK:
         log.write('The file is OK.\n')
@@ -189,10 +189,10 @@ def run_cutadapt_process(cluster_name, log, function=None):
         (OK, error_list, is_installed) = xbioinfoapp.is_installed_anaconda_package(xlib.get_cutadapt_anaconda_code(), cluster_name, True, ssh_client)
         if OK:
             if not is_installed:
-                log.write('*** ERROR: {0} is not installed.\n'.format(xlib.get_cutadapt_name()))
+                log.write(f'*** ERROR: {xlib.get_cutadapt_name()} is not installed.\n')
                 OK = False
         else:
-            log.write('*** ERROR: The verification of {0} installation could not be performed.\n'.format(xlib.get_cutadapt_name()))
+            log.write(f'*** ERROR: The verification of {xlib.get_cutadapt_name()} installation could not be performed.\n')
 
     # warn that the requirements are OK 
     if OK:
@@ -213,7 +213,7 @@ def run_cutadapt_process(cluster_name, log, function=None):
     # build the cutadapt process script
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process script {0} ...\n'.format(get_cutadapt_process_script()))
+        log.write(f'Building the process script {get_cutadapt_process_script()} ...\n')
         (OK, error_list) = build_cutadapt_process_script(cluster_name, current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -223,8 +223,8 @@ def run_cutadapt_process(cluster_name, log, function=None):
     # upload the cutadapt process script to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process script {0} to the directory {1} ...\n'.format(get_cutadapt_process_script(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_cutadapt_process_script()))
+        log.write(f'Uploading the process script {get_cutadapt_process_script()} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_cutadapt_process_script())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_cutadapt_process_script(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -235,8 +235,8 @@ def run_cutadapt_process(cluster_name, log, function=None):
     # set run permision to the cutadapt process script in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_cutadapt_process_script())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_cutadapt_process_script()))
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_cutadapt_process_script())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_cutadapt_process_script())}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
@@ -246,7 +246,7 @@ def run_cutadapt_process(cluster_name, log, function=None):
     # build the cutadapt process starter
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process starter {0} ...\n'.format(get_cutadapt_process_starter()))
+        log.write(f'Building the process starter {get_cutadapt_process_starter()} ...\n')
         (OK, error_list) = build_cutadapt_process_starter(current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -256,8 +256,8 @@ def run_cutadapt_process(cluster_name, log, function=None):
     # upload the cutadapt process starter to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process starter {0} to the directory {1} ...\n'.format(get_cutadapt_process_starter(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_cutadapt_process_starter()))
+        log.write(f'Uploading the process starter {get_cutadapt_process_starter()} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_cutadapt_process_starter())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_cutadapt_process_starter(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -268,8 +268,8 @@ def run_cutadapt_process(cluster_name, log, function=None):
     # set run permision to the cutadapt process starter in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_cutadapt_process_starter())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_cutadapt_process_starter()))
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_cutadapt_process_starter())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_cutadapt_process_starter())}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
@@ -279,7 +279,7 @@ def run_cutadapt_process(cluster_name, log, function=None):
     # submit the cutadapt process
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Submitting the process script {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_cutadapt_process_starter())))
+        log.write(f'Submitting the process script {current_run_dir}/{os.path.basename(get_cutadapt_process_starter())} ...\n')
         OK = xssh.submit_script(cluster_name, ssh_client, current_run_dir, os.path.basename(get_cutadapt_process_starter()), log)
 
     # close the SSH transport connection
@@ -501,7 +501,7 @@ def check_cutadapt_config_file(strict):
 
     # warn that the results config file is not valid if there are any errors
     if not OK:
-        error_list.append('\nThe {0} config file is not valid. Please, correct this file or recreate it.'.format(xlib.get_kallisto_name()))
+        error_list.append(f'\nThe {xlib.get_kallisto_name()} config file is not valid. Please, correct this file or recreate it.')
 
     # return the control variable and the error list
     return (OK, error_list)
@@ -570,8 +570,8 @@ def build_cutadapt_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
             script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('CUTADAPT_PATH={0}/{1}/envs/{2}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name(), xlib.get_cutadapt_anaconda_code())))
-            script_file_id.write( '{0}\n'.format('export PATH=$CUTADAPT_PATH:$PATH'))
+            script_file_id.write(f'CUTADAPT_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/envs/{xlib.get_cutadapt_anaconda_code()}/bin\n')
+            script_file_id.write( 'export PATH=$CUTADAPT_PATH:$PATH\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
             script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -593,53 +593,53 @@ def build_cutadapt_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function run_cutadapt_process'))
+            script_file_id.write( 'function run_cutadapt_process\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    mkdir --parents {0}'.format(output_read_dir)))
+            script_file_id.write(f'    mkdir --parents {output_read_dir}\n')
             script_file_id.write(f'    cd {current_run_dir}\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "cutadapt v`cutadapt --version`"'))
+            script_file_id.write( '    echo "cutadapt v`cutadapt --version`"\n')
             for i in range(len(read_file_1_list)):
                 script_file_id.write( '    echo "$SEP"\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
                 script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        cutadapt \\'))
-                script_file_id.write( '{0}\n'.format('            --cores={0} \\'.format(cores)))
-                script_file_id.write( '{0}\n'.format('            --adapter={0} \\'.format(adapter)))
+                script_file_id.write( '        cutadapt \\\n')
+                script_file_id.write(f'            --cores={cores} \\\n')
+                script_file_id.write(f'            --adapter={adapter} \\\n')
                 if adapter_pe.upper() != 'NONE':
-                    script_file_id.write( '{0}\n'.format('            -A {0} \\'.format(adapter_pe)))
+                    script_file_id.write(f'            -A {adapter_pe} \\\n')
                 if front.upper() != 'NONE':
-                    script_file_id.write( '{0}\n'.format('            --front {0} \\'.format(front)))
+                    script_file_id.write(f'            --front {front} \\\n')
                 if front_pe.upper() != 'NONE':
-                    script_file_id.write( '{0}\n'.format('            -G {0} \\'.format(front_pe)))
+                    script_file_id.write(f'            -G {front_pe} \\\n')
                 if anywhere.upper() != 'NONE':
-                    script_file_id.write( '{0}\n'.format('            --anywhere {0} \\'.format(anywhere)))
+                    script_file_id.write(f'            --anywhere {anywhere} \\\n')
                 if anywhere_pe.upper() != 'NONE':
-                    script_file_id.write( '{0}\n'.format('            -B {0} \\'.format(anywhere_pe)))
+                    script_file_id.write(f'            -B {anywhere_pe} \\\n')
                 if other_parameters.upper() != 'NONE':
                     parameter_list = [x.strip() for x in other_parameters.split(';')]
-                    for i in range(len(parameter_list)):
-                        if parameter_list[i].find('=') > 0:
+                    for j in range(len(parameter_list)):
+                        if parameter_list[j].find('=') > 0:
                             pattern = r'^--(.+)=(.+)$'
-                            mo = re.search(pattern, parameter_list[i])
+                            mo = re.search(pattern, parameter_list[j])
                             parameter_name = mo.group(1).strip()
                             parameter_value = mo.group(2).strip()
                             script_file_id.write(f'            --{parameter_name}={parameter_value} \\\n')
                         else:
                             pattern = r'^--(.+)$'
-                            mo = re.search(pattern, parameter_list[i])
+                            mo = re.search(pattern, parameter_list[j])
                             parameter_name = mo.group(1).strip()
                             script_file_id.write(f'            --{parameter_name} \\\n')
                 if read_type.upper() == 'SE':
-                    script_file_id.write( '{0}\n'.format('            --output={0}/{1} \\'.format(output_read_dir, os.path.basename(read_file_1_list[i]))))
-                    script_file_id.write( '{0}\n'.format('            {0}'.format(read_file_1_list[i])))
+                    script_file_id.write(f'            --output={output_read_dir}/{os.path.basename(read_file_1_list[i])} \\\n')
+                    script_file_id.write(f'            {read_file_1_list[i]}\n')
                 elif read_type.upper() == 'PE':
-                    script_file_id.write( '{0}\n'.format('            --output={0}/{1} \\'.format(output_read_dir, os.path.basename(read_file_1_list[i]))))
-                    script_file_id.write( '{0}\n'.format('            --paired-output={0}/{1} \\'.format(output_read_dir, os.path.basename(read_file_2_list[i]))))
-                    script_file_id.write( '{0}\n'.format('            {0} \\'.format(read_file_1_list[i])))
-                    script_file_id.write( '{0}\n'.format('            {0}'.format(read_file_2_list[i])))
+                    script_file_id.write(f'            --output={output_read_dir}/{os.path.basename(read_file_1_list[i])} \\\n')
+                    script_file_id.write(f'            --paired-output={output_read_dir}/{os.path.basename(read_file_2_list[i])} \\\n')
+                    script_file_id.write(f'            {read_file_1_list[i]} \\\n')
+                    script_file_id.write(f'            {read_file_2_list[i]}\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error cutadapt $RC; fi'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error cutadapt $RC; fi\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function end\n')
@@ -714,11 +714,11 @@ def build_cutadapt_process_script(cluster_name, current_run_dir):
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
-            script_file_id.write( '{0}\n'.format('run_cutadapt_process'))
+            script_file_id.write( 'run_cutadapt_process\n')
             script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_cutadapt_process_script()))
+        error_list.append(f'*** ERROR: The file {get_cutadapt_process_script()} can not be created.')
         OK = False
 
     # return the control variable and the error list
@@ -742,10 +742,10 @@ def build_cutadapt_process_starter(current_run_dir):
         with open(get_cutadapt_process_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_cutadapt_process_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_cutadapt_process_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_cutadapt_process_starter()))
+        error_list.append(f'*** ERROR: The file {get_cutadapt_process_starter()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -759,7 +759,7 @@ def get_cutadapt_config_file():
     '''
 
     # assign the cutadapt config file path
-    cutadapt_config_file = '{0}/{1}-config.txt'.format(xlib.get_config_dir(), xlib.get_cutadapt_code())
+    cutadapt_config_file = f'{xlib.get_config_dir()}/{xlib.get_cutadapt_code()}-config.txt'
 
     # return the cutadapt config file path
     return cutadapt_config_file
@@ -772,7 +772,7 @@ def get_cutadapt_process_script():
     '''
 
     # assign the cutadapt script path
-    cutadapt_process_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_cutadapt_code())
+    cutadapt_process_script = f'{xlib.get_temp_dir()}/{xlib.get_cutadapt_code()}-process.sh'
 
     # return the cutadapt script path
     return cutadapt_process_script
@@ -785,7 +785,7 @@ def get_cutadapt_process_starter():
     '''
 
     # assign the cutadapt process starter path
-    cutadapt_process_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_cutadapt_code())
+    cutadapt_process_starter = f'{xlib.get_temp_dir()}/{xlib.get_cutadapt_code()}-process-starter.sh'
 
     # return the cutadapt starter path
     return cutadapt_process_starter

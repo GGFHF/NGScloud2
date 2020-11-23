@@ -409,6 +409,11 @@ def get_result_dataset_dict(cluster_name, experiment_id, status, passed_connecti
                         date = mo.group(1)
                         time = mo.group(2)
                         result_dataset_name = output_pattern.format(xlib.get_cufflinks_cuffmerge_name(), date, time)
+                    elif result_dataset_id.startswith(xlib.get_cuffnorm_code()+'-'):
+                        mo = re.match(input_pattern.format(xlib.get_cuffnorm_code()), result_dataset_id)
+                        date = mo.group(1)
+                        time = mo.group(2)
+                        result_dataset_name = output_pattern.format(xlib.get_cuffnorm_name(), date, time)
                     elif result_dataset_id.startswith(xlib.get_cuffquant_code()+'-'):
                         mo = re.match(input_pattern.format(xlib.get_cuffquant_code()), result_dataset_id)
                         date = mo.group(1)

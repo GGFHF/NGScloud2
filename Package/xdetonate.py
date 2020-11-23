@@ -207,7 +207,7 @@ def run_rsem_eval_process(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(experiment_id, xlib.get_rsem_eval_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -240,7 +240,7 @@ def run_rsem_eval_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_rsem_eval_process_script())))
         command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_rsem_eval_process_script()))
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -273,7 +273,7 @@ def run_rsem_eval_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_rsem_eval_process_starter())))
         command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_rsem_eval_process_starter()))
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -799,7 +799,7 @@ def get_rsem_eval_process_starter():
 
 #-------------------------------------------------------------------------------
 
-def create_ref_eval_config_file(experiment_id='exp001', read_dataset_id=xlib.get_uploaded_read_dataset_name(), read_type = 'PE', file_1_list=['rnaseq-a_1.fastq'], file_2_list=['rnaseq-a_2.fastq'], assembly_dataset_id='sndt-170101-235959', assembly_type='CONTIGS'):
+def create_ref_eval_config_file(experiment_id='exp001', reference_dataset_id='Athaliana', reference_file='Arabidopsis_thaliana.TAIR10.dna.toplevel.fa', read_dataset_id=xlib.get_uploaded_read_dataset_name(), read_type = 'PE', file_1_list=['rnaseq-a_1.fastq'], file_2_list=['rnaseq-a_2.fastq'], assembly_dataset_id='sndt-170101-235959', assembly_type='CONTIGS'):
     '''
     Create REF-EVAL config file with the default options. It is necessary
     update the options in each run.
@@ -888,7 +888,7 @@ def run_ref_eval_process(cluster_name, log, function=None):
     # check the DETONATE is installed
     if OK:
         command = '[ -d {0}/{1} ] && echo RC=0 || echo RC=1'.format(xlib.get_cluster_app_dir(), xlib.get_detonate_name())
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] != 'RC=0':
             log.write('*** ERROR: {0} is not installed.\n'.format(xlib.get_detonate_name()))
             OK = False
@@ -903,7 +903,7 @@ def run_ref_eval_process(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(experiment_id, xlib.get_ref_eval_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -936,7 +936,7 @@ def run_ref_eval_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_ref_eval_process_script())))
         command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_ref_eval_process_script()))
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -969,7 +969,7 @@ def run_ref_eval_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_ref_eval_process_starter())))
         command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_ref_eval_process_starter()))
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -1017,9 +1017,6 @@ def check_ref_eval_config_file(strict):
     # initialize the control variable and the error list
     OK = True
     error_list = []
-
-    # intitialize variable used when value is not found
-    not_found = '***NOTFOUND***'.upper()
 
     # ...
 

@@ -100,8 +100,8 @@ def create_bowtie2_config_file(experiment_id='exp001', reference_dataset_id='NON
             file_id.write( '\n')
             file_id.write( '# This section has the information to set the Bowtie2 parameters\n')
             file_id.write( '[Bowtie2 parameters]\n')
-            file_id.write( '{0:<50} {1}\n'.format( 'index_building = YES', f'# index building when a reference is used: {get_index_building_code_list_text()}'))
-            file_id.write( '{0:<50} {1}\n'.format( 'large_index = NO', f'# a large index is force, even if the reference is less than ~ 4 billion nucleotides long: {get_large_index_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format( 'index_building = YES', f'# index building : {get_index_building_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format( 'large_index = YES', f'# a large index is force, even if the reference is less than ~ 4 billion nucleotides long: {get_large_index_code_list_text()}'))
             file_id.write( '{0:<50} {1}\n'.format( 'threads = 4', '# number of threads for use'))
             file_id.write( '{0:<50} {1}\n'.format( 'min_mp = 2', '# minimum mismatch penalty'))
             file_id.write( '{0:<50} {1}\n'.format( 'max_mp = 6', '# maximum mismatch penalty'))
@@ -118,6 +118,7 @@ def create_bowtie2_config_file(experiment_id='exp001', reference_dataset_id='NON
             file_id.write( '[library]\n')
             file_id.write( '{0:<50} {1}\n'.format( 'format = FASTQ', f'# format: {get_format_code_list_text()}'))
             file_id.write( '{0:<50} {1}\n'.format(f'read_type = {read_type}', f'# read type: {get_read_type_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format( 'library_concatenation = NO', f'# {get_library_concatenation_code_list_text()}'))
             for i in range(len(file_1_list)):
                 file_id.write( '\n')
                 if i == 0:
@@ -221,6 +222,16 @@ def run_bowtie2_process(cluster_name, log, function=None):
         else:
             log.write(f'*** ERROR: The verification of {xlib.get_bowtie2_name()} installation could not be performed.\n')
 
+    # check SAMtools is installed
+    if OK:
+        (OK, error_list, is_installed) = xbioinfoapp.is_installed_anaconda_package(xlib.get_samtools_anaconda_code(), cluster_name, True, ssh_client)
+        if OK:
+            if not is_installed:
+                log.write(f'*** ERROR: {xlib.get_samtools_name()} is not installed.\n')
+                OK = False
+        else:
+            log.write(f'*** ERROR: The verification of {xlib.get_samtools_name()} installation could not be performed.\n')
+
     # warn that the requirements are OK 
     if OK:
         log.write('Process requirements are OK.\n')
@@ -231,7 +242,7 @@ def run_bowtie2_process(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(experiment_id, xlib.get_bowtie2_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -264,7 +275,7 @@ def run_bowtie2_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_bowtie2_process_script())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_bowtie2_process_script())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -297,7 +308,7 @@ def run_bowtie2_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_bowtie2_process_starter())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_bowtie2_process_starter())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -610,6 +621,15 @@ def check_bowtie2_config_file(strict):
                 error_list.append(f'*** ERROR: the key "read_type" has to be {get_read_type_code_list_text()}.')
                 OK = False
 
+            # check section "library" - key "library_concatenation"
+            library_concatenation = bowtie2_option_dict.get('library', {}).get('library_concatenation', not_found)
+            if library_concatenation == not_found:
+                error_list.append('*** ERROR: the key "library_concatenation" is not found in the section "library".')
+                OK = False
+            elif not xlib.check_code(library_concatenation, get_library_concatenation_code_list(), case_sensitive=False):
+                error_list.append(f'*** ERROR: the key "library_concatenation" has to be {get_library_concatenation_code_list_text()}.')
+                OK = False
+
         # check section "library-1"
         if 'library-1' not in sections_list:
             error_list.append('*** ERROR: the section "library-1" is not found.')
@@ -683,6 +703,7 @@ def build_bowtie2_process_script(cluster_name, current_run_dir):
     other_parameters = bowtie2_option_dict['Bowtie2 parameters']['other_parameters']
     format = bowtie2_option_dict['library']['format']
     read_type = bowtie2_option_dict['library']['read_type']
+    library_concatenation = bowtie2_option_dict['library']['library_concatenation']
 
     # get the sections list
     sections_list = []
@@ -703,6 +724,10 @@ def build_bowtie2_process_script(cluster_name, current_run_dir):
                 read_file_2 = bowtie2_option_dict[section]['read_file_2']
                 read_file_2 = xlib.get_cluster_read_file(experiment_id, read_dataset_id, read_file_2)
                 read_file_2_list.append(read_file_2)
+    if library_concatenation.upper() == 'YES':
+        read_file_1_list = [",".join(read_file_1_list)]
+        if read_type.upper() == 'PE':
+            read_file_2_list = [",".join(read_file_2_list)]
 
     # set the cluster reference dataset directory
     if reference_dataset_id.upper() != 'NONE':
@@ -735,7 +760,7 @@ def build_bowtie2_process_script(cluster_name, current_run_dir):
 
     # set the directory and basename of the index Bowtie2
     if reference_dataset_id.upper() != 'NONE':
-        reference_file_name, reference_file_extension = os.path.splitext(reference_file)
+        (reference_file_name, _) = os.path.splitext(reference_file)
         bowtie2_index_dir = f'{cluster_reference_dataset_dir}/{reference_file_name}-bowtie2_indexes'
     else:
         bowtie2_index_dir = f'{cluster_reference_dataset_dir}/{assembly_dataset_id}-bowtie2_indexes'
@@ -782,6 +807,8 @@ def build_bowtie2_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write(f'CURRENT_DIR={current_run_dir}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function init\n')
             script_file_id.write( '{\n')
             script_file_id.write( '    INIT_DATETIME=`date --utc +%s`\n')
@@ -794,18 +821,28 @@ def build_bowtie2_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "HOST IP: $HOST_IP"\n')
             script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write( 'function print_bowtie2_version\n')
+            script_file_id.write( '{\n')
+            script_file_id.write(f'    source activate {xlib.get_bowtie2_anaconda_code()}\n')
+            script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write( '    bowtie2 --version\n')
+            script_file_id.write( '    conda deactivate\n')
+            script_file_id.write( '}\n')
             if index_building.upper() == 'YES':
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( 'function build_bowtie2_index\n')
+                script_file_id.write( 'function build_bowtie2_indexes\n')
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    source activate {xlib.get_bowtie2_anaconda_code()}\n')
-                script_file_id.write(f'    cd {current_run_dir}\n')
+                script_file_id.write( '    cd $CURRENT_DIR\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '    echo "Building index ..."\n')
+                script_file_id.write( '    echo "Building indexes ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
                 script_file_id.write( '        bowtie2-build \\\n')
                 script_file_id.write(f'            --threads {threads} \\\n')
+                if large_index.upper() == 'YES':
+                    script_file_id.write( '            --large-index \\\n')
                 script_file_id.write( '            -f \\\n')
                 script_file_id.write(f'            {cluster_reference_file} \\\n')
                 script_file_id.write(f'            {bowtie2_index_basename}\n')
@@ -817,68 +854,136 @@ def build_bowtie2_process_script(cluster_name, current_run_dir):
                 script_file_id.write(f'    mv -f {bowtie2_index_basename}.* {bowtie2_index_dir}\n')
                 script_file_id.write( '    RC=$?\n')
                 script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error mv $RC; fi\n')
+                script_file_id.write( '    echo "Indexes are built."\n')
                 script_file_id.write( '    conda deactivate\n')
-                script_file_id.write( '    echo "Index is built."\n')
                 script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function run_bowtie2_process\n')
             script_file_id.write( '{\n')
             script_file_id.write(f'    source activate {xlib.get_bowtie2_anaconda_code()}\n')
-            script_file_id.write(f'    cd {current_run_dir}\n')
-            script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '    bowtie2 --version\n')
-            script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '    echo "Mapping reads ..."\n')
-            script_file_id.write( '    /usr/bin/time \\\n')
-            script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-            script_file_id.write( '        bowtie2 \\\n')
-            script_file_id.write(f'            --threads {threads} \\\n')
-            script_file_id.write( '            --mm \\\n')
-            script_file_id.write(f'            --mp {max_mp},{min_mp} \\\n')
-            script_file_id.write(f'            --np {np} \\\n')
-            script_file_id.write(f'            --rdg {open_rdg},{extend_rdg} \\\n')
-            script_file_id.write(f'            --rfg {open_rfg},{extend_rfg} \\\n')
-            script_file_id.write(f'            --{orientation.lower()} \\\n')
-            if quality_score == '33':
-                script_file_id.write( '            --phred33 \\\n')
-            elif quality_score == '64':
-                script_file_id.write( '            --phred64 \\\n')
-            if other_parameters.upper() != 'NONE':
-                parameter_list = [x.strip() for x in other_parameters.split(';')]
-                for i in range(len(parameter_list)):
-                    if parameter_list[i].find('=') > 0:
-                        pattern = r'^--(.+)=(.+)$'
-                        mo = re.search(pattern, parameter_list[i])
-                        parameter_name = mo.group(1).strip()
-                        parameter_value = mo.group(2).strip()
-                        script_file_id.write(f'            --{parameter_name} {parameter_value} \\\n')
+            script_file_id.write( '    cd $CURRENT_DIR\n')
+            for i in range(len(read_file_1_list)):
+                # set file names for the library
+                if library_concatenation.upper() == 'YES':
+                    library_name = 'concatenated_libraries'
+                    alignment_file = 'alignment.sam'
+                    un_gz = 'unpairednotaligned.fastq.gz'
+                    al_gz = 'unpairedaligned.fastq.gz'
+                    un_conc_gz = 'pairednotaligned.fastq.gz'
+                    al_conc_gz = 'pairednotaligned.fastq.gz'
+                    metric_file = 'metrics.txt'
+                else:
+                    if read_file_1.endswith('.gz'):
+                        (library_name, _) = os.path.splitext(os.path.basename(read_file_1_list[i][:-3]))
                     else:
-                        pattern = r'^--(.+)$'
-                        mo = re.search(pattern, parameter_list[i])
-                        parameter_name = mo.group(1).strip()
-                        script_file_id.write(f'            --{parameter_name} \\\n')
-            script_file_id.write(f'            -x {bowtie2_index_dir}/{bowtie2_index_basename} \\\n')
-            if format.upper() == 'FASTQ':
-                script_file_id.write( '            -q \\\n')
-            elif format.upper() == 'FASTA':
-                script_file_id.write( '            -f \\\n')
-            if read_type.upper() == 'SE':
-                script_file_id.write(f'            -U {",".join(read_file_1_list)} \\\n')
-            elif read_type.upper() == 'PE':
-                script_file_id.write(f'            -1 {",".join(read_file_1_list)} \\\n')
-                script_file_id.write(f'            -2 {",".join(read_file_2_list)} \\\n')
-            script_file_id.write( '            --no-unal \\\n')
-            script_file_id.write(f'            -S {alignment_file} \\\n')
-            script_file_id.write(f'            --un-gz {un_gz} \\\n')
-            script_file_id.write(f'            --al-gz {al_gz} \\\n')
-            script_file_id.write(f'            --un-conc-gz {un_conc_gz} \\\n')
-            script_file_id.write(f'            --al-conc-gz {al_conc_gz} \\\n')
-            script_file_id.write(f'            --met-file {metric_file} \\\n')
-            script_file_id.write( '            --time\n')
-            script_file_id.write( '    RC=$?\n')
-            script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error bowtie2 $RC; fi\n')
+                        (library_name, _) = os.path.splitext(os.path.basename(read_file_1_list[i]))
+                    alignment_file = f'{library_name}-alignment.sam'
+                    un_gz = f'{library_name}-unpairednotaligned.fastq.gz'
+                    al_gz = f'{library_name}-unpairedaligned.fastq.gz'
+                    un_conc_gz = f'{library_name}-pairednotaligned.fastq.gz'
+                    al_conc_gz = f'{library_name}-pairednotaligned.fastq.gz'
+                    metric_file = f'{library_name}-metrics.txt'
+                # write the instructions for the library
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write(f'    echo "Mapping reads of {library_name} ..."\n')
+                script_file_id.write( '    /usr/bin/time \\\n')
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        bowtie2 \\\n')
+                script_file_id.write(f'            --threads {threads} \\\n')
+                script_file_id.write( '            --mm \\\n')
+                script_file_id.write(f'            --mp {max_mp},{min_mp} \\\n')
+                script_file_id.write(f'            --np {np} \\\n')
+                script_file_id.write(f'            --rdg {open_rdg},{extend_rdg} \\\n')
+                script_file_id.write(f'            --rfg {open_rfg},{extend_rfg} \\\n')
+                script_file_id.write(f'            --{orientation.lower()} \\\n')
+                if quality_score == '33':
+                    script_file_id.write( '            --phred33 \\\n')
+                elif quality_score == '64':
+                    script_file_id.write( '            --phred64 \\\n')
+                if other_parameters.upper() != 'NONE':
+                    parameter_list = [x.strip() for x in other_parameters.split(';')]
+                    for i in range(len(parameter_list)):
+                        if parameter_list[i].find('=') > 0:
+                            pattern = r'^--(.+)=(.+)$'
+                            mo = re.search(pattern, parameter_list[i])
+                            parameter_name = mo.group(1).strip()
+                            parameter_value = mo.group(2).strip()
+                            script_file_id.write(f'            --{parameter_name} {parameter_value} \\\n')
+                        else:
+                            pattern = r'^--(.+)$'
+                            mo = re.search(pattern, parameter_list[i])
+                            parameter_name = mo.group(1).strip()
+                            script_file_id.write(f'            --{parameter_name} \\\n')
+                script_file_id.write(f'            -x {bowtie2_index_dir}/{bowtie2_index_basename} \\\n')
+                if format.upper() == 'FASTQ':
+                    script_file_id.write( '            -q \\\n')
+                elif format.upper() == 'FASTA':
+                    script_file_id.write( '            -f \\\n')
+                if read_type.upper() == 'SE':
+                    script_file_id.write(f'            -U {",".join(read_file_1_list)} \\\n')
+                elif read_type.upper() == 'PE':
+                    script_file_id.write(f'            -1 {",".join(read_file_1_list)} \\\n')
+                    script_file_id.write(f'            -2 {",".join(read_file_2_list)} \\\n')
+                script_file_id.write( '            --no-unal \\\n')
+                script_file_id.write(f'            -S {alignment_file} \\\n')
+                script_file_id.write(f'            --un-gz {un_gz} \\\n')
+                script_file_id.write(f'            --al-gz {al_gz} \\\n')
+                script_file_id.write(f'            --un-conc-gz {un_conc_gz} \\\n')
+                script_file_id.write(f'            --al-conc-gz {al_conc_gz} \\\n')
+                script_file_id.write(f'            --met-file {metric_file} \\\n')
+                script_file_id.write( '            --time\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error bowtie2 $RC; fi\n')
+                script_file_id.write( '    echo "Reads are mapped."\n')
             script_file_id.write( '    conda deactivate\n')
-            script_file_id.write( '    echo "Reads are mapped."\n')
+            script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write( 'function convert_sam2bam\n')
+            script_file_id.write( '{\n')
+            script_file_id.write( '    cd $CURRENT_DIR\n')
+            script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write( '    echo "Converting SAM files to BAM format ..."\n')
+            script_file_id.write(f'    source activate {xlib.get_samtools_anaconda_code()}\n')
+            script_file_id.write( '    ls *.sam > sam-files.txt\n')
+            script_file_id.write( '    while read FILE_SAM; do\n')
+            script_file_id.write( '        FILE_BAM=`basename $FILE_SAM | sed "s|.sam|.bam|g"`\n')
+            script_file_id.write( '        echo "Converting file $FILE_SAM to BAM format ..."\n')
+            script_file_id.write(f'        samtools view --threads {threads} -b -S -o $FILE_BAM $FILE_SAM\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error samtools-view $RC; fi\n')
+            script_file_id.write( '        echo "$FILE_BAM is created."\n')
+            script_file_id.write( '        echo "Compressing $FILE_SAM ..."\n')
+            script_file_id.write( '        gzip $FILE_SAM\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error gzip $RC; fi\n')
+            script_file_id.write( '        echo "$FILE_SAM is compressed."\n')
+            script_file_id.write( '    done < sam-files.txt\n')
+            script_file_id.write( '    conda deactivate\n')
+            script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write( 'function sort_and_index_bam_files\n')
+            script_file_id.write( '{\n')
+            script_file_id.write( '    cd $CURRENT_DIR\n')
+            script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write(f'    source activate {xlib.get_samtools_anaconda_code()}\n')
+            script_file_id.write( '    ls *.bam > bam-files.txt\n')
+            script_file_id.write( '    while read FILE_BAM; do\n')
+            script_file_id.write( '        FILE_SORTED_BAM=`basename $FILE_BAM | sed "s|.bam|.sorted.bam|g"`\n')
+            script_file_id.write( '        echo "Sorting and indexing $FILE_BAM ..."\n')
+            script_file_id.write(f'        samtools sort --threads {threads} $FILE_BAM -o $FILE_SORTED_BAM\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error samtools-sort $RC; fi\n')
+            script_file_id.write(f'        samtools index -@ {threads} $FILE_SORTED_BAM\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error samtools-index $RC; fi\n')
+            script_file_id.write( '        echo "$FILE_SORTED_BAM is created."\n')
+            script_file_id.write( '        echo "Deleting file $FILE_BAM ..."\n')
+            script_file_id.write( '        rm -f $FILE_BAM\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error rm $RC; fi\n')
+            script_file_id.write( '        echo "$FILE_BAM is deleted."\n')
+            script_file_id.write( '    done < bam-files.txt\n')
+            script_file_id.write( '    conda deactivate\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function end\n')
@@ -953,9 +1058,12 @@ def build_bowtie2_process_script(cluster_name, current_run_dir):
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
+            script_file_id.write( 'print_bowtie2_version\n')
             if index_building.upper() == 'YES':
-                script_file_id.write( 'build_bowtie2_index\n')
+                script_file_id.write( 'build_bowtie2_indexes\n')
             script_file_id.write( 'run_bowtie2_process\n')
+            script_file_id.write( 'convert_sam2bam\n')
+            script_file_id.write( 'sort_and_index_bam_files\n')
             script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
@@ -1156,6 +1264,24 @@ def get_read_type_code_list_text():
     '''
 
     return 'SE (single-end) or PE (pair-end)'
+
+#-------------------------------------------------------------------------------
+
+def get_library_concatenation_code_list():
+    '''
+    Get the code list of "library_concatenation".
+    '''
+
+    return ['YES', 'NO']
+
+#-------------------------------------------------------------------------------
+
+def get_library_concatenation_code_list_text():
+    '''
+    Get the code list of "library_concatenation" as text.
+    '''
+
+    return 'YES (map concatanated libraries) or NO (map each library separately)'
 
 #-------------------------------------------------------------------------------
 

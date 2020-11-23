@@ -218,7 +218,7 @@ def run_trinity_process(cluster_name, log, function=None):
             else:
                 current_run_dir = xlib.get_cluster_current_run_dir(experiment_id, xlib.get_trinity_code())
             command = f'mkdir --parents {current_run_dir}'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+            (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
             if OK:
                 log.write(f'The directory path is {current_run_dir}.\n')
             else:
@@ -251,7 +251,7 @@ def run_trinity_process(cluster_name, log, function=None):
             log.write(f'{xlib.get_separator()}\n')
             log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_trinity_process_script())} ...\n')
             command = f'chmod u+x {current_run_dir}/{os.path.basename(get_trinity_process_script())}'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+            (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
             if OK:
                 log.write('The run permision is set on.\n')
             else:
@@ -283,7 +283,7 @@ def run_trinity_process(cluster_name, log, function=None):
             log.write(f'{xlib.get_separator()}\n')
             log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_trinity_process_starter())} ...\n')
             command = f'chmod u+x {current_run_dir}/{os.path.basename(get_trinity_process_starter())}'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+            (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
             if OK:
                 log.write('The run permision is set on.\n')
             else:
@@ -580,6 +580,8 @@ def build_trinity_process_script(cluster_name, current_run_dir, kmer_value):
             script_file_id.write(f'MINICONDA3_BIN_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
             script_file_id.write(f'export PATH=$MINICONDA3_BIN_PATH:$PATH\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write(f'CURRENT_DIR={current_run_dir}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
             script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
             script_file_id.write(f'SCRIPT_STATUS_WRONG={xlib.get_status_wrong(current_run_dir)}\n')
@@ -603,6 +605,7 @@ def build_trinity_process_script(cluster_name, current_run_dir, kmer_value):
             script_file_id.write( 'function run_trinity_process\n')
             script_file_id.write( '{\n')
             script_file_id.write(f'    source activate {xlib.get_trinity_anaconda_code()}\n')
+            script_file_id.write( '    cd $CURRENT_DIR\n')
             script_file_id.write(f'    cd {current_run_dir}\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write( '    Trinity --no_version_check --version\n')
@@ -1001,7 +1004,7 @@ def run_ggtrinity_process(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(experiment_id, xlib.get_ggtrinity_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -1034,7 +1037,7 @@ def run_ggtrinity_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_ggtrinity_process_script())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_ggtrinity_process_script())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -1067,7 +1070,7 @@ def run_ggtrinity_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_ggtrinity_process_starter())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_ggtrinity_process_starter())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -1227,7 +1230,7 @@ def build_ggtrinity_process_script(cluster_name, current_run_dir):
 
     # get the options
     experiment_id = ggtrinity_option_dict['identification']['experiment_id']
-    alignment_software = ggtrinity_option_dict['identification']['alignment_software']
+    # -- alignment_software = ggtrinity_option_dict['identification']['alignment_software']
     alignment_dataset_id = ggtrinity_option_dict['identification']['alignment_dataset_id']
     ncpu = ggtrinity_option_dict['Genome-guided Trinity parameters']['ncpu']
     max_memory = ggtrinity_option_dict['Genome-guided Trinity parameters']['max_memory']
@@ -1235,31 +1238,7 @@ def build_ggtrinity_process_script(cluster_name, current_run_dir):
     other_parameters = ggtrinity_option_dict['Genome-guided Trinity parameters']['other_parameters']
 
     # set the alignment file paths
-    if alignment_software == xlib.get_bowtie2_code():
-        sam_files = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id)}/alignment.sam'
-        bam_files = '$BAM_DIR/alignment.bam'
-    elif alignment_software == xlib.get_gsnap_code():
-        sam_files = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id)}/*-split.concordant_uniq'
-        bam_files = '$BAM_DIR/*-split.concordant_uniq.bam'
-    elif alignment_software == xlib.get_hisat2_code():
-        sam_files = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id)}/alignment.sam'
-        bam_files = '$BAM_DIR/alignment.bam'
-    elif alignment_software == xlib.get_star_code():
-        bam_files = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id)}/*-Aligned.sortedByCoord.out.bam'
-    elif alignment_software == xlib.get_tophat_code():
-        bam_files = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id)}/accepted_hits.bam'
-
-    # set the merged bam file path
-    if alignment_software == xlib.get_bowtie2_code():
-        merged_bam_file = bam_files
-    elif alignment_software == xlib.get_gsnap_code():
-        merged_bam_file = '$BAM_DIR/merged_bam_file.bam'
-    elif alignment_software == xlib.get_hisat2_code():
-        merged_bam_file = bam_files
-    elif alignment_software == xlib.get_star_code():
-        merged_bam_file = '$BAM_DIR/merged_bam_file.bam'
-    elif alignment_software == xlib.get_tophat_code():
-        merged_bam_file = bam_files
+    alignment_files = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id)}/*.sorted.bam'
  
     # write the Genome-guided Trinity process script
     try:
@@ -1286,10 +1265,10 @@ def build_ggtrinity_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write(f'BAM_DIR={current_run_dir}/BAM\n')
-            script_file_id.write( 'if [ ! -d "$BAM_DIR" ]; then mkdir --parents $BAM_DIR; fi\n')
-            script_file_id.write(f'MERGED_BAM_FILE={merged_bam_file}\n')
-            script_file_id.write(f'SORTED_BAM_FILE=$BAM_DIR/sorted_bam_file.bam\n')
+            script_file_id.write(f'CURRENT_DIR={current_run_dir}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write(f'MERGED_BAM_FILE=merged_bam_file.bam\n')
+            script_file_id.write(f'SORTED_BAM_FILE=sorted_bam_file.bam\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function init\n')
             script_file_id.write( '{\n')
@@ -1304,87 +1283,50 @@ def build_ggtrinity_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            if alignment_software in [xlib.get_gsnap_code(), xlib.get_hisat2_code()]:
-                script_file_id.write( 'function convert_sam2bam\n')
-                script_file_id.write( '{\n')
-                script_file_id.write(f'    cd {current_run_dir}\n')
-                script_file_id.write( '    STEP_STATUS=$STATUS_DIR/convert_sam2bam.ok\n')
-                script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '    echo "Converting SAM files to BAM format ..."\n')
-                script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
-                script_file_id.write( '        echo "This step was previously run."\n')
-                script_file_id.write( '    else\n')
-                script_file_id.write(f'        source activate {xlib.get_samtools_anaconda_code()}\n')
-                script_file_id.write(f'        ls {sam_files} > sam-files.txt\n')
-                script_file_id.write( '        while read FILE_SAM; do\n')
-                if alignment_software == xlib.get_gsnap_code():
-                    script_file_id.write( '            FILE_BAM=$BAM_DIR/`basename $FILE_SAM`.bam\n')
-                else:
-                    script_file_id.write( '            FILE_BAM=$BAM_DIR/`basename $FILE_SAM | sed "s|.sam|.bam|g"`\n')
-                script_file_id.write( '            samtools view -b -S -o $FILE_BAM $FILE_SAM\n')
-                script_file_id.write( '            RC=$?\n')
-                script_file_id.write( '            if [ $RC -ne 0 ]; then manage_error samtools-view $RC; fi\n')
-                script_file_id.write( '        done < sam-files.txt\n')
-                script_file_id.write( '        conda deactivate\n')
-                script_file_id.write( '        echo "SAM files are converted."\n')
-                script_file_id.write( '        touch $STEP_STATUS\n')
-                script_file_id.write( '    fi\n')
-                script_file_id.write( '}\n')
-                script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            if alignment_software in [xlib.get_gsnap_code(), xlib.get_star_code()]:
-                script_file_id.write( 'function merge_bam_files\n')
-                script_file_id.write( '{\n')
-                script_file_id.write(f'    cd {current_run_dir}\n')
-                script_file_id.write( '    STEP_STATUS=$STATUS_DIR/merge_bam_files.ok\n')
-                script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '    echo "Merging BAM files ..."\n')
-                script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
-                script_file_id.write( '        echo "This step was previously run."\n')
-                script_file_id.write( '    else\n')
-                script_file_id.write(f'        FILENUM=`ls -l {bam_files} | grep -v ^d | wc -l`\n')
-                script_file_id.write( '        echo "File number: $FILENUM"\n')
-                script_file_id.write( '        if [ "$FILENUM" -gt 1 ]; then\n')
-                script_file_id.write(f'            ls {bam_files} > bam-files.txt\n')
-                script_file_id.write( '            BAM_FILE_LIST=""\n')
-                script_file_id.write( '            while read BAM_FILE; do\n')
-                script_file_id.write( '                BAM_FILE_LIST=`echo "$BAM_FILE_LIST $BAM_FILE"`\n')
-                script_file_id.write( '            done < bam-files.txt\n')
-                script_file_id.write(f'            source activate {xlib.get_samtools_anaconda_code()}\n')
-                script_file_id.write( '            samtools merge $MERGED_BAM_FILE $BAM_FILE_LIST\n')
-                script_file_id.write( '            RC=$?\n')
-                script_file_id.write( '            if [ $RC -ne 0 ]; then manage_error samtools-merge $RC; fi\n')
-                script_file_id.write( '            conda deactivate\n')
-                script_file_id.write( '            echo "BAM files are merged."\n')
-                script_file_id.write( '        else\n')
-                script_file_id.write(f'           MERGED_BAM_FILE=`ls {bam_files}`\n')
-                script_file_id.write( '           echo "There only one BAM file. The merger is not done."\n')
-                script_file_id.write( '        fi\n')
-                script_file_id.write( '        touch $STEP_STATUS\n')
-                script_file_id.write( '    fi\n')
-                script_file_id.write( '}\n')
-                script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( 'function sort_merged_bam_file\n')
+            script_file_id.write( 'function merge_sort_bam_files\n')
             script_file_id.write( '{\n')
-            script_file_id.write(f'    cd {current_run_dir}\n')
-            script_file_id.write( '    STEP_STATUS=$STATUS_DIR/sort_merged_bam_file.ok\n')
+            script_file_id.write( '    cd $CURRENT_DIR\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '    echo "Sorting the [merged] BAM file ..."\n')
+            script_file_id.write( '    STEP_STATUS=$STATUS_DIR/merge_bam_files.ok\n')
+            script_file_id.write( '    echo "Merging BAM files ..."\n')
             script_file_id.write( '    if [ -f $STEP_STATUS ]; then\n')
             script_file_id.write( '        echo "This step was previously run."\n')
             script_file_id.write( '    else\n')
             script_file_id.write(f'        source activate {xlib.get_samtools_anaconda_code()}\n')
-            script_file_id.write( '        samtools sort -o $SORTED_BAM_FILE -O bam $MERGED_BAM_FILE\n')
-            script_file_id.write( '        RC=$?\n')
-            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error samtools-merger $RC; fi\n')
-            script_file_id.write( '        conda deactivate\n')
-            script_file_id.write( '        echo "BAM file is sorted."\n')
+            script_file_id.write(f'        FILENUM=`ls -l {alignment_files} | grep -v ^d | wc -l`\n')
+            script_file_id.write( '        echo "File number: $FILENUM"\n')
+            script_file_id.write( '        if [ "$FILENUM" -gt 1 ]; then\n')
+            script_file_id.write(f'            ls {alignment_files} > bam-files.txt\n')
+            script_file_id.write( '            BAM_FILE_LIST=""\n')
+            script_file_id.write( '            while read BAM_FILE; do\n')
+            script_file_id.write( '                BAM_FILE_LIST=`echo "$BAM_FILE_LIST $BAM_FILE"`\n')
+            script_file_id.write( '            done < bam-files.txt\n')
+            script_file_id.write( '            samtools merge $MERGED_BAM_FILE $BAM_FILE_LIST\n')
+            script_file_id.write( '            RC=$?\n')
+            script_file_id.write( '            if [ $RC -ne 0 ]; then manage_error samtools-merge $RC; fi\n')
+            script_file_id.write( '            echo "Files are merged."\n')
+            script_file_id.write( '            echo "Sorting the merged BAM file ..."\n')
+            script_file_id.write( '            samtools sort -o $SORTED_BAM_FILE -O bam $MERGED_BAM_FILE\n')
+            script_file_id.write( '            RC=$?\n')
+            script_file_id.write( '            if [ $RC -ne 0 ]; then manage_error samtools-merger $RC; fi\n')
+            script_file_id.write( '            echo "File is sorted."\n')
+            script_file_id.write( '            echo "Deleting the merged BAM file ..."\n')
+            script_file_id.write( '            rm -f $MERGED_BAM_FILE\n')
+            script_file_id.write( '            RC=$?\n')
+            script_file_id.write( '            if [ $RC -ne 0 ]; then manage_error rm $RC; fi\n')
+            script_file_id.write( '            echo "File is deleted."\n')
+            script_file_id.write( '        else\n')
+            script_file_id.write(f'           SORTED_BAM_FILE=`ls {alignment_files}`\n')
+            script_file_id.write( '           echo "There only one BAM file. The merger is not done."\n')
+            script_file_id.write( '        fi\n')
             script_file_id.write( '        touch $STEP_STATUS\n')
+            script_file_id.write( '        conda deactivate\n')
             script_file_id.write( '    fi\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function run_ggtrinity_process\n')
             script_file_id.write( '{\n')
-            script_file_id.write(f'    cd {current_run_dir}\n')
+            script_file_id.write( '    cd $CURRENT_DIR\n')
             script_file_id.write( '    STEP_STATUS=$STATUS_DIR/run_ggtrinity_process.ok\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write( '    echo "Assembling reads from BAM file ..."\n')
@@ -1496,11 +1438,7 @@ def build_ggtrinity_process_script(cluster_name, current_run_dir):
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
-            if alignment_software in [xlib.get_gsnap_code(), xlib.get_hisat2_code()]:
-                script_file_id.write( 'convert_sam2bam\n')
-            if alignment_software in [xlib.get_gsnap_code(), xlib.get_star_code()]:
-                script_file_id.write( 'merge_bam_files\n')
-            script_file_id.write( 'sort_merged_bam_file\n')
+            script_file_id.write( 'merge_sort_bam_files\n')
             script_file_id.write( 'run_ggtrinity_process\n')
             script_file_id.write( 'end\n')
     except Exception as e:
@@ -1792,7 +1730,7 @@ def run_insilico_read_normalization_process(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(experiment_id, xlib.get_insilico_read_normalization_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -1825,7 +1763,7 @@ def run_insilico_read_normalization_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_insilico_read_normalization_process_script())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_insilico_read_normalization_process_script())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set on.\n')
         else:
@@ -1858,7 +1796,7 @@ def run_insilico_read_normalization_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_insilico_read_normalization_process_starter())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_insilico_read_normalization_process_starter())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set on.\n')
         else:
@@ -2129,6 +2067,8 @@ def build_insilico_read_normalization_process_script(cluster_name, current_run_d
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write(f'CURRENT_DIR={current_run_dir}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function init\n')
             script_file_id.write( '{\n')
             script_file_id.write( '    INIT_DATETIME=`date --utc +%s`\n')
@@ -2142,9 +2082,17 @@ def build_insilico_read_normalization_process_script(cluster_name, current_run_d
             script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write( 'function print_trinity_version\n')
+            script_file_id.write( '{\n')
+            script_file_id.write(f'    source activate {xlib.get_trinity_anaconda_code()}\n')
+            script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write( '    Trinity --no_version_check --version\n')
+            script_file_id.write( '    conda deactivate\n')
+            script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function run_insilico_read_normalization_process\n')
             script_file_id.write( '{\n')
-            script_file_id.write(f'    cd {current_run_dir}\n')
+            script_file_id.write( '    cd $CURRENT_DIR\n')
             script_file_id.write( '    STEP_STATUS=$STATUS_DIR/run_insilico_read_normalization_process.ok\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write( '    echo "Normalizing read files dataset ..."\n')
@@ -2152,7 +2100,6 @@ def build_insilico_read_normalization_process_script(cluster_name, current_run_d
             script_file_id.write( '        echo "This step was previously run."\n')
             script_file_id.write( '    else\n')
             script_file_id.write(f'        source activate {xlib.get_trinity_anaconda_code()}\n')
-            script_file_id.write( '        Trinity --no_version_check --version\n')
             script_file_id.write( '        /usr/bin/time \\\n')
             script_file_id.write(f'            --format="{xlib.get_time_output_format()}" \\\n')
             script_file_id.write( '            insilico_read_normalization.pl \\\n')
@@ -2183,15 +2130,15 @@ def build_insilico_read_normalization_process_script(cluster_name, current_run_d
             script_file_id.write(f'                --output {current_run_dir}\n')
             script_file_id.write( '        RC=$?\n')
             script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error insilico_read_normalization.pl $RC; fi\n')
-            script_file_id.write( '        conda deactivate\n')
             script_file_id.write( '        echo "Files are normalized."\n')
             script_file_id.write( '        touch $STEP_STATUS\n')
+            script_file_id.write( '        conda deactivate\n')
             script_file_id.write( '    fi\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function move_normalized_reads\n')
             script_file_id.write( '{\n')
-            script_file_id.write(f'    cd {current_run_dir}\n')
+            script_file_id.write( '    cd $CURRENT_DIR\n')
             script_file_id.write( '    STEP_STATUS=$STATUS_DIR/move_normalized_reads.ok\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write( '    echo "Moving normalized files to read dataset ..."\n')
@@ -2280,6 +2227,7 @@ def build_insilico_read_normalization_process_script(cluster_name, current_run_d
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
+            script_file_id.write( 'print_trinity_version\n')
             script_file_id.write( 'run_insilico_read_normalization_process\n')
             script_file_id.write( 'move_normalized_reads\n')
             script_file_id.write( 'end\n')

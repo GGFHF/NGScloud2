@@ -24,6 +24,7 @@ menu items in console mode.
 
 #-------------------------------------------------------------------------------
 
+import os
 import subprocess
 import sys
 
@@ -201,7 +202,7 @@ def form_installation_bioinfo_app(app_code):
         app_name = xlib.get_vsearch_name()
 
     # get the version and download URL of the BioInfo application
-    (bioinfoapp_version, bioinfoapp__url, bioinfoapp_channel) = xconfiguration.get_bioinfo_app_data(app_name)
+    (bioinfoapp_version, _, bioinfoapp_channel) = xconfiguration.get_bioinfo_app_data(app_name)
 
     # print the header
     clib.clear_screen()
@@ -256,7 +257,7 @@ def form_installation_bioinfo_app(app_code):
 
         # install the Bowtie2 software
         elif app_code == xlib.get_bowtie2_code():
-            package_code_list = [(xlib.get_bowtie2_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_bowtie2_anaconda_code(), version, bioinfoapp_channel), (xlib.get_samtools_anaconda_code(), version, bioinfoapp_channel), (xlib.get_tabix_anaconda_code(), 'last', bioinfoapp_channel)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
@@ -327,13 +328,13 @@ def form_installation_bioinfo_app(app_code):
 
         # install the GMAP-GSNAP software
         elif app_code == xlib.get_gmap_gsnap_code():
-            package_code_list = [(xlib.get_gmap_gsnap_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_gmap_gsnap_anaconda_code(), version, bioinfoapp_channel), (xlib.get_samtools_anaconda_code(), version, bioinfoapp_channel), (xlib.get_tabix_anaconda_code(), 'last', bioinfoapp_channel)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the HISAT2 software
         elif app_code == xlib.get_hisat2_code():
-            package_code_list = [(xlib.get_hisat2_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_hisat2_anaconda_code(), version, bioinfoapp_channel), (xlib.get_samtools_anaconda_code(), version, bioinfoapp_channel), (xlib.get_tabix_anaconda_code(), 'last', bioinfoapp_channel)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
@@ -413,7 +414,7 @@ def form_installation_bioinfo_app(app_code):
 
         # install the STAR software
         elif app_code == xlib.get_star_code():
-            package_code_list = [(xlib.get_star_anaconda_code(), version, bioinfoapp_channel), (xlib.get_bowtie2_anaconda_code(), 'last', bioinfoapp_channel)]
+            package_code_list = [(xlib.get_star_anaconda_code(), version, bioinfoapp_channel), (xlib.get_samtools_anaconda_code(), version, bioinfoapp_channel), (xlib.get_tabix_anaconda_code(), 'last', bioinfoapp_channel)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
@@ -430,7 +431,7 @@ def form_installation_bioinfo_app(app_code):
 
         # install the TopHat software
         elif app_code == xlib.get_tophat_code():
-            package_code_list = [(xlib.get_tophat_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_tophat_anaconda_code(), version, bioinfoapp_channel), (xlib.get_samtools_anaconda_code(), version, bioinfoapp_channel), (xlib.get_tabix_anaconda_code(), 'last', bioinfoapp_channel)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
@@ -581,7 +582,7 @@ def form_recreate_bowtie2_config_file():
     if OK:
         selected_file_list = []
         command = f'cd {cluster_read_dir}; find . -type f -regex "./{file_pattern}"'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 selected_file_list.append(line.rstrip('\n'))
@@ -789,7 +790,7 @@ def form_recreate_cd_hit_est_config_file():
 
 #-------------------------------------------------------------------------------
 
-def form_recreate_cuffdiff_config_file():
+def form_recreate_cuffdiff_cuffnorm_config_file(app_code):
     '''
     Recreate the Cuffdiff config file.
     '''
@@ -797,9 +798,16 @@ def form_recreate_cuffdiff_config_file():
     # initialize the control variable
     OK = True
 
+    # set the bioinfo application name
+    if app_code == xlib.get_cuffdiff_code():
+        app_name = xlib.get_cuffdiff_name()
+
+    elif app_code == xlib.get_cuffnorm_code():
+        app_name = xlib.get_cuffnorm_name()
+
     # print the header
     clib.clear_screen()
-    clib.print_headers_with_environment(f'{xlib.get_cuffdiff_name()} - Recreate config file')
+    clib.print_headers_with_environment(f'{app_name} - Recreate config file')
 
     # get the cluster name
     print(xlib.get_separator())
@@ -838,6 +846,30 @@ def form_recreate_cuffdiff_config_file():
             print(f'WARNING: The cluster {cluster_name} does not have quantitation datasets.')
             OK = False
 
+    # get the path of quantitation dataset in the cluster
+    if OK:
+        cluster_quantitation_dataset_id = xlib.get_cluster_experiment_result_dataset_dir(experiment_id, quantitation_dataset_id)
+
+    # get the abundance file list
+    if OK:
+        abundance_file_id_list = []
+        command = f'cd {cluster_quantitation_dataset_id}; find . -type f -regex "./.*cxb"'
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
+        if OK:
+            for line in stdout:
+                abundance_file_id_list.append(os.path.basename(line.rstrip('\n')))
+        else:
+            print(f'*** ERROR: Wrong command ---> {command}')
+        if abundance_file_id_list == []:
+            print(f'WARNING: There are not abundance files in the cluster directory {quantitation_dataset_id}.')
+            OK = False
+        else:
+            abundance_file_id_list.sort()
+
+    # get the group list
+    if OK:
+        group_list = cinputs.input_option_to_code_list('Enter the group corresponding to these library abundance files:', 'group', abundance_file_id_list)
+
     # recreate the Cuffdiff config file
     if OK:
 
@@ -847,7 +879,10 @@ def form_recreate_cuffdiff_config_file():
 
         # recreate the config file
         if OK:
-            (OK, error_list) = xcufflinks.create_cuffdiff_config_file(experiment_id, assembly_dataset_id, quantitation_dataset_id)
+            if app_code == xlib.get_cuffdiff_code():
+                (OK, error_list) = xcufflinks.create_cuffdiff_config_file(experiment_id, assembly_dataset_id, quantitation_dataset_id, abundance_file_id_list, group_list)
+            elif app_code == xlib.get_cuffnorm_code():
+                (OK, error_list) = xcufflinks.create_cuffnorm_config_file(experiment_id, assembly_dataset_id, quantitation_dataset_id, abundance_file_id_list, group_list)
             if OK:
                 print('The file is recreated.')
             else:
@@ -927,7 +962,7 @@ def form_recreate_cufflinks_cuffmerge_config_file():
 
     # get the alignment dataset identification list
     if OK:
-        app_list = [xlib.get_star_code(), xlib.get_tophat_code()]
+        app_list = xcufflinks.get_alignment_software_code_list()
         alignment_dataset_id_list = cinputs.input_result_dataset_id_list(ssh_client, experiment_id, 'alignment', app_list, 'uncompressed', help=True)
         if alignment_dataset_id_list == []:
             print(f'ERROR: The cluster {cluster_name} does not have alignment datasets or you did not select them.')
@@ -1016,7 +1051,7 @@ def form_recreate_cuffquant_config_file():
 
     # get the assembly dataset identification
     if OK:
-        app_list = [xlib.get_cufflinks_cuffmerge_code()]
+        app_list = xcufflinks.get_alignment_software_code_list()
         assembly_dataset_id = cinputs.input_result_dataset_id(ssh_client, experiment_id, 'assembly', app_list,'uncompressed', help=True)
         if assembly_dataset_id == '':
             print(f'WARNING: The cluster {cluster_name} does not have assembly datasets.')
@@ -1100,7 +1135,7 @@ def form_recreate_cutadapt_config_file():
     if OK:
         selected_file_list = []
         command = f'cd {cluster_read_dir}; find . -type f -regex "./{file_pattern}"'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 selected_file_list.append(line.rstrip('\n'))
@@ -1393,7 +1428,7 @@ def form_recreate_fastqc_config_file():
     if OK:
         selected_file_list = []
         command = f'cd {cluster_read_dir}; find . -type f -regex "./{file_pattern}"'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 selected_file_list.append(line.rstrip('\n'))
@@ -1675,7 +1710,7 @@ def form_recreate_gsnap_config_file():
     if OK:
         selected_file_list = []
         command = f'cd {cluster_read_dir}; find . -type f -regex "./{file_pattern}"'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 selected_file_list.append(line.rstrip('\n'))
@@ -1775,18 +1810,11 @@ def form_recreate_hisat2_config_file():
             print(f'WARNING: The reference dataset {reference_dataset_id} does not have reference files.')
             OK = False
 
-    # get the splice site file
+    # get the annotation file
     if OK:
-        splice_site_file = cinputs.input_reference_file2(ssh_client, reference_dataset_id, type='splice site', allowed_none=True, help=True)
-        if splice_site_file == '':
-            print(f'ERROR: The reference dataset {reference_dataset_id} does not have files.')
-            OK = False
-
-    # get the exon file
-    if OK:
-        exon_file = cinputs.input_reference_file2(ssh_client, reference_dataset_id, type='exon', allowed_none=True, help=True)
-        if exon_file == '':
-            print(f'ERROR: The reference dataset {reference_dataset_id} does not have files.')
+        annotation_file = cinputs.input_reference_file2(ssh_client, reference_dataset_id, type='GTF', allowed_none=True, help=True)
+        if annotation_file == '':
+            print(f'ERROR: The reference dataset {reference_dataset_id} does not have annotation files.')
             OK = False
 
     # get the experiment identification
@@ -1815,7 +1843,7 @@ def form_recreate_hisat2_config_file():
     if OK:
         selected_file_list = []
         command = f'cd {cluster_read_dir}; find . -type f -regex "./{file_pattern}"'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 selected_file_list.append(line.rstrip('\n'))
@@ -1856,9 +1884,9 @@ def form_recreate_hisat2_config_file():
         # recreate the config file
         if OK:
             if read_type == 'SE':
-                (OK, error_list) = xhisat2.create_hisat2_config_file(experiment_id, reference_dataset_id, reference_file, splice_site_file, exon_file, read_dataset_id, read_type, selected_file_list, None)
+                (OK, error_list) = xhisat2.create_hisat2_config_file(experiment_id, reference_dataset_id, reference_file, annotation_file, read_dataset_id, read_type, selected_file_list, None)
             elif read_type == 'PE':
-                (OK, error_list) = xhisat2.create_hisat2_config_file(experiment_id, reference_dataset_id, reference_file, splice_site_file, exon_file, read_dataset_id, read_type, file_1_list, file_2_list)
+                (OK, error_list) = xhisat2.create_hisat2_config_file(experiment_id, reference_dataset_id, reference_file, annotation_file, read_dataset_id, read_type, file_1_list, file_2_list)
             if OK:
                 print('The file is recreated.')
             else:
@@ -1924,7 +1952,7 @@ def form_recreate_htseq_count_config_file():
 
     # get the alignment dataset identification list
     if OK:
-        app_list = [xlib.get_star_code(), xlib.get_tophat_code()]
+        app_list = xhtseq.get_alignment_software_code_list()
         alignment_dataset_id_list = cinputs.input_result_dataset_id_list(ssh_client, experiment_id, 'alignment', app_list, 'uncompressed', help=True)
         if alignment_dataset_id_list == []:
             print(f'ERROR: The cluster {cluster_name} does not have alignment datasets or you did not select them.')
@@ -2008,7 +2036,7 @@ def form_recreate_insilico_read_normalization_config_file():
     if OK:
         selected_file_list = []
         command = f'cd {cluster_read_dir}; find . -type f -regex "./{file_pattern}"'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 selected_file_list.append(line.rstrip('\n'))
@@ -2185,7 +2213,7 @@ def form_recreate_ipyrad_config_file():
     if OK:
         selected_file_list = []
         command = f'cd {cluster_read_dir}; find . -type f -regex "./{file_pattern}"'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 selected_file_list.append(line.rstrip('\n'))
@@ -2295,7 +2323,7 @@ def form_recreate_kallisto_config_file():
     if OK:
         selected_file_list = []
         command = f'cd {cluster_read_dir}; find . -type f -regex "./{file_pattern}"'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 selected_file_list.append(line.rstrip('\n'))
@@ -2594,7 +2622,7 @@ def form_recreate_ref_eval_config_file():
     if OK:
         selected_file_list = []
         command = f'cd {cluster_read_dir}; find . -type f -regex "./{file_pattern}"'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 selected_file_list.append(line.rstrip('\n'))
@@ -2738,7 +2766,7 @@ def form_recreate_rnaquast_config_file():
     if OK:
         selected_file_list = []
         command = f'cd {cluster_read_dir}; find . -type f -regex "./{file_pattern}"'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 selected_file_list.append(line.rstrip('\n'))
@@ -2865,7 +2893,7 @@ def form_recreate_rsem_eval_config_file():
     if OK:
         selected_file_list = []
         command = f'cd {cluster_read_dir}; find . -type f -regex "./{file_pattern}"'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 selected_file_list.append(line.rstrip('\n'))
@@ -3092,7 +3120,7 @@ def form_recreate_soapdenovo2_config_file():
     if OK:
         selected_file_list = []
         command = f'cd {cluster_read_dir}; find . -type f -regex "./{file_pattern}"'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 selected_file_list.append(line.rstrip('\n'))
@@ -3204,7 +3232,7 @@ def form_recreate_soapdenovotrans_config_file():
     if OK:
         selected_file_list = []
         command = f'cd {cluster_read_dir}; find . -type f -regex "./{file_pattern}"'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 selected_file_list.append(line.rstrip('\n'))
@@ -3337,7 +3365,7 @@ def form_recreate_star_config_file():
     if OK:
         selected_file_list = []
         command = f'cd {cluster_read_dir}; find . -type f -regex "./{file_pattern}"'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 selected_file_list.append(line.rstrip('\n'))
@@ -3449,7 +3477,7 @@ def form_recreate_starcode_config_file():
     if OK:
         selected_file_list = []
         command = f'cd {cluster_read_dir}; find . -type f -regex "./{file_pattern}"'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 selected_file_list.append(line.rstrip('\n'))
@@ -3583,7 +3611,7 @@ def form_recreate_tophat_config_file():
     if OK:
         selected_file_list = []
         command = f'cd {cluster_read_dir}; find . -type f -regex "./{file_pattern}"'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 selected_file_list.append(line.rstrip('\n'))
@@ -3695,7 +3723,7 @@ def form_recreate_transabyss_config_file():
     if OK:
         selected_file_list = []
         command = f'cd {cluster_read_dir}; find . -type f -regex "./{file_pattern}"'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 selected_file_list.append(line.rstrip('\n'))
@@ -3985,7 +4013,7 @@ def form_recreate_transrate_config_file():
     if OK:
         selected_file_list = []
         command = f'cd {cluster_read_dir}; find . -type f -regex "./{file_pattern}"'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 selected_file_list.append(line.rstrip('\n'))
@@ -4112,7 +4140,7 @@ def form_recreate_trimmomatic_config_file():
     if OK:
         selected_file_list = []
         command = f'cd {cluster_read_dir}; find . -type f -regex "./{file_pattern}"'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 selected_file_list.append(line.rstrip('\n'))
@@ -4224,7 +4252,7 @@ def form_recreate_trinity_config_file():
     if OK:
         selected_file_list = []
         command = f'cd {cluster_read_dir}; find . -type f -regex "./{file_pattern}"'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             for line in stdout:
                 selected_file_list.append(line.rstrip('\n'))
@@ -4414,6 +4442,9 @@ def form_edit_bioinfo_config_file(app):
     elif app == xlib.get_cufflinks_cuffmerge_code():
         name = xlib.get_cufflinks_cuffmerge_name()
 
+    elif app == xlib.get_cuffnorm_code():
+        name = xlib.get_cuffnorm_name()
+
     elif app == xlib.get_cuffquant_code():
         name = xlib.get_cuffquant_name()
 
@@ -4526,6 +4557,9 @@ def form_edit_bioinfo_config_file(app):
 
     elif app == xlib.get_cufflinks_cuffmerge_code():
         config_file = xcufflinks.get_cufflinks_cuffmerge_config_file()
+
+    elif app == xlib.get_cuffnorm_code():
+        config_file = xcufflinks.get_cuffnorm_config_file()
 
     elif app == xlib.get_cuffquant_code():
         config_file = xcufflinks.get_cuffquant_config_file()
@@ -4780,6 +4814,9 @@ def form_run_bioinfo_process(app):
     elif app == xlib.get_cufflinks_cuffmerge_code():
         name = xlib.get_cufflinks_cuffmerge_name()
 
+    elif app == xlib.get_cuffnorm_code():
+        name = xlib.get_cuffnorm_name()
+
     elif app == xlib.get_cuffquant_code():
         name = xlib.get_cuffquant_name()
 
@@ -4920,6 +4957,11 @@ def form_run_bioinfo_process(app):
         elif app == xlib.get_cufflinks_cuffmerge_code():
             devstdout = xlib.DevStdOut(xcufflinks.run_cufflinks_cuffmerge_process.__name__)
             OK = xcufflinks.run_cufflinks_cuffmerge_process(cluster_name, devstdout, function=None)
+
+        # execute the process when it is a Cuffnorm process
+        elif app == xlib.get_cuffnorm_code():
+            devstdout = xlib.DevStdOut(xcufflinks.run_cuffnorm_process.__name__)
+            OK = xcufflinks.run_cuffnorm_process(cluster_name, devstdout, function=None)
 
         # execute the process when it is a Cuffquant process
         elif app == xlib.get_cuffquant_code():

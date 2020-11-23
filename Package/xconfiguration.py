@@ -218,12 +218,12 @@ def get_instance_type_dict(cluster_mode):
     # add data of additional instance types updated in StarCluster with the workaround
     if cluster_mode in get_cluster_mode_list():
 
-        # T2 instance types
+        # t2 instance types
         instance_type_dict['1_1_04'] = {'id': 't2.large', 'vcpu': 2, 'memory': 8, 'processor': 'Intel Xeon Scalable', 'speed': 'up to 3.0 GHz', 'use': 'general purpose', 'nitro': 'no', 'starcluster': 'workaround', 'generation': 'current'}
         instance_type_dict['1_1_05'] = {'id': 't2.xlarge', 'vcpu': 4, 'memory': 16, 'processor': 'Intel Xeon Scalable', 'speed': 'up to 3.0 GHz', 'use': 'general purpose', 'nitro': 'no', 'starcluster': 'workaround', 'generation': 'current'}
         instance_type_dict['1_1_06'] = {'id': 't2.2xlarge', 'vcpu': 8, 'memory': 32, 'processor': 'Intel Xeon Scalable', 'speed': 'up to 3.0 GHz', 'use': 'general purpose', 'nitro': 'no', 'starcluster': 'workaround', 'generation': 'current'}
 
-        # M4 instance types
+        # m4 instance types
         instance_type_dict['1_2_11'] = {'id': 'm4.large', 'vcpu': 2, 'memory': 8, 'processor': 'Intel Xeon E5-2676 v3 (Haswell) or Intel Xeon E5-2686 v4 (Broadwell)', 'speed': '2.4  or 2.3  GHz', 'use': 'general purpose', 'nitro': 'no', 'starcluster': 'workaround', 'generation': 'current'}
         instance_type_dict['1_2_12'] = {'id': 'm4.xlarge', 'vcpu': 4, 'memory': 16, 'processor': 'Intel Xeon E5-2676 v3 (Haswell) or Intel Xeon E5-2686 v4 (Broadwell)', 'speed': '2.4  or 2.3  GHz', 'use': 'general purpose', 'nitro': 'no', 'starcluster': 'workaround', 'generation': 'current'}
         instance_type_dict['1_2_13'] = {'id': 'm4.2xlarge', 'vcpu': 8, 'memory': 32, 'processor': 'Intel Xeon E5-2676 v3 (Haswell) or Intel Xeon E5-2686 v4 (Broadwell)', 'speed': '2.4  or 2.3  GHz', 'use': 'general purpose', 'nitro': 'no', 'starcluster': 'workaround', 'generation': 'current'}
@@ -231,14 +231,14 @@ def get_instance_type_dict(cluster_mode):
         instance_type_dict['1_2_15'] = {'id': 'm4.10xlarge', 'vcpu': 40, 'memory': 160, 'processor': 'Intel Xeon E5-2676 v3 (Haswell) or Intel Xeon E5-2686 v4 (Broadwell)', 'speed': '2.4  or 2.3  GHz', 'use': 'general purpose', 'nitro': 'no', 'starcluster': 'workaround', 'generation': 'current'}
         instance_type_dict['1_2_16'] = {'id': 'm4.16xlarge', 'vcpu': 64, 'memory': 256, 'processor': 'Intel Xeon E5-2676 v3 (Haswell) or Intel Xeon E5-2686 v4 (Broadwell)', 'speed': '2.4  or 2.3  GHz', 'use': 'general purpose', 'nitro': 'no', 'starcluster': 'workaround', 'generation': 'current'}
 
-        # C4 instance types
+        # c4 instance types
         instance_type_dict['2_1_11'] = {'id': 'c4.large', 'vcpu': 2, 'memory': 3.75, 'processor': 'Intel Xeon E5-2666 v3 (Haswell)', 'speed': '2.9 GHz', 'use': 'compute optimized', 'nitro': 'no', 'starcluster': 'workaround', 'generation': 'current'}
         instance_type_dict['2_1_12'] = {'id': 'c4.xlarge', 'vcpu': 4, 'memory': 7.5, 'processor': 'Intel Xeon E5-2666 v3 (Haswell)', 'speed': '2.9 GHz', 'use': 'compute optimized', 'nitro': 'no', 'starcluster': 'workaround', 'generation': 'current'}
         instance_type_dict['2_1_13'] = {'id': 'c4.2xlarge', 'vcpu': 8, 'memory': 15, 'processor': 'Intel Xeon E5-2666 v3 (Haswell)', 'speed': '2.9 GHz', 'use': 'compute optimized', 'nitro': 'no', 'starcluster': 'workaround', 'generation': 'current'}
         instance_type_dict['2_1_14'] = {'id': 'c4.4xlarge', 'vcpu': 16, 'memory': 30, 'processor': 'Intel Xeon E5-2666 v3 (Haswell)', 'speed': '2.9 GHz', 'use': 'compute optimized', 'nitro': 'no', 'starcluster': 'workaround', 'generation': 'current'}
         instance_type_dict['2_1_15'] = {'id': 'c4.8xlarge', 'vcpu': 36, 'memory': 60, 'processor': 'Intel Xeon E5-2666 v3 (Haswell)', 'speed': '2.9 GHz', 'use': 'compute optimized', 'nitro': 'no', 'starcluster': 'workaround', 'generation': 'current'}
 
-        # R4 instance types
+        # r4 instance types
         instance_type_dict['3_1_11'] = {'id': 'r4.large', 'vcpu': 2, 'memory': 15.250, 'processor': 'Intel Xeon E5-2686 v4 (Broadwell)', 'speed': '2.3 GHz', 'use': 'memory optimized', 'nitro': 'no', 'starcluster': 'workaround', 'generation': 'current'}
         instance_type_dict['3_1_12'] = {'id': 'r4.xlarge', 'vcpu': 4, 'memory': 30.5, 'processor': 'Intel Xeon E5-2686 v4 (Broadwell)', 'speed': '2.3 GHz', 'use': 'memory optimized', 'nitro': 'no', 'starcluster': 'workaround', 'generation': 'current'}
         instance_type_dict['3_1_13'] = {'id': 'r4.2xlarge', 'vcpu': 8, 'memory': 61, 'processor': 'Intel Xeon E5-2686 v4 (Broadwell)', 'speed': '2.3 GHz', 'use': 'memory optimized', 'nitro': 'no', 'starcluster': 'workaround', 'generation': 'current'}
@@ -249,7 +249,7 @@ def get_instance_type_dict(cluster_mode):
     # add data of other instance types only used when the cluster mode is "native"
     if cluster_mode == get_cluster_mode_native():
 
-        # T3 instance types
+        # t3 instance types
         instance_type_dict['1_1_11'] = {'id': 't3.micro', 'vcpu': 2, 'memory': 1, 'processor': 'Intel Xeon Scalable', 'speed': '2.5 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
         instance_type_dict['1_1_12'] = {'id': 't3.small', 'vcpu': 2, 'memory': 2, 'processor': 'Intel Xeon Scalable', 'speed': '2.5 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
         instance_type_dict['1_1_13'] = {'id': 't3.medium', 'vcpu': 2, 'memory': 4, 'processor': 'Intel Xeon Scalable', 'speed': '2.5 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
@@ -257,7 +257,7 @@ def get_instance_type_dict(cluster_mode):
         instance_type_dict['1_1_15'] = {'id': 't3.xlarge', 'vcpu': 4, 'memory': 16, 'processor': 'Intel Xeon Scalable', 'speed': '2.5 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
         instance_type_dict['1_1_16'] = {'id': 't3.2xlarge', 'vcpu': 8, 'memory': 32, 'processor': 'Intel Xeon Scalable', 'speed': '2.5 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
 
-        # T3a instance types
+        # t3a instance types
         instance_type_dict['1_1_21'] = {'id': 't3a.micro', 'vcpu': 2, 'memory': 1, 'processor': 'AMD EPYC 7000 serie', 'speed': '2.5 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
         instance_type_dict['1_1_22'] = {'id': 't3a.small', 'vcpu': 2, 'memory': 2,  'processor': 'AMD EPYC 7000 serie', 'speed': '2.5 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
         instance_type_dict['1_1_23'] = {'id': 't3a.medium', 'vcpu': 2, 'memory': 4,  'processor': 'AMD EPYC 7000 serie', 'speed': '2.5 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
@@ -265,7 +265,15 @@ def get_instance_type_dict(cluster_mode):
         instance_type_dict['1_1_25'] = {'id': 't3a.xlarge', 'vcpu': 4, 'memory': 16,  'processor': 'AMD EPYC 7000 serie', 'speed': '2.5 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
         instance_type_dict['1_1_26'] = {'id': 't3a.2xlarge', 'vcpu': 8, 'memory': 32,  'processor': 'AMD EPYC 7000 serie', 'speed': '2.5 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
 
-        # M5 instance types
+        # t4g instance types
+        instance_type_dict['1_1_31'] = {'id': 't4g.micro', 'vcpu': 2, 'memory': 1, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['1_1_32'] = {'id': 't4g.small', 'vcpu': 2, 'memory': 2,  'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['1_1_33'] = {'id': 't4g.medium', 'vcpu': 2, 'memory': 4,  'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['1_1_34'] = {'id': 't4g.large', 'vcpu': 2, 'memory': 8,  'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['1_1_35'] = {'id': 't4g.xlarge', 'vcpu': 4, 'memory': 16,  'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['1_1_36'] = {'id': 't4g.2xlarge', 'vcpu': 8, 'memory': 32,  'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+
+        # m5 instance types
         instance_type_dict['1_2_21'] = {'id': 'm5.large', 'vcpu': 2, 'memory': 8, 'processor': 'Intel Xeon Platinum 8175 with new Intel Advanced Vector Extension (AXV-512) instruction set', 'speed': 'up to 3.1 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
         instance_type_dict['1_2_22'] = {'id': 'm5.xlarge', 'vcpu': 4, 'memory': 16, 'processor': 'Intel Xeon Platinum 8175 with new Intel Advanced Vector Extension (AXV-512) instruction set', 'speed': 'up to 3.1 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
         instance_type_dict['1_2_23'] = {'id': 'm5.2xlarge', 'vcpu': 8, 'memory': 32, 'processor': 'Intel Xeon Platinum 8175 with new Intel Advanced Vector Extension (AXV-512) instruction set', 'speed': 'up to 3.1 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
@@ -275,7 +283,7 @@ def get_instance_type_dict(cluster_mode):
         instance_type_dict['1_2_27'] = {'id': 'm5.16xlarge', 'vcpu': 64, 'memory': 256, 'processor': 'Intel Xeon Platinum 8175 with new Intel Advanced Vector Extension (AXV-512) instruction set', 'speed': 'up to 3.1 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
         instance_type_dict['1_2_28'] = {'id': 'm5.24xlarge', 'vcpu': 96, 'memory': 384, 'processor': 'Intel Xeon Platinum 8175 with new Intel Advanced Vector Extension (AXV-512) instruction set', 'speed': 'up to 3.1 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
 
-        # M5a instance types
+        # m5a instance types
         instance_type_dict['1_2_31'] = {'id': 'm5a.large', 'vcpu': 2, 'memory': 8, 'processor': 'AMD EPYC 7000 serie', 'speed': '2.5 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
         instance_type_dict['1_2_32'] = {'id': 'm5a.xlarge', 'vcpu': 4, 'memory': 16, 'processor': 'AMD EPYC 7000 serie', 'speed': '2.5 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
         instance_type_dict['1_2_33'] = {'id': 'm5a.2xlarge', 'vcpu': 8, 'memory': 32, 'processor': 'AMD EPYC 7000 serie', 'speed': '2.5 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
@@ -285,35 +293,75 @@ def get_instance_type_dict(cluster_mode):
         instance_type_dict['1_2_37'] = {'id': 'm5a.16xlarge', 'vcpu': 64, 'memory': 256, 'processor': 'AMD EPYC 7000 serie', 'speed': '2.5 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
         instance_type_dict['1_2_38'] = {'id': 'm5a.24xlarge', 'vcpu': 96, 'memory': 384, 'processor': 'AMD EPYC 7000 serie', 'speed': '2.5 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
 
-        # C5 instance types
-        instance_type_dict['2_1_21'] = {'id': 'c5.large', 'vcpu': 2, 'memory': 4, 'processor': '2nd generation Intel Xeon Scalable (Cascade Lake) or 1st generation Intel Xeon Platinum 8000 serie (Skylake-SP)', 'speed': 'up to 3.5 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['2_1_22'] = {'id': 'c5.xlarge', 'vcpu': 4, 'memory': 8, 'processor': '2nd generation Intel Xeon Scalable (Cascade Lake) or 1st generation Intel Xeon Platinum 8000 serie (Skylake-SP)', 'speed': 'up to 3.5 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['2_1_23'] = {'id': 'c5.2xlarge', 'vcpu': 8, 'memory': 16, 'processor': '2nd generation Intel Xeon Scalable (Cascade Lake) or 1st generation Intel Xeon Platinum 8000 serie (Skylake-SP)', 'speed': 'up to 3.5 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['2_1_24'] = {'id': 'c5.4xlarge', 'vcpu': 16, 'memory': 32, 'processor': '2nd generation Intel Xeon Scalable (Cascade Lake) or 1st generation Intel Xeon Platinum 8000 serie (Skylake-SP)', 'speed': 'up to 3.5 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['2_1_25'] = {'id': 'c5.9xlarge', 'vcpu': 36, 'memory': 72, 'processor': '2nd generation Intel Xeon Scalable (Cascade Lake) or 1st generation Intel Xeon Platinum 8000 serie (Skylake-SP)', 'speed': 'up to 3.5 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['2_1_26'] = {'id': 'c5.12xlarge', 'vcpu': 48, 'memory': 96, 'processor': '2nd generation Intel Xeon Scalable  (Cascade Lake)', 'speed': 'up to 3.9 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['2_1_27'] = {'id': 'c5.18xlarge', 'vcpu': 72, 'memory': 144, 'processor': '2nd generation Intel Xeon Scalable (Cascade Lake) or 1st generation Intel Xeon Platinum 8000 serie (Skylake-SP)', 'speed': 'up to 3.5 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['2_1_28'] = {'id': 'c5.24xlarge', 'vcpu': 96, 'memory': 192, 'processor': '2nd generation Intel Xeon Scalable  (Cascade Lake)', 'speed': 'up to 3.9 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # m6g instance types
+        instance_type_dict['1_2_41'] = {'id': 'm6g.medium', 'vcpu': 1, 'memory': 4, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['1_2_42'] = {'id': 'm6g.large', 'vcpu': 2, 'memory': 8, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['1_2_43'] = {'id': 'm6g.xlarge', 'vcpu': 4, 'memory': 16, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['1_2_44'] = {'id': 'm6g.2xlarge', 'vcpu': 8, 'memory': 32, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['1_2_45'] = {'id': 'm6g.4xlarge', 'vcpu': 16, 'memory': 64, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['1_2_46'] = {'id': 'm6g.8xlarge', 'vcpu': 32, 'memory': 128, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['1_2_47'] = {'id': 'm6g.12xlarge', 'vcpu': 48, 'memory': 192, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['1_2_48'] = {'id': 'm6g.16xlarge', 'vcpu': 64, 'memory': 256, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
 
-        # R5 instance types
+        # c5 instance types
+        instance_type_dict['2_1_21'] = {'id': 'c5.large', 'vcpu': 2, 'memory': 4, 'processor': '2nd generation Intel Xeon Scalable (Cascade Lake) or 1st generation Intel Xeon Platinum 8000 serie (Skylake-SP)', 'speed': 'up to 3.5 GHz', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['2_1_22'] = {'id': 'c5.xlarge', 'vcpu': 4, 'memory': 8, 'processor': '2nd generation Intel Xeon Scalable (Cascade Lake) or 1st generation Intel Xeon Platinum 8000 serie (Skylake-SP)', 'speed': 'up to 3.5 GHz', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['2_1_23'] = {'id': 'c5.2xlarge', 'vcpu': 8, 'memory': 16, 'processor': '2nd generation Intel Xeon Scalable (Cascade Lake) or 1st generation Intel Xeon Platinum 8000 serie (Skylake-SP)', 'speed': 'up to 3.5 GHz', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['2_1_24'] = {'id': 'c5.4xlarge', 'vcpu': 16, 'memory': 32, 'processor': '2nd generation Intel Xeon Scalable (Cascade Lake) or 1st generation Intel Xeon Platinum 8000 serie (Skylake-SP)', 'speed': 'up to 3.5 GHz', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['2_1_25'] = {'id': 'c5.9xlarge', 'vcpu': 36, 'memory': 72, 'processor': '2nd generation Intel Xeon Scalable (Cascade Lake) or 1st generation Intel Xeon Platinum 8000 serie (Skylake-SP)', 'speed': 'up to 3.5 GHz', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['2_1_26'] = {'id': 'c5.12xlarge', 'vcpu': 48, 'memory': 96, 'processor': '2nd generation Intel Xeon Scalable (Cascade Lake)', 'speed': 'up to 3.9 GHz', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['2_1_27'] = {'id': 'c5.18xlarge', 'vcpu': 72, 'memory': 144, 'processor': '2nd generation Intel Xeon Scalable (Cascade Lake) or 1st generation Intel Xeon Platinum 8000 serie (Skylake-SP)', 'speed': 'up to 3.5 GHz', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['2_1_28'] = {'id': 'c5.24xlarge', 'vcpu': 96, 'memory': 192, 'processor': '2nd generation Intel Xeon Scalable (Cascade Lake)', 'speed': 'up to 3.9 GHz', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+
+        # c5a instance types
+        instance_type_dict['2_1_31'] = {'id': 'c5a.large', 'vcpu': 2, 'memory': 4, 'processor': 'AMD EPYC 7002 serie', 'speed': 'up to 3.3 GHz', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['2_1_32'] = {'id': 'c5a.xlarge', 'vcpu': 4, 'memory': 8, 'processor': 'AMD EPYC 7002 serie', 'speed': 'up to 3.3 GHz', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['2_1_33'] = {'id': 'c5a.2xlarge', 'vcpu': 8, 'memory': 16, 'processor': 'AMD EPYC 7002 serie', 'speed': 'up to 3.3 GHz', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['2_1_34'] = {'id': 'c5a.4xlarge', 'vcpu': 16, 'memory': 32, 'processor': 'AMD EPYC 7002 serie', 'speed': 'up to 3.3 GHz', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['2_1_35'] = {'id': 'c5a.8xlarge', 'vcpu': 32, 'memory': 64, 'processor': 'AMD EPYC 7002 serie', 'speed': 'up to 3.3 GHz', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['2_1_36'] = {'id': 'c5a.12xlarge', 'vcpu': 48, 'memory': 96, 'processor': 'AMD EPYC 7002 serie', 'speed': 'up to 3.3 GHz', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['2_1_37'] = {'id': 'c5a.16xlarge', 'vcpu': 64, 'memory': 128, 'processor': 'AMD EPYC 7000 serie', 'speed': 'up to 3.3 GHz', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['2_1_38'] = {'id': 'c5a.24xlarge', 'vcpu': 96, 'memory': 192, 'processor': 'AMD EPYC 7000 serie', 'speed': 'up to 3.3 GHz', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+    
+        # c6g instance types
+        instance_type_dict['2_1_41'] = {'id': 'c6g.medium', 'vcpu': 1, 'memory': 2, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['2_1_42'] = {'id': 'c6g.large', 'vcpu': 2, 'memory': 4, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['2_1_43'] = {'id': 'c6g.xlarge', 'vcpu': 4, 'memory': 8, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['2_1_44'] = {'id': 'c6g.2xlarge', 'vcpu': 8, 'memory': 16, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['2_1_45'] = {'id': 'c6g.4xlarge', 'vcpu': 16, 'memory': 32, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['2_1_46'] = {'id': 'c6g.8xlarge', 'vcpu': 32, 'memory': 64, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['2_1_47'] = {'id': 'c6g.12xlarge', 'vcpu': 48, 'memory': 96, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['2_1_48'] = {'id': 'c6g.16xlarge', 'vcpu': 64, 'memory': 128, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+
+        # r5 instance types
         instance_type_dict['3_1_21'] = {'id': 'r5.large', 'vcpu': 2, 'memory': 16, 'processor': 'Intel Xeon Platinum 8175', 'speed': 'up to 3.1 GHz', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
         instance_type_dict['3_1_22'] = {'id': 'r5.xlarge', 'vcpu': 4, 'memory': 32, 'processor': 'Intel Xeon Platinum 8175', 'speed': 'up to 3.1 GHz', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
         instance_type_dict['3_1_23'] = {'id': 'r5.2xlarge', 'vcpu': 8, 'memory': 64, 'processor': 'Intel Xeon Platinum 8175', 'speed': 'up to 3.1 GHz', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
         instance_type_dict['3_1_24'] = {'id': 'r5.4xlarge', 'vcpu': 16, 'memory': 128, 'processor': 'Intel Xeon Platinum 8175', 'speed': 'up to 3.1 GHz', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['3_1_25'] = {'id': 'r5.8xlarge', 'vcpu': 36, 'memory': 256, 'processor': 'Intel Xeon Platinum 8175', 'speed': 'up to 3.1 GHz', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['3_1_25'] = {'id': 'r5.8xlarge', 'vcpu': 32, 'memory': 256, 'processor': 'Intel Xeon Platinum 8175', 'speed': 'up to 3.1 GHz', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
         instance_type_dict['3_1_26'] = {'id': 'r5.12xlarge', 'vcpu': 48, 'memory': 384, 'processor': 'Intel Xeon Platinum 8175', 'speed': 'up to 3.1 GHz', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
         instance_type_dict['3_1_27'] = {'id': 'r5.16xlarge', 'vcpu': 64, 'memory': 512, 'processor': 'Intel Xeon Platinum 8175', 'speed': 'up to 3.1 GHz', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
         instance_type_dict['3_1_28'] = {'id': 'r5.24xlarge', 'vcpu': 96, 'memory': 768, 'processor': 'Intel Xeon Platinum 8175', 'speed': 'up to 3.1 GHz', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
 
-        # R5a instance types
+        # r5a instance types
         instance_type_dict['3_1_31'] = {'id': 'r5a.large', 'vcpu': 2, 'memory': 16, 'processor': 'AMD EPYC 7000 serie', 'speed': '2.5 GHz', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
         instance_type_dict['3_1_32'] = {'id': 'r5a.xlarge', 'vcpu': 4, 'memory': 32, 'processor': 'AMD EPYC 7000 serie', 'speed': '2.5 GHz', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
         instance_type_dict['3_1_33'] = {'id': 'r5a.2xlarge', 'vcpu': 8, 'memory': 64, 'processor': 'AMD EPYC 7000 serie', 'speed': '2.5 GHz', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
         instance_type_dict['3_1_34'] = {'id': 'r5a.4xlarge', 'vcpu': 16, 'memory': 128, 'processor': 'AMD EPYC 7000 serie', 'speed': '2.5 GHz', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['3_1_35'] = {'id': 'r5a.8xlarge', 'vcpu': 36, 'memory': 256, 'processor': 'AMD EPYC 7000 serie', 'speed': '2.5 GHz', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['3_1_35'] = {'id': 'r5a.8xlarge', 'vcpu': 32, 'memory': 256, 'processor': 'AMD EPYC 7000 serie', 'speed': '2.5 GHz', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
         instance_type_dict['3_1_36'] = {'id': 'r5a.12xlarge', 'vcpu': 48, 'memory': 384, 'processor': 'AMD EPYC 7000 serie', 'speed': '2.5 GHz', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
         instance_type_dict['3_1_37'] = {'id': 'r5a.16xlarge', 'vcpu': 64, 'memory': 512, 'processor': 'AMD EPYC 7000 serie', 'speed': '2.5 GHz', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
         instance_type_dict['3_1_38'] = {'id': 'r5a.24xlarge', 'vcpu': 96, 'memory': 768, 'processor': 'AMD EPYC 7000 serie', 'speed': '2.5 GHz', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+
+        # r6g instance types
+        instance_type_dict['3_1_41'] = {'id': 'r6g.medium', 'vcpu': 1, 'memory': 8, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['3_1_42'] = {'id': 'r6g.large', 'vcpu': 2, 'memory': 16, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['3_1_43'] = {'id': 'r6g.xlarge', 'vcpu': 4, 'memory': 32, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['3_1_44'] = {'id': 'r6g.2xlarge', 'vcpu': 8, 'memory': 64, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['3_1_45'] = {'id': 'r6g.4xlarge', 'vcpu': 16, 'memory': 128, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['3_1_46'] = {'id': 'r6g.8xlarge', 'vcpu': 32, 'memory': 256, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['3_1_47'] = {'id': 'r6g.12xlarge', 'vcpu': 48, 'memory': 384, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        instance_type_dict['3_1_48'] = {'id': 'r6g.16xlarge', 'vcpu': 64, 'memory': 512, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
 
     # return the volumes data dictionary
     return instance_type_dict

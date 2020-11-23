@@ -68,27 +68,27 @@ def create_cd_hit_est_config_file(experiment_id='exp001', assembly_dataset_id='s
             file_id.write( '# You must review the information of this file and update the values with the corresponding ones to the current run.\n')
             file_id.write( '#\n')
             file_id.write(f'# The assembly files have to be located in the cluster directory {xlib.get_cluster_result_dir()}/experiment_id/assembly_dataset_id\n')
-            file_id.write( '{0}\n'.format('# The experiment_id and assembly_dataset_id names are fixed in the identification section.'))
+            file_id.write( '# The experiment_id and assembly_dataset_id names are fixed in the identification section.\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# You can consult the parameters of CD-HIT-EST (CD-HIT package) and their meaning in "http://weizhong-lab.ucsd.edu/cd-hit/".'))
+            file_id.write( '# You can consult the parameters of CD-HIT-EST (CD-HIT package) and their meaning in "http://weizhong-lab.ucsd.edu/cd-hit/".\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# In section "CD-HIT-EST parameters", the key "other_parameters" allows you to input additional parameters in the format:'))
+            file_id.write( '# In section "CD-HIT-EST parameters", the key "other_parameters" allows you to input additional parameters in the format:\n')
             file_id.write( '#\n')
             file_id.write( '#    other_parameters = --parameter-1[=value-1][; --parameter-2[=value-2][; ...; --parameter-n[=value-n]]]\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# parameter-i is a parameter name of CD-HIT-EST and value-i a valid value of parameter-i, e.g.'))
+            file_id.write( '# parameter-i is a parameter name of CD-HIT-EST and value-i a valid value of parameter-i, e.g.\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('#    other_parameters = --aS=0.9; --U=10'))
+            file_id.write( '#    other_parameters = --aS=0.9; --U=10\n')
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information identifies the assembly result dataset.'))
+            file_id.write( '# This section has the information identifies the assembly result dataset.\n')
             file_id.write( '[identification]\n')
             file_id.write( '{0:<50} {1}\n'.format(f'experiment_id = {experiment_id}', '# experiment identification'))
             file_id.write( '{0:<50} {1}\n'.format(f'assembly_software = {assembly_software}', f'# assembly software: {get_assembly_software_code_list_text()}'))
             file_id.write( '{0:<50} {1}\n'.format(f'assembly_dataset_id = {assembly_dataset_id}', '# assembly dataset identification'))
             file_id.write( '{0:<50} {1}\n'.format(f'assembly_type = {assembly_type}', f'# assembly type: CONTIGS or SCAFFOLDS in {xlib.get_soapdenovotrans_name()}; NONE in any other case'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information to set the CD-HIT-EST parameters'))
-            file_id.write( '{0}\n'.format('[CD-HIT-EST parameters]'))
+            file_id.write( '# This section has the information to set the CD-HIT-EST parameters\n')
+            file_id.write( '[CD-HIT-EST parameters]\n')
             file_id.write( '{0:<50} {1}\n'.format('threads = 4', '# number of threads for use; with 0, all CPUs will be used'))
             file_id.write( '{0:<50} {1}\n'.format('memory_limit = 0', '# memory limit (in MB) for the program; 0 for unlimitted'))
             file_id.write( '{0:<50} {1}\n'.format('seq_identity_threshold = 0.9', '# sequence identity threshold'))
@@ -99,7 +99,7 @@ def create_cd_hit_est_config_file(experiment_id='exp001', assembly_dataset_id='s
             file_id.write( '{0:<50} {1}\n'.format( 'other_parameters = NONE', '# additional parameters to the previous ones or NONE'))
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be recreated'.format(get_cd_hit_est_config_file()))
+        error_list.append(f'*** ERROR: The file {get_cd_hit_est_config_file()} can not be recreated')
         OK = False
 
     # return the control variable and the error list
@@ -127,7 +127,7 @@ def run_cd_hit_est_process(cluster_name, log, function=None):
 
     # check the CD-HIT-EST config file
     log.write(f'{xlib.get_separator()}\n')
-    log.write('Checking the {0} config file ...\n'.format(xlib.get_cd_hit_est_name()))
+    log.write(f'Checking the {xlib.get_cd_hit_est_name()} config file ...\n')
     (OK, error_list) = check_cd_hit_est_config_file(strict=True)
     if OK:
         log.write('The file is OK.\n')
@@ -181,10 +181,10 @@ def run_cd_hit_est_process(cluster_name, log, function=None):
         (OK, error_list, is_installed) = xbioinfoapp.is_installed_anaconda_package(xlib.get_cd_hit_anaconda_code(), cluster_name, True, ssh_client)
         if OK:
             if not is_installed:
-                log.write('*** ERROR: {0} is not installed.\n'.format(xlib.get_cd_hit_name()))
+                log.write(f'*** ERROR: {xlib.get_cd_hit_name()} is not installed.\n')
                 OK = False
         else:
-            log.write('*** ERROR: The verification of {0} installation could not be performed.\n'.format(xlib.get_cd_hit_name()))
+            log.write(f'*** ERROR: The verification of {xlib.get_cd_hit_name()} installation could not be performed.\n')
 
     # warn that the requirements are OK 
     if OK:
@@ -205,7 +205,7 @@ def run_cd_hit_est_process(cluster_name, log, function=None):
     # build the CD-HIT-EST process script
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process script {0} ...\n'.format(get_cd_hit_est_process_script()))
+        log.write(f'Building the process script {get_cd_hit_est_process_script()} ...\n')
         (OK, error_list) = build_cd_hit_est_process_script(cluster_name, current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -215,8 +215,8 @@ def run_cd_hit_est_process(cluster_name, log, function=None):
     # upload the CD-HIT-EST process script to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process script {0} to the directory {1} ...\n'.format(get_cd_hit_est_process_script(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_cd_hit_est_process_script()))
+        log.write(f'Uploading the process script {get_cd_hit_est_process_script()} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_cd_hit_est_process_script())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_cd_hit_est_process_script(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -227,8 +227,8 @@ def run_cd_hit_est_process(cluster_name, log, function=None):
     # set run permision to the CD-HIT-EST process script in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_cd_hit_est_process_script())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_cd_hit_est_process_script()))
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_cd_hit_est_process_script())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_cd_hit_est_process_script())}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
@@ -238,7 +238,7 @@ def run_cd_hit_est_process(cluster_name, log, function=None):
     # build the CD-HIT-EST process starter
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process starter {0} ...\n'.format(get_cd_hit_est_process_starter()))
+        log.write(f'Building the process starter {get_cd_hit_est_process_starter()} ...\n')
         (OK, error_list) = build_cd_hit_est_process_starter(current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -248,8 +248,8 @@ def run_cd_hit_est_process(cluster_name, log, function=None):
     # upload the CD-HIT-EST process starter to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process starter {0} to the directory {1} ...\n'.format(get_cd_hit_est_process_starter(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_cd_hit_est_process_starter()))
+        log.write(f'Uploading the process starter {get_cd_hit_est_process_starter()} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_cd_hit_est_process_starter())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_cd_hit_est_process_starter(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -260,8 +260,8 @@ def run_cd_hit_est_process(cluster_name, log, function=None):
     # set run permision to the CD-HIT-EST process starter in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_cd_hit_est_process_starter())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_cd_hit_est_process_starter()))
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_cd_hit_est_process_starter())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_cd_hit_est_process_starter())}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
@@ -271,7 +271,7 @@ def run_cd_hit_est_process(cluster_name, log, function=None):
     # submit the CD-HIT-EST process
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Submitting the process script {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_cd_hit_est_process_starter())))
+        log.write(f'Submitting the process script {current_run_dir}/{os.path.basename(get_cd_hit_est_process_starter())} ...\n')
         OK = xssh.submit_script(cluster_name, ssh_client, current_run_dir, os.path.basename(get_cd_hit_est_process_starter()), log)
 
     # close the SSH transport connection
@@ -447,7 +447,7 @@ def check_cd_hit_est_config_file(strict):
 
     # warn that the results config file is not valid if there are any errors
     if not OK:
-        error_list.append('\nThe {0} config file is not valid. Please, correct this file or recreate it.'.format(xlib.get_cd_hit_est_name()))
+        error_list.append(f'\nThe {xlib.get_cd_hit_est_name()} config file is not valid. Please, correct this file or recreate it.')
 
     # return the control variable and the error list
     return (OK, error_list)
@@ -499,7 +499,7 @@ def build_cd_hit_est_process_script(cluster_name, current_run_dir):
 
     # set the output file path
     if OK:
-        output_file = '{0}/clustered-transcriptome.fasta'.format(current_run_dir)
+        output_file = f'{current_run_dir}/clustered-transcriptome.fasta'
 
     # write the CD-HIT-EST process script
     try:
@@ -514,10 +514,10 @@ def build_cd_hit_est_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
             script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('CDHIT_PATH={0}/{1}/envs/{2}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name(), xlib.get_cd_hit_anaconda_code())))
-            script_file_id.write( '{0}\n'.format('PATH=$CDHIT_PATH:$PATH'))
-            script_file_id.write( '{0}\n'.format('cd {0}/{1}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name())))
-            script_file_id.write( '{0}\n'.format('source activate {0}'.format(xlib.get_cd_hit_anaconda_code())))
+            script_file_id.write(f'CDHIT_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/envs/{xlib.get_cd_hit_anaconda_code()}/bin\n')
+            script_file_id.write( 'PATH=$CDHIT_PATH:$PATH\n')
+            script_file_id.write(f'cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
+            script_file_id.write(f'source activate {xlib.get_cd_hit_anaconda_code()}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
             script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -539,26 +539,26 @@ def build_cd_hit_est_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function run_cd_hit_est_process'))
+            script_file_id.write( 'function run_cd_hit_est_process\n')
             script_file_id.write( '{\n')
             script_file_id.write(f'    cd {current_run_dir}\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "Running {0} process ..."'.format(xlib.get_cd_hit_est_name())))
+            script_file_id.write(f'    echo "Running {xlib.get_cd_hit_est_name()} process ..."\n')
             script_file_id.write( '    /usr/bin/time \\\n')
             script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-            script_file_id.write( '{0}\n'.format('        cd-hit-est \\'))
-            script_file_id.write( '{0}\n'.format('            -T {0} \\'.format(threads)))
-            script_file_id.write( '{0}\n'.format('            -M {0} \\'.format(memory_limit)))
-            script_file_id.write( '{0}\n'.format('            -i {0} \\'.format(transcriptome_file)))
-            script_file_id.write( '{0}\n'.format('            -c {0} \\'.format(seq_identity_threshold)))
-            script_file_id.write( '{0}\n'.format('            -n {0} \\'.format(word_length)))
-            script_file_id.write( '{0}\n'.format('            -mask {0} \\'.format(mask)))
-            script_file_id.write( '{0}\n'.format('            -match {0} \\'.format(match)))
-            script_file_id.write( '{0}\n'.format('            -mismatch {0} \\'.format(mismatch)))
+            script_file_id.write( '        cd-hit-est \\\n')
+            script_file_id.write(f'            -T {threads} \\\n')
+            script_file_id.write(f'            -M {memory_limit} \\\n')
+            script_file_id.write(f'            -i {transcriptome_file} \\\n')
+            script_file_id.write(f'            -c {seq_identity_threshold} \\\n')
+            script_file_id.write(f'            -n {word_length} \\\n')
+            script_file_id.write(f'            -mask {mask} \\\n')
+            script_file_id.write(f'            -match {match} \\\n')
+            script_file_id.write(f'            -mismatch {mismatch} \\\n')
             if other_parameters.upper() == 'NONE':
-                script_file_id.write( '{0}\n'.format('            -o {0}'.format(output_file)))
+                script_file_id.write(f'            -o {output_file}\n')
             else:
-                script_file_id.write( '{0}\n'.format('            -o {0} \\'.format(output_file)))
+                script_file_id.write(f'            -o {output_file} \\\n')
                 parameter_list = [x.strip() for x in other_parameters.split(';')]
                 for i in range(len(parameter_list)):
                     if parameter_list[i].find('=') > 0:
@@ -567,20 +567,20 @@ def build_cd_hit_est_process_script(cluster_name, current_run_dir):
                         parameter_name = mo.group(1).strip()
                         parameter_value = mo.group(2).strip()
                         if i < len(parameter_list) - 1:
-                            script_file_id.write( '{0}\n'.format('            -{0} {1} \\'.format(parameter_name, parameter_value)))
+                            script_file_id.write(f'            -{parameter_name} {parameter_value} \\\n')
                         else:
-                            script_file_id.write( '{0}\n'.format('            -{0} {1}'.format(parameter_name, parameter_value)))
+                            script_file_id.write(f'            -{parameter_name} {parameter_value}\n')
                     else:
                         pattern = r'^--(.+)$'
                         mo = re.search(pattern, parameter_list[i])
                         parameter_name = mo.group(1).strip()
                         if i < len(parameter_list):
-                            script_file_id.write( '{0}\n'.format('            -{0} \\'.format(parameter_name)))
+                            script_file_id.write(f'            -{parameter_name} \\\n')
                         else:
-                            script_file_id.write( '{0}\n'.format('            -{0}'.format(parameter_name)))
+                            script_file_id.write(f'            -{parameter_name}\n')
                     i += 1
             script_file_id.write( '    RC=$?\n')
-            script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error cd-hit-est $RC; fi'))
+            script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error cd-hit-est $RC; fi\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function end\n')
@@ -655,11 +655,11 @@ def build_cd_hit_est_process_script(cluster_name, current_run_dir):
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
-            script_file_id.write( '{0}\n'.format('run_cd_hit_est_process'))
+            script_file_id.write( 'run_cd_hit_est_process\n')
             script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_cd_hit_est_process_script()))
+        error_list.append(f'*** ERROR: The file {get_cd_hit_est_process_script()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -683,10 +683,10 @@ def build_cd_hit_est_process_starter(current_run_dir):
         with open(get_cd_hit_est_process_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_cd_hit_est_process_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_cd_hit_est_process_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_cd_hit_est_process_starter()))
+        error_list.append(f'*** ERROR: The file {get_cd_hit_est_process_starter()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -700,7 +700,7 @@ def get_cd_hit_est_config_file():
     '''
 
     # assign the CD-HIT-EST config file path
-    cd_hit_est_config_file = '{0}/{1}-config.txt'.format(xlib.get_config_dir(), xlib.get_cd_hit_est_code())
+    cd_hit_est_config_file = f'{xlib.get_config_dir()}/{xlib.get_cd_hit_est_code()}-config.txt'
 
     # return the CD-HIT-EST config file path
     return cd_hit_est_config_file
@@ -713,7 +713,7 @@ def get_cd_hit_est_process_script():
     '''
 
     # assign the CD-HIT-EST script path
-    cd_hit_est_process_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_cd_hit_est_code())
+    cd_hit_est_process_script = f'{xlib.get_temp_dir()}/{xlib.get_cd_hit_est_code()}-process.sh'
 
     # return the CD-HIT-EST script path
     return cd_hit_est_process_script
@@ -726,7 +726,7 @@ def get_cd_hit_est_process_starter():
     '''
 
     # assign the CD-HIT-EST process starter path
-    cd_hit_est_process_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_cd_hit_est_code())
+    cd_hit_est_process_starter = f'{xlib.get_temp_dir()}/{xlib.get_cd_hit_est_code()}-process-starter.sh'
 
     # return the CD-HIT-EST starter path
     return cd_hit_est_process_starter

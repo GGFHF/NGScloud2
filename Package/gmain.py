@@ -379,6 +379,13 @@ class Main():
         self.menu_cufflinks_cuffmerge.add_separator()
         self.menu_cufflinks_cuffmerge.add_command(label='Run assembly process', command=self.run_cufflinks_cuffmerge_process)
 
+        # create "menu_cuffnorm" and add its menu items
+        self.menu_cuffnorm = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.menu_cuffnorm.add_command(label='Recreate config file', command=self.recreate_cuffnorm_config_file)
+        self.menu_cuffnorm.add_command(label='Edit config file', command=self.edit_cuffnorm_config_file)
+        self.menu_cuffnorm.add_separator()
+        self.menu_cuffnorm.add_command(label='Run differential expression process', command=self.run_cuffnorm_process)
+
         # create "menu_cuffquant" and add its menu items
         self.menu_cuffquant = tkinter.Menu(self.menu_bar, tearoff=0)
         self.menu_cuffquant.add_command(label='Recreate config file', command=self.recreate_cuffquant_config_file)
@@ -626,6 +633,7 @@ class Main():
         # create "menu_denovo_rnaseq_read_alignment" add add its menu items
         self.menu_denovo_rnaseq_read_alignment = tkinter.Menu(self.menu_bar, tearoff=0)
         self.menu_denovo_rnaseq_read_alignment.add_cascade(label=xlib.get_bowtie2_name(), menu=self.menu_bowtie2)
+        self.menu_denovo_rnaseq_read_alignment.add_cascade(label=f'{xlib.get_gsnap_name()} ({xlib.get_gmap_gsnap_name()} package)', menu=self.menu_gsnap)
 
         # create "menu_denovo_rnaseq_transcriptome_quality_assessment" and add its menu items
         self.menu_denovo_rnaseq_transcriptome_quality_assessment = tkinter.Menu(self.menu_bar, tearoff=0)
@@ -710,6 +718,7 @@ class Main():
         # create "menu_reference_based_rnaseq_differential_expression" and add its menu items
         self.menu_reference_based_rnaseq_differential_expression = tkinter.Menu(self.menu_bar, tearoff=0)
         self.menu_reference_based_rnaseq_differential_expression.add_cascade(label=f'{xlib.get_cuffdiff_name()} ({xlib.get_cufflinks_name()} package)', menu=self.menu_cuffdiff)
+        self.menu_reference_based_rnaseq_differential_expression.add_cascade(label=f'{xlib.get_cuffnorm_name()} ({xlib.get_cufflinks_name()} package)', menu=self.menu_cuffnorm)
 
         # create "menu_reference_based_rnaseq_variant_calling" and add its menu items
         self.menu_reference_based_rnaseq_variant_calling = tkinter.Menu(self.menu_bar, tearoff=0)
@@ -2940,7 +2949,7 @@ class Main():
         self.close_current_form()
 
         # create and register "form_recreate_cuffdiff_config_file" in "container" with the grid geometry manager
-        form_recreate_cuffdiff_config_file = gbioinfoapp.FormRecreateCuffdiffConfigFile(self)
+        form_recreate_cuffdiff_config_file = gbioinfoapp.FormRecreateCuffdiffCuffnormConfigFile(self, xlib.get_cuffdiff_code())
         form_recreate_cuffdiff_config_file.grid(row=0, column=0, sticky='nsew')
 
         # set "form_recreate_cuffdiff_config_file" as current form and add it in the forms dictionary
@@ -3077,6 +3086,82 @@ class Main():
 
         # raise "form_run_cufflinks_cuffmerge_process" to front
         form_run_cufflinks_cuffmerge_process.tkraise()
+
+    #---------------
+    # Cuffnorm
+    #---------------
+
+    def recreate_cuffnorm_config_file(self):
+        '''
+        Recreate the Cuffnorm config file with the default options. It is necessary
+        update the options in each process run.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "form_recreate_cuffnorm_config_file" in "container" with the grid geometry manager
+        form_recreate_cuffnorm_config_file = gbioinfoapp.FormRecreateCuffdiffCuffnormConfigFile(self, xlib.get_cuffnorm_code())
+        form_recreate_cuffnorm_config_file.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_recreate_cuffnorm_config_file" as current form and add it in the forms dictionary
+        self.current_form = 'form_recreate_cuffnorm_config_file'
+        self.forms_dict[self.current_form] = form_recreate_cuffnorm_config_file
+
+        # raise "form_recreate_cuffnorm_config_file" to front
+        form_recreate_cuffnorm_config_file.tkraise()
+
+    #---------------
+
+    def edit_cuffnorm_config_file(self):
+        '''
+        Edit the Cuffnorm config file to change the parameters of each process run.
+        '''
+
+        # initialize the control variable
+        OK = True
+
+        # close the current form
+        self.close_current_form()
+
+        # set the head
+        head = f'{xlib.get_cuffnorm_name()} - Edit config file'
+
+        # edit the Cuffnorm config file using "DialogEditor" 
+        dialog_editor = gdialogs.DialogEditor(self.root, xcufflinks.get_cuffnorm_config_file())
+        self.root.wait_window(dialog_editor)
+
+        # check the Cuffnorm config file
+        (OK, error_list) = xcufflinks.check_cuffnorm_config_file(strict=False)
+        if OK:
+            message = f'The {xlib.get_cuffnorm_name()} config file is OK.'
+            tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {head}', message)
+        else:
+            message = 'Detected errors:\n\n'
+            for error in error_list:
+                message = f'{message}{error}\n'
+            tkinter.messagebox.showerror(f'{xlib.get_project_name()} - {head}', message)
+
+    #---------------
+
+    def run_cuffnorm_process(self):
+        '''
+        Run a Cuffnorm process corresponding to the options in Cuffnorm config file.
+        '''
+
+        # close the current form
+        self.close_current_form()
+
+        # create and register "form_run_cuffnorm_process" in "container" with the grid geometry manager
+        form_run_cuffnorm_process = gbioinfoapp.FormRunBioinfoProcess(self, app=xlib.get_cuffnorm_code())
+        form_run_cuffnorm_process.grid(row=0, column=0, sticky='nsew')
+
+        # set "form_run_cuffnorm_process" as current form and add it in the forms dictionary
+        self.current_form = 'form_run_cuffnorm_process'
+        self.forms_dict[self.current_form] = form_run_cuffnorm_process
+
+        # raise "form_run_cuffnorm_process" to front
+        form_run_cuffnorm_process.tkraise()
 
     #---------------
     # Cuffquant

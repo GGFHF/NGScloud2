@@ -744,6 +744,8 @@ def build_menu_denovo_rnaseq_read_alignment():
         # process the selected option
         if option == '1':
             build_menu_bowtie2()
+        elif option == '2':
+            build_menu_gsnap()
         elif option == 'X':
             break
 
@@ -1065,7 +1067,7 @@ def build_menu_reference_based_rnaseq_read_alignment():
         # process the selected option
         if option == '1':
             build_menu_bowtie2()
-        if option == '2':
+        elif option == '2':
             build_menu_gsnap()
         elif option == '3':
             build_menu_hisat2()
@@ -1189,6 +1191,7 @@ def build_menu_reference_based_rnaseq_differential_expression():
         print( 'Options:')
         print()
         print(f'    1. {xlib.get_cuffdiff_name()} ({xlib.get_cufflinks_name()} package)')
+        print(f'    2. {xlib.get_cuffnorm_name()} ({xlib.get_cufflinks_name()} package)')
         print()
         print( '    X. Return to menu Reference-based RNA-seq')
         print()
@@ -1199,6 +1202,8 @@ def build_menu_reference_based_rnaseq_differential_expression():
         # process the selected option
         if option == '1':
             build_menu_cuffdiff()
+        elif option == '2':
+            build_menu_cuffnorm()
         elif option == 'X':
             break
 
@@ -1763,7 +1768,7 @@ def build_menu_cuffdiff():
 
         # process the selected option
         if option == '1':
-            cbioinfoapp.form_recreate_cuffdiff_config_file()
+            cbioinfoapp.form_recreate_cuffdiff_cuffnorm_config_file(xlib.get_cuffdiff_code())
         elif option == '2':
             cbioinfoapp.form_edit_bioinfo_config_file(xlib.get_cuffdiff_code())
         elif option == '3':
@@ -1806,6 +1811,44 @@ def build_menu_cufflinks_cuffmerge():
             cbioinfoapp.form_edit_bioinfo_config_file(xlib.get_cufflinks_cuffmerge_code())
         elif option == '3':
             cbioinfoapp.form_run_bioinfo_process(xlib.get_cufflinks_cuffmerge_code())
+        elif option == 'X':
+            break
+
+#-------------------------------------------------------------------------------
+
+def build_menu_cuffnorm():
+    '''
+    Build the menu Cuffnorm.
+    '''
+
+    while True:
+
+        # print headers
+        clib.clear_screen()
+        clib.print_headers_with_environment(f'{xlib.get_cuffnorm_name()} ({xlib.get_cufflinks_name()} package)')
+
+        # print the menu options
+        print( 'Options:')
+        print()
+        print( '    1. Recreate config file')
+        print( '    2. Edit config file')
+        print()
+        print( '    3. Run differential expression process')
+        print( '       (CAUTION: before running a process, the config file should be updated)')
+        print()
+        print( '    X. Return to menu Differential expression')
+        print()
+
+        # get the selected option
+        option = input('Input the selected option: ').upper()
+
+        # process the selected option
+        if option == '1':
+            cbioinfoapp.form_recreate_cuffdiff_cuffnorm_config_file(xlib.get_cuffnorm_code())
+        elif option == '2':
+            cbioinfoapp.form_edit_bioinfo_config_file(xlib.get_cuffnorm_code())
+        elif option == '3':
+            cbioinfoapp.form_run_bioinfo_process(xlib.get_cuffnorm_code())
         elif option == 'X':
             break
 

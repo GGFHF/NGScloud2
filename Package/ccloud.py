@@ -85,7 +85,6 @@ def form_set_environment():
 
     # initialize the environment and the input environment
     xconfiguration.environment = ''
-    environment = ''
 
     # get the current environments list
     environments_list = xconfiguration.get_environments_list()
@@ -141,6 +140,9 @@ def form_set_environment():
 
         # create the Cufflinks-Cuffmerge config file
         (OK, error_list) = xcufflinks.create_cufflinks_cuffmerge_config_file()
+
+        # create the Cuffnorm config file
+        (OK, error_list) = xcufflinks.create_cuffnorm_config_file()
 
         # create the Cuffquant config file
         (OK, error_list) = xcufflinks.create_cuffquant_config_file()
@@ -287,10 +289,6 @@ def form_create_ngscloud_config_file(is_menu_call):
         clib.clear_screen()
         clib.print_headers_with_environment(f'Configuration - Recreate {xlib.get_project_name()} config file')
 
-    # get current region and zone names
-    region_name = xconfiguration.get_current_region_name()
-    zone_name = xconfiguration.get_current_zone_name()
-
     # get basic AWS data and contact e-mail address from NGScloud config file
     (user_id, access_key_id, secret_access_key) = xconfiguration.get_basic_aws_data()
     email = xconfiguration.get_contact_data()
@@ -348,15 +346,12 @@ def form_view_ngscloud_config_file():
     List the NGScloud config file corresponding to the environment.
     '''
 
-    # initialize the control variable
-    OK = True
-
     # get the NGScloud config file
     ngscloud_config_file = xconfiguration.get_ngscloud_config_file()
 
     # view the file
     text = f'Configuration - View {xlib.get_project_name()} config file'
-    OK = clib.view_file(ngscloud_config_file, text)
+    clib.view_file(ngscloud_config_file, text)
 
     # show continuation message 
     input('Press [Intro] to continue ...')
@@ -716,16 +711,13 @@ def form_list_clusters():
     List clusters.
     '''
 
-    # initialize the control variable
-    OK = True
-
     # print the header
     clib.clear_screen()
     clib.print_headers_with_environment('Cluster operation - List clusters')
 
     # list clusters
     devstdout = xlib.DevStdOut(xcluster.list_clusters.__name__)
-    OK = xcluster.list_clusters(devstdout, function=None)
+    xcluster.list_clusters(devstdout, function=None)
 
     # show continuation message 
     print(xlib.get_separator())
@@ -857,7 +849,7 @@ def form_create_cluster():
             template_name = xconfiguration.build_cluster_name(instance_type)
             cluster_name = xconfiguration.build_cluster_name(instance_type)
             devstdout = xlib.DevStdOut(xcluster.create_cluster.__name__)
-            (OK, master_state_code, master_state_name) = xcluster.create_cluster(template_name, cluster_name, devstdout, function=None, is_menu_call=True)
+            (OK, _, _) = xcluster.create_cluster(template_name, cluster_name, devstdout, function=None, is_menu_call=True)
 
     # show continuation message 
     print(xlib.get_separator())
@@ -1314,7 +1306,7 @@ def form_create_volume():
     # get the cluster name, node name, volume name, volume type and volume size
     print(xlib.get_separator())
     volume_name = cinputs.input_volume_name(text='volume name', zone_name=zone_name, type='created', allowed_none=False, help=False)
-    volume_type = cinputs.input_code(text='Volume type', code_list=xec2.get_volume_type_id_list(only_possible_root_disk=False), default_code='standard')
+    volume_type = cinputs.input_code(text='Volume type', code_list=xec2.get_volume_type_id_list(only_possible_root_disk=False), default_code='sc1')
     minimum_size = volume_type_dict[volume_type]['minimum_size']
     maximum_size = volume_type_dict[volume_type]['maximum_size']
     volume_size = cinputs.input_int(text='Volume size', default=minimum_size , minimum=minimum_size , maximum=maximum_size)

@@ -55,40 +55,43 @@ def create_tophat_config_file(experiment_id='exp001', reference_dataset_id='Atha
             file_id.write( '# You must review the information of this file and update the values with the corresponding ones to the current run.\n')
             file_id.write( '#\n')
             file_id.write(f'# The read files have to be located in the cluster directory {xlib.get_cluster_read_dir()}/experiment_id/read_dataset_id\n')
-            file_id.write( '{0}\n'.format('# The experiment_id, reference_dataset_id, reference_file, gtf_file and read_dataset_id names are fixed in the identification section.'))
+            file_id.write( '# The experiment_id, reference_dataset_id, reference_file, gtf_file and read_dataset_id names are fixed in the identification section.\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# You can consult the parameters of TopHat and their meaning in "http://ccb.jhu.edu/software/tophat/"'))
-            file_id.write( '{0}\n'.format('# and the ones of Trinity in "https://github.com/trinityrnaseq/trinityrnaseq/wiki".'))
+            file_id.write( '# You can consult the parameters of TopHat and their meaning in "http://ccb.jhu.edu/software/tophat/"\n')
+            file_id.write( '# and the ones of Trinity in "https://github.com/trinityrnaseq/trinityrnaseq/wiki".\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# In section "TopHat parameters", the key "other_parameters" allows you to input additional parameters in the format:'))
+            file_id.write( '# In section "TopHat parameters", the key "other_parameters" allows you to input additional parameters in the format:\n')
             file_id.write( '#\n')
             file_id.write( '#    other_parameters = --parameter-1[=value-1][; --parameter-2[=value-2][; ...; --parameter-n[=value-n]]]\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# parameter-i is a parameter name of TopHat and value-i a valid value of parameter-i, e.g.'))
+            file_id.write( '# parameter-i is a parameter name of TopHat and value-i a valid value of parameter-i, e.g.\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('#    other_parameters = --fusion-search; --fusion-read-mismatches=3'))
+            file_id.write( '#    other_parameters = --fusion-search; --fusion-read-mismatches=3\n')
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information that identifies the experiment.'))
+            file_id.write( '# This section has the information that identifies the experiment.\n')
             file_id.write( '[identification]\n')
             file_id.write( '{0:<50} {1}\n'.format(f'experiment_id = {experiment_id}', '# experiment identification'))
             file_id.write( '{0:<50} {1}\n'.format(f'reference_dataset_id = {reference_dataset_id}', '# reference dataset identification'))
             file_id.write( '{0:<50} {1}\n'.format(f'reference_file = {reference_file}', '# reference file name'))
-            file_id.write( '{0:<50} {1}\n'.format('annotation_file = {0}'.format(annotation_file), '# reference annotation file name or NONE'))
+            file_id.write( '{0:<50} {1}\n'.format(f'annotation_file = {annotation_file}', '# reference annotation file name or NONE'))
             file_id.write( '{0:<50} {1}\n'.format(f'read_dataset_id = {read_dataset_id}', '# read dataset identification'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information to set the TopHat parameters'))
-            file_id.write( '{0}\n'.format('[TopHat parameters]'))
-            file_id.write( '{0:<50} {1}\n'.format('threads = 4', '# number of threads for use'))
-            file_id.write( '{0:<50} {1}\n'.format('read_mismatches  = 2', '# final read alignments having more than these many mismatches are discarded'))
-            file_id.write( '{0:<50} {1}\n'.format('read_gap_length = 2', '# final read alignments having more than these many total length of gaps are discarded')) 
-            file_id.write( '{0:<50} {1}\n'.format('read_edit_dist = 2', '# final read alignments having more than these many edit distance are discarded'))
-            file_id.write( '{0:<50} {1}\n'.format('library_type = FR-UNSTRANDED', '# library type: {0}'.format(get_library_type_code_list_text())))
+            file_id.write( '# This section has the information to set the TopHat parameters\n')
+            file_id.write( '[TopHat parameters]\n')
+            file_id.write( '{0:<50} {1}\n'.format( 'index_building = YES', f'# index building : {get_index_building_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format( 'large_index = YES', f'# a large index is force, even if the reference is less than ~ 4 billion nucleotides long: {get_large_index_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format( 'threads = 4', '# number of threads for use'))
+            file_id.write( '{0:<50} {1}\n'.format( 'read_mismatches  = 2', '# final read alignments having more than these many mismatches are discarded'))
+            file_id.write( '{0:<50} {1}\n'.format( 'read_gap_length = 2', '# final read alignments having more than these many total length of gaps are discarded')) 
+            file_id.write( '{0:<50} {1}\n'.format( 'read_edit_dist = 2', '# final read alignments having more than these many edit distance are discarded'))
+            file_id.write( '{0:<50} {1}\n'.format( 'library_type = FR-UNSTRANDED', f'# library type: {get_library_type_code_list_text()}'))
             file_id.write( '{0:<50} {1}\n'.format( 'other_parameters = NONE', '# additional parameters to the previous ones or NONE'))
             file_id.write( '\n')
             file_id.write( '# This section has the global information of all libraries.\n')
             file_id.write( '[library]\n')
-            file_id.write( '{0:<50} {1}\n'.format('format = FASTQ', '# {0}'.format(get_format_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('read_type = {0}'.format(read_type), '# SE (single-end) or PE (paired-end)'))
+            file_id.write( '{0:<50} {1}\n'.format( 'format = FASTQ', f'# {get_format_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format(f'read_type = {read_type}', f'# read type: {get_read_type_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format( 'library_concatenation = NO', f'# {get_library_concatenation_code_list_text()}'))
             for i in range(len(file_1_list)):
                 file_id.write( '\n')
                 if i == 0:
@@ -105,7 +108,7 @@ def create_tophat_config_file(experiment_id='exp001', reference_dataset_id='Atha
                     file_id.write( '# The section identification has to be library-n (n is an integer not repeated)\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_tophat_config_file()))
+        error_list.append(f'*** ERROR: The file {get_tophat_config_file()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -133,7 +136,7 @@ def run_tophat_process(cluster_name, log, function=None):
 
     # check the TopHat config file
     log.write(f'{xlib.get_separator()}\n')
-    log.write('Checking the {0} config file ...\n'.format(xlib.get_tophat_name()))
+    log.write(f'Checking the {xlib.get_tophat_name()} config file ...\n')
     (OK, error_list) = check_tophat_config_file(strict=True)
     if OK:
         log.write('The file is OK.\n')
@@ -186,10 +189,20 @@ def run_tophat_process(cluster_name, log, function=None):
         (OK, error_list, is_installed) = xbioinfoapp.is_installed_anaconda_package(xlib.get_tophat_anaconda_code(), cluster_name, True, ssh_client)
         if OK:
             if not is_installed:
-                log.write('*** ERROR: {0} is not installed.\n'.format(xlib.get_tophat_name()))
+                log.write(f'*** ERROR: {xlib.get_tophat_name()} is not installed.\n')
                 OK = False
         else:
-            log.write('*** ERROR: The verification of {0} installation could not be performed.\n'.format(xlib.get_tophat_name()))
+            log.write(f'*** ERROR: The verification of {xlib.get_tophat_name()} installation could not be performed.\n')
+
+    # check SAMtools is installed
+    if OK:
+        (OK, error_list, is_installed) = xbioinfoapp.is_installed_anaconda_package(xlib.get_samtools_anaconda_code(), cluster_name, True, ssh_client)
+        if OK:
+            if not is_installed:
+                log.write(f'*** ERROR: {xlib.get_samtools_name()} is not installed.\n')
+                OK = False
+        else:
+            log.write(f'*** ERROR: The verification of {xlib.get_samtools_name()} installation could not be performed.\n')
 
     # warn that the requirements are OK 
     if OK:
@@ -201,7 +214,7 @@ def run_tophat_process(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(experiment_id, xlib.get_tophat_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -210,7 +223,7 @@ def run_tophat_process(cluster_name, log, function=None):
     # build the TopHat process script
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process script {0} ...\n'.format(get_tophat_process_script()))
+        log.write(f'Building the process script {get_tophat_process_script()} ...\n')
         (OK, error_list) = build_tophat_process_script(cluster_name, current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -220,8 +233,8 @@ def run_tophat_process(cluster_name, log, function=None):
     # upload the TopHat process script to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process script {0} to the directory {1} ...\n'.format(get_tophat_process_script(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_tophat_process_script()))
+        log.write(f'Uploading the process script {get_tophat_process_script()} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_tophat_process_script())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_tophat_process_script(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -232,9 +245,9 @@ def run_tophat_process(cluster_name, log, function=None):
     # set run permision to the TopHat process script in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_tophat_process_script())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_tophat_process_script()))
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_tophat_process_script())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_tophat_process_script())}'
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -243,7 +256,7 @@ def run_tophat_process(cluster_name, log, function=None):
     # build the TopHat process starter
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process starter {0} ...\n'.format(get_tophat_process_starter()))
+        log.write(f'Building the process starter {get_tophat_process_starter()} ...\n')
         (OK, error_list) = build_tophat_process_starter(current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -253,8 +266,8 @@ def run_tophat_process(cluster_name, log, function=None):
     # upload the TopHat process starter to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process starter {0} to the directory {1} ...\n'.format(get_tophat_process_starter(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_tophat_process_starter()))
+        log.write(f'Uploading the process starter {get_tophat_process_starter()} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_tophat_process_starter())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_tophat_process_starter(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -265,9 +278,9 @@ def run_tophat_process(cluster_name, log, function=None):
     # set run permision to the TopHat process starter in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_tophat_process_starter())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_tophat_process_starter()))
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_tophat_process_starter())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_tophat_process_starter())}'
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -276,7 +289,7 @@ def run_tophat_process(cluster_name, log, function=None):
     # submit the TopHat process
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Submitting the process script {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_tophat_process_starter())))
+        log.write(f'Submitting the process script {current_run_dir}/{os.path.basename(get_tophat_process_starter())} ...\n')
         OK = xssh.submit_script(cluster_name, ssh_client, current_run_dir, os.path.basename(get_tophat_process_starter()), log)
 
     # close the SSH transport connection
@@ -376,6 +389,15 @@ def check_tophat_config_file(strict):
             OK = False
         else:
 
+            # check section "TopHat parameters" - key "index_building"
+            index_building = tophat_option_dict.get('TopHat parameters', {}).get('index_building', not_found)
+            if index_building == not_found:
+                error_list.append('*** ERROR: the key "index_building" is not found in the section "TopHat parameters".')
+                OK = False
+            elif not xlib.check_code(index_building, get_index_building_code_list(), case_sensitive=False):
+                error_list.append(f'*** ERROR: the key "index_building" has to be {get_index_building_code_list_text()}.')
+                OK = False
+
             # check section "TopHat parameters" - key "threads"
             threads = tophat_option_dict.get('TopHat parameters', {}).get('threads', not_found)
             if threads == not_found:
@@ -455,6 +477,15 @@ def check_tophat_config_file(strict):
                 error_list.append(f'*** ERROR: the key "read_type" has to be {get_read_type_code_list_text()}.')
                 OK = False
 
+            # check section "library" - key "library_concatenation"
+            library_concatenation = tophat_option_dict.get('library', {}).get('library_concatenation', not_found)
+            if library_concatenation == not_found:
+                error_list.append('*** ERROR: the key "library_concatenation" is not found in the section "library".')
+                OK = False
+            elif not xlib.check_code(library_concatenation, get_library_concatenation_code_list(), case_sensitive=False):
+                error_list.append(f'*** ERROR: the key "library_concatenation" has to be {get_library_concatenation_code_list_text()}.')
+                OK = False
+
         # check section "library-1"
         if 'library-1' not in sections_list:
             error_list.append('*** ERROR: the section "library-1" is not found.')
@@ -486,7 +517,7 @@ def check_tophat_config_file(strict):
 
     # warn that the TopHat config file is not valid if there are any errors
     if not OK:
-        error_list.append('\nThe {0} config file is not valid. Please, correct this file or recreate it.'.format(xlib.get_tophat_name()))
+        error_list.append(f'\nThe {xlib.get_tophat_name()} config file is not valid. Please, correct this file or recreate it.')
 
     # return the control variable and the error list
     return (OK, error_list)
@@ -511,14 +542,17 @@ def build_tophat_process_script(cluster_name, current_run_dir):
     reference_file = tophat_option_dict['identification']['reference_file']
     annotation_file = tophat_option_dict['identification']['annotation_file']
     read_dataset_id = tophat_option_dict['identification']['read_dataset_id']
+    index_building = tophat_option_dict['TopHat parameters']['index_building']
+    large_index = tophat_option_dict['TopHat parameters']['large_index']
     threads = tophat_option_dict['TopHat parameters']['threads']
     read_mismatches = tophat_option_dict['TopHat parameters']['read_mismatches']
     read_gap_length = tophat_option_dict['TopHat parameters']['read_gap_length']
     read_edit_dist = tophat_option_dict['TopHat parameters']['read_edit_dist']
     library_type = tophat_option_dict['TopHat parameters']['library_type']
     other_parameters = tophat_option_dict['TopHat parameters']['other_parameters']
-    format = tophat_option_dict['library']['format'].upper()
+    # -- format = tophat_option_dict['library']['format'].upper()
     read_type = tophat_option_dict['library']['read_type']
+    library_concatenation = tophat_option_dict['library']['library_concatenation']
 
     # get the sections list
     sections_list = []
@@ -526,22 +560,23 @@ def build_tophat_process_script(cluster_name, current_run_dir):
         sections_list.append(section)
     sections_list.sort()
 
-    # build library files
-    files1 = ''
-    files2 = ''
+    # build read file lists
+    read_file_1_list = []
+    read_file_2_list = []
     for section in sections_list:
         # if the section identification is like library-n
         if re.match('^library-[0-9]+$', section):
             read_file_1 = tophat_option_dict[section]['read_file_1']
             read_file_1 = xlib.get_cluster_read_file(experiment_id, read_dataset_id, read_file_1)
-            files1 += read_file_1 + ','
+            read_file_1_list.append(read_file_1)
             if read_type.upper() == 'PE':
                 read_file_2 = tophat_option_dict[section]['read_file_2']
                 read_file_2 = xlib.get_cluster_read_file(experiment_id, read_dataset_id, read_file_2)
-                files2 += read_file_2 + ','
-    files1 = files1[:len(files1) - 1]
-    if read_type.upper() == 'PE':
-        files2 = files2[:len(files2) - 1]
+                read_file_2_list.append(read_file_2)
+    if library_concatenation.upper() == 'YES':
+        read_file_1_list = [",".join(read_file_1_list)]
+        if read_type.upper() == 'PE':
+            read_file_2_list = [",".join(read_file_2_list)]
 
     # set the reference file path
     reference_file = xlib.get_cluster_reference_file(reference_dataset_id, reference_file)
@@ -550,9 +585,10 @@ def build_tophat_process_script(cluster_name, current_run_dir):
     annotation_file = xlib.get_cluster_reference_file(reference_dataset_id, annotation_file)
 
     # set the Bowtie2 index dir and index base
-    (reference_file_name, reference_file_extension) = os.path.splitext(reference_file)
-    bowtie2_index_dir = '{0}_bowtie2_indexes'.format(reference_file_name)
-    bowtie2_index_base = '{0}/{1}'.format(bowtie2_index_dir, os.path.basename(reference_file_name))
+    (reference_file_name, _) = os.path.splitext(reference_file)
+    bowtie2_index_dir = f'{reference_file_name}_tophat_indexes'
+    bowtie2_index_base = f'{bowtie2_index_dir}/{os.path.basename(reference_file_name)}'
+
 
     # write the TopHat process script
     try:
@@ -567,11 +603,8 @@ def build_tophat_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
             script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('TOPHAT_PATH={0}/{1}/envs/{2}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name(), xlib.get_tophat_anaconda_code())))
-            script_file_id.write( '{0}\n'.format('TRINITY_PATH={0}/{1}/envs/{2}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name(), xlib.get_trinity_anaconda_code())))
-            script_file_id.write( '{0}\n'.format('PATH=$TOPHAT_PATH:$TRINITY_PATH:$PATH'))
-            script_file_id.write( '{0}\n'.format('cd {0}/{1}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name())))
-            script_file_id.write( '{0}\n'.format('source activate {0}'.format(xlib.get_tophat_anaconda_code())))
+            script_file_id.write(f'MINICONDA3_BIN_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
+            script_file_id.write(f'export PATH=$MINICONDA3_BIN_PATH:$PATH\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
             script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -579,6 +612,8 @@ def build_tophat_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'mkdir --parents $STATUS_DIR\n')
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write(f'CURRENT_DIR={current_run_dir}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function init\n')
             script_file_id.write( '{\n')
@@ -593,60 +628,136 @@ def build_tophat_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function create_bowtie2_indexes'))
+            script_file_id.write( 'function print_tophat_version\n')
             script_file_id.write( '{\n')
-            script_file_id.write(f'    cd {current_run_dir}\n')
+            script_file_id.write(f'    source activate {xlib.get_tophat_anaconda_code()}\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "Creating Bowtie2 indexes ..."'))
-            script_file_id.write( '{0}\n'.format('    rm -rf {0}'.format(bowtie2_index_dir)))
-            script_file_id.write( '{0}\n'.format('    mkdir --parents {0}'.format(bowtie2_index_dir)))
-            script_file_id.write( '    /usr/bin/time \\\n')
-            script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-            script_file_id.write( '{0}\n'.format('        bowtie2-build \\'))
-            script_file_id.write( '{0}\n'.format('            {0} \\'.format(reference_file)))
-            script_file_id.write( '{0}\n'.format('            {0}'.format(bowtie2_index_base)))
-            script_file_id.write( '    RC=$?\n')
-            script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error bowtie2 $RC; fi'))
+            script_file_id.write( '    tophat --version\n')
+            script_file_id.write( '    conda deactivate\n')
+            script_file_id.write( '}\n')
+            if index_building.upper() == 'YES':
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                script_file_id.write( 'function create_bowtie2_indexes\n')
+                script_file_id.write( '{\n')
+                script_file_id.write(f'    source activate {xlib.get_tophat_anaconda_code()}\n')
+                script_file_id.write( '    cd $CURRENT_DIR\n')
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    echo "Creating indexes ..."\n')
+                script_file_id.write(f'    rm -rf {bowtie2_index_dir}\n')
+                script_file_id.write(f'    mkdir --parents {bowtie2_index_dir}\n')
+                script_file_id.write( '    /usr/bin/time \\\n')
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        bowtie2-build \\\n')
+                if large_index.upper() == 'YES':
+                    script_file_id.write( '            --large-index \\\n')
+                script_file_id.write( '            -f \\\n')
+                script_file_id.write(f'            {reference_file} \\\n')
+                script_file_id.write(f'            {bowtie2_index_base}\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error bowtie2 $RC; fi\n')
+                script_file_id.write( '    echo "Indexes are built."\n')
+                script_file_id.write( '    conda deactivate\n')
+                script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write( 'function run_tophat_process\n')
+            script_file_id.write( '{\n')
+            script_file_id.write(f'    source activate {xlib.get_tophat_anaconda_code()}\n')
+            script_file_id.write( '    cd $CURRENT_DIR\n')
+            for i in range(len(read_file_1_list)):
+                # set file names for the library
+                if library_concatenation.upper() == 'YES':
+                    library_name = 'concatenated_libraries'
+                else:
+                    if read_file_1.endswith('.gz'):
+                        (library_name, _) = os.path.splitext(os.path.basename(read_file_1_list[i][:-3]))
+                    else:
+                        (library_name, _) = os.path.splitext(os.path.basename(read_file_1_list[i]))
+                # write the instructions for the library
+                script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write(f'    echo "Mapping reads of {library_name} ..."\n')
+                script_file_id.write( '    /usr/bin/time \\\n')
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        tophat \\\n')
+                script_file_id.write(f'            --num-threads {threads} \\\n')
+                script_file_id.write(f'            --read-mismatches {read_mismatches} \\\n')
+                script_file_id.write(f'            --read-gap-length {read_gap_length} \\\n')
+                script_file_id.write(f'            --read-edit-dist {read_edit_dist} \\\n')
+                script_file_id.write(f'            --library-type {library_type.lower()} \\\n')
+                script_file_id.write(f'            --GTF {annotation_file} \\\n')
+                if other_parameters.upper() != 'NONE':
+                    parameter_list = [x.strip() for x in other_parameters.split(';')]
+                    for parameter in parameter_list:
+                        if parameter.find('=') > 0:
+                            pattern = r'^--(.+)=(.+)$'
+                            mo = re.search(pattern, parameter)
+                            parameter_name = mo.group(1).strip()
+                            parameter_value = mo.group(2).strip()
+                            script_file_id.write(f'            --{parameter_name} {parameter_value} \\\n')
+                        else:
+                            pattern = r'^--(.+)$'
+                            mo = re.search(pattern, parameter)
+                            parameter_name = mo.group(1).strip()
+                            script_file_id.write(f'            --{parameter_name} \\\n')
+                script_file_id.write(f'            --output-dir {current_run_dir} \\\n')
+                script_file_id.write(f'            {bowtie2_index_base} \\\n')
+                if read_type.upper() == 'PE':
+                    script_file_id.write(f'            {read_file_1_list[i]} \\\n')
+                    script_file_id.write(f'            {read_file_2_list[i]} \\\n')
+                else:
+                    script_file_id.write(f'            {read_file_1_list[i]} \\\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error tophat $RC; fi\n')
+                script_file_id.write(f'    mv -f logs {library_name}-logs\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error mv $RC; fi\n')
+                script_file_id.write(f'    mv -f accepted_hits.bam {library_name}-accepted_hits.bam\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error mv $RC; fi\n')
+                script_file_id.write(f'    mv -f align_summary.txt {library_name}-align_summary.txt\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error mv $RC; fi\n')
+                script_file_id.write(f'    mv -f deletions.bed {library_name}-deletions.bed\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error mv $RC; fi\n')
+                script_file_id.write(f'    mv -f insertions.bed {library_name}-insertions.bed\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error mv $RC; fi\n')
+                script_file_id.write(f'    mv -f junctions.bed {library_name}-junctions.bed\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error mv $RC; fi\n')
+                script_file_id.write(f'    mv -f prep_reads.info {library_name}-prep_reads.info\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error mv $RC; fi\n')
+                script_file_id.write(f'    mv -f unmapped.bam {library_name}-unmapped.bam\n')
+                script_file_id.write( '    RC=$?\n')
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error mv $RC; fi\n')
+                script_file_id.write( '    echo "Reads are mapped."\n')
+            script_file_id.write( '    conda deactivate\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function run_tophat_process'))
+            script_file_id.write( 'function sort_and_index_bam_files\n')
             script_file_id.write( '{\n')
-            script_file_id.write(f'    cd {current_run_dir}\n')
+            script_file_id.write( '    cd $CURRENT_DIR\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    tophat --version'))
-            script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '    /usr/bin/time \\\n')
-            script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-            script_file_id.write( '{0}\n'.format('        tophat \\'))
-            script_file_id.write( '{0}\n'.format('            --num-threads {0} \\'.format(threads)))
-            script_file_id.write( '{0}\n'.format('            --read-mismatches {0} \\'.format(read_mismatches)))
-            script_file_id.write( '{0}\n'.format('            --read-gap-length {0} \\'.format(read_gap_length)))
-            script_file_id.write( '{0}\n'.format('            --read-edit-dist {0} \\'.format(read_edit_dist)))
-            script_file_id.write( '{0}\n'.format('            --library-type {0} \\'.format(library_type)))
-            script_file_id.write( '{0}\n'.format('            --GTF {0} \\'.format(annotation_file)))
-            if other_parameters.upper() != 'NONE':
-                parameter_list = [x.strip() for x in other_parameters.split(';')]
-                for parameter in parameter_list:
-                    if parameter.find('=') > 0:
-                        pattern = r'^--(.+)=(.+)$'
-                        mo = re.search(pattern, parameter)
-                        parameter_name = mo.group(1).strip()
-                        parameter_value = mo.group(2).strip()
-                        script_file_id.write(f'            --{parameter_name} {parameter_value} \\\n')
-                    else:
-                        pattern = r'^--(.+)$'
-                        mo = re.search(pattern, parameter)
-                        parameter_name = mo.group(1).strip()
-                        script_file_id.write(f'            --{parameter_name} \\\n')
-            script_file_id.write( '{0}\n'.format('            --output-dir {0} \\'.format(current_run_dir)))
-            script_file_id.write( '{0}\n'.format('            {0} \\'.format(bowtie2_index_base)))
-            if read_type.upper() == 'PE':
-                script_file_id.write( '{0}\n'.format('            {0} \\'.format(files1)))
-                script_file_id.write( '{0}\n'.format('            {0}'.format(files2)))
-            else:
-                script_file_id.write( '{0}\n'.format('            {0}'.format(files1)))
-            script_file_id.write( '    RC=$?\n')
-            script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error tophat $RC; fi'))
+            script_file_id.write(f'    source activate {xlib.get_samtools_anaconda_code()}\n')
+            script_file_id.write( '    ls *.bam > bam-files.txt\n')
+            script_file_id.write( '    while read FILE_BAM; do\n')
+            script_file_id.write( '        FILE_SORTED_BAM=`basename $FILE_BAM | sed "s|.bam|.sorted.bam|g"`\n')
+            script_file_id.write( '        echo "Sorting and indexing $FILE_BAM ..."\n')
+            script_file_id.write(f'        samtools sort --threads {threads} $FILE_BAM -o $FILE_SORTED_BAM\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error samtools-sort $RC; fi\n')
+            script_file_id.write(f'        samtools index -@ {threads} $FILE_SORTED_BAM\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error samtools-index $RC; fi\n')
+            script_file_id.write( '        echo "$FILE_SORTED_BAM is created."\n')
+            script_file_id.write( '        echo "Compressing $FILE_BAM ..."\n')
+            script_file_id.write( '        gzip $FILE_BAM\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error gzip $RC; fi\n')
+            script_file_id.write( '        echo "$FILE_BAM is compressed."\n')
+            script_file_id.write( '    done < bam-files.txt\n')
+            script_file_id.write( '    conda deactivate\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function end\n')
@@ -721,12 +832,15 @@ def build_tophat_process_script(cluster_name, current_run_dir):
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
-            script_file_id.write( '{0}\n'.format('create_bowtie2_indexes'))
-            script_file_id.write( '{0}\n'.format('run_tophat_process'))
+            script_file_id.write( 'print_tophat_version\n')
+            if index_building.upper() == 'YES':
+                script_file_id.write( 'create_bowtie2_indexes\n')
+            script_file_id.write( 'run_tophat_process\n')
+            script_file_id.write( 'sort_and_index_bam_files\n')
             script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_tophat_process_script()))
+        error_list.append(f'*** ERROR: The file {get_tophat_process_script()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -750,10 +864,10 @@ def build_tophat_process_starter(current_run_dir):
         with open(get_tophat_process_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_tophat_process_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_tophat_process_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_tophat_process_starter()))
+        error_list.append(f'*** ERROR: The file {get_tophat_process_starter()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -767,7 +881,7 @@ def get_tophat_config_file():
     '''
 
     # assign the TopHat config file path
-    tophat_config_file = '{0}/{1}-config.txt'.format(xlib.get_config_dir(), xlib.get_tophat_code())
+    tophat_config_file = f'{xlib.get_config_dir()}/{xlib.get_tophat_code()}-config.txt'
 
     # return the TopHat config file path
     return tophat_config_file
@@ -780,7 +894,7 @@ def get_tophat_process_script():
     '''
 
     # assign the TopHat script path
-    tophat_process_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_tophat_code())
+    tophat_process_script = f'{xlib.get_temp_dir()}/{xlib.get_tophat_code()}-process.sh'
 
     # return the TopHat script path
     return tophat_process_script
@@ -793,10 +907,46 @@ def get_tophat_process_starter():
     '''
 
     # assign the TopHat process starter path
-    tophat_process_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_tophat_code())
+    tophat_process_starter = f'{xlib.get_temp_dir()}/{xlib.get_tophat_code()}-process-starter.sh'
 
     # return the TopHat starter path
     return tophat_process_starter
+
+#-------------------------------------------------------------------------------
+
+def get_index_building_code_list():
+    '''
+    Get the code list of "index_building".
+    '''
+
+    return ['YES', 'NO']
+
+#-------------------------------------------------------------------------------
+
+def get_index_building_code_list_text():
+    '''
+    Get the code list of "index_building" as text.
+    '''
+
+    return 'YES (built indexes) or NO (old indexes will be used)'
+
+#-------------------------------------------------------------------------------
+
+def get_large_index_code_list():
+    '''
+    Get the code list of "large_index".
+    '''
+
+    return ['YES', 'NO']
+
+#-------------------------------------------------------------------------------
+
+def get_large_index_code_list_text():
+    '''
+    Get the code list of "large_index" as text.
+    '''
+
+    return str(get_large_index_code_list()).strip('[]').replace('\'','').replace(',', ' or')
 
 #-------------------------------------------------------------------------------
     
@@ -851,6 +1001,24 @@ def get_read_type_code_list_text():
     '''
 
     return 'SE (single-end) or PE (pair-end)'
+
+#-------------------------------------------------------------------------------
+
+def get_library_concatenation_code_list():
+    '''
+    Get the code list of "library_concatenation".
+    '''
+
+    return ['YES', 'NO']
+
+#-------------------------------------------------------------------------------
+
+def get_library_concatenation_code_list_text():
+    '''
+    Get the code list of "library_concatenation" as text.
+    '''
+
+    return 'YES (map concatanated libraries) or NO (map each library separately)'
 
 #-------------------------------------------------------------------------------
 

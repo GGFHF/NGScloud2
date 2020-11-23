@@ -61,7 +61,7 @@ def get_project_version():
     Get the project name.
     '''
 
-    return '2.09'
+    return '2.10'
 
 #-------------------------------------------------------------------------------
     
@@ -465,6 +465,24 @@ def get_cufflinks_cuffmerge_name():
     '''
 
     return 'Cufflinks-Cuffmerge'
+
+#-------------------------------------------------------------------------------
+
+def get_cuffnorm_code():
+    '''
+    Get the Cuffnorm (Cufflinks package) code used to identify its processes.
+    '''
+
+    return 'cuffnorm'
+
+#-------------------------------------------------------------------------------
+
+def get_cuffnorm_name():
+    '''
+    Get the Cuffnorm (Cufflinks package) name used to title.
+    '''
+
+    return 'Cuffnorm'
 
 #-------------------------------------------------------------------------------
 
@@ -2750,6 +2768,7 @@ def get_submission_process_dict():
     submission_process_dict['run_cd_hit_est_process']= {'text': 'Run {0} process'.format(get_cd_hit_est_name())}
     submission_process_dict['run_cuffdiff_process']= {'text': 'Run {0} process'.format(get_cuffdiff_name())}
     submission_process_dict['run_cufflinks_cuffmerge_process']= {'text': 'Run {0} process'.format(get_cufflinks_cuffmerge_name())}
+    submission_process_dict['run_cuffnorm_process']= {'text': 'Run {0} process'.format(get_cuffnorm_name())}
     submission_process_dict['run_cuffquant_process']= {'text': 'Run {0} process'.format(get_cuffquant_name())}
     submission_process_dict['run_ddradseq_simulation_process']= {'text': 'Run ddRADseq simulation process'}
     submission_process_dict['run_entrez_direct_process']= {'text': 'Run {0} process'.format(get_entrez_direct_name())}
@@ -3631,7 +3650,7 @@ def check_parameter_list(parameters, key, not_allowed_parameters_list):
                 pattern = r'^--(.+)=(.+)$'
                 mo = re.search(pattern, parameter)
                 parameter_name = mo.group(1).strip()
-                parameter_value = mo.group(2).strip()
+                # -- parameter_value = mo.group(2).strip()
             else:
                 pattern = r'^--(.+)$'
                 mo = re.search(pattern, parameter)
@@ -3954,7 +3973,7 @@ def get_mail_message_wrong(process_name, cluster_name):
     '''
 
     # build the message
-    message = f'The {process_name} process ended WRONG in node $HOST_ADDRESS of cluster {cluster_name} ' + \
+    message = f'The {process_name} process ended *** WRONG *** in node $HOST_ADDRESS of cluster {cluster_name} ' + \
                'at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION). ' + \
                'Please review its log.<br/>' + \
                '<br/>' + \

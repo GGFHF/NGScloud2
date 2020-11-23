@@ -1,4 +1,16 @@
-CURRENT VERSION: 2.09
+CURRENT VERSION: 2.10
+
+********************************************************************************
+
+Changes in v2.10 (November 2020)
+
+* *De novo* RNAseq improvements: GSNAP is added in the read alignment step.
+
+* Reference-based RNAseq improvements: Cuffnorm is added in the differential expression step.
+
+* Multi-library management is improved in the Bowtie2, GSNAP, HISAT2, STAR and TopHat processes.
+
+* Optimization of several code fragments.
 
 ********************************************************************************
 

@@ -53,36 +53,36 @@ def create_trimmomatic_config_file(experiment_id='exp001', read_dataset_id=xlib.
         with open(get_trimmomatic_config_file(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '# You must review the information of this file and update the values with the corresponding ones to the current run.\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# The files have to be located in the cluster directory {0}/experiment_id/read_dataset_id'.format(xlib.get_cluster_read_dir())))
-            file_id.write( '{0}\n'.format('# The experiment_id and read_dataset_id names are fixed in the identification section.'))
+            file_id.write(f'# The files have to be located in the cluster directory {xlib.get_cluster_read_dir()}/experiment_id/read_dataset_id\n')
+            file_id.write( '# The experiment_id and read_dataset_id names are fixed in the identification section.\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# You can consult the parameters and trimming sets of Trimmomatic and their meaning in "http://www.usadellab.org/cms/index.php?page=trimmomatic".'))
+            file_id.write( '# You can consult the parameters and trimming sets of Trimmomatic and their meaning in "http://www.usadellab.org/cms/index.php?page=trimmomatic".\n')
             file_id.write( '\n')
             file_id.write( '# This section has the information identifies the experiment.\n')
             file_id.write( '[identification]\n')
             file_id.write( '{0:<50} {1}\n'.format(f'experiment_id = {experiment_id}', '# experiment identification'))
             file_id.write( '{0:<50} {1}\n'.format(f'read_dataset_id = {read_dataset_id}', '# read dataset identification'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information to set the Trimmomatic parameters.'))
-            file_id.write( '{0}\n'.format('[Trimmomatic parameters]'))
-            file_id.write( '{0:<50} {1}\n'.format('threads = 4', '# number of threads for use'))
-            file_id.write( '{0:<50} {1}\n'.format('phred = 64', '# Phred quality score: {0}'.format(get_phred_code_list_text())))
+            file_id.write( '# This section has the information to set the Trimmomatic parameters.\n')
+            file_id.write( '[Trimmomatic parameters]\n')
+            file_id.write( '{0:<50} {1}\n'.format( 'threads = 4', '# number of threads for use'))
+            file_id.write( '{0:<50} {1}\n'.format( 'phred = 64', f'# Phred quality score: {get_phred_code_list_text()}'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information to set the trimming step values'))
-            file_id.write( '{0}\n'.format('[Trimming step values]'))
-            file_id.write( '{0:<50} {1}\n'.format('illuminaclip = NONE', '# cutting of adapter and other illumina-specific sequences: $TRIMMOMATIC_PATH/adapters/fastaWithAdaptersEtc:seedMismatches:palindromeClipThreshold:simpleClipThreshold or NONE (do not perform this step'))
-            file_id.write( '{0:<50} {1}\n'.format('slidingwindow = NONE', '# sliding window trimming approach: windowSize:requiredQuality or NONE (do not perform this step)'))
-            file_id.write( '{0:<50} {1}\n'.format('leading = NONE', '# threshold quality to cut bases off the start of a read (if below) or NONE (do not perform this step)'))
-            file_id.write( '{0:<50} {1}\n'.format('trailing = NONE', '# threshold quality to cut bases off the end of a read (if below) or NONE (do not perform this step)'))
-            file_id.write( '{0:<50} {1}\n'.format('crop = NONE', '# length to cut the read removing bases from the end  or NONE (do not perform this step)'))
-            file_id.write( '{0:<50} {1}\n'.format('headcrop = 12', '# length to cut from the start of the read or NONE (do not perform this step)'))
-            file_id.write( '{0:<50} {1}\n'.format('minlen = NONE', '# length to drop the read if it is below or NONE (do not perform this step)'))
-            file_id.write( '{0:<50} {1}\n'.format('tophred33 = FALSE', '# convert quality scores to Phred-33: {0}'.format(get_tophredxx_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('tophred64 = FALSE', '# convert quality scores to Phred-64 : {0}'.format(get_tophredxx_code_list_text())))
+            file_id.write( '# This section has the information to set the trimming step values\n')
+            file_id.write( '[Trimming step values]\n')
+            file_id.write( '{0:<50} {1}\n'.format( 'illuminaclip = NONE', '# cutting of adapter and other illumina-specific sequences: $TRIMMOMATIC_PATH/adapters/fastaWithAdaptersEtc:seedMismatches:palindromeClipThreshold:simpleClipThreshold or NONE (do not perform this step'))
+            file_id.write( '{0:<50} {1}\n'.format( 'slidingwindow = NONE', '# sliding window trimming approach: windowSize:requiredQuality or NONE (do not perform this step)'))
+            file_id.write( '{0:<50} {1}\n'.format( 'leading = NONE', '# threshold quality to cut bases off the start of a read (if below) or NONE (do not perform this step)'))
+            file_id.write( '{0:<50} {1}\n'.format( 'trailing = NONE', '# threshold quality to cut bases off the end of a read (if below) or NONE (do not perform this step)'))
+            file_id.write( '{0:<50} {1}\n'.format( 'crop = NONE', '# length to cut the read removing bases from the end  or NONE (do not perform this step)'))
+            file_id.write( '{0:<50} {1}\n'.format( 'headcrop = 12', '# length to cut from the start of the read or NONE (do not perform this step)'))
+            file_id.write( '{0:<50} {1}\n'.format( 'minlen = NONE', '# length to drop the read if it is below or NONE (do not perform this step)'))
+            file_id.write( '{0:<50} {1}\n'.format( 'tophred33 = FALSE', f'# convert quality scores to Phred-33: {get_tophredxx_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format( 'tophred64 = FALSE', f'# convert quality scores to Phred-64 : {get_tophredxx_code_list_text()}'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information to set the performarce order of every step with value'))
-            file_id.write( '{0}\n'.format('[Trimming step order]'))
-            file_id.write( '{0:<50} {1}\n'.format('order = headcrop', '# if there are more than one step, they have to be separated by commas'))
+            file_id.write( '# This section has the information to set the performarce order of every step with value\n')
+            file_id.write( '[Trimming step order]\n')
+            file_id.write( '{0:<50} {1}\n'.format( 'order = headcrop', '# if there are more than one step, they have to be separated by commas'))
             file_id.write( '\n')
             file_id.write( '# This section has the global information of all libraries.\n')
             file_id.write( '[library]\n')
@@ -103,7 +103,7 @@ def create_trimmomatic_config_file(experiment_id='exp001', read_dataset_id=xlib.
                     file_id.write( '# The section identification has to be library-n (n is an integer not repeated)\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be recreated'.format(get_trimmomatic_config_file()))
+        error_list.append(f'*** ERROR: The file {get_trimmomatic_config_file()} can not be recreated')
         OK = False
 
     # return the control variable and the error list
@@ -131,7 +131,7 @@ def run_trimmomatic_process(cluster_name, log, function=None):
 
     # check the Trimmomatic config file
     log.write(f'{xlib.get_separator()}\n')
-    log.write('Checking the {0} config file ...\n'.format(xlib.get_trimmomatic_name()))
+    log.write(f'Checking the {xlib.get_trimmomatic_name()} config file ...\n')
     (OK, error_list) = check_trimmomatic_config_file(strict=True)
     if OK:
         log.write('The file is OK.\n')
@@ -185,10 +185,10 @@ def run_trimmomatic_process(cluster_name, log, function=None):
         (OK, error_list, is_installed) = xbioinfoapp.is_installed_anaconda_package(xlib.get_trimmomatic_anaconda_code(), cluster_name, True, ssh_client)
         if OK:
             if not is_installed:
-                log.write('*** ERROR: {0} is not installed.\n'.format(xlib.get_trimmomatic_name()))
+                log.write(f'*** ERROR: {xlib.get_trimmomatic_name()} is not installed.\n')
                 OK = False
         else:
-            log.write('*** ERROR: The verification of {0} installation could not be performed.\n'.format(xlib.get_trimmomatic_name()))
+            log.write(f'*** ERROR: The verification of {xlib.get_trimmomatic_name()} installation could not be performed.\n')
 
     # warn that the requirements are OK 
     if OK:
@@ -209,7 +209,7 @@ def run_trimmomatic_process(cluster_name, log, function=None):
     # build the Trimmomatic process script
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process script {0} ...\n'.format(get_trimmomatic_process_script()))
+        log.write(f'Building the process script {get_trimmomatic_process_script()} ...\n')
         (OK, error_list) = build_trimmomatic_process_script(cluster_name, current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -219,8 +219,8 @@ def run_trimmomatic_process(cluster_name, log, function=None):
     # upload the Trimmomatic process script to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process script {0} to the directory {1} ...\n'.format(get_trimmomatic_process_script(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_trimmomatic_process_script()))
+        log.write(f'Uploading the process script {get_trimmomatic_process_script()} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_trimmomatic_process_script())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_trimmomatic_process_script(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -231,8 +231,8 @@ def run_trimmomatic_process(cluster_name, log, function=None):
     # set run permision to the Trimmomatic process script in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_trimmomatic_process_script())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_trimmomatic_process_script()))
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_trimmomatic_process_script())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_trimmomatic_process_script())}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
@@ -242,7 +242,7 @@ def run_trimmomatic_process(cluster_name, log, function=None):
     # build the Trimmomatic process starter
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process starter {0} ...\n'.format(get_trimmomatic_process_starter()))
+        log.write(f'Building the process starter {get_trimmomatic_process_starter()} ...\n')
         (OK, error_list) = build_trimmomatic_process_starter(current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -252,8 +252,8 @@ def run_trimmomatic_process(cluster_name, log, function=None):
     # upload the Trimmomatic process starter to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process starter {0} to the directory {1} ...\n'.format(get_trimmomatic_process_starter(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_trimmomatic_process_starter()))
+        log.write(f'Uploading the process starter {get_trimmomatic_process_starter()} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_trimmomatic_process_starter())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_trimmomatic_process_starter(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -264,8 +264,8 @@ def run_trimmomatic_process(cluster_name, log, function=None):
     # set run permision to the Trimmomatic process starter in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_trimmomatic_process_starter())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_trimmomatic_process_starter()))
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_trimmomatic_process_starter())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_trimmomatic_process_starter())}'
         (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
@@ -275,7 +275,7 @@ def run_trimmomatic_process(cluster_name, log, function=None):
     # submit the Trimmomatic process
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Submitting the process script {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_trimmomatic_process_starter())))
+        log.write(f'Submitting the process script {current_run_dir}/{os.path.basename(get_trimmomatic_process_starter())} ...\n')
         OK = xssh.submit_script(cluster_name, ssh_client, current_run_dir, os.path.basename(get_trimmomatic_process_starter()), log)
 
     # close the SSH transport connection
@@ -372,7 +372,7 @@ def check_trimmomatic_config_file(strict):
                 error_list.append('*** ERROR: the key "phred" is not found in the section "Trimmomatic parameters".')
                 OK = False
             elif not xlib.check_code(phred, get_phred_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "phred" has to be {0}.'.format(get_phred_code_list_text()))
+                error_list.append(f'*** ERROR: the key "phred" has to be {get_phred_code_list_text()}.')
                 OK = False
 
         # check section "Trimming step values"
@@ -481,7 +481,7 @@ def check_trimmomatic_config_file(strict):
                 error_list.append('*** ERROR: the key "tophred33" is not found in the section "Trimming step values".')
                 OK = False
             elif not xlib.check_code(tophred33, get_tophredxx_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "tophred33" has to be {0}.'.format(get_tophredxx_code_list_text()))
+                error_list.append(f'*** ERROR: the key "tophred33" has to be {get_tophredxx_code_list_text()}.')
                 OK = False
             elif tophred33.upper() == 'TRUE':
                 selected_step_list.append('tophred33')
@@ -492,7 +492,7 @@ def check_trimmomatic_config_file(strict):
                 error_list.append('*** ERROR: the key "tophred64" is not found in the section "Trimming step values".')
                 OK = False
             elif not xlib.check_code(tophred64, get_tophredxx_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "tophred64" has to be {0}.'.format(get_tophredxx_code_list_text()))
+                error_list.append(f'*** ERROR: the key "tophred64" has to be {get_tophredxx_code_list_text()}.')
                 OK = False
             elif tophred64.upper() == 'TRUE':
                 selected_step_list.append('tophred64')
@@ -527,14 +527,14 @@ def check_trimmomatic_config_file(strict):
                     for ordered_step in ordered_step_list:
                         value = trimmomatic_option_dict.get('Trimming step values', {}).get(ordered_step, not_found)
                         if value == not_found:
-                            error_list.append('*** ERROR: the step {0} in the section "Trimming step order" is a invalid step.'.format(ordered_step))
+                            error_list.append(f'*** ERROR: the step {ordered_step} in the section "Trimming step order" is a invalid step.')
                             OK = False
                         elif value.upper() in ['NONE', 'FALSE']:
-                            error_list.append('*** ERROR: the step {0} is in section "Trimming step order" but it does not have value in the section "Trimming step values".'.format(ordered_step))
+                            error_list.append(f'*** ERROR: the step {ordered_step} is in section "Trimming step order" but it does not have value in the section "Trimming step values".')
                             OK = False
                     for selected_step in selected_step_list:
                         if selected_step not in ordered_step_list:
-                            error_list.append('*** ERROR: the step {0} in the section "Trimming step values" has value but it is not in in section "Trimming step order".'.format(selected_step))
+                            error_list.append('*** ERROR: the step {selected_step} in the section "Trimming step values" has value but it is not in in section "Trimming step order".')
                             OK = False
 
         # check section "library"
@@ -583,7 +583,7 @@ def check_trimmomatic_config_file(strict):
 
     # warn that the results config file is not valid if there are any errors
     if not OK:
-        error_list.append('\nThe {0} config file is not valid. Please, correct this file or recreate it.'.format(xlib.get_trimmomatic_name()))
+        error_list.append(f'\nThe {xlib.get_trimmomatic_name()} config file is not valid. Please, correct this file or recreate it.')
 
     # return the control variable and the error list
     return (OK, error_list)
@@ -605,7 +605,7 @@ def build_trimmomatic_process_script(cluster_name, current_run_dir):
     # get the options
     experiment_id = trimmomatic_option_dict['identification']['experiment_id']
     read_dataset_id = trimmomatic_option_dict['identification']['read_dataset_id']
-    read_type = trimmomatic_option_dict['library']['read_type'].upper()
+    read_type = trimmomatic_option_dict['library']['read_type']
     threads = trimmomatic_option_dict['Trimmomatic parameters']['threads']
     phred = trimmomatic_option_dict['Trimmomatic parameters']['phred']
 
@@ -629,9 +629,9 @@ def build_trimmomatic_process_script(cluster_name, current_run_dir):
     for ordered_step in ordered_step_list:
         step_value = step_dict[ordered_step]
         if ordered_step not in ['tophred33', 'tophred64']:
-            selected_steps += '{0}:{1} '.format(ordered_step.upper(), step_value)
+            selected_steps += f'{ordered_step.upper()}:{step_value} '
         else:
-            selected_steps += '{0} '.format(ordered_step.upper())
+            selected_steps += f'{ordered_step.upper()} '
 
     # get the sections list
     sections_list = []
@@ -670,10 +670,10 @@ def build_trimmomatic_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
             script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('TRIMMOMATIC_PATH={0}/{1}/envs/{2}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name(), xlib.get_trimmomatic_anaconda_code())))
-            script_file_id.write( '{0}\n'.format('PATH=$TRIMMOMATIC_PATH:$PATH'))
-            script_file_id.write( '{0}\n'.format('cd {0}/{1}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name())))
-            script_file_id.write( '{0}\n'.format('source activate {0}'.format(xlib.get_trimmomatic_anaconda_code())))
+            script_file_id.write(f'TRIMMOMATIC_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/envs/{xlib.get_trimmomatic_anaconda_code()}/bin\n')
+            script_file_id.write( 'PATH=$TRIMMOMATIC_PATH:$PATH\n')
+            script_file_id.write(f'cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
+            script_file_id.write(f'source activate {xlib.get_trimmomatic_anaconda_code()}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
             script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -695,44 +695,45 @@ def build_trimmomatic_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function run_trimmomatic_process'))
+            script_file_id.write( 'function run_trimmomatic_process\n')
             script_file_id.write( '{\n')
-            script_file_id.write( '{0}\n'.format('    mkdir --parents {0}'.format(output_read_dir)))
+            script_file_id.write(f'    mkdir --parents {output_read_dir}\n')
             script_file_id.write(f'    cd {current_run_dir}\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('     echo "Trimmomatic v`trimmomatic -version`"'))
+            script_file_id.write( '    echo "Trimmomatic v`trimmomatic -version`"\n')
             for i in range(len(read_file_1_list)):
                 # get the unpaired read file names
                 if read_file_1_list[i].endswith('.gz'):
-                    unpaired_read_file_1 = '{0}.unpaired.gz'.format(read_file_1_list[i][:-3])
+                    unpaired_read_file_1 = f'{read_file_1_list[i][:-3]}.unpaired.gz'
                 else:
-                    unpaired_read_file_1 = '{0}.unpaired'.format(read_file_1_list[i])
-                if read_file_2_list[i].endswith('.gz'):
-                    unpaired_read_file_2 = '{0}.unpaired.gz'.format(read_file_2_list[i][:-3])
-                else:
-                    unpaired_read_file_2 = '{0}.unpaired'.format(read_file_2_list[i])
+                    unpaired_read_file_1 = f'{read_file_1_list[i]}.unpaired'
+                if read_type.upper() == 'PE':
+                    if read_file_2_list[i].endswith('.gz'):
+                        unpaired_read_file_2 = f'{read_file_2_list[i][:-3]}.unpaired.gz'
+                    else:
+                        unpaired_read_file_2 = f'{read_file_2_list[i]}.unpaired'
                 # write the trimmomatic run instructions
                 script_file_id.write( '    echo "$SEP"\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
                 script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        trimmomatic \\'))
-                script_file_id.write( '{0}\n'.format('            {0} \\'.format(read_type)))
-                script_file_id.write( '{0}\n'.format('            -threads {0} \\'.format(threads)))
-                script_file_id.write( '{0}\n'.format('            -phred{0} \\'.format(phred)))
-                script_file_id.write( '{0}\n'.format('            -trimlog {0}.log \\'.format(read_file_1_list[i])))
+                script_file_id.write( '        trimmomatic \\\n')
+                script_file_id.write(f'            {read_type} \\\n')
+                script_file_id.write(f'            -threads {threads} \\\n')
+                script_file_id.write(f'            -phred{phred} \\\n')
+                script_file_id.write(f'            -trimlog {read_file_1_list[i]}.log \\\n')
                 if read_type == 'SE':
-                    script_file_id.write( '{0}\n'.format('            {0}/{1} \\'.format(input_read_dir, read_file_1_list[i])))
-                    script_file_id.write( '{0}\n'.format('            {0}/{1} \\'.format(output_read_dir, read_file_1_list[i])))
+                    script_file_id.write(f'            {input_read_dir}/{read_file_1_list[i]} \\\n')
+                    script_file_id.write(f'            {output_read_dir}/{read_file_1_list[i]} \\\n')
                 elif read_type == 'PE':
-                    script_file_id.write( '{0}\n'.format('            {0}/{1} \\'.format(input_read_dir, read_file_1_list[i])))
-                    script_file_id.write( '{0}\n'.format('            {0}/{1} \\'.format(input_read_dir, read_file_2_list[i])))
-                    script_file_id.write( '{0}\n'.format('            {0}/{1} \\'.format(output_read_dir, read_file_1_list[i])))
-                    script_file_id.write( '{0}\n'.format('            {0}/{1} \\'.format(output_read_dir, unpaired_read_file_1)))
-                    script_file_id.write( '{0}\n'.format('            {0}/{1} \\'.format(output_read_dir, read_file_2_list[i])))
-                    script_file_id.write( '{0}\n'.format('            {0}/{1} \\'.format(output_read_dir, unpaired_read_file_2)))
-                script_file_id.write( '{0}\n'.format('            {0}'.format(selected_steps)))
+                    script_file_id.write(f'            {input_read_dir}/{read_file_1_list[i]} \\\n')
+                    script_file_id.write(f'            {input_read_dir}/{read_file_2_list[i]} \\\n')
+                    script_file_id.write(f'            {output_read_dir}/{read_file_1_list[i]} \\\n')
+                    script_file_id.write(f'            {output_read_dir}/{unpaired_read_file_1} \\\n')
+                    script_file_id.write(f'            {output_read_dir}/{read_file_2_list[i]} \\\n')
+                    script_file_id.write(f'            {output_read_dir}/{unpaired_read_file_2} \\\n')
+                script_file_id.write(f'            {selected_steps}\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error trimmomatic $RC; fi'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error trimmomatic $RC; fi\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function end\n')
@@ -807,11 +808,11 @@ def build_trimmomatic_process_script(cluster_name, current_run_dir):
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
-            script_file_id.write( '{0}\n'.format('run_trimmomatic_process'))
+            script_file_id.write( 'run_trimmomatic_process\n')
             script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_trimmomatic_process_script()))
+        error_list.append(f'*** ERROR: The file {get_trimmomatic_process_script()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -835,10 +836,10 @@ def build_trimmomatic_process_starter(current_run_dir):
         with open(get_trimmomatic_process_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_trimmomatic_process_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_trimmomatic_process_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_trimmomatic_process_starter()))
+        error_list.append(f'*** ERROR: The file {get_trimmomatic_process_starter()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -852,7 +853,7 @@ def get_trimmomatic_config_file():
     '''
 
     # assign the Trimmomatic config file path
-    trimmomatic_config_file = '{0}/{1}-config.txt'.format(xlib.get_config_dir(), xlib.get_trimmomatic_code())
+    trimmomatic_config_file = f'{xlib.get_config_dir()}/{xlib.get_trimmomatic_code()}-config.txt'
 
     # return the Trimmomatic config file path
     return trimmomatic_config_file
@@ -865,7 +866,7 @@ def get_trimmomatic_process_script():
     '''
 
     # assign the Trimmomatic script path
-    trimmomatic_process_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_trimmomatic_code())
+    trimmomatic_process_script = f'{xlib.get_temp_dir()}/{xlib.get_trimmomatic_code()}-process.sh'
 
     # return the Trimmomatic script path
     return trimmomatic_process_script
@@ -878,7 +879,7 @@ def get_trimmomatic_process_starter():
     '''
 
     # assign the Trimmomatic process starter path
-    trimmomatic_process_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_trimmomatic_code())
+    trimmomatic_process_starter = f'{xlib.get_temp_dir()}/{xlib.get_trimmomatic_code()}-process-starter.sh'
 
     # return the Trimmomatic starter path
     return trimmomatic_process_starter

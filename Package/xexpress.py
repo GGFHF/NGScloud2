@@ -203,7 +203,7 @@ def run_express_process(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(experiment_id, xlib.get_express_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -236,7 +236,7 @@ def run_express_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_express_process_script())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_express_process_script())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -269,7 +269,7 @@ def run_express_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_express_process_starter())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_express_process_starter())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:

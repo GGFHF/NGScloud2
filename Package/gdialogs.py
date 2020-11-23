@@ -248,7 +248,7 @@ class DialogTable(tkinter.Toplevel):
 
         # get the directory dictionary of directories in the volume
         command = 'ls -la {0}/{1}'.format(parent_directory, directory_name)
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             directory_dict = {}
             for line in stdout:
@@ -305,16 +305,16 @@ class DialogTable(tkinter.Toplevel):
 
         # get the directory dictionary of directories in the volume
         command = 'ls -la {0}/{1}'.format(parent_directory, file_name)
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             file_detail_dict = {}
             for line in stdout:
                 line = line.rstrip('\n')
                 file_data_list = line.split()
-                permissions = file_data_list[0][1:]
-                links_number = file_data_list[1]
-                owner_name = file_data_list[2]
-                owner_group = file_data_list[3]
+                # -- permissions = file_data_list[0][1:]
+                # -- links_number = file_data_list[1]
+                # -- owner_name = file_data_list[2]
+                # -- owner_group = file_data_list[3]
                 day = int(file_data_list[6])
                 try:
                     month = 1 + ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Sep', 'Oct', 'Nov', 'Dec'].index(file_data_list[5])
@@ -615,7 +615,9 @@ class DialogOptionUpdate(tkinter.Toplevel):
         # check the option value and updatge option value in the item dictionary 
         value_type = self.item_dict[option_id]['value_type']
         admitted_option_value_list = self.item_dict[option_id]['admitted_option_value_list']
-        if value_type == 'string_list':
+        if value_type == 'any':
+            self.item_dict[option_id]['option_value'] = option_value
+        elif value_type == 'string_list':
             if option_value not in admitted_option_value_list:
                 OK = False
                 message = 'The value {0} is not OK. It has to be: {1}.'.format(option_value, str(admitted_option_value_list).strip('[]').replace('\'',''))

@@ -53,40 +53,41 @@ def create_star_config_file(experiment_id='exp001', reference_dataset_id='Athali
         with open(get_star_config_file(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '# You must review the information of this file and update the values with the corresponding ones to the current run.\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# The reference and GTF files have to be located in the cluster directory {0}/experiment_id/reference_dataset_id'.format(xlib.get_cluster_reference_dir())))
+            file_id.write(f'# The reference and GTF files have to be located in the cluster directory {xlib.get_cluster_reference_dir()}/experiment_id/reference_dataset_id\n')
             file_id.write(f'# The read files have to be located in the cluster directory {xlib.get_cluster_read_dir()}/experiment_id/read_dataset_id\n')
-            file_id.write( '{0}\n'.format('# The experiment_id, reference_dataset_id, reference_file, gtf_file and read_dataset_id names are fixed in the identification section.'))
+            file_id.write( '# The experiment_id, reference_dataset_id, reference_file, gtf_file and read_dataset_id names are fixed in the identification section.\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# You can consult the parameters of STAR and their meaning in "https://github.com/alexdobin/STAR".'))
+            file_id.write( '# You can consult the parameters of STAR and their meaning in "https://github.com/alexdobin/STAR".\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# In section "STAR parameters", the key "other_parameters" allows you to input additional parameters in the format:'))
+            file_id.write( '# In section "STAR parameters", the key "other_parameters" allows you to input additional parameters in the format:\n')
             file_id.write( '#\n')
             file_id.write( '#    other_parameters = --parameter-1[=value-1][; --parameter-2[=value-2][; ...; --parameter-n[=value-n]]]\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# parameter-i is a parameter name of STAR and value-i a valid value of parameter-i, e.g.'))
+            file_id.write( '# parameter-i is a parameter name of STAR and value-i a valid value of parameter-i, e.g.\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('#    other_parameters = --outSAMattributes=All; --limitGenomeGenerateRAM=48000000000'))
+            file_id.write( '#    other_parameters = --outSAMattributes=All; --limitGenomeGenerateRAM=48000000000\n')
             file_id.write( '\n')
             file_id.write( '# This section has the information identifies the experiment.\n')
             file_id.write( '[identification]\n')
             file_id.write( '{0:<50} {1}\n'.format(f'experiment_id = {experiment_id}', '# experiment identification'))
             file_id.write( '{0:<50} {1}\n'.format(f'reference_dataset_id = {reference_dataset_id}', '# reference dataset identification'))
             file_id.write( '{0:<50} {1}\n'.format(f'reference_file = {reference_file}', '# reference file name'))
-            file_id.write( '{0:<50} {1}\n'.format('gtf_file = {0}'.format(gtf_file), '# GTF file name'))
+            file_id.write( '{0:<50} {1}\n'.format(f'gtf_file = {gtf_file}', '# GTF file name'))
             file_id.write( '{0:<50} {1}\n'.format(f'read_dataset_id = {read_dataset_id}', '# read dataset identification'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information to set the STAR parameters'))
-            file_id.write( '{0}\n'.format('[STAR parameters]'))
-            file_id.write( '{0:<50} {1}\n'.format('index_building = YES', '# index building when a reference is used: {0}'.format(get_index_building_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('threads = 4', '# number of threads for use'))
-            file_id.write( '{0:<50} {1}\n'.format('two_pass_mode = NONE', '# 2-pass mapping mode: {0}'.format(get_two_pass_mode_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('two_pass_1_readsn = -1', '# number of reads to process for the 1st step; use -1 to map all reads in the first step'))
-            file_id.write( '{0:<50} {1}\n'.format('out_filter_multimap_nmax = 20', '# maximun number of multiple alignments allowed for a read'))
-            file_id.write( '{0:<50} {1}\n'.format('out_reads_unmapped = FASTX', '# output of unmapped and partially mapped reads in separate files: {0}'.format(get_out_reads_unmapped_code_list_text())))
-            file_id.write( '{0:<50} {1}\n'.format('cleanup = NO', '# leave intermediate files: {0}'.format(get_cleanup_code_list_text())))
+            file_id.write( '# This section has the information to set the STAR parameters\n')
+            file_id.write( '[STAR parameters]\n')
+            file_id.write( '{0:<50} {1}\n'.format( 'index_building = YES', f'# index building when a reference is used: {get_index_building_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format( 'limit_genome_generate_ram = 31000000000', '# maximum available RAM (in bytes) for genome index generation'))
+            file_id.write( '{0:<50} {1}\n'.format( 'threads = 4', '# number of threads for use'))
+            file_id.write( '{0:<50} {1}\n'.format( 'two_pass_mode = NONE', f'# 2-pass mapping mode: {get_two_pass_mode_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format( 'two_pass_1_readsn = -1', '# number of reads to process for the 1st step; use -1 to map all reads in the first step'))
+            file_id.write( '{0:<50} {1}\n'.format( 'out_filter_multimap_nmax = 20', '# maximun number of multiple alignments allowed for a read'))
+            file_id.write( '{0:<50} {1}\n'.format( 'out_reads_unmapped = FASTX', f'# output of unmapped and partially mapped reads in separate files: {get_out_reads_unmapped_code_list_text()}'))
+            file_id.write( '{0:<50} {1}\n'.format( 'cleanup = NO', f'# leave intermediate files: {get_cleanup_code_list_text()}'))
             file_id.write( '{0:<50} {1}\n'.format( 'other_parameters = NONE', '# additional parameters to the previous ones or NONE'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information of the library (only one library is allowed)'))
+            file_id.write( '# This section has the information of the library (only one library is allowed)\n')
             file_id.write( '[library]\n')
             file_id.write( '{0:<50} {1}\n'.format( 'format = FASTQ', f'# format: {get_format_code_list_text()}'))
             file_id.write( '{0:<50} {1}\n'.format(f'read_type = {read_type}', f'# read type: {get_read_type_code_list_text()}'))
@@ -106,7 +107,7 @@ def create_star_config_file(experiment_id='exp001', reference_dataset_id='Athali
                     file_id.write( '# The section identification has to be library-n (n is an integer not repeated)\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be recreated'.format(get_star_config_file()))
+        error_list.append(f'*** ERROR: The file {get_star_config_file()} can not be recreated')
         OK = False
 
     # return the control variable and the error list
@@ -134,7 +135,7 @@ def run_star_process(cluster_name, log, function=None):
 
     # check the STAR config file
     log.write(f'{xlib.get_separator()}\n')
-    log.write('Checking the {0} config file ...\n'.format(xlib.get_star_name()))
+    log.write(f'Checking the {xlib.get_star_name()} config file ...\n')
     (OK, error_list) = check_star_config_file(strict=True)
     if OK:
         log.write('The file is OK.\n')
@@ -188,10 +189,20 @@ def run_star_process(cluster_name, log, function=None):
         (OK, error_list, is_installed) = xbioinfoapp.is_installed_anaconda_package(xlib.get_star_anaconda_code(), cluster_name, True, ssh_client)
         if OK:
             if not is_installed:
-                log.write('*** ERROR: {0} is not installed.\n'.format(xlib.get_star_name()))
+                log.write(f'*** ERROR: {xlib.get_star_name()} is not installed.\n')
                 OK = False
         else:
-            log.write('*** ERROR: The verification of {0} installation could not be performed.\n'.format(xlib.get_star_name()))
+            log.write(f'*** ERROR: The verification of {xlib.get_star_name()} installation could not be performed.\n')
+
+    # check SAMtools is installed
+    if OK:
+        (OK, error_list, is_installed) = xbioinfoapp.is_installed_anaconda_package(xlib.get_samtools_anaconda_code(), cluster_name, True, ssh_client)
+        if OK:
+            if not is_installed:
+                log.write(f'*** ERROR: {xlib.get_samtools_name()} is not installed.\n')
+                OK = False
+        else:
+            log.write(f'*** ERROR: The verification of {xlib.get_samtools_name()} installation could not be performed.\n')
 
     # warn that the requirements are OK 
     if OK:
@@ -203,7 +214,7 @@ def run_star_process(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(experiment_id, xlib.get_star_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -212,7 +223,7 @@ def run_star_process(cluster_name, log, function=None):
     # build the STAR process script
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process script {0} ...\n'.format(get_star_process_script()))
+        log.write(f'Building the process script {get_star_process_script()} ...\n')
         (OK, error_list) = build_star_process_script(cluster_name, current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -222,8 +233,8 @@ def run_star_process(cluster_name, log, function=None):
     # upload the STAR process script to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process script {0} to the directory {1} ...\n'.format(get_star_process_script(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_star_process_script()))
+        log.write(f'Uploading the process script {get_star_process_script()} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_star_process_script())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_star_process_script(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -234,9 +245,9 @@ def run_star_process(cluster_name, log, function=None):
     # set run permision to the STAR process script in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_star_process_script())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_star_process_script()))
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_star_process_script())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_star_process_script())}'
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -245,7 +256,7 @@ def run_star_process(cluster_name, log, function=None):
     # build the STAR process starter
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process starter {0} ...\n'.format(get_star_process_starter()))
+        log.write(f'Building the process starter {get_star_process_starter()} ...\n')
         (OK, error_list) = build_star_process_starter(current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -255,8 +266,8 @@ def run_star_process(cluster_name, log, function=None):
     # upload the STAR process starter to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process starter {0} to the directory {1} ...\n'.format(get_star_process_starter(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_star_process_starter()))
+        log.write(f'Uploading the process starter {get_star_process_starter()} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_star_process_starter())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_star_process_starter(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -267,9 +278,9 @@ def run_star_process(cluster_name, log, function=None):
     # set run permision to the STAR process starter in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_star_process_starter())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_star_process_starter()))
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_star_process_starter())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_star_process_starter())}'
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -278,7 +289,7 @@ def run_star_process(cluster_name, log, function=None):
     # submit the STAR process
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Submitting the process script {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_star_process_starter())))
+        log.write(f'Submitting the process script {current_run_dir}/{os.path.basename(get_star_process_starter())} ...\n')
         OK = xssh.submit_script(cluster_name, ssh_client, current_run_dir, os.path.basename(get_star_process_starter()), log)
 
     # close the SSH transport connection
@@ -387,6 +398,15 @@ def check_star_config_file(strict):
                 error_list.append(f'*** ERROR: the key "index_building" has to be {get_index_building_code_list_text()}.')
                 OK = False
 
+            # check section "STAR parameters" - key "limit_genome_generate_ram"
+            limit_genome_generate_ram = star_option_dict.get('STAR parameters', {}).get('limit_genome_generate_ram', not_found)
+            if limit_genome_generate_ram == not_found:
+                error_list.append('*** ERROR: the key "limit_genome_generate_ram" is not found in the section "STAR parameters".')
+                OK = False
+            elif not xlib.check_int(limit_genome_generate_ram, minimum=1):
+                error_list.append('*** ERROR: the key "limit_genome_generate_ram" has to be an integer number greater than or equal to 1.')
+                OK = False
+
             # check section "STAR parameters" - key "threads"
             threads = star_option_dict.get('STAR parameters', {}).get('threads', not_found)
             if threads == not_found:
@@ -411,7 +431,7 @@ def check_star_config_file(strict):
                 error_list.append('*** ERROR: the key "two_pass_mode" is not found in the section "STAR parameters".')
                 OK = False
             elif not xlib.check_code(two_pass_mode, get_two_pass_mode_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "two_pass_mode" has to be {0}.'.format(get_two_pass_mode_code_list_text()))
+                error_list.append(f'*** ERROR: the key "two_pass_mode" has to be {get_two_pass_mode_code_list_text()}.')
                 OK = False
 
             # check section "STAR parameters" - key "two_pass_1_readsn"
@@ -419,7 +439,7 @@ def check_star_config_file(strict):
             if two_pass_1_readsn == not_found:
                 error_list.append('*** ERROR: the key "two_pass_1_readsn" is not found in the section "STAR parameters".')
                 OK = False
-            elif not xlib.check_int(threads, minimum=1) and not xlib.check_int(threads, minimum=-1, maximum=-1):
+            elif not xlib.check_int(two_pass_1_readsn, minimum=1) and not xlib.check_int(two_pass_1_readsn, minimum=-1, maximum=-1):
                 error_list.append('*** ERROR: the key "two_pass_1_readsn" has to be an integer number greater than or equal to 1, or -1 (all redas).')
                 OK = False
 
@@ -429,7 +449,7 @@ def check_star_config_file(strict):
                 error_list.append('*** ERROR: the key "out_reads_unmapped" is not found in the section "STAR parameters".')
                 OK = False
             elif not xlib.check_code(out_reads_unmapped, get_out_reads_unmapped_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "out_reads_unmapped" has to be {0}.'.format(get_out_reads_unmapped_code_list_text()))
+                error_list.append(f'*** ERROR: the key "out_reads_unmapped" has to be {get_out_reads_unmapped_code_list_text()}.')
                 OK = False
 
             # check section "STAR parameters" - key "cleanup"
@@ -438,11 +458,11 @@ def check_star_config_file(strict):
                 error_list.append('*** ERROR: the key "cleanup" is not found in the section "STAR parameters".')
                 OK = False
             elif not xlib.check_code(cleanup, get_cleanup_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "cleanup" has to be {0}.'.format(get_cleanup_code_list_text()))
+                error_list.append(f'*** ERROR: the key "cleanup" has to be {get_cleanup_code_list_text()}.')
                 OK = False
 
             # check section "STAR parameters" - key "other_parameters"
-            not_allowed_parameters_list = ['runMode', 'runThreadN', 'genomeDir', 'readFilesCommand', 'readFilesIn', 'sjdbGTFfile', 'twopassMode', 'twopass1readsN', 'quantMode', 'outFilterMultimapNmax', 'outSAMunmapped', 'outFileNamePrefix', 'outTmpKeep', 'outSAMtype']
+            not_allowed_parameters_list = ['runMode', 'runThreadN', 'limitGenomeGenerateRAM', 'genomeDir', 'readFilesCommand', 'readFilesIn', 'sjdbGTFfile', 'twopassMode', 'twopass1readsN', 'quantMode', 'outFilterMultimapNmax', 'outSAMunmapped', 'outFileNamePrefix', 'outTmpKeep', 'outSAMtype', 'outSAMattributes']
             other_parameters = star_option_dict.get('STAR parameters', {}).get('other_parameters', not_found)
             if other_parameters == not_found:
                 error_list.append('*** ERROR: the key "other_parameters" is not found in the section "STAR parameters".')
@@ -506,7 +526,7 @@ def check_star_config_file(strict):
 
     # warn that the results config file is not valid if there are any errors
     if not OK:
-        error_list.append('\nThe {0} config file is not valid. Please, correct this file or recreate it.'.format(xlib.get_star_name()))
+        error_list.append(f'\nThe {xlib.get_star_name()} config file is not valid. Please, correct this file or recreate it.')
 
     # return the control variable and the error list
     return (OK, error_list)
@@ -532,6 +552,7 @@ def build_star_process_script(cluster_name, current_run_dir):
     gtf_file = star_option_dict['identification']['gtf_file']
     read_dataset_id = star_option_dict['identification']['read_dataset_id']
     index_building = star_option_dict['STAR parameters']['index_building']
+    limit_genome_generate_ram = star_option_dict['STAR parameters']['limit_genome_generate_ram']
     threads = star_option_dict['STAR parameters']['threads']
     two_pass_mode = star_option_dict['STAR parameters']['two_pass_mode']
     two_pass_1_readsn = star_option_dict['STAR parameters']['two_pass_1_readsn']
@@ -568,8 +589,8 @@ def build_star_process_script(cluster_name, current_run_dir):
     gtf_file = xlib.get_cluster_reference_file(reference_dataset_id, gtf_file)
 
     # set the STAR indexes directory
-    (reference_file_name, reference_file_extension) = os.path.splitext(reference_file)
-    star_indexes_dir = '{0}_star_indexes'.format(reference_file_name)
+    (reference_file_name, _) = os.path.splitext(reference_file)
+    star_indexes_dir = f'{reference_file_name}_star_indexes'
 
     # write the STAR process script
     try:
@@ -584,12 +605,10 @@ def build_star_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
             script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('STAR_PATH={0}/{1}/envs/{2}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name(), xlib.get_star_anaconda_code())))
-            script_file_id.write( '{0}\n'.format('TRINITY_PATH={0}/{1}/envs/{2}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name(), xlib.get_trinity_anaconda_code())))
-            script_file_id.write( '{0}\n'.format('BOWTIE2_PATH={0}/{1}/envs/{2}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name(), xlib.get_bowtie2_anaconda_code())))
-            script_file_id.write( '{0}\n'.format('export PATH=$STAR_PATH:$TRINITY_PATH:$BOWTIE2_PATH:$PATH'))
-            script_file_id.write( '{0}\n'.format('cd {0}/{1}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name())))
-            script_file_id.write( '{0}\n'.format('source activate {0}'.format(xlib.get_star_anaconda_code())))
+            script_file_id.write(f'MINICONDA3_BIN_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
+            script_file_id.write(f'export PATH=$MINICONDA3_BIN_PATH:$PATH\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write(f'CURRENT_DIR={current_run_dir}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
             script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -610,71 +629,81 @@ def build_star_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "HOST IP: $HOST_IP"\n')
             script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write( 'function print_star_version\n')
+            script_file_id.write( '{\n')
+            script_file_id.write(f'    source activate {xlib.get_star_anaconda_code()}\n')
+            script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write( '    STAR --version\n')
+            script_file_id.write( '    conda deactivate\n')
+            script_file_id.write( '}\n')
             if index_building.upper() == 'YES':
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( '{0}\n'.format('function create_star_indexes'))
+                script_file_id.write( 'function create_star_indexes\n')
                 script_file_id.write( '{\n')
-                script_file_id.write(f'    cd {current_run_dir}\n')
+                script_file_id.write(f'    source activate {xlib.get_star_anaconda_code()}\n')
+                script_file_id.write( '    cd $CURRENT_DIR\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Creating indexes ..."'))
-                script_file_id.write( '{0}\n'.format('    rm -rf {0}'.format(star_indexes_dir)))
-                script_file_id.write( '{0}\n'.format('    mkdir --parents {0}'.format(star_indexes_dir)))
+                script_file_id.write( '    echo "Creating indexes ..."\n')
+                script_file_id.write(f'    rm -rf {star_indexes_dir}\n')
+                script_file_id.write(f'    mkdir --parents {star_indexes_dir}\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        STAR \\'))
-                script_file_id.write( '{0}\n'.format('            --runMode genomeGenerate \\'))
-                script_file_id.write( '{0}\n'.format('            --runThreadN {0} \\'.format(threads)))
-                script_file_id.write( '{0}\n'.format('            --genomeDir {0} \\'.format(star_indexes_dir)))
-                script_file_id.write( '{0}\n'.format('            --genomeFastaFiles {0}'.format(reference_file)))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        STAR \\\n')
+                script_file_id.write( '            --runMode genomeGenerate \\\n')
+                script_file_id.write(f'            --limitGenomeGenerateRAM {limit_genome_generate_ram} \\\n')
+                script_file_id.write(f'            --runThreadN {threads} \\\n')
+                script_file_id.write(f'            --genomeDir {star_indexes_dir} \\\n')
+                script_file_id.write(f'            --genomeFastaFiles {reference_file}\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error STAR $RC; fi'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error STAR $RC; fi\n')
+                script_file_id.write( '    echo "Indexes are built."\n')
+                script_file_id.write( '    conda deactivate\n')
                 script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function run_star_process'))
+            script_file_id.write( 'function run_star_process\n')
             script_file_id.write( '{\n')
-            script_file_id.write(f'    cd {current_run_dir}\n')
-            script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    STAR --version'))
+            script_file_id.write(f'    source activate {xlib.get_star_anaconda_code()}\n')
+            script_file_id.write( '    cd $CURRENT_DIR\n')
             for i in range(len(read_file_1_list)):
-                # get the read file paths
-                # set the name of read file 1
+                # set the library name
                 if read_file_1.endswith('.gz'):
-                    (read_file_1_name, read_file_1_extension) = os.path.splitext(os.path.basename(read_file_1_list[i][:-3]))
+                    (library_name, _) = os.path.splitext(os.path.basename(read_file_1_list[i][:-3]))
                     gz_compression = True
                 else:
-                    (read_file_1_name, read_file_1_extension) = os.path.splitext(os.path.basename(read_file_1_list[i]))
+                    (library_name, _) = os.path.splitext(os.path.basename(read_file_1_list[i]))
                     gz_compression = False
-                # write the STAR run instructions
+                # write the instructions for the library
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '{0}\n'.format('    echo "Assembling reads ..."'))
+                script_file_id.write(f'    echo "Mapping reads of {library_name} ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-                script_file_id.write( '{0}\n'.format('        STAR \\'))
-                script_file_id.write( '{0}\n'.format('            --runMode alignReads \\'))
-                script_file_id.write( '{0}\n'.format('            --runThreadN {0} \\'.format(threads)))
-                script_file_id.write( '{0}\n'.format('            --genomeDir {0} \\'.format(star_indexes_dir)))
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '        STAR \\\n')
+                script_file_id.write( '            --runMode alignReads \\\n')
+                script_file_id.write(f'            --runThreadN {threads} \\\n')
+                script_file_id.write(f'            --genomeDir {star_indexes_dir} \\\n')
                 if gz_compression:
-                    script_file_id.write( '{0}\n'.format('            --readFilesCommand gzip -c \\'))
+                    script_file_id.write( '            --readFilesCommand gzip -c \\\n')
                 if read_type.upper() == 'SE':
-                    script_file_id.write( '{0}\n'.format('            --readFilesIn {0} \\'.format(read_file_1_list[i])))
+                    script_file_id.write(f'            --readFilesIn {read_file_1_list[i]} \\\n')
                 elif read_type.upper() == 'PE':
-                    script_file_id.write( '{0}\n'.format('            --readFilesIn {0} {1} \\'.format(read_file_1_list[i], read_file_2_list[i])))
-                script_file_id.write( '{0}\n'.format('            --sjdbGTFfile {0} \\'.format(gtf_file)))
+                    script_file_id.write(f'            --readFilesIn {read_file_1_list[i]} {read_file_2_list[i]} \\\n')
+                script_file_id.write(f'            --sjdbGTFfile {gtf_file} \\\n')
                 if two_pass_mode.upper() == 'NONE':
-                    script_file_id.write( '{0}\n'.format('            --twopassMode None \\'))
+                    script_file_id.write( '            --twopassMode None \\\n')
                 elif two_pass_mode.upper() == 'BASIC':
-                    script_file_id.write( '{0}\n'.format('            --twopassMode Basic \\'))
-                    script_file_id.write( '{0}\n'.format('            --twopass1readsN {0} \\'.format(two_pass_1_readsn)))
-                script_file_id.write( '{0}\n'.format('            --quantMode TranscriptomeSAM \\'))
+                    script_file_id.write( '            --twopassMode Basic \\\n')
+                    script_file_id.write(f'            --twopass1readsN {two_pass_1_readsn} \\\n')
+                script_file_id.write( '            --quantMode TranscriptomeSAM \\\n')
                 if out_reads_unmapped.upper() == 'NONE':
-                    script_file_id.write( '{0}\n'.format('            --outReadsUnmapped None \\'))
+                    script_file_id.write( '            --outReadsUnmapped None \\\n')
                 elif out_reads_unmapped.upper() == 'FASTX':
-                    script_file_id.write( '{0}\n'.format('            --outReadsUnmapped Fastx \\'))
-                script_file_id.write( '{0}\n'.format('            --outFilterMultimapNmax {0} \\'.format(out_filter_multimap_nmax)))
-                script_file_id.write( '{0}\n'.format('            --outSAMunmapped None \\'))
-                script_file_id.write( '{0}\n'.format('            --outFileNamePrefix "{0}/{1}-" \\'.format(current_run_dir, read_file_1_name)))
+                    script_file_id.write( '            --outReadsUnmapped Fastx \\\n')
+                script_file_id.write(f'            --outFilterMultimapNmax {out_filter_multimap_nmax} \\\n')
+                script_file_id.write( '            --outSAMunmapped None \\\n')
+                script_file_id.write(f'            --outFileNamePrefix "{current_run_dir}/{library_name}-" \\\n')
                 if cleanup.upper() == 'NO':
-                    script_file_id.write( '{0}\n'.format('            --outTmpKeep Yes \\'))
+                    script_file_id.write( '            --outTmpKeep Yes \\\n')
                 if other_parameters.upper() != 'NONE':
                     parameter_list = [x.strip() for x in other_parameters.split(';')]
                     for parameter in parameter_list:
@@ -689,9 +718,60 @@ def build_star_process_script(cluster_name, current_run_dir):
                             mo = re.search(pattern, parameter)
                             parameter_name = mo.group(1).strip()
                             script_file_id.write(f'            --{parameter_name} \\\n')
-                script_file_id.write( '{0}\n'.format('            --outSAMtype BAM SortedByCoordinate'))
+                script_file_id.write( '            --outSAMtype SAM \\\n')
+                script_file_id.write( '            --outSAMattributes NH HI AS nM XS\n')
                 script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error STAR $RC; fi'))
+                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error STAR $RC; fi\n')
+                script_file_id.write( '    echo "Reads are mapped."\n')
+            script_file_id.write( '    conda deactivate\n')
+            script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write( 'function convert_sam2bam\n')
+            script_file_id.write( '{\n')
+            script_file_id.write( '    cd $CURRENT_DIR\n')
+            script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write( '    echo "Converting SAM files to BAM format ..."\n')
+            script_file_id.write(f'    source activate {xlib.get_samtools_anaconda_code()}\n')
+            script_file_id.write( '    ls *.sam > sam-files.txt\n')
+            script_file_id.write( '    while read FILE_SAM; do\n')
+            script_file_id.write( '        FILE_BAM=`basename $FILE_SAM | sed "s|.sam|.bam|g"`\n')
+            script_file_id.write( '        echo "Converting file $FILE_SAM to BAM format ..."\n')
+            script_file_id.write(f'        samtools view --threads {threads} -b -S -o $FILE_BAM $FILE_SAM\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error samtools-view $RC; fi\n')
+            script_file_id.write( '        echo "$FILE_BAM is created."\n')
+            script_file_id.write( '        echo "Compressing $FILE_SAM ..."\n')
+            script_file_id.write( '        gzip $FILE_SAM\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error gzip $RC; fi\n')
+            script_file_id.write( '        echo "$FILE_SAM is compressed."\n')
+            script_file_id.write( '    done < sam-files.txt\n')
+            script_file_id.write( '    conda deactivate\n')
+            script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write( 'function sort_and_index_bam_files\n')
+            script_file_id.write( '{\n')
+            script_file_id.write( '    cd $CURRENT_DIR\n')
+            script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write(f'    source activate {xlib.get_samtools_anaconda_code()}\n')
+            script_file_id.write( '    ls *-Aligned.out.bam > bam-files.txt\n')
+            script_file_id.write( '    while read FILE_BAM; do\n')
+            script_file_id.write( '        FILE_SORTED_BAM=`basename $FILE_BAM | sed "s|.bam|.sorted.bam|g"`\n')
+            script_file_id.write( '        echo "Sorting and indexing $FILE_BAM ..."\n')
+            script_file_id.write(f'        samtools sort --threads {threads} $FILE_BAM -o $FILE_SORTED_BAM\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error samtools-sort $RC; fi\n')
+            script_file_id.write(f'        samtools index -@ {threads} $FILE_SORTED_BAM\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error samtools-index $RC; fi\n')
+            script_file_id.write( '        echo "$FILE_SORTED_BAM is created."\n')
+            script_file_id.write( '        echo "Deleting file $FILE_BAM ..."\n')
+            script_file_id.write( '        rm -f $FILE_BAM\n')
+            script_file_id.write( '        RC=$?\n')
+            script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error rm $RC; fi\n')
+            script_file_id.write( '        echo "$FILE_BAM is deleted."\n')
+            script_file_id.write( '    done < bam-files.txt\n')
+            script_file_id.write( '    conda deactivate\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function end\n')
@@ -766,13 +846,16 @@ def build_star_process_script(cluster_name, current_run_dir):
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
+            script_file_id.write( 'print_star_version\n')
             if index_building.upper() == 'YES':
-                script_file_id.write( '{0}\n'.format('create_star_indexes'))
-            script_file_id.write( '{0}\n'.format('run_star_process'))
+                script_file_id.write( 'create_star_indexes\n')
+            script_file_id.write( 'run_star_process\n')
+            script_file_id.write( 'convert_sam2bam\n')
+            script_file_id.write( 'sort_and_index_bam_files\n')
             script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_star_process_script()))
+        error_list.append(f'*** ERROR: The file {get_star_process_script()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -796,10 +879,10 @@ def build_star_process_starter(current_run_dir):
         with open(get_star_process_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_star_process_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_star_process_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_star_process_starter()))
+        error_list.append(f'*** ERROR: The file {get_star_process_starter()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -813,7 +896,7 @@ def get_star_config_file():
     '''
 
     # assign the STAR config file path
-    star_config_file = '{0}/{1}-config.txt'.format(xlib.get_config_dir(), xlib.get_star_code())
+    star_config_file = f'{xlib.get_config_dir()}/{xlib.get_star_code()}-config.txt'
 
     # return the STAR config file path
     return star_config_file
@@ -826,7 +909,7 @@ def get_star_process_script():
     '''
 
     # assign the STAR script path
-    star_process_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_star_code())
+    star_process_script = f'{xlib.get_temp_dir()}/{xlib.get_star_code()}-process.sh'
 
     # return the STAR script path
     return star_process_script
@@ -839,7 +922,7 @@ def get_star_process_starter():
     '''
 
     # assign the STAR process starter path
-    star_process_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_star_code())
+    star_process_starter = f'{xlib.get_temp_dir()}/{xlib.get_star_code()}-process-starter.sh'
 
     # return the STAR starter path
     return star_process_starter

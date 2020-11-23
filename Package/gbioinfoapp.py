@@ -473,7 +473,7 @@ class FormInstallBioinfoApp(tkinter.Frame):
 
             # install the Bowtie2 software
             elif self.app_code == xlib.get_bowtie2_code():
-                package_list = [(xlib.get_bowtie2_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_bowtie2_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_samtools_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_tabix_anaconda_code(), 'last', self.bioinfoapp_channel)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
@@ -556,14 +556,14 @@ class FormInstallBioinfoApp(tkinter.Frame):
 
             # install the GMAP-GSNAP software
             elif self.app_code == xlib.get_gmap_gsnap_code():
-                package_list = [(xlib.get_gmap_gsnap_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_gmap_gsnap_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_samtools_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_tabix_anaconda_code(), 'last', self.bioinfoapp_channel)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the HISAT2 software
             elif self.app_code == xlib.get_hisat2_code():
-                package_list = [(xlib.get_hisat2_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_hisat2_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_samtools_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_tabix_anaconda_code(), 'last', self.bioinfoapp_channel)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
@@ -657,7 +657,7 @@ class FormInstallBioinfoApp(tkinter.Frame):
 
             # install the STAR software
             elif self.app_code == xlib.get_star_code():
-                package_list = [(xlib.get_star_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_bowtie2_anaconda_code(), 'last', self.bioinfoapp_channel)]
+                package_list = [(xlib.get_star_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_samtools_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_tabix_anaconda_code(), 'last', self.bioinfoapp_channel)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
@@ -677,7 +677,7 @@ class FormInstallBioinfoApp(tkinter.Frame):
 
             # install the TopHat software
             elif self.app_code == xlib.get_tophat_code():
-                package_list = [(xlib.get_tophat_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_tophat_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_samtools_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_tabix_anaconda_code(), 'last', self.bioinfoapp_channel)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
@@ -1021,7 +1021,7 @@ class FormRecreateBowtie2ConfigFile(tkinter.Frame):
         self.wrapper_reference_dataset.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_reference_dataset['values'] = ['NONE'] + sorted(reference_dataset_name_list)
@@ -1037,7 +1037,7 @@ class FormRecreateBowtie2ConfigFile(tkinter.Frame):
         self.wrapper_reference_file.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_reference_file['values'] = sorted(reference_file_name_list)
@@ -1057,7 +1057,7 @@ class FormRecreateBowtie2ConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -1085,7 +1085,7 @@ class FormRecreateBowtie2ConfigFile(tkinter.Frame):
 
         # get the list of the assembly_dataset dataset names
         app_list = [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(), xlib.get_transcript_filter_code(), xlib.get_soapdenovo2_code(), xlib.get_starcode_code()]
-        (OK, error_list, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # load the assembly dataset names in the combobox
         self.combobox_assembly_dataset['values'] = sorted(assembly_dataset_name_list)
@@ -1101,7 +1101,7 @@ class FormRecreateBowtie2ConfigFile(tkinter.Frame):
         self.wrapper_read_dataset.set('')
 
         # get the list of the read dataset names
-        (OK, error_list, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the list of the read dataset names in the combobox
         self.combobox_read_dataset['values'] = read_dataset_name_list
@@ -1253,7 +1253,7 @@ class FormRecreateBowtie2ConfigFile(tkinter.Frame):
         '''
 
         # get the assembly_dataset dataset identification
-        (OK, error_list, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
 
         # load data in "combobox_assembly_type"
         if self.assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()) or self.assembly_dataset_id.startswith(xlib.get_soapdenovo2_code()):
@@ -1283,7 +1283,7 @@ class FormRecreateBowtie2ConfigFile(tkinter.Frame):
         '''
 
         # get the read dataset identification
-        (OK, error_list, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 
@@ -1346,7 +1346,7 @@ class FormRecreateBowtie2ConfigFile(tkinter.Frame):
         # check that "entry_file_pattern" value is a valid pattern of regular expression
         try:
             re.compile(self.wrapper_file_pattern.get())
-        except Exception as e:
+        except Exception:
             self.label_file_pattern_warning['text'] = 'It is not a valid pattern of regular expression.'
             self.label_file_pattern_warning['foreground'] = 'red'
             OK = False
@@ -1382,7 +1382,7 @@ class FormRecreateBowtie2ConfigFile(tkinter.Frame):
         if OK:
             selected_file_list = []
             command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
@@ -1630,7 +1630,7 @@ class FormRecreateBuscoConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -1658,7 +1658,7 @@ class FormRecreateBuscoConfigFile(tkinter.Frame):
 
         # get the list of the assembly dataset names
         app_list = [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(), xlib.get_transcript_filter_code()]
-        (OK, error_list, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # load the assembly dataset names in the combobox
         self.combobox_assembly_dataset['values'] = sorted(assembly_dataset_name_list)
@@ -1730,7 +1730,7 @@ class FormRecreateBuscoConfigFile(tkinter.Frame):
         '''
 
         # get the assembly dataset identification
-        (OK, error_list, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
 
         # load data in "combobox_assembly_type"
         if self.assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()):
@@ -2012,7 +2012,7 @@ class FormRecreateCdHitEstConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_result_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -2040,7 +2040,7 @@ class FormRecreateCdHitEstConfigFile(tkinter.Frame):
 
         # get the list of the assembly_dataset dataset names
         app_list = [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(), xlib.get_transcript_filter_code()]
-        (OK, error_list, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # load the assembly dataset names in the combobox
         self.combobox_assembly_dataset['values'] = sorted(assembly_dataset_name_list)
@@ -2112,7 +2112,7 @@ class FormRecreateCdHitEstConfigFile(tkinter.Frame):
         '''
 
         # get the assembly_dataset dataset identification
-        (OK, error_list, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
 
         # load data in "combobox_assembly_type"
         if self.assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()):
@@ -2224,19 +2224,20 @@ class FormRecreateCdHitEstConfigFile(tkinter.Frame):
 
 #-------------------------------------------------------------------------------
 
-class FormRecreateCuffdiffConfigFile(tkinter.Frame):
+class FormRecreateCuffdiffCuffnormConfigFile(tkinter.Frame):
 
     #---------------
 
-    def __init__(self, main):
+    def __init__(self, main, app):
         '''
-        Execute actions correspending to the creation of a "FormRecreateCuffdiffConfigFile" instance.
+        Execute actions correspending to the creation of a "FormRecreateCuffdiffCuffnormConfigFile" instance.
         '''
 
         # save initial parameters in instance variables
         self.main = main
         self.root = main.root
         self.container = main.container
+        self.app_code = app
 
         # call the init method of the parent class
         tkinter.Frame.__init__(self, self.container)
@@ -2245,8 +2246,14 @@ class FormRecreateCuffdiffConfigFile(tkinter.Frame):
         self.root.config(cursor='watch')
         self.root.update()
 
+        # set the software name
+        if self.app_code == xlib.get_cuffdiff_code():
+            self.app_name = xlib.get_cuffdiff_name()
+        elif self.app_code == xlib.get_cuffnorm_code():
+            self.app_name = xlib.get_cuffnorm_name()
+
         # assign the text of the "head"
-        self.head = f'{xlib.get_cuffdiff_name()} - Recreate config file'
+        self.head = f'{self.app_name} - Recreate config file'
 
         # initialize the SSH client connection and previous cluster name
         self.ssh_client = None
@@ -2261,6 +2268,8 @@ class FormRecreateCuffdiffConfigFile(tkinter.Frame):
         self.wrapper_assembly_dataset.trace('w', self.check_inputs)
         self.wrapper_quantitation_dataset = tkinter.StringVar()
         self.wrapper_quantitation_dataset.trace('w', self.check_inputs)
+        self.wrapper_abundance_files = tkinter.StringVar()
+        self.wrapper_abundance_files.trace('w', self.check_inputs)
 
         # build the graphical user interface
         self.build_gui()
@@ -2276,11 +2285,15 @@ class FormRecreateCuffdiffConfigFile(tkinter.Frame):
 
     def build_gui(self):
         '''
-        Build the graphical user interface of "FormRecreateCuffdiffConfigFile".
+        Build the graphical user interface of "FormRecreateCuffdiffCuffnormConfigFile".
         '''
 
         # assign the text to the label of the current process name
         self.main.label_process['text'] = self.head
+
+        # create "image_select_dirs"
+        image_select_dirs = PIL.Image.open('./image_select_dirs.png')
+        imagetk_select_dirs = PIL.ImageTk.PhotoImage(image_select_dirs)
 
         # create "label_cluster_name" and register it with the grid geometry manager
         self.label_cluster_name = tkinter.Label(self, text='Cluster name')
@@ -2314,17 +2327,30 @@ class FormRecreateCuffdiffConfigFile(tkinter.Frame):
         self.combobox_quantitation_dataset = tkinter.ttk.Combobox(self, width=45, height=4, state='readonly', textvariable=self.wrapper_quantitation_dataset)
         self.combobox_quantitation_dataset.grid(row=3, column=1, padx=(5,5), pady=(45,5), sticky='w')
 
+        # create "label_abundance_files" and register it with the grid geometry manager
+        self.label_abundance_files = tkinter.Label(self, text='Abundance files')
+        self.label_abundance_files.grid(row=4, column=0, padx=(15,5), pady=(40,5), sticky='e')
+
+        # create "entry_abundance_files" and register it with the grid geometry manager
+        self.entry_abundance_files = tkinter.Entry(self, textvariable=self.wrapper_abundance_files, width=45, state='disabled', validatecommand=self.check_inputs)
+        self.entry_abundance_files.grid(row=4, column=1, padx=(5,5), pady=(40,5), sticky='w')
+
+        # create "button_select_abundance_files" and register it with the grid geometry manager
+        self.button_select_abundance_files = tkinter.ttk.Button(self, image=imagetk_select_dirs, command=self.select_abundance_files, state='disabled')
+        self.button_select_abundance_files.image = imagetk_select_dirs
+        self.button_select_abundance_files.grid(row=4, column=2, padx=(5,0), pady=(40,5), sticky='w')
+
         # create "label_fit" and register it with the grid geometry manager
         self.label_fit = tkinter.Label(self, text=' '*46)
-        self.label_fit.grid(row=4, column=2, padx=(0,0), pady=(45,5), sticky='e')
+        self.label_fit.grid(row=5, column=2, padx=(0,0), pady=(45,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
         self.button_execute = tkinter.ttk.Button(self, text='Execute', command=self.execute, state='disabled')
-        self.button_execute.grid(row=4, column=3, padx=(0,5), pady=(45,5), sticky='e')
+        self.button_execute.grid(row=5, column=3, padx=(0,5), pady=(45,5), sticky='e')
 
         # create "button_close" and register it with the grid geometry manager
         self.button_close = tkinter.ttk.Button(self, text='Close', command=self.close)
-        self.button_close.grid(row=4, column=4, padx=(5,5), pady=(45,5), sticky='w')
+        self.button_close.grid(row=5, column=4, padx=(5,5), pady=(45,5), sticky='w')
 
         # link a handler to events
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
@@ -2349,6 +2375,7 @@ class FormRecreateCuffdiffConfigFile(tkinter.Frame):
         self.combobox_quantitation_dataset['values'] = []
         self.wrapper_quantitation_dataset.set('')
         self.quantitation_dataset_id = None
+        self.wrapper_abundance_files.set('')
 
         # populate data in comboboxes
         self.populate_combobox_cluster_name()
@@ -2394,7 +2421,7 @@ class FormRecreateCuffdiffConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -2422,7 +2449,7 @@ class FormRecreateCuffdiffConfigFile(tkinter.Frame):
 
         # get the list of the assembly dataset names
         app_list = [xlib.get_cufflinks_cuffmerge_code()]
-        (OK, error_list, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # load the assembly dataset names in the combobox
         self.combobox_assembly_dataset['values'] = sorted(assembly_dataset_name_list)
@@ -2439,7 +2466,7 @@ class FormRecreateCuffdiffConfigFile(tkinter.Frame):
 
         # get the list of the quantitation dataset names
         app_list = [xlib.get_cuffquant_code()]
-        (OK, error_list, quantitation_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, quantitation_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # load the quantitation dataset names in the combobox
         self.combobox_quantitation_dataset['values'] = sorted(quantitation_dataset_name_list)
@@ -2498,6 +2525,14 @@ class FormRecreateCuffdiffConfigFile(tkinter.Frame):
         # load data in "combobox_quantitation_dataset"
         self.populate_combobox_quantitation_dataset()
 
+        # initialize the data of alignment datasets
+        self.wrapper_abundance_files.set('')
+        self.abundance_file_id_list = []
+        self.group_list = []
+
+        # enable "button_select_abundance_files"
+        self.button_select_abundance_files['state'] = 'disabled'
+
         # set cursor to show normal status
         self.root.config(cursor='')
         self.root.update()
@@ -2510,7 +2545,7 @@ class FormRecreateCuffdiffConfigFile(tkinter.Frame):
         '''
 
         # get the assembly dataset identification
-        (OK, error_list, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 
@@ -2520,20 +2555,84 @@ class FormRecreateCuffdiffConfigFile(tkinter.Frame):
         '''
 
         # get the quantitation dataset identification
-        (OK, error_list, self.quantitation_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_quantitation_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.quantitation_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_quantitation_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+
+        # get the path of quantitation dataset in the cluster
+        cluster_quantitation_dataset_id = xlib.get_cluster_experiment_result_dataset_dir(self.wrapper_experiment_id.get(), self.quantitation_dataset_id)
+
+        # initialize the data of alignment datasets
+        self.wrapper_abundance_files.set('')
+        self.abundance_file_id_list = []
+        self.group_list = []
+
+        # enable "button_select_abundance_files"
+        self.button_select_abundance_files['state'] = 'enabled'
+
+        # get the abundance file list
+        command = f'cd {cluster_quantitation_dataset_id}; find . -type f -regex "./.*cxb"'
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
+        if OK:
+            for line in stdout:
+                self.abundance_file_id_list.append(os.path.basename(line.rstrip('\n')))
+        else:
+            message = f'*** ERROR: Wrong command ---> {command}'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+        if self.abundance_file_id_list == []:
+            message = f'WARNING: There are not abundance files in the cluster directory {self.quantitation_dataset_id}.'
+            tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
+        else:
+            self.abundance_file_id_list.sort()
+            for i in range(len(self.abundance_file_id_list)):
+                self.group_list.append(f'group-{i+1}')
+
+    #---------------
+
+    def select_abundance_files(self):
+        '''
+        Set the group of the abundance file and update "entry_abundance_files".
+        '''
+
+        # get the directory dictionary of directories in the volume
+        abundance_file_dict = {}
+        for i in range(len(self.abundance_file_id_list)):
+            key = self.abundance_file_id_list[i]
+            abundance_file_dict[key] = {'option_id': self.abundance_file_id_list[i], 'option_value': self.group_list[i], 'comment': '', 'value_type': 'any', 'admitted_option_value_list': []}
+
+        # build the data dictionary
+        data_dict = {}
+        data_dict['option_id']= {'text': 'Library abundance file', 'width': 60, 'alignment': 'left'}
+        data_dict['option_value'] = {'text': 'Group', 'width': 10, 'alignment': 'left'}
+        data_dict['comment'] = {'text': 'Admitted values', 'width': 0, 'alignment': 'left'}
+
+        # create the dialog Table to show the nodes running
+        title_text = 'Update the group to which the libraries belong'
+        window_height = 600
+        window_width = 575
+        auxliary_window_height = 60
+        auxliary_window_width = 920
+        dialog_table = gdialogs.DialogOptionUpdate(self, title_text, window_height, window_width, auxliary_window_height, auxliary_window_width, data_dict, abundance_file_dict, self.abundance_file_id_list)
+        self.wait_window(dialog_table)
+
+        # update the group list
+        for key in abundance_file_dict.keys():
+            index = self.abundance_file_id_list.index(key)
+            self.group_list[index] = abundance_file_dict[key]['option_value']
+
+        # update "entry_abundance_files"
+        self.wrapper_abundance_files.set(str(self.abundance_file_id_list).strip('[]').replace('\'',''))
 
     #---------------
 
     def check_inputs(self, *args):
         '''
-        check the content of each input of "FormRecreateCuffdiffConfigFile" and do the actions linked to its value
+        check the content of each input of "FormRecreateCuffdiffCuffnormConfigFile" and do the actions linked to its value
         '''
 
         # initialize the control variable
         OK = True
 
         # check if "button_execute" has to be enabled or disabled
-        if self.wrapper_cluster_name.get() != '' and self.wrapper_experiment_id.get() != '' and self.wrapper_assembly_dataset.get() != '' and self.wrapper_quantitation_dataset.get() != '':
+        if self.wrapper_cluster_name.get() != '' and self.wrapper_experiment_id.get() != '' and self.wrapper_assembly_dataset.get() != '' and self.wrapper_quantitation_dataset.get() != '' and self.wrapper_abundance_files.get() != '':
             self.button_execute['state'] = 'enable'
         else:
             self.button_execute['state'] = 'disabled'
@@ -2560,29 +2659,41 @@ class FormRecreateCuffdiffConfigFile(tkinter.Frame):
 
         # confirm the creation of the Cuffdiff config file
         if OK:
-            message = f'The file {xcufflinks.get_cuffdiff_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            if self.app_code == xlib.get_cuffdiff_code():
+                message = f'The file {xcufflinks.get_cuffdiff_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
+            elif self.app_code == xlib.get_cuffnorm_code():
+                message = f'The file {xcufflinks.get_cuffnorm_config_file()} is going to be recreated. The previous file will be lost.\n\nAre you sure to continue?'
             OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
-        # recreate the Cuffdiff config file
+        # recreate the Cuffdiff/Cuffnorm config file
         if OK:
-            (OK, error_list) = xcufflinks.create_cuffdiff_config_file(self.wrapper_experiment_id.get(), self.assembly_dataset_id, self.quantitation_dataset_id)
+            if self.app_code == xlib.get_cuffdiff_code():
+                (OK, error_list) = xcufflinks.create_cuffdiff_config_file(self.wrapper_experiment_id.get(), self.assembly_dataset_id, self.quantitation_dataset_id, self.abundance_file_id_list, self.group_list)
+            elif self.app_code == xlib.get_cuffnorm_code():
+                (OK, error_list) = xcufflinks.create_cuffnorm_config_file(self.wrapper_experiment_id.get(), self.assembly_dataset_id, self.quantitation_dataset_id, self.abundance_file_id_list, self.group_list)
             if not OK:
                 message = ''
                 for error in error_list:
                     message = f'{message}{error}\n'
                 tkinter.messagebox.showwarning(f'{xlib.get_project_name()} - {self.head}', message)
 
-        # edit the Cuffdiff config file
+        # edit the Cuffdiff/Cuffnorm config file
         if OK:
 
             # edit the config file using "DialogEditor" 
-            dialog_editor = gdialogs.DialogEditor(self, xcufflinks.get_cuffdiff_config_file())
+            if self.app_code == xlib.get_cuffdiff_code():
+                dialog_editor = gdialogs.DialogEditor(self, xcufflinks.get_cuffdiff_config_file())
+            elif self.app_code == xlib.get_cuffnorm_code():
+                dialog_editor = gdialogs.DialogEditor(self, xcufflinks.get_cuffnorm_config_file())
             self.wait_window(dialog_editor)
 
             # check the config file
-            (OK, error_list) = xcufflinks.check_cuffdiff_config_file(strict=False)
+            if self.app_code == xlib.get_cuffdiff_code():
+                (OK, error_list) = xcufflinks.check_cuffdiff_config_file(strict=False)
+            elif self.app_code == xlib.get_cuffnorm_code():
+                (OK, error_list) = xcufflinks.check_cuffnorm_config_file(strict=False)
             if OK:
-                message = f'The {xlib.get_cuffdiff_name()} config file is OK.'
+                message = f'The {self.app_name} config file is OK.'
                 tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
             else:
                 message = 'Detected errors:\n\n'
@@ -2597,7 +2708,7 @@ class FormRecreateCuffdiffConfigFile(tkinter.Frame):
 
     def close(self):
         '''
-        Close "FormRecreateCuffdiffConfigFile".
+        Close "FormRecreateCuffdiffCuffnormConfigFile".
         '''
         # close SSH client connection
         if self.cluster_name_ant is not None:
@@ -2827,7 +2938,7 @@ class FormRecreateCufflinksCuffmergeConfigFile(tkinter.Frame):
         self.wrapper_reference_dataset.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_reference_dataset['values'] = sorted(reference_dataset_name_list)
@@ -2843,7 +2954,7 @@ class FormRecreateCufflinksCuffmergeConfigFile(tkinter.Frame):
         self.wrapper_reference_file.set('')
 
         # get the list of the reference file names
-        (OK, error_list, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference file names in the combobox
         self.combobox_reference_file['values'] = sorted(reference_file_name_list)
@@ -2859,7 +2970,7 @@ class FormRecreateCufflinksCuffmergeConfigFile(tkinter.Frame):
         self.wrapper_annotation_file.set('')
 
         # get the list of the annotation file names
-        (OK, error_list, annotation_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, annotation_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the annotation file names in the combobox
         self.combobox_annotation_file['values'] = sorted(annotation_file_name_list)
@@ -2875,7 +2986,7 @@ class FormRecreateCufflinksCuffmergeConfigFile(tkinter.Frame):
         self.wrapper_mask_file.set('')
 
         # get the list of the mask file names
-        (OK, error_list, mask_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, mask_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the mask file names in the combobox
         self.combobox_mask_file['values'] = ['NONE'] + sorted(mask_file_name_list)
@@ -2895,7 +3006,7 @@ class FormRecreateCufflinksCuffmergeConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -3046,8 +3157,8 @@ class FormRecreateCufflinksCuffmergeConfigFile(tkinter.Frame):
         '''
 
         # get the list of the alignment dataset names
-        app_list = [xlib.get_star_code(), xlib.get_tophat_code()]
-        (OK, error_list, alignment_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+        app_list = xcufflinks.get_alignment_software_code_list()
+        (OK, _, alignment_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # get the directory dictionary of directories in the volume
         if OK:
@@ -3080,7 +3191,7 @@ class FormRecreateCufflinksCuffmergeConfigFile(tkinter.Frame):
         for key in alignment_dataset_dict.keys():
             if alignment_dataset_dict[key]['option_value'] == 'YES':
                 self.selected_alignment_dataset_list.append(key)
-                (OK, error_list, alignment_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), key, status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+                (OK, _, alignment_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), key, status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
                 self.alignment_dataset_id_list.append(alignment_dataset_id)
 
         # sort the selected alignment dataset list and alignment dataset identification list
@@ -3299,23 +3410,23 @@ class FormRecreateCuffquantConfigFile(tkinter.Frame):
 
         # create "label_assembly_dataset" and register it with the grid geometry manager
         self.label_assembly_dataset = tkinter.Label(self, text='Assembly dataset')
-        self.label_assembly_dataset.grid(row=6, column=0, padx=(15,5), pady=(40,5), sticky='e')
+        self.label_assembly_dataset.grid(row=5, column=0, padx=(15,5), pady=(40,5), sticky='e')
 
         # create "combobox_assembly_dataset" and register it with the grid geometry manager
         self.combobox_assembly_dataset = tkinter.ttk.Combobox(self, width=45, height=4, state='readonly', textvariable=self.wrapper_assembly_dataset)
-        self.combobox_assembly_dataset.grid(row=6, column=1, padx=(5,5), pady=(40,5), sticky='w')
+        self.combobox_assembly_dataset.grid(row=5, column=1, padx=(5,5), pady=(40,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
         self.label_fit = tkinter.Label(self, text=' '*36)
-        self.label_fit.grid(row=7, column=3, padx=(0,0), pady=(40,5), sticky='e')
+        self.label_fit.grid(row=6, column=3, padx=(0,0), pady=(40,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
         self.button_execute = tkinter.ttk.Button(self, text='Execute', command=self.execute, state='disabled')
-        self.button_execute.grid(row=7, column=4, padx=(0,5), pady=(40,5), sticky='e')
+        self.button_execute.grid(row=6, column=4, padx=(0,5), pady=(40,5), sticky='e')
 
         # create "button_close" and register it with the grid geometry manager
         self.button_close = tkinter.ttk.Button(self, text='Close', command=self.close)
-        self.button_close.grid(row=7, column=5, padx=(5,5), pady=(40,5), sticky='w')
+        self.button_close.grid(row=6, column=5, padx=(5,5), pady=(40,5), sticky='w')
 
         # link a handler to events
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
@@ -3384,7 +3495,7 @@ class FormRecreateCuffquantConfigFile(tkinter.Frame):
         self.wrapper_reference_dataset.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_reference_dataset['values'] = sorted(reference_dataset_name_list)
@@ -3400,7 +3511,7 @@ class FormRecreateCuffquantConfigFile(tkinter.Frame):
         self.wrapper_mask_file.set('')
 
         # get the list of the mask file names
-        (OK, error_list, mask_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, mask_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the mask file names in the combobox
         self.combobox_mask_file['values'] = ['NONE'] + sorted(mask_file_name_list)
@@ -3420,7 +3531,7 @@ class FormRecreateCuffquantConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -3448,7 +3559,7 @@ class FormRecreateCuffquantConfigFile(tkinter.Frame):
 
         # get the list of the assembly dataset names
         app_list = [xlib.get_cufflinks_cuffmerge_code()]
-        (OK, error_list, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # load the assembly dataset names in the combobox
         self.combobox_assembly_dataset['values'] = sorted(assembly_dataset_name_list)
@@ -3558,7 +3669,7 @@ class FormRecreateCuffquantConfigFile(tkinter.Frame):
         '''
 
         # get the assembly dataset identification
-        (OK, error_list, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 
@@ -3568,8 +3679,9 @@ class FormRecreateCuffquantConfigFile(tkinter.Frame):
         '''
 
         # get the list of the alignment dataset names
-        app_list = [xlib.get_star_code(), xlib.get_tophat_code()]
-        (OK, error_list, alignment_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+        app_list = xcufflinks.get_alignment_software_code_list()
+
+        (OK, _, alignment_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # get the directory dictionary of directories in the volume
         if OK:
@@ -3602,7 +3714,7 @@ class FormRecreateCuffquantConfigFile(tkinter.Frame):
         for key in alignment_dataset_dict.keys():
             if alignment_dataset_dict[key]['option_value'] == 'YES':
                 self.selected_alignment_dataset_list.append(key)
-                (OK, error_list, alignment_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), key, status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+                (OK, _, alignment_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), key, status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
                 self.alignment_dataset_id_list.append(alignment_dataset_id)
 
         # sort the selected alignment dataset list and alignment dataset identification list
@@ -3912,7 +4024,7 @@ class FormRecreateCutadaptConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -3939,7 +4051,7 @@ class FormRecreateCutadaptConfigFile(tkinter.Frame):
         self.wrapper_read_dataset.set('')
 
         # get the list of the read dataset names
-        (OK, error_list, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the list of the read dataset names in the combobox
         self.combobox_read_dataset['values'] = read_dataset_name_list
@@ -4024,7 +4136,7 @@ class FormRecreateCutadaptConfigFile(tkinter.Frame):
         '''
 
         # get the read dataset identification
-        (OK, error_list, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 
@@ -4087,7 +4199,7 @@ class FormRecreateCutadaptConfigFile(tkinter.Frame):
         # check that "entry_file_pattern" value is a valid pattern of regular expression
         try:
             re.compile(self.wrapper_file_pattern.get())
-        except Exception as e:
+        except Exception:
             self.label_file_pattern_warning['text'] = 'It is not a valid pattern of regular expression.'
             self.label_file_pattern_warning['foreground'] = 'red'
             OK = False
@@ -4123,7 +4235,7 @@ class FormRecreateCutadaptConfigFile(tkinter.Frame):
         if OK:
             selected_file_list = []
             command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
@@ -4395,7 +4507,7 @@ class FormRecreateDdRadSeqSimulationConfigFile(tkinter.Frame):
         self.wrapper_reference_dataset.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_reference_dataset['values'] = sorted(reference_dataset_name_list)
@@ -4411,7 +4523,7 @@ class FormRecreateDdRadSeqSimulationConfigFile(tkinter.Frame):
         self.wrapper_reference_file.set('')
 
         # get the list of the reference file names
-        (OK, error_list, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference file names in the combobox
         self.combobox_reference_file['values'] = sorted(reference_file_name_list)
@@ -4916,7 +5028,7 @@ class FormRecreateExpressConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -4944,7 +5056,7 @@ class FormRecreateExpressConfigFile(tkinter.Frame):
 
         # get the list of the assembly dataset names
         app_list = [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(), xlib.get_transcript_filter_code()]
-        (OK, error_list, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # load the assembly dataset names in the combobox
         self.combobox_assembly_dataset['values'] = sorted(assembly_dataset_name_list)
@@ -4961,7 +5073,7 @@ class FormRecreateExpressConfigFile(tkinter.Frame):
 
         # get the list of the alignment dataset names
         app_list = [xlib.get_bowtie2_code()]
-        (OK, error_list, alignment_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, alignment_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # load the alignment dataset names in the combobox
         self.combobox_alignment_dataset['values'] = sorted(alignment_dataset_name_list)
@@ -5040,7 +5152,7 @@ class FormRecreateExpressConfigFile(tkinter.Frame):
         '''
 
         # get the assembly dataset identification
-        (OK, error_list, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
 
         # load data in "combobox_assembly_type"
         if self.assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()):
@@ -5069,7 +5181,7 @@ class FormRecreateExpressConfigFile(tkinter.Frame):
         '''
 
         # get the alignment dataset identification
-        (OK, error_list, self.alignment_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_alignment_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.alignment_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_alignment_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 
@@ -5335,7 +5447,7 @@ class FormRecreateFastQCConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -5362,7 +5474,7 @@ class FormRecreateFastQCConfigFile(tkinter.Frame):
         self.wrapper_read_dataset.set('')
 
         # get the list of the read dataset names
-        (OK, error_list, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the list of the read dataset names in the combobox
         self.combobox_read_dataset['values'] = read_dataset_name_list
@@ -5434,7 +5546,7 @@ class FormRecreateFastQCConfigFile(tkinter.Frame):
         '''
 
         # get the read dataset identification
-        (OK, error_list, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 
@@ -5472,7 +5584,7 @@ class FormRecreateFastQCConfigFile(tkinter.Frame):
         # check that "entry_file_pattern" value is a valid pattern of regular expression
         try:
             re.compile(self.wrapper_file_pattern.get())
-        except Exception as e:
+        except Exception:
             self.label_file_pattern_warning['text'] = 'It is not a valid pattern of regular expression.'
             self.label_file_pattern_warning['foreground'] = 'red'
             OK = False
@@ -5508,7 +5620,7 @@ class FormRecreateFastQCConfigFile(tkinter.Frame):
         if OK:
             selected_file_list = []
             command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
@@ -5731,7 +5843,7 @@ class FormRecreateGgTrinityConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -5759,7 +5871,7 @@ class FormRecreateGgTrinityConfigFile(tkinter.Frame):
 
         # get the list of the alignment dataset names
         app_list = [xlib.get_bowtie2_code(), xlib.get_gsnap_code(), xlib.get_hisat2_code(), xlib.get_star_code(), xlib.get_tophat_code()]
-        (OK, error_list, alignment_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, alignment_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # load the alignment dataset names in the combobox
         self.combobox_alignment_dataset['values'] = sorted(alignment_dataset_name_list)
@@ -5827,7 +5939,7 @@ class FormRecreateGgTrinityConfigFile(tkinter.Frame):
         '''
 
         # get the alignment dataset identification
-        (OK, error_list, self.alignment_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_alignment_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.alignment_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_alignment_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 
@@ -6112,7 +6224,7 @@ class FormRecreateGmapConfigFile(tkinter.Frame):
         self.wrapper_reference_dataset.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_reference_dataset['values'] = sorted(reference_dataset_name_list)
@@ -6128,7 +6240,7 @@ class FormRecreateGmapConfigFile(tkinter.Frame):
         self.wrapper_reference_file.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_reference_file['values'] = sorted(reference_file_name_list)
@@ -6148,7 +6260,7 @@ class FormRecreateGmapConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_result_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -6176,7 +6288,7 @@ class FormRecreateGmapConfigFile(tkinter.Frame):
 
         # get the list of the assembly_dataset dataset names
         app_list = [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(), xlib.get_transcript_filter_code()]
-        (OK, error_list, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # load the assembly dataset names in the combobox
         self.combobox_assembly_dataset['values'] = sorted(assembly_dataset_name_list)
@@ -6274,7 +6386,7 @@ class FormRecreateGmapConfigFile(tkinter.Frame):
         '''
 
         # get the assembly_dataset dataset identification
-        (OK, error_list, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
 
         # load data in "combobox_assembly_type"
         if self.assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()):
@@ -6645,7 +6757,7 @@ class FormRecreateGsnapConfigFile(tkinter.Frame):
         self.wrapper_reference_dataset.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_reference_dataset['values'] = ['NONE'] + sorted(reference_dataset_name_list)
@@ -6661,7 +6773,7 @@ class FormRecreateGsnapConfigFile(tkinter.Frame):
         self.wrapper_reference_file.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_reference_file['values'] = sorted(reference_file_name_list)
@@ -6681,7 +6793,7 @@ class FormRecreateGsnapConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -6709,7 +6821,7 @@ class FormRecreateGsnapConfigFile(tkinter.Frame):
 
         # get the list of the assembly_dataset dataset names
         app_list = [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(), xlib.get_transcript_filter_code(), xlib.get_soapdenovo2_code(), xlib.get_starcode_code()]
-        (OK, error_list, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # load the assembly dataset names in the combobox
         self.combobox_assembly_dataset['values'] = sorted(assembly_dataset_name_list)
@@ -6725,7 +6837,7 @@ class FormRecreateGsnapConfigFile(tkinter.Frame):
         self.wrapper_read_dataset.set('')
 
         # get the list of the read dataset names
-        (OK, error_list, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the list of the read dataset names in the combobox
         self.combobox_read_dataset['values'] = read_dataset_name_list
@@ -6877,10 +6989,10 @@ class FormRecreateGsnapConfigFile(tkinter.Frame):
         '''
 
         # get the assembly_dataset dataset identification
-        (OK, error_list, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
 
         # load data in "combobox_assembly_type"
-        if self.assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code() or self.assembly_dataset_id.startswith(xlib.get_soapdenovo2_code())):
+        if self.assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()) or self.assembly_dataset_id.startswith(xlib.get_soapdenovo2_code()):
             self.combobox_assembly_type['state'] = 'readonly'
             self.combobox_assembly_type['values'] = ['CONTIGS', 'SCAFFOLDS']
             self.wrapper_assembly_type.set('')
@@ -6907,7 +7019,7 @@ class FormRecreateGsnapConfigFile(tkinter.Frame):
         '''
 
         # get the read dataset identification
-        (OK, error_list, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 
@@ -6970,7 +7082,7 @@ class FormRecreateGsnapConfigFile(tkinter.Frame):
         # check that "entry_file_pattern" value is a valid pattern of regular expression
         try:
             re.compile(self.wrapper_file_pattern.get())
-        except Exception as e:
+        except Exception:
             self.label_file_pattern_warning['text'] = 'It is not a valid pattern of regular expression.'
             self.label_file_pattern_warning['foreground'] = 'red'
             OK = False
@@ -7006,7 +7118,7 @@ class FormRecreateGsnapConfigFile(tkinter.Frame):
         if OK:
             selected_file_list = []
             command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
@@ -7119,10 +7231,8 @@ class FormRecreateHisat2ConfigFile(tkinter.Frame):
         self.wrapper_reference_dataset.trace('w', self.check_inputs)
         self.wrapper_reference_file = tkinter.StringVar()
         self.wrapper_reference_file.trace('w', self.check_inputs)
-        self.wrapper_splice_site_file = tkinter.StringVar()
-        self.wrapper_splice_site_file.trace('w', self.check_inputs)
-        self.wrapper_exon_file = tkinter.StringVar()
-        self.wrapper_exon_file.trace('w', self.check_inputs)
+        self.wrapper_annotation_file = tkinter.StringVar()
+        self.wrapper_annotation_file.trace('w', self.check_inputs)
         self.wrapper_experiment_id = tkinter.StringVar()
         self.wrapper_experiment_id.trace('w', self.check_inputs)
         self.wrapper_read_dataset = tkinter.StringVar()
@@ -7158,11 +7268,11 @@ class FormRecreateHisat2ConfigFile(tkinter.Frame):
 
         # create "label_cluster_name" and register it with the grid geometry manager
         self.label_cluster_name = tkinter.Label(self, text='Cluster name')
-        self.label_cluster_name.grid(row=0, column=0, padx=(15,5), pady=(30,5), sticky='e')
+        self.label_cluster_name.grid(row=0, column=0, padx=(15,5), pady=(50,5), sticky='e')
 
         # create "combobox_cluster_name" and register it with the grid geometry manager
         self.combobox_cluster_name = tkinter.ttk.Combobox(self, width=20, height=4, state='readonly', textvariable=self.wrapper_cluster_name)
-        self.combobox_cluster_name.grid(row=0, column=1, padx=(5,5), pady=(30,5), sticky='w')
+        self.combobox_cluster_name.grid(row=0, column=1, padx=(5,5), pady=(50,5), sticky='w')
 
         # create "label_reference_dataset" and register it with the grid geometry manager
         self.label_reference_dataset = tkinter.Label(self, text='Reference dataset')
@@ -7180,92 +7290,83 @@ class FormRecreateHisat2ConfigFile(tkinter.Frame):
         self.combobox_reference_file = tkinter.ttk.Combobox(self, width=45, height=4, state='readonly', textvariable=self.wrapper_reference_file)
         self.combobox_reference_file.grid(row=2, column=1, padx=(5,5), pady=(15,5), sticky='w')
 
-        # create "label_splice_site_file" and register it with the grid geometry manager
-        self.label_splice_site_file = tkinter.Label(self, text='Splice site file')
-        self.label_splice_site_file.grid(row=3, column=0, padx=(15,5), pady=(15,5), sticky='e')
+        # create "label_annotation_file" and register it with the grid geometry manager
+        self.label_annotation_file = tkinter.Label(self, text='Annotation file')
+        self.label_annotation_file.grid(row=3, column=0, padx=(15,5), pady=(15,5), sticky='e')
 
-        # create "combobox_splice_site_file" and register it with the grid geometry manager
-        self.combobox_splice_site_file = tkinter.ttk.Combobox(self, width=45, height=4, state='readonly', textvariable=self.wrapper_splice_site_file)
-        self.combobox_splice_site_file.grid(row=3, column=1, padx=(5,5), pady=(15,5), sticky='w')
-
-        # create "label_exon_file" and register it with the grid geometry manager
-        self.label_exon_file = tkinter.Label(self, text='Exon file')
-        self.label_exon_file.grid(row=4, column=0, padx=(15,5), pady=(15,5), sticky='e')
-
-        # create "combobox_exon_file" and register it with the grid geometry manager
-        self.combobox_exon_file = tkinter.ttk.Combobox(self, width=45, height=4, state='readonly', textvariable=self.wrapper_exon_file)
-        self.combobox_exon_file.grid(row=4, column=1, padx=(5,5), pady=(15,5), sticky='w')
+        # create "combobox_annotation_file" and register it with the grid geometry manager
+        self.combobox_annotation_file = tkinter.ttk.Combobox(self, width=45, height=4, state='readonly', textvariable=self.wrapper_annotation_file)
+        self.combobox_annotation_file.grid(row=3, column=1, padx=(5,5), pady=(15,5), sticky='w')
 
         # create "label_experiment_id" and register it with the grid geometry manager
         self.label_experiment_id = tkinter.Label(self, text='Experiment id.')
-        self.label_experiment_id.grid(row=5, column=0, padx=(15,5), pady=(15,5), sticky='e')
+        self.label_experiment_id.grid(row=4, column=0, padx=(15,5), pady=(15,5), sticky='e')
 
         # create "combobox_experiment_id" and register it with the grid geometry manager
         self.combobox_experiment_id = tkinter.ttk.Combobox(self, width=30, height=4, state='readonly', textvariable=self.wrapper_experiment_id)
-        self.combobox_experiment_id.grid(row=5, column=1, padx=(5,5), pady=(15,5), sticky='w')
+        self.combobox_experiment_id.grid(row=4, column=1, padx=(5,5), pady=(15,5), sticky='w')
 
         # create "label_read_dataset" and register it with the grid geometry manager
         self.label_read_dataset = tkinter.Label(self, text='Read dataset')
-        self.label_read_dataset.grid(row=6, column=0, padx=(15,5), pady=(15,5), sticky='e')
+        self.label_read_dataset.grid(row=5, column=0, padx=(15,5), pady=(15,5), sticky='e')
 
         # create "combobox_read_dataset" and register it with the grid geometry manager
         self.combobox_read_dataset = tkinter.ttk.Combobox(self, width=45, height=4, state='readonly', textvariable=self.wrapper_read_dataset)
-        self.combobox_read_dataset.grid(row=6, column=1, padx=(5,5), pady=(15,5), sticky='w')
+        self.combobox_read_dataset.grid(row=5, column=1, padx=(5,5), pady=(15,5), sticky='w')
 
         # create "label_file_pattern" and register it with the grid geometry manager
         self.label_file_pattern = tkinter.Label(self, text='File pattern')
-        self.label_file_pattern.grid(row=7, column=0, padx=(15,5), pady=(15,5), sticky='e')
+        self.label_file_pattern.grid(row=6, column=0, padx=(15,5), pady=(15,5), sticky='e')
 
         # create "entry_file_pattern" and register it with the grid geometry manager
         self.entry_file_pattern = tkinter.Entry(self, textvariable=self.wrapper_file_pattern, width=30, validatecommand=self.check_inputs)
-        self.entry_file_pattern.grid(row=7, column=1, padx=(5,5), pady=(15,5), sticky='w')
+        self.entry_file_pattern.grid(row=6, column=1, padx=(5,5), pady=(15,5), sticky='w')
 
         # create "label_file_pattern_warning" and register it with the grid geometry manager
         self.label_file_pattern_warning = tkinter.Label(self, text='')
-        self.label_file_pattern_warning.grid(row=7, column=2, columnspan=3, padx=(5,5), pady=(15,5), sticky='w')
+        self.label_file_pattern_warning.grid(row=6, column=2, columnspan=3, padx=(5,5), pady=(15,5), sticky='w')
 
         # create "label_read_type" and register it with the grid geometry manager
         self.label_read_type = tkinter.Label(self, text='Read type')
-        self.label_read_type.grid(row=8, column=0, padx=(15,5), pady=(15,5), sticky='e')
+        self.label_read_type.grid(row=7, column=0, padx=(15,5), pady=(15,5), sticky='e')
 
         # create "combobox_read_type" and register it with the grid geometry manager
         self.combobox_read_type = tkinter.ttk.Combobox(self, width=15, height=4, state='readonly', textvariable=self.wrapper_read_type)
-        self.combobox_read_type.grid(row=8, column=1, padx=(5,5), pady=(15,5), sticky='w')
+        self.combobox_read_type.grid(row=7, column=1, padx=(5,5), pady=(15,5), sticky='w')
 
         # create "label_specific_chars_1" and register it with the grid geometry manager
         self.label_specific_chars_1 = tkinter.Label(self, text='File #1 specific chars')
-        self.label_specific_chars_1.grid(row=9, column=0, padx=(15,5), pady=(15,5), sticky='e')
+        self.label_specific_chars_1.grid(row=8, column=0, padx=(15,5), pady=(15,5), sticky='e')
 
         # create "entry_specific_chars_1" and register it with the grid geometry manager
         self.entry_specific_chars_1 = tkinter.Entry(self, textvariable=self.wrapper_specific_chars_1, width=30, validatecommand=self.check_inputs)
-        self.entry_specific_chars_1.grid(row=9, column=1, padx=(5,5), pady=(15,5), sticky='w')
+        self.entry_specific_chars_1.grid(row=8, column=1, padx=(5,5), pady=(15,5), sticky='w')
 
         # create "label_specific_chars_2" and register it with the grid geometry manager
         self.label_specific_chars_2 = tkinter.Label(self, text='File #2 specific chars')
-        self.label_specific_chars_2.grid(row=10, column=0, padx=(15,5), pady=(15,5), sticky='e')
+        self.label_specific_chars_2.grid(row=9, column=0, padx=(15,5), pady=(15,5), sticky='e')
 
         # create "entry_specific_chars_2" and register it with the grid geometry manager
         self.entry_specific_chars_2 = tkinter.Entry(self, textvariable=self.wrapper_specific_chars_2, width=30, validatecommand=self.check_inputs)
-        self.entry_specific_chars_2.grid(row=10, column=1, padx=(5,5), pady=(15,5), sticky='w')
+        self.entry_specific_chars_2.grid(row=9, column=1, padx=(5,5), pady=(15,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
         self.label_fit = tkinter.Label(self, text=' '*44)
-        self.label_fit.grid(row=11, column=2, padx=(0,0), pady=(15,5), sticky='e')
+        self.label_fit.grid(row=10, column=2, padx=(0,0), pady=(15,5), sticky='e')
 
         # create "button_execute" and register it with the grid geometry manager
         self.button_execute = tkinter.ttk.Button(self, text='Execute', command=self.execute, state='disabled')
-        self.button_execute.grid(row=11, column=3, padx=(0,5), pady=(15,5), sticky='e')
+        self.button_execute.grid(row=10, column=3, padx=(0,5), pady=(15,5), sticky='e')
 
         # create "button_close" and register it with the grid geometry manager
         self.button_close = tkinter.ttk.Button(self, text='Close', command=self.close)
-        self.button_close.grid(row=11, column=4, padx=(5,5), pady=(15,5), sticky='w')
+        self.button_close.grid(row=10, column=4, padx=(5,5), pady=(15,5), sticky='w')
 
         # link a handler to events
         self.combobox_cluster_name.bind('<<ComboboxSelected>>', self.combobox_cluster_name_selected_item)
         self.combobox_reference_dataset.bind('<<ComboboxSelected>>', self.combobox_reference_dataset_selected_item)
         self.combobox_reference_file.bind('<<ComboboxSelected>>', self.combobox_reference_file_selected_item)
-        self.combobox_splice_site_file.bind('<<ComboboxSelected>>', self.combobox_splice_site_file_selected_item)
-        self.combobox_exon_file.bind('<<ComboboxSelected>>', self.combobox_exon_file_selected_item)
+        self.combobox_annotation_file.bind('<<ComboboxSelected>>', self.combobox_annotation_file_selected_item)
         self.combobox_experiment_id.bind('<<ComboboxSelected>>', self.combobox_experiment_id_selected_item)
         self.combobox_read_dataset.bind('<<ComboboxSelected>>', self.combobox_read_dataset_selected_item)
         self.combobox_read_type.bind('<<ComboboxSelected>>', self.combobox_read_type_selected_item)
@@ -7283,10 +7384,8 @@ class FormRecreateHisat2ConfigFile(tkinter.Frame):
         self.wrapper_reference_dataset.set('')
         self.combobox_reference_file['values'] = []
         self.wrapper_reference_file.set('')
-        self.combobox_splice_site_file['values'] = []
-        self.wrapper_splice_site_file.set('')
-        self.combobox_exon_file['values'] = []
-        self.wrapper_exon_file.set('')
+        self.combobox_annotation_file['values'] = []
+        self.wrapper_annotation_file.set('')
         self.combobox_experiment_id['values'] = []
         self.wrapper_experiment_id.set('')
         self.combobox_read_dataset['values'] = []
@@ -7340,7 +7439,7 @@ class FormRecreateHisat2ConfigFile(tkinter.Frame):
         self.wrapper_reference_dataset.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_reference_dataset['values'] = sorted(reference_dataset_name_list)
@@ -7356,42 +7455,26 @@ class FormRecreateHisat2ConfigFile(tkinter.Frame):
         self.wrapper_reference_file.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_reference_file['values'] = sorted(reference_file_name_list)
 
     #---------------
 
-    def populate_combobox_splice_site_file(self):
+    def populate_combobox_annotation_file(self):
         '''
-        Populate data in "combobox_splice_site_file".
-        '''
-
-        # clear the value selected in the combobox
-        self.wrapper_splice_site_file.set('')
-
-        # get the list of the reference dataset names
-        (OK, error_list, splice_site_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
-
-        # load the reference dataset names in the combobox
-        self.combobox_splice_site_file['values'] = ['NONE'] + sorted(splice_site_file_name_list)
-
-    #---------------
-
-    def populate_combobox_exon_file(self):
-        '''
-        Populate data in "combobox_exon_file".
+        Populate data in "combobox_annotation_file".
         '''
 
         # clear the value selected in the combobox
-        self.wrapper_exon_file.set('')
+        self.wrapper_annotation_file.set('')
 
-        # get the list of the reference dataset names
-        (OK, error_list, exon_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        # get the list of the annotation file names
+        (_, _, annotation_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
-        # load the reference dataset names in the combobox
-        self.combobox_exon_file['values'] = ['NONE'] + sorted(exon_file_name_list)
+        # load the annotation file names in the combobox
+        self.combobox_annotation_file['values'] = ['NONE'] + sorted(annotation_file_name_list)
 
     #---------------
 
@@ -7408,7 +7491,7 @@ class FormRecreateHisat2ConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -7435,7 +7518,7 @@ class FormRecreateHisat2ConfigFile(tkinter.Frame):
         self.wrapper_read_dataset.set('')
 
         # get the list of the read dataset names
-        (OK, error_list, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the list of the read dataset names in the combobox
         self.combobox_read_dataset['values'] = read_dataset_name_list
@@ -7490,13 +7573,9 @@ class FormRecreateHisat2ConfigFile(tkinter.Frame):
         self.combobox_reference_file['values'] = []
         self.wrapper_reference_file.set('')
 
-        # clear data in "combobox_splice_site_file"
-        self.combobox_splice_site_file['values'] = []
-        self.wrapper_splice_site_file.set('')
-
-        # clear data in "combobox_exon_file"
-        self.combobox_exon_file['values'] = []
-        self.wrapper_exon_file.set('')
+        # clear data in "combobox_annotation_file"
+        self.combobox_annotation_file['values'] = []
+        self.wrapper_annotation_file.set('')
 
         # load data in "combobox_experiment_id"
         self.populate_combobox_experiment_id()
@@ -7524,11 +7603,8 @@ class FormRecreateHisat2ConfigFile(tkinter.Frame):
         # load data in "combobox_reference_file"
         self.populate_combobox_reference_file()
 
-        # load data in "combobox_splice_site_file"
-        self.populate_combobox_splice_site_file()
-
-        # load data in "combobox_exon_file"
-        self.populate_combobox_exon_file()
+        # load data in "combobox_annotation_file"
+        self.populate_combobox_annotation_file()
 
         # set cursor to show normal status
         self.root.config(cursor='')
@@ -7545,18 +7621,9 @@ class FormRecreateHisat2ConfigFile(tkinter.Frame):
 
     #---------------
 
-    def combobox_splice_site_file_selected_item(self, event=None):
+    def combobox_annotation_file_selected_item(self, event=None):
         '''
-        Process the event when an item of "combobox_splice_site_file" has been selected
-        '''
-
-        pass
-
-    #---------------
-
-    def combobox_exon_file_selected_item(self, event=None):
-        '''
-        Process the event when an item of "combobox_exon_file" has been selected
+        Process the event when an item of "combobox_annotation_file" has been selected
         '''
 
         pass
@@ -7587,7 +7654,7 @@ class FormRecreateHisat2ConfigFile(tkinter.Frame):
         '''
 
         # get the read dataset identification
-        (OK, error_list, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 
@@ -7629,7 +7696,7 @@ class FormRecreateHisat2ConfigFile(tkinter.Frame):
             OK = False
 
         # check if "button_execute" has to be enabled or disabled
-        if self.wrapper_cluster_name.get() != '' and self.wrapper_reference_dataset.get() != '' and self.wrapper_reference_file.get() != '' and self.wrapper_splice_site_file.get() != '' and self.wrapper_exon_file.get() != '' and self.wrapper_experiment_id.get() != '' and self.wrapper_read_dataset.get() != '' and self.wrapper_file_pattern.get() != '' and (self.read_type == 'SE' or self.read_type == 'PE' and self.wrapper_specific_chars_1.get() != '' and  self.wrapper_specific_chars_2.get() != ''):
+        if self.wrapper_cluster_name.get() != '' and self.wrapper_reference_dataset.get() != '' and self.wrapper_reference_file.get() != ''  and self.wrapper_annotation_file.get() != '' and self.wrapper_experiment_id.get() != '' and self.wrapper_read_dataset.get() != '' and self.wrapper_file_pattern.get() != '' and (self.read_type == 'SE' or self.read_type == 'PE' and self.wrapper_specific_chars_1.get() != '' and  self.wrapper_specific_chars_2.get() != ''):
             self.button_execute['state'] = 'enable'
         else:
             self.button_execute['state'] = 'disabled'
@@ -7650,7 +7717,7 @@ class FormRecreateHisat2ConfigFile(tkinter.Frame):
         # check that "entry_file_pattern" value is a valid pattern of regular expression
         try:
             re.compile(self.wrapper_file_pattern.get())
-        except Exception as e:
+        except Exception:
             self.label_file_pattern_warning['text'] = 'It is not a valid pattern of regular expression.'
             self.label_file_pattern_warning['foreground'] = 'red'
             OK = False
@@ -7686,7 +7753,7 @@ class FormRecreateHisat2ConfigFile(tkinter.Frame):
         if OK:
             selected_file_list = []
             command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
@@ -7714,9 +7781,9 @@ class FormRecreateHisat2ConfigFile(tkinter.Frame):
         # recreate the HISAT2 config file
         if OK:
             if self.read_type == 'SE':
-                (OK, error_list) = xhisat2.create_hisat2_config_file(self.wrapper_experiment_id.get(), self.wrapper_reference_dataset.get(), self.wrapper_reference_file.get(), self.wrapper_splice_site_file.get(), self.wrapper_exon_file.get(), self.read_dataset_id, self.read_type, selected_file_list, None)
+                (OK, error_list) = xhisat2.create_hisat2_config_file(self.wrapper_experiment_id.get(), self.wrapper_reference_dataset.get(), self.wrapper_reference_file.get(), self.wrapper_annotation_file.get(), self.read_dataset_id, self.read_type, selected_file_list, None)
             elif self.read_type == 'PE':
-                (OK, error_list) = xhisat2.create_hisat2_config_file(self.wrapper_experiment_id.get(), self.wrapper_reference_dataset.get(), self.wrapper_reference_file.get(), self.wrapper_splice_site_file.get(), self.wrapper_exon_file.get(), self.read_dataset_id, self.read_type, file_1_list, file_2_list)
+                (OK, error_list) = xhisat2.create_hisat2_config_file(self.wrapper_experiment_id.get(), self.wrapper_reference_dataset.get(), self.wrapper_reference_file.get(), self.wrapper_annotation_file.get(), self.read_dataset_id, self.read_type, file_1_list, file_2_list)
             if not OK:
                 message = ''
                 for error in error_list:
@@ -7731,7 +7798,7 @@ class FormRecreateHisat2ConfigFile(tkinter.Frame):
             self.wait_window(dialog_editor)
 
             # check the config file
-            (OK, error_list) = xgmap.check_hisat2_config_file(strict=False)
+            (OK, error_list) = xhisat2.check_hisat2_config_file(strict=False)
             if OK:
                 message = f'The {xlib.get_hisat2_name()} config file is OK.'
                 tkinter.messagebox.showinfo(f'{xlib.get_project_name()} - {self.head}', message)
@@ -7952,7 +8019,7 @@ class FormRecreateHtseqCountConfigFile(tkinter.Frame):
         self.wrapper_reference_dataset.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_reference_dataset['values'] = sorted(reference_dataset_name_list)
@@ -7968,7 +8035,7 @@ class FormRecreateHtseqCountConfigFile(tkinter.Frame):
         self.wrapper_annotation_file.set('')
 
         # get the list of the annotation file names
-        (OK, error_list, annotation_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, annotation_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the annotation file names in the combobox
         self.combobox_annotation_file['values'] = sorted(annotation_file_name_list)
@@ -7988,7 +8055,7 @@ class FormRecreateHtseqCountConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -8107,8 +8174,8 @@ class FormRecreateHtseqCountConfigFile(tkinter.Frame):
         '''
 
         # get the list of the alignment dataset names
-        app_list = [xlib.get_star_code(), xlib.get_tophat_code()]
-        (OK, error_list, alignment_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+        app_list = xhtseq.get_alignment_software_code_list()
+        (OK, _, alignment_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # get the directory dictionary of directories in the volume
         if OK:
@@ -8141,7 +8208,7 @@ class FormRecreateHtseqCountConfigFile(tkinter.Frame):
         for key in alignment_dataset_dict.keys():
             if alignment_dataset_dict[key]['option_value'] == 'YES':
                 self.selected_alignment_dataset_list.append(key)
-                (OK, error_list, alignment_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), key, status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+                (_, _, alignment_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), key, status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
                 self.alignment_dataset_id_list.append(alignment_dataset_id)
 
         # sort the selected alignment dataset list and alignment dataset identification list
@@ -8451,7 +8518,7 @@ class FormRecreateInsilicoReadNormalizationConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -8478,7 +8545,7 @@ class FormRecreateInsilicoReadNormalizationConfigFile(tkinter.Frame):
         self.wrapper_read_dataset.set('')
 
         # get the list of the read dataset names
-        (OK, error_list, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the list of the read dataset names in the combobox
         self.combobox_read_dataset['values'] = read_dataset_name_list
@@ -8563,7 +8630,7 @@ class FormRecreateInsilicoReadNormalizationConfigFile(tkinter.Frame):
         '''
 
         # get the read dataset identification
-        (OK, error_list, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 
@@ -8626,7 +8693,7 @@ class FormRecreateInsilicoReadNormalizationConfigFile(tkinter.Frame):
         # check that "entry_file_pattern" value is a valid pattern of regular expression
         try:
             re.compile(self.wrapper_file_pattern.get())
-        except Exception as e:
+        except Exception:
             self.label_file_pattern_warning['text'] = 'It is not a valid pattern of regular expression.'
             self.label_file_pattern_warning['foreground'] = 'red'
             OK = False
@@ -8662,7 +8729,7 @@ class FormRecreateInsilicoReadNormalizationConfigFile(tkinter.Frame):
         if OK:
             selected_file_list = []
             command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
@@ -9028,7 +9095,7 @@ class FormRecreateIpyradConfigFile(tkinter.Frame):
         self.wrapper_reference_dataset.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_reference_dataset['values'] = sorted(reference_dataset_name_list)
@@ -9044,7 +9111,7 @@ class FormRecreateIpyradConfigFile(tkinter.Frame):
         self.wrapper_reference_file.set('')
 
         # get the list of the reference file names
-        (OK, error_list, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference file names in the combobox
         self.combobox_reference_file['values'] = sorted(reference_file_name_list)
@@ -9090,7 +9157,7 @@ class FormRecreateIpyradConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -9117,7 +9184,7 @@ class FormRecreateIpyradConfigFile(tkinter.Frame):
         self.wrapper_read_dataset.set('')
 
         # get the list of the read dataset names
-        (OK, error_list, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the list of the read dataset names in the combobox
         self.combobox_read_dataset['values'] = read_dataset_name_list
@@ -9357,7 +9424,7 @@ class FormRecreateIpyradConfigFile(tkinter.Frame):
         '''
 
         # get the read dataset identification
-        (OK, error_list, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 
@@ -9395,7 +9462,7 @@ class FormRecreateIpyradConfigFile(tkinter.Frame):
         # check that "entry_file_pattern" value is a valid pattern of regular expression
         try:
             re.compile(self.wrapper_file_pattern.get())
-        except Exception as e:
+        except Exception:
             self.label_file_pattern_warning['text'] = 'It is not a valid pattern of regular expression.'
             self.label_file_pattern_warning['foreground'] = 'red'
             OK = False
@@ -9480,7 +9547,7 @@ class FormRecreateIpyradConfigFile(tkinter.Frame):
         if OK:
             selected_file_list = []
             command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
@@ -9804,7 +9871,7 @@ class FormRecreateKallistoConfigFile(tkinter.Frame):
         self.wrapper_reference_dataset.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_reference_dataset['values'] = ['NONE'] + sorted(reference_dataset_name_list)
@@ -9820,7 +9887,7 @@ class FormRecreateKallistoConfigFile(tkinter.Frame):
         self.wrapper_annotation_file.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, annotation_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, annotation_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_annotation_file['values'] = sorted(annotation_file_name_list)
@@ -9840,7 +9907,7 @@ class FormRecreateKallistoConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -9867,7 +9934,7 @@ class FormRecreateKallistoConfigFile(tkinter.Frame):
         self.wrapper_read_dataset.set('')
 
         # get the list of the read dataset names
-        (OK, error_list, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the list of the read dataset names in the combobox
         self.combobox_read_dataset['values'] = read_dataset_name_list
@@ -9897,7 +9964,7 @@ class FormRecreateKallistoConfigFile(tkinter.Frame):
 
         # get the list of the assembly dataset names
         app_list = [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(), xlib.get_transcript_filter_code()]
-        (OK, error_list, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # load the assembly dataset names in the combobox
         self.combobox_assembly_dataset['values'] = sorted(assembly_dataset_name_list)
@@ -10014,7 +10081,7 @@ class FormRecreateKallistoConfigFile(tkinter.Frame):
         '''
 
         # get the read dataset identification
-        (OK, error_list, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 
@@ -10049,7 +10116,7 @@ class FormRecreateKallistoConfigFile(tkinter.Frame):
         '''
 
         # get the assembly dataset identification
-        (OK, error_list, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
 
         # load data in "combobox_assembly_type"
         if self.assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()):
@@ -10106,7 +10173,7 @@ class FormRecreateKallistoConfigFile(tkinter.Frame):
         # check that "entry_file_pattern" value is a valid pattern of regular expression
         try:
             re.compile(self.wrapper_file_pattern.get())
-        except Exception as e:
+        except Exception:
             self.label_file_pattern_warning['text'] = 'Invalid pattern.'
             self.label_file_pattern_warning['foreground'] = 'red'
             OK = False
@@ -10142,7 +10209,7 @@ class FormRecreateKallistoConfigFile(tkinter.Frame):
         if OK:
             selected_file_list = []
             command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
@@ -10412,7 +10479,7 @@ class FormRecreateQuastConfigFile(tkinter.Frame):
         self.wrapper_reference_dataset.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_reference_dataset['values'] = ['NONE'] + sorted(reference_dataset_name_list)
@@ -10428,7 +10495,7 @@ class FormRecreateQuastConfigFile(tkinter.Frame):
         self.wrapper_reference_file.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_reference_file['values'] = sorted(reference_file_name_list)
@@ -10448,7 +10515,7 @@ class FormRecreateQuastConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_result_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -10476,7 +10543,7 @@ class FormRecreateQuastConfigFile(tkinter.Frame):
 
         # get the list of the assembly_dataset dataset names
         app_list = [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(), xlib.get_transcript_filter_code()]
-        (OK, error_list, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # load the assembly dataset names in the combobox
         self.combobox_assembly_dataset['values'] = sorted(assembly_dataset_name_list)
@@ -10578,7 +10645,7 @@ class FormRecreateQuastConfigFile(tkinter.Frame):
         '''
 
         # get the assembly_dataset dataset identification
-        (OK, error_list, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
 
         # load data in "combobox_assembly_type"
         if self.assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()):
@@ -10848,7 +10915,7 @@ class FormRecreateRADdesignerConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_result_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -10876,7 +10943,7 @@ class FormRecreateRADdesignerConfigFile(tkinter.Frame):
 
         # get the list of the read dataset names
         app_list = [xlib.get_ipyrad_code()]
-        (OK, error_list, vcf_location_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, vcf_location_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # load the list of the read dataset names in the combobox
         self.combobox_vcf_location_dataset['values'] = vcf_location_dataset_name_list
@@ -10948,7 +11015,7 @@ class FormRecreateRADdesignerConfigFile(tkinter.Frame):
         '''
 
         # get the read dataset identification
-        (OK, error_list, self.vcf_location_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_vcf_location_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.vcf_location_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_vcf_location_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 
@@ -11299,7 +11366,7 @@ class FormRecreateRefEvalConfigFile(tkinter.Frame):
         self.wrapper_reference_dataset.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_reference_dataset['values'] = ['NONE'] + sorted(reference_dataset_name_list)
@@ -11315,7 +11382,7 @@ class FormRecreateRefEvalConfigFile(tkinter.Frame):
         self.wrapper_reference_file.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_reference_file['values'] = sorted(reference_file_name_list)
@@ -11335,7 +11402,7 @@ class FormRecreateRefEvalConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -11362,7 +11429,7 @@ class FormRecreateRefEvalConfigFile(tkinter.Frame):
         self.wrapper_read_dataset.set('')
 
         # get the list of the read dataset names
-        (OK, error_list, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the list of the read dataset names in the combobox
         self.combobox_read_dataset['values'] = read_dataset_name_list
@@ -11392,7 +11459,7 @@ class FormRecreateRefEvalConfigFile(tkinter.Frame):
 
         # get the list of the assembly dataset names
         app_list = [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(), xlib.get_transcript_filter_code()]
-        (OK, error_list, assembly_dataset_name_list) = xresult.get_assembly_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # load the assembly dataset names in the combobox
         self.combobox_assembly_dataset['values'] = sorted(assembly_dataset_name_list)
@@ -11509,7 +11576,7 @@ class FormRecreateRefEvalConfigFile(tkinter.Frame):
         '''
 
         # get the read dataset identification
-        (OK, error_list, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 
@@ -11544,7 +11611,7 @@ class FormRecreateRefEvalConfigFile(tkinter.Frame):
         '''
 
         # get the assembly dataset identification
-        (OK, error_list, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
 
         # load data in "combobox_assembly_type"
         if self.assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()):
@@ -11601,7 +11668,7 @@ class FormRecreateRefEvalConfigFile(tkinter.Frame):
         # check that "entry_file_pattern" value is a valid pattern of regular expression
         try:
             re.compile(self.wrapper_file_pattern.get())
-        except Exception as e:
+        except Exception:
             self.label_file_pattern_warning['text'] = 'Invalid pattern.'
             self.label_file_pattern_warning['foreground'] = 'red'
             OK = False
@@ -11637,7 +11704,7 @@ class FormRecreateRefEvalConfigFile(tkinter.Frame):
         if OK:
             selected_file_list = []
             command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
@@ -11973,7 +12040,7 @@ class FormRecreateRnaQuastConfigFile(tkinter.Frame):
         self.wrapper_reference_dataset.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_reference_dataset['values'] = ['NONE'] + sorted(reference_dataset_name_list)
@@ -11989,7 +12056,7 @@ class FormRecreateRnaQuastConfigFile(tkinter.Frame):
         self.wrapper_reference_file.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_reference_file['values'] = sorted(reference_file_name_list)
@@ -12009,7 +12076,7 @@ class FormRecreateRnaQuastConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -12036,7 +12103,7 @@ class FormRecreateRnaQuastConfigFile(tkinter.Frame):
         self.wrapper_read_dataset.set('')
 
         # get the list of the read dataset names
-        (OK, error_list, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the list of the read dataset names in the combobox
         self.combobox_read_dataset['values'] = read_dataset_name_list
@@ -12066,7 +12133,7 @@ class FormRecreateRnaQuastConfigFile(tkinter.Frame):
 
         # get the list of the assembly dataset names
         app_list = [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(), xlib.get_transcript_filter_code()]
-        (OK, error_list, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # load the assembly dataset names in the combobox
         self.combobox_assembly_dataset['values'] = sorted(assembly_dataset_name_list)
@@ -12183,7 +12250,7 @@ class FormRecreateRnaQuastConfigFile(tkinter.Frame):
         '''
 
         # get the read dataset identification
-        (OK, error_list, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 
@@ -12218,7 +12285,7 @@ class FormRecreateRnaQuastConfigFile(tkinter.Frame):
         '''
 
         # get the assembly dataset identification
-        (OK, error_list, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
 
         # load data in "combobox_assembly_type"
         if self.assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()):
@@ -12275,7 +12342,7 @@ class FormRecreateRnaQuastConfigFile(tkinter.Frame):
         # check that "entry_file_pattern" value is a valid pattern of regular expression
         try:
             re.compile(self.wrapper_file_pattern.get())
-        except Exception as e:
+        except Exception:
             self.label_file_pattern_warning['text'] = 'Invalid pattern.'
             self.label_file_pattern_warning['foreground'] = 'red'
             OK = False
@@ -12311,7 +12378,7 @@ class FormRecreateRnaQuastConfigFile(tkinter.Frame):
         if OK:
             selected_file_list = []
             command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
@@ -12625,7 +12692,7 @@ class FormRecreateRsemEvalConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -12652,7 +12719,7 @@ class FormRecreateRsemEvalConfigFile(tkinter.Frame):
         self.wrapper_read_dataset.set('')
 
         # get the list of the read dataset names
-        (OK, error_list, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the list of the read dataset names in the combobox
         self.combobox_read_dataset['values'] = read_dataset_name_list
@@ -12682,7 +12749,7 @@ class FormRecreateRsemEvalConfigFile(tkinter.Frame):
 
         # get the list of the assembly dataset names
         app_list = [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(), xlib.get_transcript_filter_code()]
-        (OK, error_list, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # load the assembly dataset names in the combobox
         self.combobox_assembly_dataset['values'] = sorted(assembly_dataset_name_list)
@@ -12761,7 +12828,7 @@ class FormRecreateRsemEvalConfigFile(tkinter.Frame):
         '''
 
         # get the read dataset identification
-        (OK, error_list, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 
@@ -12796,7 +12863,7 @@ class FormRecreateRsemEvalConfigFile(tkinter.Frame):
         '''
 
         # get the assembly dataset identification
-        (OK, error_list, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
 
         # load data in "combobox_assembly_type"
         if self.assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()):
@@ -12853,7 +12920,7 @@ class FormRecreateRsemEvalConfigFile(tkinter.Frame):
         # check that "entry_file_pattern" value is a valid pattern of regular expression
         try:
             re.compile(self.wrapper_file_pattern.get())
-        except Exception as e:
+        except Exception:
             self.label_file_pattern_warning['text'] = 'Invalid pattern.'
             self.label_file_pattern_warning['foreground'] = 'red'
             OK = False
@@ -12889,7 +12956,7 @@ class FormRecreateRsemEvalConfigFile(tkinter.Frame):
         if OK:
             selected_file_list = []
             command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
@@ -13161,7 +13228,7 @@ class FormRecreateRSiteSearchConfigFile(tkinter.Frame):
         self.wrapper_reference_dataset.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_reference_dataset['values'] = sorted(reference_dataset_name_list)
@@ -13177,7 +13244,7 @@ class FormRecreateRSiteSearchConfigFile(tkinter.Frame):
         self.wrapper_reference_file.set('')
 
         # get the list of the reference file names
-        (OK, error_list, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference file names in the combobox
         self.combobox_reference_file['values'] = sorted(reference_file_name_list)
@@ -13707,7 +13774,7 @@ class FormRecreateSoapdenovo2ConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -13734,7 +13801,7 @@ class FormRecreateSoapdenovo2ConfigFile(tkinter.Frame):
         self.wrapper_read_dataset.set('')
 
         # get the list of the read dataset names
-        (OK, error_list, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the list of the read dataset names in the combobox
         self.combobox_read_dataset['values'] = read_dataset_name_list
@@ -13819,7 +13886,7 @@ class FormRecreateSoapdenovo2ConfigFile(tkinter.Frame):
         '''
 
         # get the read dataset identification
-        (OK, error_list, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 
@@ -13882,7 +13949,7 @@ class FormRecreateSoapdenovo2ConfigFile(tkinter.Frame):
         # check that "entry_file_pattern" value is a valid pattern of regular expression
         try:
             re.compile(self.wrapper_file_pattern.get())
-        except Exception as e:
+        except Exception:
             self.label_file_pattern_warning['text'] = 'It is not a valid pattern of regular expression.'
             self.label_file_pattern_warning['foreground'] = 'red'
             OK = False
@@ -13918,7 +13985,7 @@ class FormRecreateSoapdenovo2ConfigFile(tkinter.Frame):
         if OK:
             selected_file_list = []
             command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
@@ -14204,7 +14271,7 @@ class FormRecreateSoapdenovoTransConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -14231,7 +14298,7 @@ class FormRecreateSoapdenovoTransConfigFile(tkinter.Frame):
         self.wrapper_read_dataset.set('')
 
         # get the list of the read dataset names
-        (OK, error_list, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the list of the read dataset names in the combobox
         self.combobox_read_dataset['values'] = read_dataset_name_list
@@ -14316,7 +14383,7 @@ class FormRecreateSoapdenovoTransConfigFile(tkinter.Frame):
         '''
 
         # get the read dataset identification
-        (OK, error_list, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 
@@ -14379,7 +14446,7 @@ class FormRecreateSoapdenovoTransConfigFile(tkinter.Frame):
         # check that "entry_file_pattern" value is a valid pattern of regular expression
         try:
             re.compile(self.wrapper_file_pattern.get())
-        except Exception as e:
+        except Exception:
             self.label_file_pattern_warning['text'] = 'It is not a valid pattern of regular expression.'
             self.label_file_pattern_warning['foreground'] = 'red'
             OK = False
@@ -14415,7 +14482,7 @@ class FormRecreateSoapdenovoTransConfigFile(tkinter.Frame):
         if OK:
             selected_file_list = []
             command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
@@ -14736,7 +14803,7 @@ class FormRecreateSTARConfigFile(tkinter.Frame):
         self.wrapper_reference_dataset.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_reference_dataset['values'] = sorted(reference_dataset_name_list)
@@ -14752,7 +14819,7 @@ class FormRecreateSTARConfigFile(tkinter.Frame):
         self.wrapper_reference_file.set('')
 
         # get the list of the reference file names
-        (OK, error_list, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference file names in the combobox
         self.combobox_reference_file['values'] = sorted(reference_file_name_list)
@@ -14768,7 +14835,7 @@ class FormRecreateSTARConfigFile(tkinter.Frame):
         self.wrapper_annotation_file.set('')
 
         # get the list of the annotation file names
-        (OK, error_list, annotation_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, annotation_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the annotation file names in the combobox
         self.combobox_annotation_file['values'] = sorted(annotation_file_name_list)
@@ -14788,7 +14855,7 @@ class FormRecreateSTARConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -14815,7 +14882,7 @@ class FormRecreateSTARConfigFile(tkinter.Frame):
         self.wrapper_read_dataset.set('')
 
         # get the list of the read dataset names
-        (OK, error_list, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the list of the read dataset names in the combobox
         self.combobox_read_dataset['values'] = read_dataset_name_list
@@ -14950,7 +15017,7 @@ class FormRecreateSTARConfigFile(tkinter.Frame):
         '''
 
         # get the read dataset identification
-        (OK, error_list, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 
@@ -15013,7 +15080,7 @@ class FormRecreateSTARConfigFile(tkinter.Frame):
         # check that "entry_file_pattern" value is a valid pattern of regular expression
         try:
             re.compile(self.wrapper_file_pattern.get())
-        except Exception as e:
+        except Exception:
             self.label_file_pattern_warning['text'] = 'Invalid pattern.'
             self.label_file_pattern_warning['foreground'] = 'red'
             OK = False
@@ -15049,7 +15116,7 @@ class FormRecreateSTARConfigFile(tkinter.Frame):
         if OK:
             selected_file_list = []
             command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
@@ -15335,7 +15402,7 @@ class FormRecreateStarcodeConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -15362,7 +15429,7 @@ class FormRecreateStarcodeConfigFile(tkinter.Frame):
         self.wrapper_read_dataset.set('')
 
         # get the list of the read dataset names
-        (OK, error_list, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the list of the read dataset names in the combobox
         self.combobox_read_dataset['values'] = read_dataset_name_list
@@ -15448,7 +15515,7 @@ class FormRecreateStarcodeConfigFile(tkinter.Frame):
         '''
 
         # get the read dataset identification
-        (OK, error_list, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 
@@ -15511,7 +15578,7 @@ class FormRecreateStarcodeConfigFile(tkinter.Frame):
         # check that "entry_file_pattern" value is a valid pattern of regular expression
         try:
             re.compile(self.wrapper_file_pattern.get())
-        except Exception as e:
+        except Exception:
             self.label_file_pattern_warning['text'] = 'It is not a valid pattern of regular expression.'
             self.label_file_pattern_warning['foreground'] = 'red'
             OK = False
@@ -15547,7 +15614,7 @@ class FormRecreateStarcodeConfigFile(tkinter.Frame):
         if OK:
             selected_file_list = []
             command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
@@ -15868,7 +15935,7 @@ class FormRecreateTopHatConfigFile(tkinter.Frame):
         self.wrapper_reference_dataset.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_reference_dataset['values'] = sorted(reference_dataset_name_list)
@@ -15884,7 +15951,7 @@ class FormRecreateTopHatConfigFile(tkinter.Frame):
         self.wrapper_reference_file.set('')
 
         # get the list of the reference file names
-        (OK, error_list, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference file names in the combobox
         self.combobox_reference_file['values'] = sorted(reference_file_name_list)
@@ -15900,7 +15967,7 @@ class FormRecreateTopHatConfigFile(tkinter.Frame):
         self.wrapper_annotation_file.set('')
 
         # get the list of the annotation file names
-        (OK, error_list, annotation_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, annotation_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the annotation file names in the combobox
         self.combobox_annotation_file['values'] = sorted(annotation_file_name_list)
@@ -15920,7 +15987,7 @@ class FormRecreateTopHatConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -15947,7 +16014,7 @@ class FormRecreateTopHatConfigFile(tkinter.Frame):
         self.wrapper_read_dataset.set('')
 
         # get the list of the read dataset names
-        (OK, error_list, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the list of the read dataset names in the combobox
         self.combobox_read_dataset['values'] = read_dataset_name_list
@@ -16082,7 +16149,7 @@ class FormRecreateTopHatConfigFile(tkinter.Frame):
         '''
 
         # get the read dataset identification
-        (OK, error_list, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 
@@ -16145,7 +16212,7 @@ class FormRecreateTopHatConfigFile(tkinter.Frame):
         # check that "entry_file_pattern" value is a valid pattern of regular expression
         try:
             re.compile(self.wrapper_file_pattern.get())
-        except Exception as e:
+        except Exception:
             self.label_file_pattern_warning['text'] = 'Invalid pattern.'
             self.label_file_pattern_warning['foreground'] = 'red'
             OK = False
@@ -16181,7 +16248,7 @@ class FormRecreateTopHatConfigFile(tkinter.Frame):
         if OK:
             selected_file_list = []
             command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
@@ -16467,7 +16534,7 @@ class FormRecreateTransAbyssConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -16494,7 +16561,7 @@ class FormRecreateTransAbyssConfigFile(tkinter.Frame):
         self.wrapper_read_dataset.set('')
 
         # get the list of the read dataset names
-        (OK, error_list, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the list of the read dataset names in the combobox
         self.combobox_read_dataset['values'] = read_dataset_name_list
@@ -16579,7 +16646,7 @@ class FormRecreateTransAbyssConfigFile(tkinter.Frame):
         '''
 
         # get the read dataset identification
-        (OK, error_list, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 
@@ -16642,7 +16709,7 @@ class FormRecreateTransAbyssConfigFile(tkinter.Frame):
         # check that "entry_file_pattern" value is a valid pattern of regular expression
         try:
             re.compile(self.wrapper_file_pattern.get())
-        except Exception as e:
+        except Exception:
             self.label_file_pattern_warning['text'] = 'It is not a valid pattern of regular expression.'
             self.label_file_pattern_warning['foreground'] = 'red'
             OK = False
@@ -16678,7 +16745,7 @@ class FormRecreateTransAbyssConfigFile(tkinter.Frame):
         if OK:
             selected_file_list = []
             command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
@@ -16912,7 +16979,7 @@ class FormRecreateTranscriptFilterConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_result_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -16940,7 +17007,7 @@ class FormRecreateTranscriptFilterConfigFile(tkinter.Frame):
 
         # get the list of the RSEM-EVAL dataset names
         app_list = [xlib.get_rsem_eval_code()]
-        (OK, error_list, rsem_eval_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, rsem_eval_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # load the RSEM-EVAL dataset names in the combobox
         self.combobox_rsem_eval_dataset['values'] = sorted(rsem_eval_dataset_name_list)
@@ -17012,7 +17079,7 @@ class FormRecreateTranscriptFilterConfigFile(tkinter.Frame):
         '''
 
         # get the RSEM-EVAL dataset identification
-        (OK, error_list, self.rsem_eval_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_rsem_eval_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.rsem_eval_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_rsem_eval_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 
@@ -17297,7 +17364,7 @@ class FormRecreateTranscriptomeBlastxConfigFile(tkinter.Frame):
         self.wrapper_database_dataset.set('')
 
         # get the list of the database dataset names
-        (OK, error_list, database_dataset_name_list) = xdatabase.get_database_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, database_dataset_name_list) = xdatabase.get_database_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the database dataset names in the combobox
         self.combobox_database_dataset['values'] = sorted(database_dataset_name_list)
@@ -17313,13 +17380,13 @@ class FormRecreateTranscriptomeBlastxConfigFile(tkinter.Frame):
         self.wrapper_protein_database_name.set('')
 
         # get the list of the database file names
-        (OK, error_list, database_file_name_list) = xdatabase.get_database_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_database_dataset.get(), file_type='.*phr', passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, database_file_name_list) = xdatabase.get_database_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_database_dataset.get(), file_type='.*phr', passed_connection=True, ssh_client=self.ssh_client)
 
         # get the list of the database dataset names
         protein_database_name_list = []
         pattern = re.compile('^.*[0-9][0-9]$')
         for database_file_name in database_file_name_list:
-            file_name, file_extension = os.path.splitext(database_file_name)
+            (file_name, _) = os.path.splitext(database_file_name)
             if pattern.match(file_name):
                 database_name = file_name[:-3]
             else:
@@ -17345,7 +17412,7 @@ class FormRecreateTranscriptomeBlastxConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_result_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -17373,7 +17440,7 @@ class FormRecreateTranscriptomeBlastxConfigFile(tkinter.Frame):
 
         # get the list of the assembly_dataset dataset names
         app_list = [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(), xlib.get_transcript_filter_code()]
-        (OK, error_list, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # load the assembly dataset names in the combobox
         self.combobox_assembly_dataset['values'] = sorted(assembly_dataset_name_list)
@@ -17471,7 +17538,7 @@ class FormRecreateTranscriptomeBlastxConfigFile(tkinter.Frame):
         '''
 
         # get the assembly_dataset dataset identification
-        (OK, error_list, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
 
         # load data in "combobox_assembly_type"
         if self.assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()):
@@ -17841,7 +17908,7 @@ class FormRecreateTransrateConfigFile(tkinter.Frame):
         self.wrapper_reference_dataset.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_reference_dataset['values'] = ['NONE'] + sorted(reference_dataset_name_list)
@@ -17857,7 +17924,7 @@ class FormRecreateTransrateConfigFile(tkinter.Frame):
         self.wrapper_reference_file.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_reference_file['values'] = sorted(reference_file_name_list)
@@ -17877,7 +17944,7 @@ class FormRecreateTransrateConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -17904,7 +17971,7 @@ class FormRecreateTransrateConfigFile(tkinter.Frame):
         self.wrapper_read_dataset.set('')
 
         # get the list of the read dataset names
-        (OK, error_list, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the list of the read dataset names in the combobox
         self.combobox_read_dataset['values'] = read_dataset_name_list
@@ -17934,7 +18001,7 @@ class FormRecreateTransrateConfigFile(tkinter.Frame):
 
         # get the list of the assembly dataset names
         app_list = [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(), xlib.get_transcript_filter_code()]
-        (OK, error_list, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # load the assembly dataset names in the combobox
         self.combobox_assembly_dataset['values'] = sorted(assembly_dataset_name_list)
@@ -18051,7 +18118,7 @@ class FormRecreateTransrateConfigFile(tkinter.Frame):
         '''
 
         # get the read dataset identification
-        (OK, error_list, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 
@@ -18086,7 +18153,7 @@ class FormRecreateTransrateConfigFile(tkinter.Frame):
         '''
 
         # get the assembly dataset identification
-        (OK, error_list, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
 
         # load data in "combobox_assembly_type"
         if self.assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()):
@@ -18143,7 +18210,7 @@ class FormRecreateTransrateConfigFile(tkinter.Frame):
         # check that "entry_file_pattern" value is a valid pattern of regular expression
         try:
             re.compile(self.wrapper_file_pattern.get())
-        except Exception as e:
+        except Exception:
             self.label_file_pattern_warning['text'] = 'Invalid pattern.'
             self.label_file_pattern_warning['foreground'] = 'red'
             OK = False
@@ -18179,7 +18246,7 @@ class FormRecreateTransrateConfigFile(tkinter.Frame):
         if OK:
             selected_file_list = []
             command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
@@ -18465,7 +18532,7 @@ class FormRecreateTrimmomaticConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -18492,7 +18559,7 @@ class FormRecreateTrimmomaticConfigFile(tkinter.Frame):
         self.wrapper_read_dataset.set('')
 
         # get the list of the read dataset names
-        (OK, error_list, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the list of the read dataset names in the combobox
         self.combobox_read_dataset['values'] = read_dataset_name_list
@@ -18577,7 +18644,7 @@ class FormRecreateTrimmomaticConfigFile(tkinter.Frame):
         '''
 
         # get the read dataset identification
-        (OK, error_list, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 
@@ -18640,7 +18707,7 @@ class FormRecreateTrimmomaticConfigFile(tkinter.Frame):
         # check that "entry_file_pattern" value is a valid pattern of regular expression
         try:
             re.compile(self.wrapper_file_pattern.get())
-        except Exception as e:
+        except Exception:
             self.label_file_pattern_warning['text'] = 'It is not a valid pattern of regular expression.'
             self.label_file_pattern_warning['foreground'] = 'red'
             OK = False
@@ -18676,7 +18743,7 @@ class FormRecreateTrimmomaticConfigFile(tkinter.Frame):
         if OK:
             selected_file_list = []
             command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
@@ -18962,7 +19029,7 @@ class FormRecreateTrinityConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_read_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -18989,7 +19056,7 @@ class FormRecreateTrinityConfigFile(tkinter.Frame):
         self.wrapper_read_dataset.set('')
 
         # get the list of the read dataset names
-        (OK, error_list, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, read_dataset_name_list) = xread.get_read_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the list of the read dataset names in the combobox
         self.combobox_read_dataset['values'] = read_dataset_name_list
@@ -19074,7 +19141,7 @@ class FormRecreateTrinityConfigFile(tkinter.Frame):
         '''
 
         # get the read dataset identification
-        (OK, error_list, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.read_dataset_id) = xread.get_read_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_read_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 
@@ -19137,7 +19204,7 @@ class FormRecreateTrinityConfigFile(tkinter.Frame):
         # check that "entry_file_pattern" value is a valid pattern of regular expression
         try:
             re.compile(self.wrapper_file_pattern.get())
-        except Exception as e:
+        except Exception:
             self.label_file_pattern_warning['text'] = 'It is not a valid pattern of regular expression.'
             self.label_file_pattern_warning['foreground'] = 'red'
             OK = False
@@ -19173,7 +19240,7 @@ class FormRecreateTrinityConfigFile(tkinter.Frame):
         if OK:
             selected_file_list = []
             command = f'cd {cluster_read_dir}; find . -type f -regex "./{self.wrapper_file_pattern.get()}"'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
             if OK:
                 for line in stdout:
                     selected_file_list.append(line.rstrip('\n'))
@@ -19458,7 +19525,7 @@ class FormRecreateVariantCallingConfigFile(tkinter.Frame):
         self.wrapper_reference_dataset.set('')
 
         # get the list of the reference dataset names
-        (OK, error_list, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_dataset_name_list) = xreference.get_reference_dataset_name_list(self.wrapper_cluster_name.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference dataset names in the combobox
         self.combobox_reference_dataset['values'] = ['NONE'] + sorted(reference_dataset_name_list)
@@ -19474,7 +19541,7 @@ class FormRecreateVariantCallingConfigFile(tkinter.Frame):
         self.wrapper_reference_file.set('')
 
         # get the list of the reference file names
-        (OK, error_list, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, reference_file_name_list) = xreference.get_reference_file_name_list(self.wrapper_cluster_name.get(), self.wrapper_reference_dataset.get(), passed_connection=True, ssh_client=self.ssh_client)
 
         # load the reference file names in the combobox
         self.combobox_reference_file['values'] = sorted(reference_file_name_list)
@@ -19494,7 +19561,7 @@ class FormRecreateVariantCallingConfigFile(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_result_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout,_) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -19522,7 +19589,7 @@ class FormRecreateVariantCallingConfigFile(tkinter.Frame):
 
         # get the list of the assembly_dataset dataset names
         app_list = [xlib.get_soapdenovotrans_code(), xlib.get_transabyss_code(), xlib.get_trinity_code(), xlib.get_ggtrinity_code(), xlib.get_cd_hit_est_code(), xlib.get_transcript_filter_code(), xlib.get_soapdenovo2_code(), xlib.get_starcode_code()]
-        (OK, error_list, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, assembly_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # load the assembly dataset names in the combobox
         self.combobox_assembly_dataset['values'] = sorted(assembly_dataset_name_list)
@@ -19539,7 +19606,7 @@ class FormRecreateVariantCallingConfigFile(tkinter.Frame):
 
         # get the list of the alignment dataset names
         app_list = [xlib.get_bowtie2_code(), xlib.get_gsnap_code(), xlib.get_hisat2_code(), xlib.get_star_code(), xlib.get_tophat_code()]
-        (OK, error_list, alignment_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, alignment_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # load the alignment dataset names in the combobox
         self.combobox_alignment_dataset['values'] = sorted(alignment_dataset_name_list)
@@ -19682,7 +19749,7 @@ class FormRecreateVariantCallingConfigFile(tkinter.Frame):
         '''
 
         # get the assembly_dataset dataset identification
-        (OK, error_list, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.assembly_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_assembly_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
 
         # load data in "combobox_assembly_type"
         if self.assembly_dataset_id.startswith(xlib.get_soapdenovotrans_code()) or self.assembly_dataset_id.startswith(xlib.get_soapdenovo2_code()):
@@ -19712,7 +19779,7 @@ class FormRecreateVariantCallingConfigFile(tkinter.Frame):
         '''
 
         # get the alignment dataset identification
-        (OK, error_list, self.alignment_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_alignment_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.alignment_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_alignment_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
 
 
     #---------------
@@ -19843,6 +19910,9 @@ class FormRunBioinfoProcess(tkinter.Frame):
 
         elif self.app == xlib.get_cufflinks_cuffmerge_code():
             self.name = xlib.get_cufflinks_cuffmerge_name()
+
+        elif self.app == xlib.get_cuffnorm_code():
+            self.name = xlib.get_cuffnorm_name()
 
         elif self.app == xlib.get_cuffquant_code():
             self.name = xlib.get_cuffquant_name()
@@ -20130,6 +20200,12 @@ class FormRunBioinfoProcess(tkinter.Frame):
                 dialog_log = gdialogs.DialogLog(self, self.head, xcufflinks.run_cufflinks_cuffmerge_process.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xcufflinks.run_cufflinks_cuffmerge_process, args=(self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
+
+            # execute the process when it is a Cuffnorm process
+            elif self.app == xlib.get_cuffnorm_code():
+                dialog_log = gdialogs.DialogLog(self, self.head, xcufflinks.run_cuffnorm_process.__name__)
+                threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
+                threading.Thread(target=xcufflinks.run_cuffnorm_process, args=(self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # execute the process when it is a Cuffquant process
             elif self.app == xlib.get_cuffquant_code():
@@ -20521,7 +20597,7 @@ class FormRestartBioinfoProcess(tkinter.Frame):
 
         # get the experiment identifications
         command = f'ls {xlib.get_cluster_result_dir()}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(self.ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(self.ssh_client, command)
         if OK:
             for line in stdout:
                 line = line.rstrip('\n')
@@ -20557,7 +20633,7 @@ class FormRestartBioinfoProcess(tkinter.Frame):
 
         # get the list of the assembly dataset names
         app_list = [self.app]
-        (OK, error_list, result_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, result_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
 
         # load the assembly dataset names in the combobox
         self.combobox_result_dataset['values'] = sorted(result_dataset_name_list)
@@ -20629,7 +20705,7 @@ class FormRestartBioinfoProcess(tkinter.Frame):
         '''
 
         # get the assembly dataset identification
-        (OK, error_list, self.result_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_result_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+        (_, _, self.result_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_result_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
 
     #---------------
 

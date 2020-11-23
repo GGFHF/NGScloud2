@@ -219,7 +219,7 @@ def run_kallisto_process(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(experiment_id, xlib.get_kallisto_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -252,7 +252,7 @@ def run_kallisto_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_kallisto_process_script())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_kallisto_process_script())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -285,7 +285,7 @@ def run_kallisto_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_kallisto_process_starter())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_kallisto_process_starter())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -687,16 +687,16 @@ def build_kallisto_process_script(cluster_name, current_run_dir):
                     script_file_id.write( '            --rf-stranded \\\n')
                 if other_parameters.upper() != 'NONE':
                     parameter_list = [x.strip() for x in other_parameters.split(';')]
-                    for i in range(len(parameter_list)):
-                        if parameter_list[i].find('=') > 0:
+                    for j in range(len(parameter_list)):
+                        if parameter_list[j].find('=') > 0:
                             pattern = r'^--(.+)=(.+)$'
-                            mo = re.search(pattern, parameter_list[i])
+                            mo = re.search(pattern, parameter_list[j])
                             parameter_name = mo.group(1).strip()
                             parameter_value = mo.group(2).strip()
                             script_file_id.write(f'            --{parameter_name}={parameter_value} \\\n')
                         else:
                             pattern = r'^--(.+)$'
-                            mo = re.search(pattern, parameter_list[i])
+                            mo = re.search(pattern, parameter_list[j])
                             parameter_name = mo.group(1).strip()
                             script_file_id.write(f'            --{parameter_name} \\\n')
                 script_file_id.write(f'            --output-dir={output_dir} \\\n')
