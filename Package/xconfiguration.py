@@ -266,12 +266,12 @@ def get_instance_type_dict(cluster_mode):
         instance_type_dict['1_1_26'] = {'id': 't3a.2xlarge', 'vcpu': 8, 'memory': 32,  'processor': 'AMD EPYC 7000 serie', 'speed': '2.5 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
 
         # t4g instance types
-        instance_type_dict['1_1_31'] = {'id': 't4g.micro', 'vcpu': 2, 'memory': 1, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['1_1_32'] = {'id': 't4g.small', 'vcpu': 2, 'memory': 2,  'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['1_1_33'] = {'id': 't4g.medium', 'vcpu': 2, 'memory': 4,  'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['1_1_34'] = {'id': 't4g.large', 'vcpu': 2, 'memory': 8,  'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['1_1_35'] = {'id': 't4g.xlarge', 'vcpu': 4, 'memory': 16,  'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['1_1_36'] = {'id': 't4g.2xlarge', 'vcpu': 8, 'memory': 32,  'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['1_1_31'] = {'id': 't4g.micro', 'vcpu': 2, 'memory': 1, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['1_1_32'] = {'id': 't4g.small', 'vcpu': 2, 'memory': 2,  'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['1_1_33'] = {'id': 't4g.medium', 'vcpu': 2, 'memory': 4,  'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['1_1_34'] = {'id': 't4g.large', 'vcpu': 2, 'memory': 8,  'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['1_1_35'] = {'id': 't4g.xlarge', 'vcpu': 4, 'memory': 16,  'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['1_1_36'] = {'id': 't4g.2xlarge', 'vcpu': 8, 'memory': 32,  'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
 
         # m5 instance types
         instance_type_dict['1_2_21'] = {'id': 'm5.large', 'vcpu': 2, 'memory': 8, 'processor': 'Intel Xeon Platinum 8175 with new Intel Advanced Vector Extension (AXV-512) instruction set', 'speed': 'up to 3.1 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
@@ -294,14 +294,14 @@ def get_instance_type_dict(cluster_mode):
         instance_type_dict['1_2_38'] = {'id': 'm5a.24xlarge', 'vcpu': 96, 'memory': 384, 'processor': 'AMD EPYC 7000 serie', 'speed': '2.5 GHz', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
 
         # m6g instance types
-        instance_type_dict['1_2_41'] = {'id': 'm6g.medium', 'vcpu': 1, 'memory': 4, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['1_2_42'] = {'id': 'm6g.large', 'vcpu': 2, 'memory': 8, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['1_2_43'] = {'id': 'm6g.xlarge', 'vcpu': 4, 'memory': 16, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['1_2_44'] = {'id': 'm6g.2xlarge', 'vcpu': 8, 'memory': 32, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['1_2_45'] = {'id': 'm6g.4xlarge', 'vcpu': 16, 'memory': 64, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['1_2_46'] = {'id': 'm6g.8xlarge', 'vcpu': 32, 'memory': 128, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['1_2_47'] = {'id': 'm6g.12xlarge', 'vcpu': 48, 'memory': 192, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['1_2_48'] = {'id': 'm6g.16xlarge', 'vcpu': 64, 'memory': 256, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['1_2_41'] = {'id': 'm6g.medium', 'vcpu': 1, 'memory': 4, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['1_2_42'] = {'id': 'm6g.large', 'vcpu': 2, 'memory': 8, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['1_2_43'] = {'id': 'm6g.xlarge', 'vcpu': 4, 'memory': 16, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['1_2_44'] = {'id': 'm6g.2xlarge', 'vcpu': 8, 'memory': 32, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['1_2_45'] = {'id': 'm6g.4xlarge', 'vcpu': 16, 'memory': 64, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['1_2_46'] = {'id': 'm6g.8xlarge', 'vcpu': 32, 'memory': 128, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['1_2_47'] = {'id': 'm6g.12xlarge', 'vcpu': 48, 'memory': 192, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['1_2_48'] = {'id': 'm6g.16xlarge', 'vcpu': 64, 'memory': 256, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'general purpose', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
 
         # c5 instance types
         instance_type_dict['2_1_21'] = {'id': 'c5.large', 'vcpu': 2, 'memory': 4, 'processor': '2nd generation Intel Xeon Scalable (Cascade Lake) or 1st generation Intel Xeon Platinum 8000 serie (Skylake-SP)', 'speed': 'up to 3.5 GHz', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
@@ -324,14 +324,14 @@ def get_instance_type_dict(cluster_mode):
         instance_type_dict['2_1_38'] = {'id': 'c5a.24xlarge', 'vcpu': 96, 'memory': 192, 'processor': 'AMD EPYC 7000 serie', 'speed': 'up to 3.3 GHz', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
     
         # c6g instance types
-        instance_type_dict['2_1_41'] = {'id': 'c6g.medium', 'vcpu': 1, 'memory': 2, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['2_1_42'] = {'id': 'c6g.large', 'vcpu': 2, 'memory': 4, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['2_1_43'] = {'id': 'c6g.xlarge', 'vcpu': 4, 'memory': 8, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['2_1_44'] = {'id': 'c6g.2xlarge', 'vcpu': 8, 'memory': 16, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['2_1_45'] = {'id': 'c6g.4xlarge', 'vcpu': 16, 'memory': 32, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['2_1_46'] = {'id': 'c6g.8xlarge', 'vcpu': 32, 'memory': 64, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['2_1_47'] = {'id': 'c6g.12xlarge', 'vcpu': 48, 'memory': 96, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['2_1_48'] = {'id': 'c6g.16xlarge', 'vcpu': 64, 'memory': 128, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['2_1_41'] = {'id': 'c6g.medium', 'vcpu': 1, 'memory': 2, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['2_1_42'] = {'id': 'c6g.large', 'vcpu': 2, 'memory': 4, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['2_1_43'] = {'id': 'c6g.xlarge', 'vcpu': 4, 'memory': 8, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['2_1_44'] = {'id': 'c6g.2xlarge', 'vcpu': 8, 'memory': 16, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['2_1_45'] = {'id': 'c6g.4xlarge', 'vcpu': 16, 'memory': 32, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['2_1_46'] = {'id': 'c6g.8xlarge', 'vcpu': 32, 'memory': 64, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['2_1_47'] = {'id': 'c6g.12xlarge', 'vcpu': 48, 'memory': 96, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['2_1_48'] = {'id': 'c6g.16xlarge', 'vcpu': 64, 'memory': 128, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'compute optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
 
         # r5 instance types
         instance_type_dict['3_1_21'] = {'id': 'r5.large', 'vcpu': 2, 'memory': 16, 'processor': 'Intel Xeon Platinum 8175', 'speed': 'up to 3.1 GHz', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
@@ -354,14 +354,14 @@ def get_instance_type_dict(cluster_mode):
         instance_type_dict['3_1_38'] = {'id': 'r5a.24xlarge', 'vcpu': 96, 'memory': 768, 'processor': 'AMD EPYC 7000 serie', 'speed': '2.5 GHz', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
 
         # r6g instance types
-        instance_type_dict['3_1_41'] = {'id': 'r6g.medium', 'vcpu': 1, 'memory': 8, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['3_1_42'] = {'id': 'r6g.large', 'vcpu': 2, 'memory': 16, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['3_1_43'] = {'id': 'r6g.xlarge', 'vcpu': 4, 'memory': 32, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['3_1_44'] = {'id': 'r6g.2xlarge', 'vcpu': 8, 'memory': 64, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['3_1_45'] = {'id': 'r6g.4xlarge', 'vcpu': 16, 'memory': 128, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['3_1_46'] = {'id': 'r6g.8xlarge', 'vcpu': 32, 'memory': 256, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['3_1_47'] = {'id': 'r6g.12xlarge', 'vcpu': 48, 'memory': 384, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
-        instance_type_dict['3_1_48'] = {'id': 'r6g.16xlarge', 'vcpu': 64, 'memory': 512, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['3_1_41'] = {'id': 'r6g.medium', 'vcpu': 1, 'memory': 8, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['3_1_42'] = {'id': 'r6g.large', 'vcpu': 2, 'memory': 16, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['3_1_43'] = {'id': 'r6g.xlarge', 'vcpu': 4, 'memory': 32, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['3_1_44'] = {'id': 'r6g.2xlarge', 'vcpu': 8, 'memory': 64, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['3_1_45'] = {'id': 'r6g.4xlarge', 'vcpu': 16, 'memory': 128, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['3_1_46'] = {'id': 'r6g.8xlarge', 'vcpu': 32, 'memory': 256, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['3_1_47'] = {'id': 'r6g.12xlarge', 'vcpu': 48, 'memory': 384, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
+        # -- instance_type_dict['3_1_48'] = {'id': 'r6g.16xlarge', 'vcpu': 64, 'memory': 512, 'processor': 'Arm-based AWS Graviton2', 'speed': 'N/A', 'use': 'memory optimized', 'nitro': 'yes', 'starcluster': 'non-supported', 'generation': 'current'}
 
     # return the volumes data dictionary
     return instance_type_dict
