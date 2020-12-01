@@ -60,7 +60,7 @@ def is_installed_transrate(cluster_name, passed_connection, ssh_client):
     # check the Transrate directory is created
     if OK:
         command = f'[ -d {xlib.get_cluster_app_dir()}/{xlib.get_transrate_name()} ] && echo RC=0 || echo RC=1'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] == 'RC=0':
             OK = True
             is_installed = True
@@ -132,7 +132,7 @@ def install_transrate(cluster_name, log, function=None):
     # check the app directory is created
     if OK:
         command = f'[ -d {xlib.get_cluster_app_dir()} ] && echo RC=0 || echo RC=1'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] != 'RC=0':
             log.write('*** ERROR: There is not any volume mounted in the directory.\n')
             log.write(f'You have to link a volume in the mounting point {xlib.get_cluster_app_dir()} for the cluster {cluster_name}.\n')
@@ -148,7 +148,7 @@ def install_transrate(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_toa_result_installation_dir(), xlib.get_transrate_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -181,7 +181,7 @@ def install_transrate(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_transrate_installation_script())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_transrate_installation_script())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -214,7 +214,7 @@ def install_transrate(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_transrate_installation_starter())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_transrate_installation_starter())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -257,7 +257,7 @@ def build_transrate_installation_script(cluster_name, current_run_dir):
     error_list = []
 
     # get the version and download URL of Transrate
-    (transrate_version, transrate_url, transrate_channel) = xconfiguration.get_bioinfo_app_data(xlib.get_transrate_name())
+    (transrate_version, transrate_url, _) = xconfiguration.get_bioinfo_app_data(xlib.get_transrate_name())
 
     # write the Transrate installation script
     try:
@@ -548,14 +548,14 @@ def create_transrate_config_file(experiment_id='exp001', reference_dataset_id='A
         with open(get_transrate_config_file(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '# You must review the information of this file and update the values with the corresponding ones to the current run.\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format(f'# The reference file has to be located in the cluster directory {xlib.get_cluster_reference_dir()}/experiment_id/reference_dataset_id'))
-            file_id.write( '{0}\n'.format(f'# The read files have to be located in the cluster directory {xlib.get_cluster_read_dir()}/experiment_id/read_dataset_id'))
-            file_id.write( '{0}\n'.format(f'# The assembly files have to be located in the cluster directory {xlib.get_cluster_result_dir()}/experiment_id/assembly_dataset_id'))
+            file_id.write(f'# The reference file has to be located in the cluster directory {xlib.get_cluster_reference_dir()}/experiment_id/reference_dataset_id\n')
+            file_id.write(f'# The read files have to be located in the cluster directory {xlib.get_cluster_read_dir()}/experiment_id/read_dataset_id\n')
+            file_id.write(f'# The assembly files have to be located in the cluster directory {xlib.get_cluster_result_dir()}/experiment_id/assembly_dataset_id\n')
             file_id.write( '# The experiment_id, reference_dataset_id, reference_file_name, read_dataset_id and assembly_dataset_id names are fixed in the identification section.\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# You can consult the parameters of Transrate and their meaning in "http://hibberdlab.com/transrate/".'))
+            file_id.write( '# You can consult the parameters of Transrate and their meaning in "http://hibberdlab.com/transrate/".\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# WARNING: The files have to be decompressed.'))
+            file_id.write( '# WARNING: The files have to be decompressed.\n')
             file_id.write( '\n')
             file_id.write( '# This section has the information identifies the experiment.\n')
             file_id.write( '[identification]\n')
@@ -567,8 +567,8 @@ def create_transrate_config_file(experiment_id='exp001', reference_dataset_id='A
             file_id.write( '{0:<50} {1}\n'.format(f'assembly_dataset_id = {assembly_dataset_id}', '# assembly dataset identification'))
             file_id.write( '{0:<50} {1}\n'.format(f'assembly_type = {assembly_type}', f'# assembly type: CONTIGS or SCAFFOLDS in {xlib.get_soapdenovotrans_name()}; NONE in any other case'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information to set the Transrate parameters'))
-            file_id.write( '{0}\n'.format('[Transrate parameters]'))
+            file_id.write( '# This section has the information to set the Transrate parameters\n')
+            file_id.write( '[Transrate parameters]\n')
             file_id.write( '{0:<50} {1}\n'.format('threads = 4', '# number of threads for use'))
             file_id.write( '{0:<50} {1}\n'.format('loglevel = INFO', f'# log level: {get_loglevel_code_list_text()}'))
             file_id.write( '\n')
@@ -580,7 +580,7 @@ def create_transrate_config_file(experiment_id='exp001', reference_dataset_id='A
                 file_id.write( '\n')
                 if i == 0:
                     file_id.write( '# This section has the information of the first library.\n')
-                file_id.write( '{0}\n'.format(f'[library-{i + 1}]'))
+                file_id.write(f'[library-{i + 1}]\n')
                 file_id.write( '{0:<50} {1}\n'.format(f'read_file_1 = {os.path.basename(file_1_list[i])}', '# name of the read file in SE read type or the + strand read file in PE case'))
                 if read_type == 'SE':
                     file_id.write( '{0:<50} {1}\n'.format( 'read_file_2 = NONE', '# name of the - strand reads file in PE read type or NONE in SE case'))
@@ -672,7 +672,7 @@ def run_transrate_process(cluster_name, log, function=None):
     # check the Transrate is installed
     if OK:
         command = f'[ -d {xlib.get_cluster_app_dir()}/{xlib.get_transrate_name()} ] && echo RC=0 || echo RC=1'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] != 'RC=0':
             log.write(f'*** ERROR: {xlib.get_transrate_name()} is not installed.\n')
             OK = False
@@ -694,7 +694,7 @@ def run_transrate_process(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(experiment_id, xlib.get_transrate_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -727,7 +727,7 @@ def run_transrate_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_transrate_process_script())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_transrate_process_script())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -760,7 +760,7 @@ def run_transrate_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_transrate_process_starter())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_transrate_process_starter())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -1073,6 +1073,8 @@ def build_transrate_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write(f'CURRENT_DIR={current_run_dir}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function init\n')
             script_file_id.write( '{\n')
             script_file_id.write( '    INIT_DATETIME=`date --utc +%s`\n')
@@ -1088,8 +1090,9 @@ def build_transrate_process_script(cluster_name, current_run_dir):
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function run_transrate_process\n')
             script_file_id.write( '{\n')
-            script_file_id.write(f'    cd {current_run_dir}\n')
+            script_file_id.write(f'    cd $CURRENT_DIR\n')
             script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write( '    echo "Assessing the transcriptome quality ..."\n')
             script_file_id.write( '    /usr/bin/time \\\n')
             script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
             script_file_id.write( '        transrate \\\n')
@@ -1101,9 +1104,10 @@ def build_transrate_process_script(cluster_name, current_run_dir):
             if read_type.upper() == 'PE':
                 script_file_id.write(f'            --right={read_file_2} \\\n')
             script_file_id.write(f'            --loglevel={loglevel.lower()} \\\n')
-            script_file_id.write(f'            --output={current_run_dir}\n')
+            script_file_id.write(f'            --output=$CURRENT_DIR\n')
             script_file_id.write( '    RC=$?\n')
             script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error transrate $RC; fi\n')
+            script_file_id.write( '    echo "The assessment is done."\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function end\n')

@@ -61,7 +61,7 @@ def get_project_version():
     Get the project name.
     '''
 
-    return '2.10'
+    return '2.11'
 
 #-------------------------------------------------------------------------------
     
@@ -2608,7 +2608,7 @@ def get_taxonomy_dict(type, value):
         r = requests.get(f'{taxonomy_server}/{type}/{value}')
     except requests.exceptions.ConnectionError:
         raise ProgramException('W002', taxonomy_server)
-    except Exception as e:
+    except:
         raise ProgramException('W001', taxonomy_server)
 
     # build the taxonomy dictionary
@@ -2616,7 +2616,7 @@ def get_taxonomy_dict(type, value):
         try:
             if r.json()[value].get('error','OK') == 'OK' :
                 taxonomy_dict = r.json()[value]
-        except Exception as e:
+        except:
             pass
     else:
         raise ProgramException('W003', taxonomy_server, r.status_code)

@@ -551,9 +551,6 @@ def build_kallisto_process_script(cluster_name, current_run_dir):
     other_parameters = kallisto_option_dict['kallisto parameters']['other_parameters']
     read_type = kallisto_option_dict['library']['read_type']
 
-    # get the experiment read dataset dir
-    experiment_read_dataset_dir = xlib.get_cluster_experiment_read_dataset_dir(experiment_id, read_dataset_id)
-
     # get the sections list
     sections_list = []
     for section in kallisto_option_dict.keys():
@@ -614,6 +611,8 @@ def build_kallisto_process_script(cluster_name, current_run_dir):
             script_file_id.write(f'MINICONDA3_BIN_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
             script_file_id.write(f'export PATH=$MINICONDA3_BIN_PATH:$PATH\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write(f'CURRENT_DIR={current_run_dir}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
             script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
             script_file_id.write(f'SCRIPT_STATUS_WRONG={xlib.get_status_wrong(current_run_dir)}\n')
@@ -637,11 +636,11 @@ def build_kallisto_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'function run_kallisto_index_process\n')
             script_file_id.write( '{\n')
             script_file_id.write(f'    source activate {xlib.get_kallisto_anaconda_code()}\n')
-            script_file_id.write(f'    cd {current_run_dir}\n')
+            script_file_id.write( '    cd $CURRENT_DIR\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '    echo "Creation of the transcriptome index ..."\n')
+            script_file_id.write( '    echo "Creation of transcriptome indexes ..."\n')
             script_file_id.write( '    /usr/bin/time \\\n')
-            script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
+            script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
             script_file_id.write( '        kallisto index \\\n')
             script_file_id.write(f'            --index={index_file} \\\n')
             script_file_id.write(f'            --kmer-size={kmer_size} \\\n')
@@ -650,13 +649,14 @@ def build_kallisto_process_script(cluster_name, current_run_dir):
             script_file_id.write(f'            {transcriptome_file}\n')
             script_file_id.write( '    RC=$?\n')
             script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error kallisto $RC; fi\n')
+            script_file_id.write( '    echo "Indexes are created."\n')
             script_file_id.write( '    conda deactivate\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function run_kallisto_quant_process\n')
             script_file_id.write( '{\n')
             script_file_id.write(f'    source activate {xlib.get_kallisto_anaconda_code()}\n')
-            script_file_id.write(f'    cd {current_run_dir}\n')
+            script_file_id.write( '    cd $CURRENT_DIR\n')
             for i in range(len(read_file_1_list)):
                 # set the output_dir value
                 if read_file_1_list[i].endswith('.gz'):
@@ -672,8 +672,9 @@ def build_kallisto_process_script(cluster_name, current_run_dir):
                     output_dir = f'{current_run_dir}/{os.path.basename(base_name)}'
                 # write the kallisto run instructions
                 script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write(f'    echo "Quantitating read library {read_file_1_list[i]} ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
                 script_file_id.write( '        kallisto quant \\\n')
                 script_file_id.write(f'            --index={index_file} \\\n')
                 script_file_id.write(f'            --threads={threads} \\\n')
@@ -707,6 +708,7 @@ def build_kallisto_process_script(cluster_name, current_run_dir):
                     script_file_id.write(f'            {read_file_2_list[i]}\n')
                 script_file_id.write( '    RC=$?\n')
                 script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error kallisto $RC; fi\n')
+                script_file_id.write( '    echo "Quantitation is done."\n')
             script_file_id.write( '    conda deactivate\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')

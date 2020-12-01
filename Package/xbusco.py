@@ -93,7 +93,7 @@ def create_busco_config_file(experiment_id='exp001', assembly_dataset_id='sdnt-1
             file_id.write( '# This section has the information to set the BUSCO parameters\n')
             file_id.write( '[BUSCO parameters]\n')
             file_id.write( '{0:<50} {1}\n'.format('ncpu = 4', '# number of threads/cores for use'))
-            file_id.write( '{0:<50} {1}\n'.format('lineage_data_url = https://busco-data.ezlab.org/v4/data/lineages/viridiplantae_odb10.2019-11-20.tar.gz', '# the url of lineage data file that will be used'))
+            file_id.write( '{0:<50} {1}\n'.format('lineage_data_url = https://busco-data.ezlab.org/v4/data/lineages/viridiplantae_odb10.2020-09-10.tar.gz', '# the url of lineage data file that will be used'))
             file_id.write( '{0:<50} {1}\n'.format('mode = TRAN', f'# mode: {get_mode_code_list_text()}'))
             file_id.write( '{0:<50} {1}\n'.format('evalue = 1E-03', '# E-value cutoff for BLAST searches'))
             file_id.write( '{0:<50} {1}\n'.format('limit = 3', '# number of candidate regions to consider'))
@@ -199,7 +199,7 @@ def run_busco_process(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(experiment_id, xlib.get_busco_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -232,7 +232,7 @@ def run_busco_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_busco_process_script())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_busco_process_script())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -265,7 +265,7 @@ def run_busco_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_busco_process_starter())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_busco_process_starter())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -517,11 +517,13 @@ def build_busco_process_script(cluster_name, current_run_dir):
             script_file_id.write( '#!/bin/bash\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'SEP="#########################################"\n')
+            script_file_id.write( 'export HOST_IP=`curl --silent checkip.amazonaws.com`\n')
+            script_file_id.write( 'export HOST_ADDRESS="ec2-${HOST_IP//./-}-compute-1.amazonaws.com"\n')
+            script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
+            script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write(f'MINICONDA3_BIN_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-            script_file_id.write(f'BUSCO_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/envs/{xlib.get_busco_anaconda_code()}/bin\n')
-            script_file_id.write( 'export PATH=$BUSCO_PATH:$PATH\n')
-            script_file_id.write(f'cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-            script_file_id.write(f'source {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin/activate {xlib.get_busco_anaconda_code()}\n')
+            script_file_id.write(f'export PATH=$MINICONDA3_BIN_PATH:$PATH\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
             script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -529,6 +531,8 @@ def build_busco_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'mkdir --parents $STATUS_DIR\n')
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write(f'CURRENT_DIR={current_run_dir}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function init\n')
             script_file_id.write( '{\n')
@@ -545,10 +549,9 @@ def build_busco_process_script(cluster_name, current_run_dir):
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function download_lineage_data\n')
             script_file_id.write( '{\n')
-            script_file_id.write(f'    cd {current_run_dir}\n')
+            script_file_id.write( '    cd $CURRENT_DIR\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write( '    echo "Downloading lineage data ..."\n')
-            # -- script_file_id.write(f'    wget --quiet --output-document ./{lineage_data_file} {lineage_data_url}\n')
             download_script = f'import requests; r = requests.get(\'{lineage_data_url}\') ; open(\'{lineage_data_file}\' , \'wb\').write(r.content)'
             script_file_id.write(f'    $MINICONDA3_BIN_PATH/python3 -c "{download_script}"\n')
             script_file_id.write( '    RC=$?\n')
@@ -564,10 +567,12 @@ def build_busco_process_script(cluster_name, current_run_dir):
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function run_busco_process\n')
             script_file_id.write( '{\n')
-            script_file_id.write(f'    cd {current_run_dir}\n')
+            script_file_id.write(f'    source activate {xlib.get_busco_anaconda_code()}\n')
+            script_file_id.write( '    cd $CURRENT_DIR\n')
             script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write( '    echo "Assessing the transcriptome quality ..."\n')
             script_file_id.write( '    /usr/bin/time \\\n')
-            script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
+            script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
             script_file_id.write( '        busco \\\n')
             script_file_id.write(f'            --cpu={ncpu} \\\n')
             script_file_id.write(f'            --lineage_dataset=./{lineage_data} \\\n')
@@ -584,6 +589,8 @@ def build_busco_process_script(cluster_name, current_run_dir):
             script_file_id.write(f'            --out={os.path.basename(current_run_dir)}\n')
             script_file_id.write( '    RC=$?\n')
             script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error run_BUSCO.py $RC; fi\n')
+            script_file_id.write( '    echo "The assessment is done."\n')
+            script_file_id.write( '    conda deactivate\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function end\n')

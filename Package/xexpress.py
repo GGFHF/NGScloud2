@@ -37,7 +37,7 @@ import xssh
 
 #-------------------------------------------------------------------------------
 
-def create_express_config_file(experiment_id='exp001', assembly_dataset_id='sdnt-170101-235959', assembly_type='CONTIGS', alignment_dataset_id='bowtie2-170101-235959'):
+def create_express_config_file(experiment_id='exp001', assembly_dataset_id='sdnt-170101-235959', assembly_type='CONTIGS', alignment_dataset_id_list=['bowtie2-170101-235959']):
     '''
     Create eXpress config file with the default options. It is necessary
     update the options in each run.
@@ -60,10 +60,6 @@ def create_express_config_file(experiment_id='exp001', assembly_dataset_id='sdnt
         assembly_software = xlib.get_cd_hit_est_code()
     elif assembly_dataset_id.startswith(xlib.get_transcript_filter_code()):
         assembly_software = xlib.get_transcript_filter_code()
-
-    # set the alignment software
-    if alignment_dataset_id.startswith(xlib.get_bowtie2_code()):
-        alignment_software = xlib.get_bowtie2_code()
 
     # create the eXpress config file and write the default options
     try:
@@ -92,8 +88,24 @@ def create_express_config_file(experiment_id='exp001', assembly_dataset_id='sdnt
             file_id.write( '{0:<50} {1}\n'.format(f'assembly_software = {assembly_software}', f'# assembly software: {get_assembly_software_code_list_text()}'))
             file_id.write( '{0:<50} {1}\n'.format(f'assembly_dataset_id = {assembly_dataset_id}', '# assembly dataset identification'))
             file_id.write( '{0:<50} {1}\n'.format(f'assembly_type = {assembly_type}', f'# assembly type: CONTIGS or SCAFFOLDS in {xlib.get_soapdenovotrans_name()}; NONE in any other case'))
-            file_id.write( '{0:<50} {1}\n'.format(f'alignment_software = {alignment_software}', f'# alignment software: {get_alignment_software_code_list_text()}'))
-            file_id.write( '{0:<50} {1}\n'.format(f'alignment_dataset_id = {alignment_dataset_id}', '# alignment dataset identification'))
+            for i in range(len(alignment_dataset_id_list)):
+                # set the alignment software
+                alignment_dataset_id = alignment_dataset_id_list[i]
+                if alignment_dataset_id.startswith(xlib.get_bowtie2_code()):
+                    alignment_software = xlib.get_bowtie2_code()
+                elif alignment_dataset_id.startswith(xlib.get_gsnap_code()):
+                    alignment_software = xlib.get_gsnap_code()
+                # write the alignment dataset section
+                file_id.write( '\n')
+                if i == 0:
+                    file_id.write( '# This section has the information of the first alignment dataset.\n')
+                file_id.write(f'[alignment-dataset-{i + 1}]\n')
+                file_id.write( '{0:<50} {1}\n'.format(f'alignment_software = {alignment_software}', f'# alignment software: {get_alignment_software_code_list_text()}'))
+                file_id.write( '{0:<50} {1}\n'.format(f'alignment_dataset_id = {alignment_dataset_id}', '# alignment dataset identification'))
+                if i == 0:
+                    file_id.write( '\n')
+                    file_id.write( '# If there are more alignment datasets, you have to repeat the section alignment-dataset-1 with the data of each dataset.\n')
+                    file_id.write( '# The section identification has to be alignment-dataset-n (n is an integer not repeated)\n')
             file_id.write( '\n')
             file_id.write( '# This section has the information to set the eXpress parameters\n')
             file_id.write( '[eXpress parameters]\n')
@@ -376,23 +388,40 @@ def check_express_config_file(strict):
                     error_list.append(f'*** ERROR: the key "assembly_type" has to be CONTIGS or SCAFFOLDS in {xlib.get_soapdenovotrans_name()} or NONE in any other case.')
                     OK = False
 
-            # check section "identification" - key "alignment_software"
-            alignment_software = express_option_dict.get('identification', {}).get('alignment_software', not_found)
-            if alignment_software == not_found:
-                error_list.append(f'*** ERROR: the key "alignment_software" is not found in the section "{section}".')
-                OK = False
-            elif not xlib.check_code(alignment_software, get_alignment_software_code_list(), case_sensitive=False):
-                error_list.append(f'*** ERROR: the key "alignment_software" has to be {get_alignment_software_code_list_text()}.')
-                OK = False
+        # check section "alignment-dataset-1"
+        if 'alignment-dataset-1' not in sections_list:
+            error_list.append('*** ERROR: the section "alignment-dataset-1" is not found.')
+            OK = False
 
-            # check section "identification" - key "alignment_dataset_id"
-            alignment_dataset_id = express_option_dict.get('identification', {}).get('alignment_dataset_id', not_found)
-            if alignment_dataset_id == not_found:
-                error_list.append(f'*** ERROR: the key "alignment_dataset_id" is not found in the section "{section}".')
-                OK = False
-            elif not xlib.check_startswith(alignment_dataset_id, get_alignment_software_code_list(), case_sensitive=True):
-                error_list.append(f'*** ERROR: the key "alignment_dataset_id" has to start with {get_alignment_software_code_list_text()}.')
-                OK = False
+        # check all sections "alignment-dataset-n"
+        for section in sections_list:
+
+            if section not in ['identification', 'eXpress parameters']:
+
+                # check than the section identification is like alignment-dataset-n 
+                if not re.match('^alignment-dataset-[0-9]+$', section):
+                    error_list.append(f'*** ERROR: the section "{section}" has a wrong identification.')
+                    OK = False
+
+                else:
+
+                    # check section "alignment-dataset-n" - key "alignment_software"
+                    alignment_software = express_option_dict.get(section, {}).get('alignment_software', not_found)
+                    if alignment_software == not_found:
+                        error_list.append(f'*** ERROR: the key "alignment_software" is not found in the section "{section}".')
+                        OK = False
+                    elif not xlib.check_code(alignment_software, get_alignment_software_code_list(), case_sensitive=False):
+                        error_list.append(f'*** ERROR: the key "alignment_software" has to be {get_alignment_software_code_list_text()}.')
+                        OK = False
+
+                    # check section "alignment-dataset-n" - key "alignment_dataset_id"
+                    alignment_dataset_id = express_option_dict.get(section, {}).get('alignment_dataset_id', not_found)
+                    if alignment_dataset_id == not_found:
+                        error_list.append(f'*** ERROR: the key "alignment_dataset_id" is not found in the section "{section}".')
+                        OK = False
+                    elif not xlib.check_startswith(alignment_dataset_id, get_alignment_software_code_list(), case_sensitive=True):
+                        error_list.append(f'*** ERROR: the key "alignment_dataset_id" has to start with {get_alignment_software_code_list_text()}.')
+                        OK = False
 
         # check section "eXpress parameters"
         if 'eXpress parameters' not in sections_list:
@@ -490,8 +519,6 @@ def build_express_process_script(cluster_name, current_run_dir):
     assembly_software = express_option_dict['identification']['assembly_software']
     assembly_dataset_id = express_option_dict['identification']['assembly_dataset_id']
     assembly_type = express_option_dict['identification']['assembly_type']
-    alignment_software = express_option_dict['identification']['alignment_software']
-    alignment_dataset_id = express_option_dict['identification']['alignment_dataset_id']
     frag_len_mean = express_option_dict['eXpress parameters']['frag-len-mean']
     frag_len_stddev = express_option_dict['eXpress parameters']['frag-len-stddev']
     library_type = express_option_dict['eXpress parameters']['library_type']
@@ -499,6 +526,21 @@ def build_express_process_script(cluster_name, current_run_dir):
     no_bias_correct = express_option_dict['eXpress parameters']['no-bias-correct']
     no_error_model = express_option_dict['eXpress parameters']['no-error-model']
     other_parameters = express_option_dict['eXpress parameters']['other_parameters']
+
+    # get the sections list
+    sections_list = []
+    for section in express_option_dict.keys():
+        sections_list.append(section)
+    sections_list.sort()
+
+    # build alignment dataset identification list
+    alignment_software_list = []
+    alignment_dataset_id_list = []
+    for section in sections_list:
+        # if the section identification is like library-n
+        if re.match('^alignment-dataset-[0-9]+$', section):
+            alignment_software_list.append(express_option_dict[section]['alignment_software'])
+            alignment_dataset_id_list.append(express_option_dict[section]['alignment_dataset_id'])
 
     # set the transcriptome file path
     if assembly_software == xlib.get_soapdenovotrans_code():
@@ -517,10 +559,6 @@ def build_express_process_script(cluster_name, current_run_dir):
     elif assembly_software == xlib.get_transcript_filter_code():
         transcriptome_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)}/filtered-transcriptome.fasta'
 
-    # set the alignment file path
-    if alignment_software == xlib.get_bowtie2_code():
-        alignment_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id)}/alignment.sam'
-
     # write the eXpress process script
     try:
         if not os.path.exists(os.path.dirname(get_express_process_script())):
@@ -536,6 +574,8 @@ def build_express_process_script(cluster_name, current_run_dir):
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write(f'MINICONDA3_BIN_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
             script_file_id.write(f'export PATH=$MINICONDA3_BIN_PATH:$PATH\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write(f'CURRENT_DIR={current_run_dir}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
             script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -560,46 +600,58 @@ def build_express_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'function run_express_process\n')
             script_file_id.write( '{\n')
             script_file_id.write(f'    source activate {xlib.get_express_anaconda_code()}\n')
-            script_file_id.write(f'    cd {current_run_dir}\n')
-            script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '    /usr/bin/time \\\n')
-            script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-            script_file_id.write( '        express \\\n')
-            script_file_id.write( '            --no-update-check \\\n')
-            script_file_id.write(f'            --frag-len-mean {frag_len_mean} \\\n')
-            script_file_id.write(f'            --frag-len-stddev {frag_len_stddev} \\\n')
-            if library_type.lower() == 'fr-stranded':
-                script_file_id.write( '            --fr-stranded \\\n')
-            elif library_type.lower() == 'rf-stranded':
-                script_file_id.write( '            --rf-stranded \\\n')
-            elif library_type.lower() == 'f-stranded':
-                script_file_id.write( '            --f-stranded \\\n')
-            elif library_type.lower() == 'r-stranded':
-                script_file_id.write( '            --r-stranded \\\n')
-            script_file_id.write(f'            --max-indel-size {max_indel_size} \\\n')
-            if no_bias_correct.upper() == 'YES':
-                script_file_id.write( '            --no-bias-correct \\\n')
-            if no_error_model.upper() == 'YES':
-                script_file_id.write( '            --no-error-model \\\n')
-            if other_parameters.upper() != 'NONE':
-                parameter_list = [x.strip() for x in other_parameters.split(';')]
-                for i in range(len(parameter_list)):
-                    if parameter_list[i].find('=') > 0:
-                        pattern = r'^--(.+)=(.+)$'
-                        mo = re.search(pattern, parameter_list[i])
-                        parameter_name = mo.group(1).strip()
-                        parameter_value = mo.group(2).strip()
-                        script_file_id.write(f'            --{parameter_name}={parameter_value} \\\n')
-                    else:
-                        pattern = r'^--(.+)$'
-                        mo = re.search(pattern, parameter_list[i])
-                        parameter_name = mo.group(1).strip()
-                        script_file_id.write(f'            --{parameter_name} \\\n')
-            script_file_id.write(f'            --output-dir {current_run_dir} \\\n')
-            script_file_id.write(f'            {transcriptome_file} \\\n')
-            script_file_id.write(f'            {alignment_file}\n')
-            script_file_id.write( '    RC=$?\n')
-            script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error express $RC; fi\n')
+            script_file_id.write(f'    cd $CURRENT_DIR\n')
+            for i in range(len(alignment_dataset_id_list)):
+                alignment_files = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, alignment_dataset_id_list[i])}/*.sorted.bam'
+                script_file_id.write(f'    SORTED_BAM_LIST={alignment_dataset_id_list[i]}-sorted-bam-files.txt\n')
+                script_file_id.write(f'    ls {alignment_files} > $SORTED_BAM_LIST\n')
+                script_file_id.write( '    while read FILE_BAM; do\n')
+                script_file_id.write( '        NAME=`basename $FILE_BAM`\n')
+                script_file_id.write( '        NAME=${NAME:0:-11}\n')
+                script_file_id.write(f'        SUBDIR={alignment_dataset_id_list[i]}-$NAME\n')
+                script_file_id.write(f'        mkdir --parents $CURRENT_DIR/$SUBDIR\n')
+                script_file_id.write( '        echo "$SEP"\n')
+                script_file_id.write(f'        echo "Quantitating alignment dataset {alignment_dataset_id_list[i]} - library $SUBDIR ..."\n')
+                script_file_id.write( '        /usr/bin/time \\\n')
+                script_file_id.write(f'            --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+                script_file_id.write( '            express \\\n')
+                script_file_id.write( '                --no-update-check \\\n')
+                script_file_id.write(f'                --frag-len-mean {frag_len_mean} \\\n')
+                script_file_id.write(f'                --frag-len-stddev {frag_len_stddev} \\\n')
+                if library_type.lower() == 'fr-stranded':
+                    script_file_id.write( '                --fr-stranded \\\n')
+                elif library_type.lower() == 'rf-stranded':
+                    script_file_id.write( '                --rf-stranded \\\n')
+                elif library_type.lower() == 'f-stranded':
+                    script_file_id.write( '                --f-stranded \\\n')
+                elif library_type.lower() == 'r-stranded':
+                    script_file_id.write( '                --r-stranded \\\n')
+                script_file_id.write(f'                --max-indel-size {max_indel_size} \\\n')
+                if no_bias_correct.upper() == 'YES':
+                    script_file_id.write( '                --no-bias-correct \\\n')
+                if no_error_model.upper() == 'YES':
+                    script_file_id.write( '                --no-error-model \\\n')
+                if other_parameters.upper() != 'NONE':
+                    parameter_list = [x.strip() for x in other_parameters.split(';')]
+                    for i in range(len(parameter_list)):
+                        if parameter_list[i].find('=') > 0:
+                            pattern = r'^--(.+)=(.+)$'
+                            mo = re.search(pattern, parameter_list[i])
+                            parameter_name = mo.group(1).strip()
+                            parameter_value = mo.group(2).strip()
+                            script_file_id.write(f'                --{parameter_name}={parameter_value} \\\n')
+                        else:
+                            pattern = r'^--(.+)$'
+                            mo = re.search(pattern, parameter_list[i])
+                            parameter_name = mo.group(1).strip()
+                            script_file_id.write(f'                --{parameter_name} \\\n')
+                script_file_id.write( '                --output-dir $CURRENT_DIR/$SUBDIR \\\n')
+                script_file_id.write(f'                {transcriptome_file} \\\n')
+                script_file_id.write( '                $FILE_BAM\n')
+                script_file_id.write( '        RC=$?\n')
+                script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error express $RC; fi\n')
+                script_file_id.write( '        echo "Quantitation is done."\n')
+                script_file_id.write( '    done < $SORTED_BAM_LIST\n')
             script_file_id.write( '    conda deactivate\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
@@ -776,7 +828,7 @@ def get_alignment_software_code_list():
     Get the code list of "alignment_software".
     '''
 
-    return [xlib.get_bowtie2_code()]
+    return [xlib.get_bowtie2_code(), xlib.get_gsnap_code()]
 
 #-------------------------------------------------------------------------------
     
@@ -785,7 +837,7 @@ def get_alignment_software_code_list_text():
     Get the code list of "alignment_software" as text.
     '''
 
-    return f'{xlib.get_bowtie2_code()} ({xlib.get_bowtie2_name()}))'
+    return f'{xlib.get_bowtie2_code()} ({xlib.get_bowtie2_name()}) or {xlib.get_gsnap_code()} ({xlib.get_gsnap_name()}))'
 
 #-------------------------------------------------------------------------------
     

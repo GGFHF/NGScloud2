@@ -70,11 +70,11 @@ def create_rsem_eval_config_file(experiment_id='exp001', read_dataset_id=xlib.ge
             file_id.write( '#\n')
             file_id.write(f'# The read files have to be located in the cluster directory {xlib.get_cluster_read_dir()}/experiment_id/read_dataset_id\n')
             file_id.write(f'# The assembly files have to be located in the cluster directory {xlib.get_cluster_result_dir()}/experiment_id/assembly_dataset_id\n')
-            file_id.write( '{0}\n'.format('# The experiment_id, read_dataset_id and assembly_dataset_id names are fixed in the identification section.'))
+            file_id.write( '# The experiment_id, read_dataset_id and assembly_dataset_id names are fixed in the identification section.\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# You can consult the parameters of RSEM-EVAL (DETONATE package) and their meaning in "http://deweylab.biostat.wisc.edu/detonate/".'))
+            file_id.write( '# You can consult the parameters of RSEM-EVAL (DETONATE package) and their meaning in "http://deweylab.biostat.wisc.edu/detonate/"\n')
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information identifies the assembly result dataset.'))
+            file_id.write( '# This section has the information identifies the assembly result dataset.\n')
             file_id.write( '[identification]\n')
             file_id.write( '{0:<50} {1}\n'.format(f'experiment_id = {experiment_id}', '# experiment identification'))
             file_id.write( '{0:<50} {1}\n'.format(f'read_dataset_id = {read_dataset_id}', '# read dataset identification'))
@@ -83,11 +83,11 @@ def create_rsem_eval_config_file(experiment_id='exp001', read_dataset_id=xlib.ge
             file_id.write( '{0:<50} {1}\n'.format(f'assembly_type = {assembly_type}', f'# assembly type: CONTIGS or SCAFFOLDS in {xlib.get_soapdenovotrans_name()}; NONE in any other case'))
             file_id.write( '\n')
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information to set the RSEM-EVAL parameters'))
-            file_id.write( '{0}\n'.format('[RSEM-EVAL parameters]'))
-            file_id.write( '{0:<50} {1}\n'.format('num_threads = 2', '# number of threads for use'))
+            file_id.write( '# This section has the information to set the RSEM-EVAL parameters\n')
+            file_id.write( '[RSEM-EVAL parameters]\n')
+            file_id.write( '{0:<50} {1}\n'.format('num_threads = 4', '# number of threads for use'))
             file_id.write( '{0:<50} {1}\n'.format('bowtie2_mismatch_rate = 0.1', '# maximum mismatch rate allowed (Bowtie 2 parameter)'))
-            file_id.write( '{0:<50} {1}\n'.format('keep_intermediate_files = NO', '# keep temporary files generated: {0}'.format(get_keep_intermediate_file_code_list_text())))
+            file_id.write( '{0:<50} {1}\n'.format('keep_intermediate_files = NO', f'# keep temporary files generated: {get_keep_intermediate_file_code_list_text()}'))
             file_id.write( '\n')
             file_id.write( '# This section has the global information of all libraries.\n')
             file_id.write( '[library]\n')
@@ -110,7 +110,7 @@ def create_rsem_eval_config_file(experiment_id='exp001', read_dataset_id=xlib.ge
                     file_id.write( '# The section identification has to be library-n (n is an integer not repeated)\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be recreated'.format(get_rsem_eval_config_file()))
+        error_list.append(f'*** ERROR: The file {get_rsem_eval_config_file()} can not be recreated')
         OK = False
 
     # return the control variable and the error list
@@ -138,7 +138,7 @@ def run_rsem_eval_process(cluster_name, log, function=None):
 
     # check the RSEM-EVAL config file
     log.write(f'{xlib.get_separator()}\n')
-    log.write('Checking the {0} config file ...\n'.format(xlib.get_rsem_eval_name()))
+    log.write(f'Checking the {xlib.get_rsem_eval_name()} config file ...\n')
     (OK, error_list) = check_rsem_eval_config_file(strict=True)
     if OK:
         log.write('The file is OK.\n')
@@ -192,10 +192,10 @@ def run_rsem_eval_process(cluster_name, log, function=None):
         (OK, error_list, is_installed) = xbioinfoapp.is_installed_anaconda_package(xlib.get_detonate_anaconda_code(), cluster_name, True, ssh_client)
         if OK:
             if not is_installed:
-                log.write('*** ERROR: {0} is not installed.\n'.format(xlib.get_detonate_name()))
+                log.write(f'*** ERROR: {xlib.get_detonate_name()} is not installed.\n')
                 OK = False
         else:
-            log.write('*** ERROR: The verification of {0} installation could not be performed.\n'.format(xlib.get_detonate_name()))
+            log.write(f'*** ERROR: The verification of {xlib.get_detonate_name()} installation could not be performed.\n')
 
     # warn that the requirements are OK 
     if OK:
@@ -216,7 +216,7 @@ def run_rsem_eval_process(cluster_name, log, function=None):
     # build the RSEM-EVAL process script
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process script {0} ...\n'.format(get_rsem_eval_process_script()))
+        log.write(f'Building the process script {get_rsem_eval_process_script()} ...\n')
         (OK, error_list) = build_rsem_eval_process_script(cluster_name, current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -226,8 +226,8 @@ def run_rsem_eval_process(cluster_name, log, function=None):
     # upload the RSEM-EVAL process script to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process script {0} to the directory {1} ...\n'.format(get_rsem_eval_process_script(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_rsem_eval_process_script()))
+        log.write(f'Uploading the process script {get_rsem_eval_process_script()} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_rsem_eval_process_script())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_rsem_eval_process_script(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -238,8 +238,8 @@ def run_rsem_eval_process(cluster_name, log, function=None):
     # set run permision to the RSEM-EVAL process script in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_rsem_eval_process_script())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_rsem_eval_process_script()))
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_rsem_eval_process_script())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_rsem_eval_process_script())}'
         (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
@@ -249,7 +249,7 @@ def run_rsem_eval_process(cluster_name, log, function=None):
     # build the RSEM-EVAL process starter
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process starter {0} ...\n'.format(get_rsem_eval_process_starter()))
+        log.write(f'Building the process starter {get_rsem_eval_process_starter()} ...\n')
         (OK, error_list) = build_rsem_eval_process_starter(current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -259,8 +259,8 @@ def run_rsem_eval_process(cluster_name, log, function=None):
     # upload the RSEM-EVAL process starter to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process starter {0} to the directory {1} ...\n'.format(get_rsem_eval_process_starter(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_rsem_eval_process_starter()))
+        log.write(f'Uploading the process starter {get_rsem_eval_process_starter()} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_rsem_eval_process_starter())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_rsem_eval_process_starter(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -271,8 +271,8 @@ def run_rsem_eval_process(cluster_name, log, function=None):
     # set run permision to the RSEM-EVAL process starter in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_rsem_eval_process_starter())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_rsem_eval_process_starter()))
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_rsem_eval_process_starter())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_rsem_eval_process_starter())}'
         (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
@@ -282,7 +282,7 @@ def run_rsem_eval_process(cluster_name, log, function=None):
     # submit the RSEM-EVAL process
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Submitting the process script {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_rsem_eval_process_starter())))
+        log.write(f'Submitting the process script {current_run_dir}/{os.path.basename(get_rsem_eval_process_starter())} ...\n')
         OK = xssh.submit_script(cluster_name, ssh_client, current_run_dir, os.path.basename(get_rsem_eval_process_starter()), log)
 
     # close the SSH transport connection
@@ -416,7 +416,7 @@ def check_rsem_eval_config_file(strict):
                 error_list.append('*** ERROR: the key "keep_intermediate_files" is not found in the section "RSEM-EVAL parameters".')
                 OK = False
             elif not xlib.check_code(keep_intermediate_files, get_keep_intermediate_file_code_list(), case_sensitive=False):
-                error_list.append('*** ERROR: the key "keep_intermediate_files" has to be {0}.'.format(get_keep_intermediate_file_code_list_text()))
+                error_list.append(f'*** ERROR: the key "keep_intermediate_files" has to be {get_keep_intermediate_file_code_list_text()}.')
                 OK = False
 
         # check section "library"
@@ -483,7 +483,7 @@ def check_rsem_eval_config_file(strict):
 
     # warn that the results config file is not valid if there are any errors
     if not OK:
-        error_list.append('\nThe {0} config file is not valid. Please, correct this file or recreate it.'.format(xlib.get_rsem_eval_name()))
+        error_list.append(f'\nThe {xlib.get_rsem_eval_name()} config file is not valid. Please, correct this file or recreate it.')
 
     # return the control variable and the error list
     return (OK, error_list)
@@ -555,12 +555,6 @@ def build_rsem_eval_process_script(cluster_name, current_run_dir):
     elif assembly_software == xlib.get_transcript_filter_code():
         transcriptome_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, assembly_dataset_id)}/filtered-transcriptome.fasta'
 
-    # set the distribution file path
-    distribution_file = '{0}/distribution.txt'.format(current_run_dir)
-
-    # set the temporaly directory path
-    temp_dir = '{0}/temp'.format(current_run_dir)
-
     # write the RSEM-EVAL process script
     try:
         if not os.path.exists(os.path.dirname(get_rsem_eval_process_script())):
@@ -574,11 +568,9 @@ def build_rsem_eval_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'export AWS_CONFIG_FILE=/home/ubuntu/.aws/config\n')
             script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('DETONATE_PATH={0}/{1}/envs/{2}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name(), xlib.get_detonate_anaconda_code())))
-            script_file_id.write( '{0}\n'.format('BOWTIE2_PATH={0}/{1}/envs/{2}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name(), xlib.get_bowtie2_anaconda_code())))
-            script_file_id.write( '{0}\n'.format('PATH=$DETONATE_PATH:$BOWTIE2_PATH:$PATH'))
-            script_file_id.write( '{0}\n'.format('cd {0}/{1}/bin'.format(xlib.get_cluster_app_dir(), xlib.get_miniconda3_name())))
-            script_file_id.write( '{0}\n'.format('source activate {0}'.format(xlib.get_detonate_anaconda_code())))
+            script_file_id.write(f'BOWTIE2_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/envs/{xlib.get_bowtie2_anaconda_code()}/bin\n')
+            script_file_id.write(f'MINICONDA3_BIN_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
+            script_file_id.write(f'export PATH=$BOWTIE2_PATH:$MINICONDA3_BIN_PATH:$PATH\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
             script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -586,6 +578,8 @@ def build_rsem_eval_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'mkdir --parents $STATUS_DIR\n')
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write(f'CURRENT_DIR={current_run_dir}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function init\n')
             script_file_id.write( '{\n')
@@ -600,52 +594,65 @@ def build_rsem_eval_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function run_rsem_eval_process'))
+            script_file_id.write( 'function print_rsem_eval_version\n')
             script_file_id.write( '{\n')
-            script_file_id.write(f'    cd {current_run_dir}\n')
+            script_file_id.write(f'    source activate {xlib.get_detonate_anaconda_code()}\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    rsem-eval-calculate-score --version'))
-            script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "Running rsem-eval-estimate-transcript-length-distribution ... "'))
-            script_file_id.write( '    /usr/bin/time \\\n')
-            script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-            script_file_id.write( '{0}\n'.format('        rsem-eval-estimate-transcript-length-distribution \\'))
-            script_file_id.write( '{0}\n'.format('            {0} \\'.format(transcriptome_file)))
-            script_file_id.write( '{0}\n'.format('            {0}'.format(distribution_file)))
-            script_file_id.write( '    RC=$?\n')
-            script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error rsem-eval-estimate-transcript-length-distribution $RC; fi'))
-            script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "Running rsem-eval-calculate-score ... "'))
-            script_file_id.write( '    /usr/bin/time \\\n')
-            script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-            script_file_id.write( '{0}\n'.format('        rsem-eval-calculate-score \\'))
-            script_file_id.write( '{0}\n'.format('            --num-threads {0} \\'.format(num_threads)))
-            script_file_id.write( '{0}\n'.format('            --bowtie2 \\'))
-            script_file_id.write( '{0}\n'.format('            --bowtie2-mismatch-rate {0} \\'.format(bowtie2_mismatch_rate)))
-            script_file_id.write( '{0}\n'.format('            --transcript-length-parameters {0} \\'.format(distribution_file)))
-            script_file_id.write( '{0}\n'.format('            --temporary-folder {0} \\'.format(temp_dir)))
-            if keep_intermediate_files.upper() == 'YES':
-                script_file_id.write( '{0}\n'.format('            --keep-intermediate-files \\'))
-            if format == 'FASTA':
-                script_file_id.write( '{0}\n'.format('            --no-qualities \\'))
-            if read_type == 'PE':
-                script_file_id.write( '{0}\n'.format('            --paired-end {0} {1} \\'.format(files1, files2)))
-            else:
-                script_file_id.write( '{0}\n'.format('            {0} \\'.format(files1)))
-            script_file_id.write( '{0}\n'.format('            {0} \\'.format(transcriptome_file)))
-            script_file_id.write( '{0}\n'.format('            {0} \\'.format(current_run_dir)))
-            script_file_id.write( '{0}\n'.format('            {0}'.format(length)))
-            script_file_id.write( '    RC=$?\n')
-            script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then rsem-eval-calculate-score $RC; fi'))
+            script_file_id.write( '    rsem-eval-calculate-score --version\n')
+            script_file_id.write( '    conda deactivate\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function move_result_files'))
+            script_file_id.write( 'function run_rsem_eval_process\n')
+            script_file_id.write( '{\n')
+            script_file_id.write(f'    source activate {xlib.get_detonate_anaconda_code()}\n')
+            script_file_id.write( '    cd $CURRENT_DIR\n')
+            script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write( '    echo "Assessing the transcriptome quality ..."\n')
+            script_file_id.write( '    echo "... 1) running rsem-eval-estimate-transcript-length-distribution ... "\n')
+            script_file_id.write( '    /usr/bin/time \\\n')
+            script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+            script_file_id.write( '        rsem-eval-estimate-transcript-length-distribution \\\n')
+            script_file_id.write(f'            {transcriptome_file} \\\n')
+            script_file_id.write(f'            $CURRENT_DIR/distribution.txt\n')
+            script_file_id.write( '    RC=$?\n')
+            script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error rsem-eval-estimate-transcript-length-distribution $RC; fi\n')
+            script_file_id.write( '    echo "rsem-eval-estimate-transcript-length-distribution is run."\n')
+            script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write( '    echo "Assessing the transcriptome quality ..."\n')
+            script_file_id.write( '    echo "... 2) running rsem-eval-calculate-score ... "\n')
+            script_file_id.write( '    mkdir --parents temp\n')
+            script_file_id.write( '    /usr/bin/time \\\n')
+            script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+            script_file_id.write( '        rsem-eval-calculate-score \\\n')
+            script_file_id.write(f'            --num-threads {num_threads} \\\n')
+            script_file_id.write( '            --bowtie2 \\\n')
+            script_file_id.write(f'            --bowtie2-mismatch-rate {bowtie2_mismatch_rate} \\\n')
+            script_file_id.write(f'            --transcript-length-parameters $CURRENT_DIR/distribution.txt \\\n')
+            script_file_id.write(f'            --temporary-folder temp \\\n')
+            if keep_intermediate_files.upper() == 'YES':
+                script_file_id.write( '            --keep-intermediate-files \\\n')
+            if format == 'FASTA':
+                script_file_id.write( '            --no-qualities \\\n')
+            if read_type == 'PE':
+                script_file_id.write(f'            --paired-end {files1} {files2} \\\n')
+            else:
+                script_file_id.write(f'            {files1} \\\n')
+            script_file_id.write(f'            {transcriptome_file} \\\n')
+            script_file_id.write(f'            transcriptome \\\n')
+            script_file_id.write(f'            {length}\n')
+            script_file_id.write( '    RC=$?\n')
+            script_file_id.write( '    if [ $RC -ne 0 ]; then rsem-eval-calculate-score $RC; fi\n')
+            script_file_id.write( '    echo "rsem-eval-calculate-score is run."\n')
+            script_file_id.write( '    echo "The assessment is done."\n')
+            script_file_id.write( '    conda deactivate\n')
+            script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write( 'function print_assembly_data\n')
             script_file_id.write( '{\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    echo "Moving result files ... "'))
-            script_file_id.write( '{0}\n'.format('    mv ../{0}.stat/* .'.format(os.path.basename(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('    rm -fr ../{0}.stat'.format(os.path.basename(current_run_dir))))
-            script_file_id.write( '{0}\n'.format('    mv ../{0}.* .'.format(os.path.basename(current_run_dir))))
+            script_file_id.write(f'    echo "FILTERING_DATA - ASSEMBLY_SOFTWARE: {assembly_software}"\n')
+            script_file_id.write(f'    echo "FILTERING_DATA - ASSEMBLY_DATASET_ID: {assembly_dataset_id}"\n')
+            script_file_id.write(f'    echo "FILTERING_DATA - ASSEMBLY_TYPE: {assembly_type}"\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function end\n')
@@ -720,12 +727,13 @@ def build_rsem_eval_process_script(cluster_name, current_run_dir):
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
-            script_file_id.write( '{0}\n'.format('run_rsem_eval_process'))
-            script_file_id.write( '{0}\n'.format('move_result_files'))
+            script_file_id.write( 'print_rsem_eval_version\n')
+            script_file_id.write( 'run_rsem_eval_process\n')
+            script_file_id.write( 'print_assembly_data\n')
             script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_rsem_eval_process_script()))
+        error_list.append(f'*** ERROR: The file {get_rsem_eval_process_script()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -749,10 +757,10 @@ def build_rsem_eval_process_starter(current_run_dir):
         with open(get_rsem_eval_process_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_rsem_eval_process_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_rsem_eval_process_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_rsem_eval_process_starter()))
+        error_list.append(f'*** ERROR: The file {get_rsem_eval_process_starter()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -766,7 +774,7 @@ def get_rsem_eval_config_file():
     '''
 
     # assign the RSEM-EVAL config file path
-    rsem_eval_config_file = '{0}/{1}-config.txt'.format(xlib.get_config_dir(), xlib.get_rsem_eval_code())
+    rsem_eval_config_file = f'{xlib.get_config_dir()}/{xlib.get_rsem_eval_code()}-config.txt'
 
     # return the RSEM-EVAL config file path
     return rsem_eval_config_file
@@ -779,7 +787,7 @@ def get_rsem_eval_process_script():
     '''
 
     # assign the RSEM-EVAL script path
-    rsem_eval_process_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_rsem_eval_code())
+    rsem_eval_process_script = f'{xlib.get_temp_dir()}/{xlib.get_rsem_eval_code()}-process.sh'
 
     # return the RSEM-EVAL script path
     return rsem_eval_process_script
@@ -792,7 +800,7 @@ def get_rsem_eval_process_starter():
     '''
 
     # assign the RSEM-EVAL process starter path
-    rsem_eval_process_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_rsem_eval_code())
+    rsem_eval_process_starter = f'{xlib.get_temp_dir()}/{xlib.get_rsem_eval_code()}-process-starter.sh'
 
     # return the RSEM-EVAL starter path
     return rsem_eval_process_starter
@@ -836,7 +844,7 @@ def run_ref_eval_process(cluster_name, log, function=None):
 
     # check the REF-EVAL config file
     log.write(f'{xlib.get_separator()}\n')
-    log.write('Checking the {0} config file ...\n'.format(xlib.get_ref_eval_name()))
+    log.write(f'Checking the {xlib.get_ref_eval_name()} config file ...\n')
     (OK, error_list) = check_ref_eval_config_file(strict=True)
     if OK:
         log.write('The file is OK.\n')
@@ -887,10 +895,10 @@ def run_ref_eval_process(cluster_name, log, function=None):
 
     # check the DETONATE is installed
     if OK:
-        command = '[ -d {0}/{1} ] && echo RC=0 || echo RC=1'.format(xlib.get_cluster_app_dir(), xlib.get_detonate_name())
+        command = f'[ -d {xlib.get_cluster_app_dir()}/{xlib.get_detonate_name()} ] && echo RC=0 || echo RC=1'
         (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] != 'RC=0':
-            log.write('*** ERROR: {0} is not installed.\n'.format(xlib.get_detonate_name()))
+            log.write(f'*** ERROR: {xlib.get_detonate_name()} is not installed.\n')
             OK = False
 
     # warn that the requirements are OK 
@@ -912,7 +920,7 @@ def run_ref_eval_process(cluster_name, log, function=None):
     # build the REF-EVAL process script
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process script {0} ...\n'.format(get_ref_eval_process_script()))
+        log.write(f'Building the process script {get_ref_eval_process_script()} ...\n')
         (OK, error_list) = build_ref_eval_process_script(current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -922,8 +930,8 @@ def run_ref_eval_process(cluster_name, log, function=None):
     # upload the REF-EVAL process script to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process script {0} to the directory {1} ...\n'.format(get_ref_eval_process_script(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_ref_eval_process_script()))
+        log.write(f'Uploading the process script {get_ref_eval_process_script()} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_ref_eval_process_script())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_ref_eval_process_script(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -934,8 +942,8 @@ def run_ref_eval_process(cluster_name, log, function=None):
     # set run permision to the REF-EVAL process script in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_ref_eval_process_script())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_ref_eval_process_script()))
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_ref_eval_process_script())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_ref_eval_process_script())}'
         (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
@@ -945,7 +953,7 @@ def run_ref_eval_process(cluster_name, log, function=None):
     # build the REF-EVAL process starter
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process starter {0} ...\n'.format(get_ref_eval_process_starter()))
+        log.write(f'Building the process starter {get_ref_eval_process_starter()} ...\n')
         (OK, error_list) = build_ref_eval_process_starter(current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -955,8 +963,8 @@ def run_ref_eval_process(cluster_name, log, function=None):
     # upload the REF-EVAL process starter to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process starter {0} to the directory {1} ...\n'.format(get_ref_eval_process_starter(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_ref_eval_process_starter()))
+        log.write(f'Uploading the process starter {get_ref_eval_process_starter()} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_ref_eval_process_starter())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_ref_eval_process_starter(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -967,8 +975,8 @@ def run_ref_eval_process(cluster_name, log, function=None):
     # set run permision to the REF-EVAL process starter in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_ref_eval_process_starter())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_ref_eval_process_starter()))
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_ref_eval_process_starter())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_ref_eval_process_starter())}'
         (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
@@ -978,7 +986,7 @@ def run_ref_eval_process(cluster_name, log, function=None):
     # submit the REF-EVAL process
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Submitting the process script {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_ref_eval_process_starter())))
+        log.write(f'Submitting the process script {current_run_dir}/{os.path.basename(get_ref_eval_process_starter())} ...\n')
         OK = xssh.submit_script(cluster_name, ssh_client, current_run_dir, os.path.basename(get_ref_eval_process_starter()), log)
 
     # close the SSH transport connection
@@ -1057,10 +1065,10 @@ def build_ref_eval_process_starter(current_run_dir):
         with open(get_ref_eval_process_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_ref_eval_process_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_ref_eval_process_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_ref_eval_process_starter()))
+        error_list.append(f'*** ERROR: The file {get_ref_eval_process_starter()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -1074,7 +1082,7 @@ def get_ref_eval_config_file():
     '''
 
     # assign the REF-EVAL config file path
-    ref_eval_config_file = '{0}/{1}-config.txt'.format(xlib.get_config_dir(), xlib.get_ref_eval_code())
+    ref_eval_config_file = f'{xlib.get_config_dir()}/{xlib.get_ref_eval_code()}-config.txt'
 
     # return the REF-EVAL config file path
     return ref_eval_config_file
@@ -1087,7 +1095,7 @@ def get_ref_eval_process_script():
     '''
 
     # assign the REF-EVAL script path
-    ref_eval_process_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_ref_eval_code())
+    ref_eval_process_script = f'{xlib.get_temp_dir()}/{xlib.get_ref_eval_code()}-process.sh'
 
     # return the REF-EVAL script path
     return ref_eval_process_script
@@ -1100,7 +1108,7 @@ def get_ref_eval_process_starter():
     '''
 
     # assign the REF-EVAL process starter path
-    ref_eval_process_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_ref_eval_code())
+    ref_eval_process_starter = f'{xlib.get_temp_dir()}/{xlib.get_ref_eval_code()}-process-starter.sh'
 
     # return the REF-EVAL starter path
     return ref_eval_process_starter

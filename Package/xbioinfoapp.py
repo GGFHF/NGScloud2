@@ -59,7 +59,7 @@ def is_installed_miniconda3(cluster_name, passed_connection, ssh_client):
     # check the Miniconda3 directory is created
     if OK:
         command = f'[ -d {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()} ] && echo RC=0 || echo RC=1'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] == 'RC=0':
             OK = True
             is_installed = True
@@ -139,7 +139,7 @@ def install_miniconda3(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_toa_result_installation_dir(), xlib.get_miniconda3_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -172,7 +172,7 @@ def install_miniconda3(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_miniconda3_installation_script())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_miniconda3_installation_script())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -205,7 +205,7 @@ def install_miniconda3(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_miniconda3_installation_starter())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_miniconda3_installation_starter())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -255,7 +255,7 @@ def build_miniconda3_installation_script(cluster_name, current_run_dir ):
     error_list = []
 
     # get the name, version and download URL of Miniconda3
-    (miniconda3_version, miniconda3_url, miniconda_channel) = xconfiguration.get_bioinfo_app_data(xlib.get_miniconda3_name())
+    (_, miniconda3_url, _) = xconfiguration.get_bioinfo_app_data(xlib.get_miniconda3_name())
 
     # write the Miniconda3 installation script
     try:
@@ -390,82 +390,6 @@ def build_miniconda3_installation_script(cluster_name, current_run_dir ):
             script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error pip $RC; fi\n')
             script_file_id.write( '    echo "The package is installed."\n')
             script_file_id.write( '}\n')
-            ###script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            ###script_file_id.write( 'function create_python2_environment\n')
-            ###script_file_id.write( '{\n')
-            ###script_file_id.write( '    echo "$SEP"\n')
-            ###script_file_id.write( '    echo "Creating the Python 2 environment ..."\n')
-            ###script_file_id.write(f'    cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-            ###script_file_id.write( '    ./conda create --yes --quiet --name py27 python=2.7\n')
-            ###script_file_id.write( '    RC=$?\n')
-            ###script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error conda $RC; fi\n')
-            ###script_file_id.write( '    echo "The environment is created."\n')
-            ###script_file_id.write( '}\n')
-            ###script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            ###script_file_id.write( 'function install_gffutils_python2\n')
-            ###script_file_id.write( '{\n')
-            ###script_file_id.write( '    echo "$SEP"\n')
-            ###script_file_id.write( '    echo "Installing package gffutils in Python 2 environment ..."\n')
-            ###script_file_id.write(f'    cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-            ###script_file_id.write( '    source activate py27\n')
-            ###script_file_id.write( '    pip install --quiet gffutils\n')
-            ###script_file_id.write( '    RC=$?\n')
-            ###script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error pip $RC; fi\n')
-            ###script_file_id.write( '    conda deactivate\n')
-            ###script_file_id.write(f'    echo "The package is installed."\n')
-            ###script_file_id.write( '}\n')
-            ###script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            ###script_file_id.write( 'function install_joblib_python2\n')
-            ###script_file_id.write( '{\n')
-            ###script_file_id.write( '    echo "$SEP"\n')
-            ###script_file_id.write( '    echo "Installing package joblib in Python 2 environment ..."\n')
-            ###script_file_id.write(f'    cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-            ###script_file_id.write( '    source activate py27\n')
-            ###script_file_id.write( '    conda install --quiet --yes joblib\n')
-            ###script_file_id.write( '    RC=$?\n')
-            ###script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error pip $RC; fi\n')
-            ###script_file_id.write( '    conda deactivate\n')
-            ###script_file_id.write(f'    echo "The package is installed."\n')
-            ###script_file_id.write( '}\n')
-            ###script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            ###script_file_id.write( 'function install_matplotlib_python2\n')
-            ###script_file_id.write( '{\n')
-            ###script_file_id.write( '    echo "$SEP"\n')
-            ###script_file_id.write( '    echo "Installing package matplotlib in Python 2 environment ..."\n')
-            ###script_file_id.write(f'    cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-            ###script_file_id.write( '    source activate py27\n')
-            ###script_file_id.write( '    conda install --quiet --yes matplotlib\n')
-            ###script_file_id.write( '    RC=$?\n')
-            ###script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error pip $RC; fi\n')
-            ###script_file_id.write( '    conda deactivate\n')
-            ###script_file_id.write(f'    echo "The package is installed."\n')
-            ###script_file_id.write( '}\n')
-            ###script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            ###script_file_id.write( 'function install_biopython_python2\n')
-            ###script_file_id.write( '{\n')
-            ###script_file_id.write( '    echo "$SEP"\n')
-            ###script_file_id.write( '    echo "Installing package biopython in Python 2 environment ..."\n')
-            ###script_file_id.write(f'    cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-            ###script_file_id.write( '    source activate py27\n')
-            ###script_file_id.write( '    conda install --quiet --yes biopython\n')
-            ###script_file_id.write( '    RC=$?\n')
-            ###script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error pip $RC; fi\n')
-            ###script_file_id.write( '    conda deactivate\n')
-            ###script_file_id.write(f'    echo "The package is installed."\n')
-            ###script_file_id.write( '}\n')
-            ###script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            ###script_file_id.write( 'function install_requests_python2\n')
-            ###script_file_id.write( '{\n')
-            ###script_file_id.write( '    echo "$SEP"\n')
-            ###script_file_id.write( '    echo "Installing package requests in Python 2 environment ..."\n')
-            ###script_file_id.write(f'    cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-            ###script_file_id.write( '    source activate py27\n')
-            ###script_file_id.write( '    conda install --quiet --yes requests\n')
-            ###script_file_id.write( '    RC=$?\n')
-            ###script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error pip $RC; fi\n')
-            ###script_file_id.write( '    conda deactivate\n')
-            ###script_file_id.write(f'    echo "The package is installed."\n')
-            ###script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function end\n')
             script_file_id.write( '{\n')
@@ -548,12 +472,6 @@ def build_miniconda3_installation_script(cluster_name, current_run_dir ):
             script_file_id.write( 'install_matplotlib_python3\n')
             script_file_id.write( 'install_biopython_python3\n')
             script_file_id.write( 'install_requests_python3\n')
-            ###script_file_id.write( 'create_python2_environment\n')
-            ###script_file_id.write( 'install_gffutils_python2\n')
-            ###script_file_id.write( 'install_joblib_python2\n')
-            ###script_file_id.write( 'install_matplotlib_python2\n')
-            ###script_file_id.write( 'install_biopython_python2\n')
-            ###script_file_id.write( 'install_requests_python2\n')
             script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
@@ -641,7 +559,7 @@ def is_installed_anaconda_package(package_code, cluster_name, passed_connection,
     # check the Anaconda package directory is created
     if OK:
         command = f'[ -d {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/envs/{package_code} ] && echo RC=0 || echo RC=1'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] == 'RC=0':
             OK = True
             is_installed = True
@@ -715,7 +633,7 @@ def install_anaconda_package_list(app_code, app_name, package_list, cluster_name
     # check the app directory is created
     if OK:
         command = f'[ -d {xlib.get_cluster_app_dir()} ] && echo RC=0 || echo RC=1'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] == 'RC=0':
             OK = True
         else:
@@ -743,7 +661,7 @@ def install_anaconda_package_list(app_code, app_name, package_list, cluster_name
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_toa_result_installation_dir(), app_code)
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -776,7 +694,7 @@ def install_anaconda_package_list(app_code, app_name, package_list, cluster_name
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_anaconda_package_installation_script())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_anaconda_package_installation_script())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -809,7 +727,7 @@ def install_anaconda_package_list(app_code, app_name, package_list, cluster_name
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_anaconda_package_installation_starter())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_anaconda_package_installation_starter())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -858,9 +776,6 @@ def build_anaconda_package_installation_script(app_name, package_list, cluster_n
     OK = True
     error_list = []
 
-    # get the name, version and download URL of Miniconda3
-    (miniconda3_version, miniconda3_url, miniconda3_channel) = xconfiguration.get_bioinfo_app_data(xlib.get_miniconda3_name())
-
     # write the Anaconda package installation script
     try:
         if not os.path.exists(os.path.dirname(get_anaconda_package_installation_script())):
@@ -893,50 +808,6 @@ def build_anaconda_package_installation_script(app_name, package_list, cluster_n
             script_file_id.write( '    echo "HOST IP: $HOST_IP"\n')
             script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
-            script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( 'function add_channel_defaults\n')
-            script_file_id.write( '{\n')
-            script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '    echo "Adding channel defaults ..."\n')
-            script_file_id.write(f'    cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-            script_file_id.write( '    ./conda config --add channels defaults\n')
-            script_file_id.write( '    RC=$?\n')
-            script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error conda $RC; fi\n')
-            script_file_id.write( '    echo "The channel is added."\n')
-            script_file_id.write( '}\n')
-            script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( 'function add_channel_bioconda\n')
-            script_file_id.write( '{\n')
-            script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '    echo "Adding channel bioconda ..."\n')
-            script_file_id.write(f'    cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-            script_file_id.write( '    ./conda config --add channels bioconda\n')
-            script_file_id.write( '    RC=$?\n')
-            script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error conda $RC; fi\n')
-            script_file_id.write( '    echo "The channel is added."\n')
-            script_file_id.write( '}\n')
-            script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( 'function add_channel_conda_forge\n')
-            script_file_id.write( '{\n')
-            script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '    echo "Adding channel conda-forge ..."\n')
-            script_file_id.write(f'    cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-            script_file_id.write( '    ./conda config --add channels conda-forge\n')
-            script_file_id.write( '    RC=$?\n')
-            script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error conda $RC; fi\n')
-            script_file_id.write( '    echo "The channel is added."\n')
-            script_file_id.write( '}\n')
-            script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( 'function add_channel_r\n')
-            script_file_id.write( '{\n')
-            script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '    echo "Adding channel r ..."\n')
-            script_file_id.write(f'    cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-            script_file_id.write( '    ./conda config --add channels r\n')
-            script_file_id.write( '    RC=$?\n')
-            script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error conda $RC; fi\n')
-            script_file_id.write( '    echo "The channel is added."\n')
-            script_file_id.write( '}\n')
             for package in package_list:
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'function remove_anaconda_package_{package[0]}\n')
@@ -957,55 +828,27 @@ def build_anaconda_package_installation_script(app_name, package_list, cluster_n
                 script_file_id.write( '{\n')
                 script_file_id.write( '    echo "$SEP"\n')
                 script_file_id.write(f'    cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
+                channel_list = package[2].split(';')
+                channel_param_list_text = ''
+                for channel in channel_list:
+                    channel_param_list_text = f'{channel_param_list_text} --channel {channel}'
                 if package[1] == 'last':
                     script_file_id.write(f'    echo "Installing {xlib.get_anaconda_name()} package {package[0]} - last version ..."\n')
-                    script_file_id.write(f'    ./conda create --yes --quiet --channel {package[2]}  --name {package[0]} {package[0]}\n')
+                    script_file_id.write(f'    ./conda create --yes --quiet {channel_param_list_text} --name {package[0]} {package[0]}\n')
                     script_file_id.write( '    RC=$?\n')
                     script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error conda $RC; fi\n')
                 else:
                     script_file_id.write(f'    echo "Installing {xlib.get_anaconda_name()} package {package[0]} - version {package[1]} ..."\n')
-                    script_file_id.write(f'    ./conda create --yes --quiet --channel {package[2]} --name {package[0]} {package[0]}={package[1]}\n')
+                    script_file_id.write(f'    ./conda create --yes --quiet {channel_param_list_text} --name {package[0]} {package[0]}={package[1]}\n')
                     script_file_id.write( '    RC=$?\n')
                     script_file_id.write( '    if [ $RC -ne 0 ]; then\n')
                     script_file_id.write(f'        echo "Installing {xlib.get_anaconda_name()} package {package[0]} - last version ..."\n')
-                    script_file_id.write(f'        ./conda create --yes --quiet --channel {package[2]} --name {package[0]} {package[0]}\n')
+                    script_file_id.write(f'        ./conda create --yes --quiet {channel_param_list_text} --name {package[0]} {package[0]}\n')
                     script_file_id.write( '        RC=$?\n')
                     script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error conda $RC; fi\n')
                     script_file_id.write( '    fi\n')
                 script_file_id.write(f'    echo "The package is installed."\n')
                 script_file_id.write( '}\n')
-                ###script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                ###script_file_id.write(f'function install_anaconda_package_{package[0]}\n')
-                ###script_file_id.write( '{\n')
-                ###script_file_id.write( '    echo "$SEP"\n')
-                ###script_file_id.write(f'    echo "Creating the environment {package[0]} ..."\n')
-                ###script_file_id.write(f'    cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-                ###script_file_id.write(f'    ./conda create --yes --quiet --name {package[0]}\n')
-                ###script_file_id.write( '    RC=$?\n')
-                ###script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error conda $RC; fi\n')
-                ###script_file_id.write(f'    source activate {package[0]}\n')
-                ###script_file_id.write( '    echo "The environment is created."\n')
-                ###if package[1] == 'last':
-                ###    script_file_id.write(f'    echo "Installing {xlib.get_anaconda_name()} package {package[0]} - last version ..."\n')
-                ###    script_file_id.write(f'    ./conda install --yes --quiet --debug --channel {package[2]} {package[0]}\n')
-                ###    script_file_id.write( '    RC=$?\n')
-                ###    script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error conda $RC; fi\n')
-                ###    script_file_id.write( '    echo "The package is installed."\n')
-                ###else:
-                ###    script_file_id.write(f'    echo "Installing {xlib.get_anaconda_name()} package {package[0]} - version {package[1]} ..."\n')
-                ###    script_file_id.write(f'    cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-                ###    script_file_id.write(f'    ./conda install --yes --quiet --debug --channel {package[2]} {package[0]}={package[1]}\n')
-                ###    script_file_id.write( '    RC=$?\n')
-                ###    script_file_id.write( '    if [ $RC -ne 0 ]; then\n')
-                ###    script_file_id.write(f'        echo "Installing {xlib.get_anaconda_name()} package {package[0]} - last version ..."\n')
-                ###    script_file_id.write(f'        cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-                ###    script_file_id.write(f'        ./conda install --yes --quiet --debug --channel {package[2]} {package[0]}\n')
-                ###    script_file_id.write( '        RC=$?\n')
-                ###    script_file_id.write( '        if  [ $RC ne 0 ]; then manage_error conda $RC; fi\n')
-                ###    script_file_id.write( '    fi\n')
-                ###    script_file_id.write( '    ./conda deactivate\n')
-                ###    script_file_id.write( '    echo "The package is installed."\n')
-                ###script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function end\n')
             script_file_id.write( '{\n')
@@ -1079,10 +922,6 @@ def build_anaconda_package_installation_script(app_name, package_list, cluster_n
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
-            script_file_id.write( 'add_channel_defaults\n')
-            script_file_id.write( 'add_channel_bioconda\n')
-            script_file_id.write( 'add_channel_conda_forge\n')
-            script_file_id.write( 'add_channel_r\n')
             for package in package_list:
                 script_file_id.write(f'remove_anaconda_package_{package[0]}\n')
                 script_file_id.write(f'install_anaconda_package_{package[0]}\n')
@@ -1173,7 +1012,7 @@ def is_installed_r(cluster_name, passed_connection, ssh_client):
     # check the Anaconda package directory is created
     if OK:
         command = f'[ -d {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/envs/{xlib.get_r_name()} ] && echo RC=0 || echo RC=1'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] == 'RC=0':
             OK = True
             is_installed = True
@@ -1246,7 +1085,7 @@ def install_r(cluster_name, log, function=None):
     # check the app directory is created
     if OK:
         command = f'[ -d {xlib.get_cluster_app_dir()} ] && echo RC=0 || echo RC=1'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] == 'RC=0':
             OK = True
         else:
@@ -1274,7 +1113,7 @@ def install_r(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_toa_result_installation_dir(), xlib.get_r_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -1307,7 +1146,7 @@ def install_r(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_r_installation_script())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_r_installation_script())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -1340,7 +1179,7 @@ def install_r(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_r_installation_starter())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_r_installation_starter())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -1436,50 +1275,6 @@ def build_r_installation_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( 'function add_channel_defaults\n')
-            script_file_id.write( '{\n')
-            script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '    echo "Adding channel defaults ..."\n')
-            script_file_id.write(f'    cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-            script_file_id.write( '    ./conda config --add channels defaults\n')
-            script_file_id.write( '    RC=$?\n')
-            script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error conda $RC; fi\n')
-            script_file_id.write( '    echo "The channel is added."\n')
-            script_file_id.write( '}\n')
-            script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( 'function add_channel_r\n')
-            script_file_id.write( '{\n')
-            script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '    echo "Adding channel r ..."\n')
-            script_file_id.write(f'    cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-            script_file_id.write( '    ./conda config --add channels r\n')
-            script_file_id.write( '    RC=$?\n')
-            script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error conda $RC; fi\n')
-            script_file_id.write( '    echo "The channel is added."\n')
-            script_file_id.write( '}\n')
-            script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( 'function add_channel_conda_forge\n')
-            script_file_id.write( '{\n')
-            script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '    echo "Adding channel conda-forge ..."\n')
-            script_file_id.write(f'    cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-            script_file_id.write( '    ./conda config --add channels conda-forge\n')
-            script_file_id.write( '    RC=$?\n')
-            script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error conda $RC; fi\n')
-            script_file_id.write( '    echo "The channel is added."\n')
-            script_file_id.write( '}\n')
-            script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( 'function add_channel_bioconda\n')
-            script_file_id.write( '{\n')
-            script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '    echo "Adding channel bioconda ..."\n')
-            script_file_id.write(f'    cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-            script_file_id.write( '    ./conda config --add channels bioconda\n')
-            script_file_id.write( '    RC=$?\n')
-            script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error conda $RC; fi\n')
-            script_file_id.write( '    echo "The channel is added."\n')
-            script_file_id.write( '}\n')
-            script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function remove_r\n')
             script_file_id.write( '{\n')
             script_file_id.write( '    echo "$SEP"\n')
@@ -1493,49 +1288,57 @@ def build_r_installation_script(cluster_name, current_run_dir):
             script_file_id.write( '      echo "The old package is not found."\n')
             script_file_id.write( '    fi\n')
             script_file_id.write( '}\n')
-            (r_software_version, r_software_url, r_software_channel) = xconfiguration.get_r_software_data('r-essentials')
+            (r_software_version, _, r_software_channels) = xconfiguration.get_r_software_data('r-essentials')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function install_package_r-essentials\n')
             script_file_id.write( '{\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write(f'    cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
+            channel_list = r_software_channels.split(';')
+            channel_param_list_text = ''
+            for channel in channel_list:
+                channel_param_list_text = f'{channel_param_list_text} --channel {channel}'
             if r_software_version == 'last':
-                script_file_id.write(f'    echo "Installing package r-essential - last version - channel {r_software_channel} ..."\n')
-                script_file_id.write(f'    ./conda create --yes --quiet --channel {r_software_channel} --name {xlib.get_r_name()} r-essentials\n')
+                script_file_id.write(f'    echo "Installing package r-essential - last version - channel {r_software_channels} ..."\n')
+                script_file_id.write(f'    ./conda create --yes --quiet {channel_param_list_text} --name {xlib.get_r_name()} r-essentials\n')
                 script_file_id.write( '    RC=$?\n')
                 script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error conda $RC; fi\n')
             else:
-                script_file_id.write(f'    echo "Installing package r-essential - version {r_software_version} - channel {r_software_channel} ..."\n')
-                script_file_id.write(f'    ./conda create --yes --quiet --channel {r_software_channel} --name {xlib.get_r_name()} r-essentials={r_software_version}\n')
+                script_file_id.write(f'    echo "Installing package r-essential - version {r_software_version} - channel {r_software_channels} ..."\n')
+                script_file_id.write(f'    ./conda create --yes --quiet {channel_param_list_text} --name {xlib.get_r_name()} r-essentials={r_software_version}\n')
                 script_file_id.write( '    RC=$?\n')
                 script_file_id.write( '    if [ $RC -ne 0 ]; then\n')
-                script_file_id.write(f'        echo "Installing package r-essential - last version - channel {r_software_channel} ..."\n')
-                script_file_id.write(f'        ./conda create --yes --quiet --channel {r_software_channel} --name {xlib.get_r_name()} r-essentials\n')
+                script_file_id.write(f'        echo "Installing package r-essential - last version - channel {r_software_channels} ..."\n')
+                script_file_id.write(f'        ./conda create --yes --quiet {channel_param_list_text} --name {xlib.get_r_name()} r-essentials\n')
                 script_file_id.write( '        RC=$?\n')
                 script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error conda $RC; fi\n')
                 script_file_id.write( '    fi\n')
             script_file_id.write( '    echo "The package is installed."\n')
             script_file_id.write( '}\n')
             for package_code in anaconda_r_software_list:
-                (r_software_version, r_software_url, r_software_channel) = xconfiguration.get_r_software_data(package_code)
+                (r_software_version, _, r_software_channels) = xconfiguration.get_r_software_data(package_code)
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'function install_package_{package_code}\n')
                 script_file_id.write( '{\n')
                 script_file_id.write( '    echo "$SEP"\n')
                 script_file_id.write(f'    cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
                 script_file_id.write(f'    source activate {xlib.get_r_name()}\n')
+                channel_list = r_software_channels.split(';')
+                channel_param_list_text = ''
+                for channel in channel_list:
+                    channel_param_list_text = f'{channel_param_list_text} --channel {channel}'
                 if r_software_version == 'last':
-                    script_file_id.write(f'    echo "Installing package {package_code} - last version - channel {r_software_channel} ..."\n')
-                    script_file_id.write(f'    ./conda install --yes --quiet --channel {r_software_channel} {package_code}\n')
+                    script_file_id.write(f'    echo "Installing package {package_code} - last version - channel {r_software_channels} ..."\n')
+                    script_file_id.write(f'    ./conda install --yes --quiet {channel_param_list_text} {package_code}\n')
                     script_file_id.write( '    RC=$?\n')
                     script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error conda $RC; fi\n')
                 else:
-                    script_file_id.write(f'    echo "Installing package {package_code} - version {r_software_version} - channel {r_software_channel} ..."\n')
-                    script_file_id.write(f'    ./conda install --yes --quiet --channel {r_software_channel} {package_code}={r_software_version}\n')
+                    script_file_id.write(f'    echo "Installing package {package_code} - version {r_software_version} - channel {r_software_channels} ..."\n')
+                    script_file_id.write(f'    ./conda install --yes --quiet {channel_param_list_text} {package_code}={r_software_version}\n')
                     script_file_id.write( '    RC=$?\n')
                     script_file_id.write( '    if [ $RC -ne 0 ]; then\n')
-                    script_file_id.write(f'        echo "Installing package {package_code} - last version - channel {r_software_channel} ..."\n')
-                    script_file_id.write(f'        ./conda create --yes --quiet --channel {r_software_channel} --name {xlib.get_r_name()} {package_code}\n')
+                    script_file_id.write(f'        echo "Installing package {package_code} - last version - channel {r_software_channels} ..."\n')
+                    script_file_id.write(f'        ./conda create --yes --quiet {channel_param_list_text} --name {xlib.get_r_name()} {package_code}\n')
                     script_file_id.write( '        RC=$?\n')
                     script_file_id.write( '        if [ $RC -ne 0 ]; then manage_error conda $RC; fi\n')
                     script_file_id.write( '    fi\n')
@@ -1549,7 +1352,7 @@ def build_r_installation_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "Creating the R script to install GitHuB packages..."\n')
             script_file_id.write(f'    echo "library(\\"devtools\\")" >$GITHUB_INSTALLATION_SCRIPT \n')
             for package_code in github_r_software_list:
-                (r_software_version, r_software_url, r_software_channel) = xconfiguration.get_r_software_data(package_code)
+                (r_software_version, _, r_software_channel) = xconfiguration.get_r_software_data(package_code)
                 script_file_id.write(f'    echo "print(\\"Installing package {package_code} - GitHub: {r_software_channel} ...\\")" >>$GITHUB_INSTALLATION_SCRIPT \n')
                 script_file_id.write(f'    echo "install_github(\\"{r_software_channel}\\")" >>$GITHUB_INSTALLATION_SCRIPT \n')
             script_file_id.write( '    echo "The R script is buit."\n')
@@ -1650,10 +1453,6 @@ def build_r_installation_script(cluster_name, current_run_dir):
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
-            script_file_id.write( 'add_channel_defaults\n')
-            script_file_id.write( 'add_channel_r\n')
-            script_file_id.write( 'add_channel_conda_forge\n')
-            script_file_id.write( 'add_channel_bioconda\n')
             script_file_id.write( 'remove_r\n')
             script_file_id.write( 'install_package_r-essentials\n')
             for package_code in anaconda_r_software_list:

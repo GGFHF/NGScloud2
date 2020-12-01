@@ -202,7 +202,7 @@ def form_installation_bioinfo_app(app_code):
         app_name = xlib.get_vsearch_name()
 
     # get the version and download URL of the BioInfo application
-    (bioinfoapp_version, _, bioinfoapp_channel) = xconfiguration.get_bioinfo_app_data(app_name)
+    (bioinfoapp_version, _, bioinfoapp_channels) = xconfiguration.get_bioinfo_app_data(app_name)
 
     # print the header
     clib.clear_screen()
@@ -232,56 +232,56 @@ def form_installation_bioinfo_app(app_code):
         elif app_code in [xlib.get_ddradseqtools_code(), xlib.get_ngshelper_code(), xlib.get_raddesigner_code(), xlib.get_toa_code(), xlib.get_transrate_code()]:
             OK = clib.confirm_action(f'{app_name} is going to be installed in the cluster {cluster_name}. The previous version will be lost, if it exists.')
         else:
-            OK = clib.confirm_action(f'{app_name} (channel {bioinfoapp_channel}) is going to be installed in the cluster {cluster_name}. The previous version will be lost, if it exists.')
+            OK = clib.confirm_action(f'{app_name} (channel {bioinfoapp_channels}) is going to be installed in the cluster {cluster_name}. The previous version will be lost, if it exists.')
 
     # install the software
     if OK:
 
         # install the BCFtools software
         if app_code == xlib.get_bcftools_code():
-            package_code_list = [(xlib.get_bcftools_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_bcftools_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the BEDtools software
         elif app_code == xlib.get_bedtools_code():
-            package_code_list = [(xlib.get_bedtools_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_bedtools_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the BLAST+ software
         elif app_code == xlib.get_blastplus_code():
-            package_code_list = [(xlib.get_blastplus_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_blastplus_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the Bowtie2 software
         elif app_code == xlib.get_bowtie2_code():
-            package_code_list = [(xlib.get_bowtie2_anaconda_code(), version, bioinfoapp_channel), (xlib.get_samtools_anaconda_code(), version, bioinfoapp_channel), (xlib.get_tabix_anaconda_code(), 'last', bioinfoapp_channel)]
+            package_code_list = [(xlib.get_bowtie2_anaconda_code(), version, bioinfoapp_channels), (xlib.get_samtools_anaconda_code(), version, bioinfoapp_channels), (xlib.get_tabix_anaconda_code(), 'last', bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the BUSCO software
         elif app_code == xlib.get_busco_code():
-            package_code_list = [(xlib.get_busco_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_busco_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the CD-HIT software
         elif app_code == xlib.get_cd_hit_code():
-            package_code_list = [(xlib.get_cd_hit_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_cd_hit_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the Cufflinks software
         elif app_code == xlib.get_cufflinks_code():
-            package_code_list = [(xlib.get_cufflinks_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_cufflinks_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the cutadapt software
         elif app_code == xlib.get_cutadapt_code():
-            package_code_list = [(xlib.get_cutadapt_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_cutadapt_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
@@ -292,67 +292,67 @@ def form_installation_bioinfo_app(app_code):
 
         # install the DETONATE software
         elif app_code == xlib.get_detonate_code():
-            package_code_list = [(xlib.get_detonate_anaconda_code(), version, bioinfoapp_channel), (xlib.get_bowtie2_anaconda_code(), 'last', bioinfoapp_channel)]
+            package_code_list = [(xlib.get_detonate_anaconda_code(), version, bioinfoapp_channels), (xlib.get_bowtie2_anaconda_code(), 'last', bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the DIAMOND software
         elif app_code == xlib.get_diamond_code():
-            package_code_list = [(xlib.get_diamond_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_diamond_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the EMBOSS software
         elif app_code == xlib.get_emboss_code():
-            package_code_list = [(xlib.get_emboss_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_emboss_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the Entrez Direct software
         elif app_code == xlib.get_entrez_direct_code():
-            package_code_list = [(xlib.get_entrez_direct_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_entrez_direct_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the eXpress software
         elif app_code == xlib.get_express_code():
-            package_code_list = [(xlib.get_express_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_express_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the FastQC software
         elif app_code == xlib.get_fastqc_code():
-            package_code_list = [(xlib.get_fastqc_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_fastqc_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the GMAP-GSNAP software
         elif app_code == xlib.get_gmap_gsnap_code():
-            package_code_list = [(xlib.get_gmap_gsnap_anaconda_code(), version, bioinfoapp_channel), (xlib.get_samtools_anaconda_code(), version, bioinfoapp_channel), (xlib.get_tabix_anaconda_code(), 'last', bioinfoapp_channel)]
+            package_code_list = [(xlib.get_gmap_gsnap_anaconda_code(), version, bioinfoapp_channels), (xlib.get_samtools_anaconda_code(), version, bioinfoapp_channels), (xlib.get_tabix_anaconda_code(), 'last', bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the HISAT2 software
         elif app_code == xlib.get_hisat2_code():
-            package_code_list = [(xlib.get_hisat2_anaconda_code(), version, bioinfoapp_channel), (xlib.get_samtools_anaconda_code(), version, bioinfoapp_channel), (xlib.get_tabix_anaconda_code(), 'last', bioinfoapp_channel)]
+            package_code_list = [(xlib.get_hisat2_anaconda_code(), version, bioinfoapp_channels), (xlib.get_samtools_anaconda_code(), version, bioinfoapp_channels), (xlib.get_tabix_anaconda_code(), 'last', bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the HTSeq software
         elif app_code == xlib.get_htseq_code():
-            package_code_list = [(xlib.get_htseq_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_htseq_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the ipyrad software
         elif app_code == xlib.get_ipyrad_code():
-            package_code_list = [(xlib.get_quast_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_quast_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the kallisto software
         elif app_code == xlib.get_kallisto_code():
-            package_code_list = [(xlib.get_kallisto_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_kallisto_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
@@ -368,7 +368,7 @@ def form_installation_bioinfo_app(app_code):
 
         # install the QUAST software
         elif app_code == xlib.get_quast_code():
-            package_code_list = [(xlib.get_quast_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_quast_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
@@ -384,43 +384,43 @@ def form_installation_bioinfo_app(app_code):
 
         # install the rnaQUAST software
         elif app_code == xlib.get_rnaquast_code():
-            package_code_list = [(xlib.get_rnaquast_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_rnaquast_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the RSEM software
         elif app_code == xlib.get_rsem_code():
-            package_code_list = [(xlib.get_rsem_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_rsem_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the SAMtools software
         if app_code == xlib.get_samtools_code():
-            package_code_list = [(xlib.get_samtools_anaconda_code(), version, bioinfoapp_channel), (xlib.get_tabix_anaconda_code(), 'last', bioinfoapp_channel)]
+            package_code_list = [(xlib.get_samtools_anaconda_code(), version, bioinfoapp_channels), (xlib.get_tabix_anaconda_code(), 'last', bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the SOAPdenovo2 software
         elif app_code == xlib.get_soapdenovo2_code():
-            package_code_list = [(xlib.get_soapdenovo2_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_soapdenovo2_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the SOAPdenovo-Trans software
         elif app_code == xlib.get_soapdenovotrans_code():
-            package_code_list = [(xlib.get_soapdenovotrans_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_soapdenovotrans_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the STAR software
         elif app_code == xlib.get_star_code():
-            package_code_list = [(xlib.get_star_anaconda_code(), version, bioinfoapp_channel), (xlib.get_samtools_anaconda_code(), version, bioinfoapp_channel), (xlib.get_tabix_anaconda_code(), 'last', bioinfoapp_channel)]
+            package_code_list = [(xlib.get_star_anaconda_code(), version, bioinfoapp_channels), (xlib.get_samtools_anaconda_code(), version, bioinfoapp_channels), (xlib.get_tabix_anaconda_code(), 'last', bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the starcode software
         elif app_code == xlib.get_starcode_code():
-            package_code_list = [(xlib.get_starcode_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_starcode_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
@@ -431,19 +431,19 @@ def form_installation_bioinfo_app(app_code):
 
         # install the TopHat software
         elif app_code == xlib.get_tophat_code():
-            package_code_list = [(xlib.get_tophat_anaconda_code(), version, bioinfoapp_channel), (xlib.get_samtools_anaconda_code(), version, bioinfoapp_channel), (xlib.get_tabix_anaconda_code(), 'last', bioinfoapp_channel)]
+            package_code_list = [(xlib.get_tophat_anaconda_code(), version, bioinfoapp_channels), (xlib.get_samtools_anaconda_code(), version, bioinfoapp_channels), (xlib.get_tabix_anaconda_code(), 'last', bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the Trans-ABySS software
         elif app_code == xlib.get_transabyss_code():
-            package_code_list = [(xlib.get_transabyss_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_transabyss_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the TransDecoder software
         elif app_code == xlib.get_transdecoder_code():
-            package_code_list = [(xlib.get_transdecoder_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_transdecoder_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
@@ -451,37 +451,37 @@ def form_installation_bioinfo_app(app_code):
         elif app_code == xlib.get_transrate_code():
             devstdout = xlib.DevStdOut(xtransrate.install_transrate.__name__)
             OK = xtransrate.install_transrate(cluster_name, devstdout, function=None)
-            # -- package_code_list = [(xlib.get_transrate_anaconda_code(), version, bioinfoapp_channel)]
+            # -- package_code_list = [(xlib.get_transrate_anaconda_code(), version, bioinfoapp_channels)]
             # -- devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             # -- OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the Trimmomatic software
         elif app_code == xlib.get_trimmomatic_code():
-            package_code_list = [(xlib.get_trimmomatic_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_trimmomatic_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the Trinity software
         elif app_code == xlib.get_trinity_code():
-            package_code_list = [(xlib.get_trinity_anaconda_code(), version, bioinfoapp_channel), (xlib.get_bowtie2_anaconda_code(), 'last', bioinfoapp_channel)]
+            package_code_list = [(xlib.get_trinity_anaconda_code(), version, bioinfoapp_channels), (xlib.get_bowtie2_anaconda_code(), 'last', bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the VCFtools software
         if app_code == xlib.get_vcftools_code():
-            package_code_list = [(xlib.get_vcftools_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_vcftools_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the VCFtools Perl libraries software
         if app_code == xlib.get_vcftools_perl_libraries_code():
-            package_code_list = [(xlib.get_vcftools_perl_libraries_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_vcftools_perl_libraries_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
         # install the vsearch software
         elif app_code == xlib.get_vsearch_code():
-            package_code_list = [(xlib.get_vsearch_anaconda_code(), version, bioinfoapp_channel)]
+            package_code_list = [(xlib.get_vsearch_anaconda_code(), version, bioinfoapp_channels)]
             devstdout = xlib.DevStdOut(xbioinfoapp.install_anaconda_package_list.__name__)
             OK = xbioinfoapp.install_anaconda_package_list(app_code, app_name, package_code_list, cluster_name, devstdout, function=None)
 
@@ -1342,12 +1342,12 @@ def form_recreate_express_config_file():
         elif assembly_dataset_id.startswith(xlib.get_transabyss_code()) or assembly_dataset_id.startswith(xlib.get_trinity_code()) or assembly_dataset_id.startswith(xlib.get_ggtrinity_code()) or assembly_dataset_id.startswith(xlib.get_cd_hit_est_code()) or assembly_dataset_id.startswith(xlib.get_transcript_filter_code()):
             assembly_type = 'NONE'
 
-    # get the alignment dataset identification
+    # get the alignment dataset identification list
     if OK:
-        app_list = [xlib.get_bowtie2_code()]
-        alignment_dataset_id = cinputs.input_result_dataset_id(ssh_client, experiment_id, 'alignment', app_list, 'uncompressed', help=True)
-        if alignment_dataset_id == '':
-            print(f'ERROR: The cluster {cluster_name} does not have alignment datasets.')
+        app_list = xexpress.get_alignment_software_code_list()
+        alignment_dataset_id_list = cinputs.input_result_dataset_id_list(ssh_client, experiment_id, 'alignment', app_list, 'uncompressed', help=True)
+        if alignment_dataset_id_list == []:
+            print(f'ERROR: The cluster {cluster_name} does not have alignment datasets or you did not select them.')
             OK = False
 
     # recreate the eXpress config file
@@ -1359,7 +1359,7 @@ def form_recreate_express_config_file():
 
         # recreate the config file
         if OK:
-            (OK, error_list) = xexpress.create_express_config_file(experiment_id, assembly_dataset_id, assembly_type,alignment_dataset_id)
+            (OK, error_list) = xexpress.create_express_config_file(experiment_id, assembly_dataset_id, assembly_type, alignment_dataset_id_list)
             if OK:
                 print('The file is recreated.')
             else:

@@ -67,27 +67,36 @@ def create_quast_config_file(experiment_id='exp001', reference_dataset_id='NONE'
         with open(get_quast_config_file(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '# You must review the information of this file and update the values with the corresponding ones to the current run.\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# The reference file has to be located in the cluster directory {0}/experiment_id/reference_dataset_id'.format(xlib.get_cluster_reference_dir())))
+            file_id.write(f'# The reference file has to be located in the cluster directory {xlib.get_cluster_reference_dir()}/experiment_id/reference_dataset_id\n')
             file_id.write(f'# The assembly files have to be located in the cluster directory {xlib.get_cluster_result_dir()}/experiment_id/assembly_dataset_id\n')
-            file_id.write( '{0}\n'.format('# The experiment_id, reference_dataset_id, reference_file and assembly_dataset_id are fixed in the identification section.'))
+            file_id.write( '# The experiment_id, reference_dataset_id, reference_file and assembly_dataset_id are fixed in the identification section.\n')
             file_id.write( '#\n')
-            file_id.write( '{0}\n'.format('# You can consult the parameters of QUAST and their meaning in "http://quast.sourceforge.net/quast.html".'))
+            file_id.write( '# You can consult the parameters of QUAST and their meaning in "http://quast.sourceforge.net/quast.html".\n')
+            file_id.write( '#\n')
+            file_id.write( '# In section "QUAST parameters", the key "other_parameters" allows you to input additional parameters in the format:\n')
+            file_id.write( '#\n')
+            file_id.write( '#    other_parameters = --parameter-1[=value-1][; --parameter-2[=value-2][; ...; --parameter-n[=value-n]]]\n')
+            file_id.write( '#\n')
+            file_id.write( '# parameter-i is a parameter name of QUAST and value-i a valid value of parameter-i, e.g.\n')
+            file_id.write( '#\n')
+            file_id.write( '#    other_parameters = --fragmented; --fragmented-max-indent=50\n')
             file_id.write( '\n')
             file_id.write( '# This section has the information identifies the experiment.\n')
             file_id.write( '[identification]\n')
             file_id.write( '{0:<50} {1}\n'.format(f'experiment_id = {experiment_id}', '# experiment identification'))
-            file_id.write( '{0:<50} {1}\n'.format('reference_dataset_id = {0}'.format(reference_dataset_id), '# reference dataset identification or NONE'))
-            file_id.write( '{0:<50} {1}\n'.format('reference_file = {0}'.format(reference_file), '# reference file name or NONE'))
+            file_id.write( '{0:<50} {1}\n'.format(f'reference_dataset_id = {reference_dataset_id}', '# reference dataset identification or NONE'))
+            file_id.write( '{0:<50} {1}\n'.format(f'reference_file = {reference_file}', '# reference file name or NONE'))
             file_id.write( '{0:<50} {1}\n'.format(f'assembly_software = {assembly_software}', f'# assembly software: {get_assembly_software_code_list_text()}'))
             file_id.write( '{0:<50} {1}\n'.format(f'assembly_dataset_id = {assembly_dataset_id}', '# assembly dataset identification'))
             file_id.write( '{0:<50} {1}\n'.format(f'assembly_type = {assembly_type}', f'# assembly type: CONTIGS or SCAFFOLDS in {xlib.get_soapdenovotrans_name()}; NONE in any other case'))
             file_id.write( '\n')
-            file_id.write( '{0}\n'.format('# This section has the information to set the QUAST parameters'))
-            file_id.write( '{0}\n'.format('[QUAST parameters]'))
+            file_id.write( '# This section has the information to set the QUAST parameters\n')
+            file_id.write( '[QUAST parameters]\n')
             file_id.write( '{0:<50} {1}\n'.format('threads = 4', '# number of threads for use'))
+            file_id.write( '{0:<50} {1}\n'.format( 'other_parameters = NONE', '# additional parameters to the previous ones or NONE'))
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be recreated'.format(get_quast_config_file()))
+        error_list.append(f'*** ERROR: The file {get_quast_config_file()} can not be recreated')
         OK = False
 
     # return the control variable and the error list
@@ -115,7 +124,7 @@ def run_quast_process(cluster_name, log, function=None):
 
     # check the QUAST config file
     log.write(f'{xlib.get_separator()}\n')
-    log.write('Checking the {0} config file ...\n'.format(xlib.get_quast_name()))
+    log.write(f'Checking the {xlib.get_quast_name()} config file ...\n')
     (OK, error_list) = check_quast_config_file(strict=True)
     if OK:
         log.write('The file is OK.\n')
@@ -169,10 +178,10 @@ def run_quast_process(cluster_name, log, function=None):
         (OK, error_list, is_installed) = xbioinfoapp.is_installed_anaconda_package(xlib.get_quast_anaconda_code(), cluster_name, True, ssh_client)
         if OK:
             if not is_installed:
-                log.write('*** ERROR: {0} is not installed.\n'.format(xlib.get_quast_name()))
+                log.write(f'*** ERROR: {xlib.get_quast_name()} is not installed.\n')
                 OK = False
         else:
-            log.write('*** ERROR: The verification of {0} installation could not be performed.\n'.format(xlib.get_quast_name()))
+            log.write(f'*** ERROR: The verification of {xlib.get_quast_name()} installation could not be performed.\n')
 
     # warn that the requirements are OK 
     if OK:
@@ -184,7 +193,7 @@ def run_quast_process(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(experiment_id, xlib.get_quast_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -193,7 +202,7 @@ def run_quast_process(cluster_name, log, function=None):
     # build the QUAST process script
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process script {0} ...\n'.format(get_quast_process_script()))
+        log.write(f'Building the process script {get_quast_process_script()} ...\n')
         (OK, error_list) = build_quast_process_script(cluster_name, current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -203,8 +212,8 @@ def run_quast_process(cluster_name, log, function=None):
     # upload the QUAST process script to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process script {0} to the directory {1} ...\n'.format(get_quast_process_script(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_quast_process_script()))
+        log.write(f'Uploading the process script {get_quast_process_script()} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_quast_process_script())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_quast_process_script(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -215,9 +224,9 @@ def run_quast_process(cluster_name, log, function=None):
     # set run permision to the QUAST process script in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_quast_process_script())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_quast_process_script()))
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_quast_process_script())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_quast_process_script())}'
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -226,7 +235,7 @@ def run_quast_process(cluster_name, log, function=None):
     # build the QUAST process starter
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Building the process starter {0} ...\n'.format(get_quast_process_starter()))
+        log.write(f'Building the process starter {get_quast_process_starter()} ...\n')
         (OK, error_list) = build_quast_process_starter(current_run_dir)
         if OK:
             log.write('The file is built.\n')
@@ -236,8 +245,8 @@ def run_quast_process(cluster_name, log, function=None):
     # upload the QUAST process starter to the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Uploading the process starter {0} to the directory {1} ...\n'.format(get_quast_process_starter(), current_run_dir))
-        cluster_path = '{0}/{1}'.format(current_run_dir, os.path.basename(get_quast_process_starter()))
+        log.write(f'Uploading the process starter {get_quast_process_starter()} to the directory {current_run_dir} ...\n')
+        cluster_path = f'{current_run_dir}/{os.path.basename(get_quast_process_starter())}'
         (OK, error_list) = xssh.put_file(sftp_client, get_quast_process_starter(), cluster_path)
         if OK:
             log.write('The file is uploaded.\n')
@@ -248,9 +257,9 @@ def run_quast_process(cluster_name, log, function=None):
     # set run permision to the QUAST process starter in the cluster
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Setting on the run permision of {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_quast_process_starter())))
-        command = 'chmod u+x {0}/{1}'.format(current_run_dir, os.path.basename(get_quast_process_starter()))
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_quast_process_starter())} ...\n')
+        command = f'chmod u+x {current_run_dir}/{os.path.basename(get_quast_process_starter())}'
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -259,7 +268,7 @@ def run_quast_process(cluster_name, log, function=None):
     # submit the QUAST process
     if OK:
         log.write(f'{xlib.get_separator()}\n')
-        log.write('Submitting the process script {0}/{1} ...\n'.format(current_run_dir, os.path.basename(get_quast_process_starter())))
+        log.write(f'Submitting the process script {current_run_dir}/{os.path.basename(get_quast_process_starter())} ...\n')
         OK = xssh.submit_script(cluster_name, ssh_client, current_run_dir, os.path.basename(get_quast_process_starter()), log)
 
     # close the SSH transport connection
@@ -384,9 +393,19 @@ def check_quast_config_file(strict):
                 error_list.append('*** ERROR: the key "threads" has to be an integer number greater than or equal to 1.')
                 OK = False
 
+            # check section "QUAST parameters" - key "other_parameters"
+            not_allowed_parameters_list = ['threads', 'output-dir']
+            other_parameters = quast_option_dict.get('QUAST parameters', {}).get('other_parameters', not_found)
+            if other_parameters == not_found:
+                error_list.append('*** ERROR: the key "other_parameters" is not found in the section "QUAST parameters".')
+                OK = False
+            elif other_parameters.upper() != 'NONE':
+                (OK, error_list2) = xlib.check_parameter_list(other_parameters, "other_parameters", not_allowed_parameters_list)
+                error_list = error_list + error_list2
+
     # warn that the results config file is not valid if there are any errors
     if not OK:
-        error_list.append('\nThe {0} config file is not valid. Please, correct this file or recreate it.'.format(xlib.get_quast_name()))
+        error_list.append(f'\nThe {xlib.get_quast_name()} config file is not valid. Please, correct this file or recreate it.')
 
     # return the control variable and the error list
     return (OK, error_list)
@@ -413,6 +432,7 @@ def build_quast_process_script(cluster_name, current_run_dir):
     assembly_dataset_id = quast_option_dict['identification']['assembly_dataset_id']
     assembly_type = quast_option_dict['identification']['assembly_type']
     threads = quast_option_dict['QUAST parameters']['threads']
+    other_parameters = quast_option_dict['QUAST parameters']['other_parameters']
 
     # set the reference file path
     if reference_dataset_id.upper() != 'NONE':
@@ -461,6 +481,8 @@ def build_quast_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write(f'CURRENT_DIR={current_run_dir}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function init\n')
             script_file_id.write( '{\n')
             script_file_id.write( '    INIT_DATETIME=`date --utc +%s`\n')
@@ -474,25 +496,45 @@ def build_quast_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( '{0}\n'.format('function run_quast_process'))
+            script_file_id.write( 'function print_quast_version\n')
             script_file_id.write( '{\n')
             script_file_id.write(f'    source activate {xlib.get_quast_anaconda_code()}\n')
-            script_file_id.write(f'    cd {current_run_dir}\n')
             script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '{0}\n'.format('    quast.py --version'))
+            script_file_id.write( '    quast --version\n')
+            script_file_id.write( '    conda deactivate\n')
+            script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write( 'function run_quast_process\n')
+            script_file_id.write( '{\n')
+            script_file_id.write(f'    source activate {xlib.get_quast_anaconda_code()}\n')
+            script_file_id.write( '    cd $CURRENT_DIR\n')
             script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write( '    echo "Assessing the transcriptome quality ..."\n')
             script_file_id.write( '    /usr/bin/time \\\n')
-            script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
-            script_file_id.write( '{0}\n'.format('        quast.py \\'))
-            script_file_id.write( '{0}\n'.format('            --threads {0} \\'.format(threads)))
-            script_file_id.write( '{0}\n'.format('            --output-dir {0} \\'.format(current_run_dir)))
+            script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
+            script_file_id.write( '        quast \\\n')
+            script_file_id.write(f'            --threads {threads} \\\n')
             if reference_dataset_id.upper() != 'NONE':
-                script_file_id.write( '{0}\n'.format('            -R {0} \\'.format(reference_file_path)))
-            if assembly_type.upper() == 'SCAFFOLDS':
-                script_file_id.write( '{0}\n'.format('            --scaffolds \\'))
-            script_file_id.write( '{0}\n'.format('            {0}'.format(transcriptome_file)))
+                script_file_id.write(f'            -r {reference_file_path} \\\n')
+            if other_parameters.upper() != 'NONE':
+                parameter_list = [x.strip() for x in other_parameters.split(';')]
+                for j in range(len(parameter_list)):
+                    if parameter_list[j].find('=') > 0:
+                        pattern = r'^--(.+)=(.+)$'
+                        mo = re.search(pattern, parameter_list[j])
+                        parameter_name = mo.group(1).strip()
+                        parameter_value = mo.group(2).strip()
+                        script_file_id.write(f'            --{parameter_name} {parameter_value} \\\n')
+                    else:
+                        pattern = r'^--(.+)$'
+                        mo = re.search(pattern, parameter_list[j])
+                        parameter_name = mo.group(1).strip()
+                        script_file_id.write(f'            --{parameter_name} \\\n')
+            script_file_id.write(f'            --output-dir {current_run_dir} \\\n')
+            script_file_id.write(f'            {transcriptome_file}\n')
             script_file_id.write( '    RC=$?\n')
-            script_file_id.write( '{0}\n'.format('    if [ $RC -ne 0 ]; then manage_error quast.py $RC; fi'))
+            script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error quast.py $RC; fi\n')
+            script_file_id.write( '    echo "The assessment is done."\n')
             script_file_id.write( '    conda deactivate\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
@@ -568,11 +610,12 @@ def build_quast_process_script(cluster_name, current_run_dir):
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
-            script_file_id.write( '{0}\n'.format('run_quast_process'))
+            script_file_id.write( 'print_quast_version\n')
+            script_file_id.write( 'run_quast_process\n')
             script_file_id.write( 'end\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(quast_process_script))
+        error_list.append(f'*** ERROR: The file {quast_process_script} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -596,10 +639,10 @@ def build_quast_process_starter(current_run_dir):
         with open(get_quast_process_starter(), mode='w', encoding='iso-8859-1', newline='\n') as file_id:
             file_id.write( '#!/bin/bash\n')
             file_id.write( '#-------------------------------------------------------------------------------\n')
-            file_id.write( '{0}\n'.format('{0}/{1} &>>{0}/{2}'.format(current_run_dir, os.path.basename(get_quast_process_script()), xlib.get_cluster_log_file())))
+            file_id.write(f'{current_run_dir}/{os.path.basename(get_quast_process_script())} &>>{current_run_dir}/{xlib.get_cluster_log_file()}\n')
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
-        error_list.append('*** ERROR: The file {0} can not be created'.format(get_quast_process_starter()))
+        error_list.append(f'*** ERROR: The file {get_quast_process_starter()} can not be created')
         OK = False
 
     # return the control variable and the error list
@@ -613,7 +656,7 @@ def get_quast_config_file():
     '''
 
     # assign the QUAST config file path
-    quast_config_file = '{0}/{1}-config.txt'.format(xlib.get_config_dir(), xlib.get_quast_code())
+    quast_config_file = f'{xlib.get_config_dir()}/{xlib.get_quast_code()}-config.txt'
 
     # return the QUAST config file path
     return quast_config_file
@@ -626,7 +669,7 @@ def get_quast_process_script():
     '''
 
     # assign the QUAST script path
-    quast_process_script = '{0}/{1}-process.sh'.format(xlib.get_temp_dir(), xlib.get_quast_code())
+    quast_process_script = f'{xlib.get_temp_dir()}/{xlib.get_quast_code()}-process.sh'
 
     # return the QUAST script path
     return quast_process_script
@@ -639,7 +682,7 @@ def get_quast_process_starter():
     '''
 
     # assign the QUAST process starter path
-    quast_process_starter = '{0}/{1}-process-starter.sh'.format(xlib.get_temp_dir(), xlib.get_quast_code())
+    quast_process_starter = f'{xlib.get_temp_dir()}/{xlib.get_quast_code()}-process-starter.sh'
 
     # return the QUAST starter path
     return quast_process_starter

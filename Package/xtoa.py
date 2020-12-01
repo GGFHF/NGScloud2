@@ -63,7 +63,7 @@ def is_installed_toa(cluster_name, passed_connection, ssh_client):
     # check the TOA directory is created
     if OK:
         command = f'[ -d {cluster_app_dir}/{xlib.get_toa_name()} ] && echo RC=0 || echo RC=1'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] == 'RC=0':
             OK = True
             is_installed = True
@@ -87,9 +87,6 @@ def install_toa(cluster_name, log, function=None):
 
     # initialize the control variable
     OK = True
-
-    # get the version and download URL of TOA
-    (toa_version, toa_url, toa_channel) = xconfiguration.get_bioinfo_app_data(xlib.get_toa_name())
 
     # get the aplication directory in the cluster
     cluster_app_dir = xlib.get_cluster_app_dir()
@@ -141,7 +138,7 @@ def install_toa(cluster_name, log, function=None):
     # check the app directory is created
     if OK:
         command = f'[ -d {cluster_app_dir} ] && echo RC=0 || echo RC=1'.format()
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] != 'RC=0':
             log.write('*** ERROR: There is not any volume mounted in the directory.\n')
             log.write(f'You have to link a volume in the mounting point {cluster_app_dir} for the cluster {cluster_name}.\n')
@@ -157,7 +154,7 @@ def install_toa(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_toa_result_installation_dir(), xlib.get_toa_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -190,7 +187,7 @@ def install_toa(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_toa_installation_script())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_toa_installation_script())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -223,7 +220,7 @@ def install_toa(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_toa_installation_starter())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_toa_installation_starter())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -266,7 +263,7 @@ def build_toa_installation_script(cluster_name, current_run_dir):
     error_list = []
 
     # get the version and download URL of TOA
-    (toa_version, toa_url, toa_channel) = xconfiguration.get_bioinfo_app_data(xlib.get_toa_name())
+    (_, toa_url, _) = xconfiguration.get_bioinfo_app_data(xlib.get_toa_name())
 
     # write the script
     try:
@@ -784,7 +781,7 @@ def get_toa_config_dict():
     # open the TOA config file
     try:
         toa_config_file_id = open(get_toa_config_file(), mode='r', encoding='iso-8859-1')
-    except Exception as e:
+    except Exception:
         raise xlib.ProgramException('F001', get_toa_config_file())
 
     # read the first record
@@ -882,10 +879,10 @@ def check_dataset_file(strict):
                 # extract the data
                 try: 
                     mo = record_pattern.match(record)
-                    dataset_id = mo.group(1).strip()
-                    dataset_name = mo.group(2).strip()
-                    repository_id = mo.group(3).strip()
-                    ftp_adress = mo.group(4).strip()
+                    # -- dataset_id = mo.group(1).strip()
+                    # -- dataset_name = mo.group(2).strip()
+                    # -- repository_id = mo.group(3).strip()
+                    # -- ftp_adress = mo.group(4).strip()
                 except Exception as e:
                     record_text = record.replace("\n", "")
                     error_list.append(f'*** ERROR: There is a format error in the record: {record_text}.')
@@ -1064,8 +1061,8 @@ def check_species_file(strict):
                 # extract the data
                 try:
                     mo = record_pattern.match(record)
-                    species_name = mo.group(1).strip()
-                    plaza_species_id = mo.group(2).strip()
+                    # -- species_name = mo.group(1).strip()
+                    # -- plaza_species_id = mo.group(2).strip()
                 except Exception as e:
                     record_text = record.replace("\n", "")
                     error_list.append(f'*** ERROR: There is a format error in the record: {record_text}.')
@@ -1162,7 +1159,7 @@ def manage_toa_database(cluster_name, process_type, log, function=None):
     # check the TOA is installed
     if OK:
         command = f'[ -d {xlib.get_cluster_app_dir()}/{xlib.get_toa_name()} ] && echo RC=0 || echo RC=1'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] != 'RC=0':
             log.write(f'*** ERROR: {xlib.get_toa_name()} is not installed.\n')
             OK = False
@@ -1180,7 +1177,7 @@ def manage_toa_database(cluster_name, process_type, log, function=None):
         elif process_type == xlib.get_toa_type_rebuild(): 
             current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_toa_result_database_dir(), xlib.get_toa_process_rebuild_toa_database_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -1221,7 +1218,7 @@ def manage_toa_database(cluster_name, process_type, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(script)} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(script)}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -1261,7 +1258,7 @@ def manage_toa_database(cluster_name, process_type, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_recreate_toa_database_starter())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_recreate_toa_database_starter())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -1806,7 +1803,7 @@ def manage_genomic_database(cluster_name, process_type, genomic_database, log, f
     # check the TOA is installed
     if OK:
         command = f'[ -d {xlib.get_cluster_app_dir()}/{xlib.get_toa_name()} ] && echo RC=0 || echo RC=1'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] != 'RC=0':
             log.write(f'*** ERROR: {xlib.get_toa_name()} is not installed.\n')
             OK = False
@@ -1891,7 +1888,7 @@ def manage_genomic_database(cluster_name, process_type, genomic_database, log, f
                 current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_toa_result_database_dir(), xlib.get_toa_process_gilist_viridiplantae_protein_gi_code())
 
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -1903,7 +1900,7 @@ def manage_genomic_database(cluster_name, process_type, genomic_database, log, f
             log.write(f'{xlib.get_separator()}\n')
             log.write('Creating the TOA data directory ...\n')
             command = f'mkdir --parents {data_dir}'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+            (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
             if OK:
                 log.write(f'The directory path {data_dir} is created.\n')
             else:
@@ -2081,7 +2078,7 @@ def manage_genomic_database(cluster_name, process_type, genomic_database, log, f
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(script)} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(script)}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -2228,7 +2225,7 @@ def manage_genomic_database(cluster_name, process_type, genomic_database, log, f
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(starter)} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(starter)}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -6083,7 +6080,7 @@ def build_nr_diamond_db_script(cluster_name, current_run_dir):
                 script_file_id.write( '    exit 3\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                process_name = f'TOA - {xlib.get_toa_process_nr_diamond_db_name}'
+                process_name = f'TOA - {xlib.get_toa_process_nr_diamond_db_name()}'
                 mail_message_ok = xlib.get_mail_message_ok(process_name, cluster_name)
                 mail_message_wrong = xlib.get_mail_message_wrong(process_name, cluster_name)
                 script_file_id.write( 'function send_mail\n')
@@ -8461,7 +8458,7 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
     # check the TOA is installed
     if OK:
         command = f'[ -d {xlib.get_cluster_app_dir()}/{xlib.get_toa_name()} ] && echo RC=0 || echo RC=1'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] != 'RC=0':
             log.write(f'*** ERROR: {xlib.get_toa_name()} is not installed.\n')
             OK = False
@@ -8470,7 +8467,7 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
     if OK:
         check_sentence = f'check-data-load.py --db={toa_config_dict["TOA_DB"]} --group=basic'
         command = f'{path_sentence}; {check_sentence} && echo RC=0 || echo RC=1'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] != 'RC=0':
             log.write('*** ERROR: The basic data load in TOA database is wrong.\n')
             OK = False
@@ -8481,7 +8478,7 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
     if OK:
         if 'gymno_01' in selected_database_list:
             command = f'[ -d {toa_config_dict["GYMNO_01_BLASTPLUS_DB_DIR"]} ] && echo RC=0 || echo RC=1'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
             if stdout[len(stdout) - 1] != 'RC=0':
                 log.write('*** ERROR: Gymno PLAZA 1.0 proteome is not built.\n')
                 OK = False
@@ -8493,7 +8490,7 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
         if 'gymno_01' in selected_database_list:
             check_sentence = f'check-data-load.py --db={toa_config_dict["TOA_DB"]} --group=gymno_01'
             command = f'{path_sentence}; {check_sentence} && echo RC=0 || echo RC=1'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
             if stdout[len(stdout) - 1] != 'RC=0':
                 log.write('*** ERROR: Gymno PLAZA 1.0 load in TOA database is wrong.\n')
                 OK = False
@@ -8504,7 +8501,7 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
     if OK:
         if 'dicots_04' in selected_database_list:
             command = f'[ -d {toa_config_dict["DICOTS_04_BLASTPLUS_DB_DIR"]} ] && echo RC=0 || echo RC=1'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
             if stdout[len(stdout) - 1] != 'RC=0':
                 log.write('*** ERROR: Dicots PLAZA 4.0 proteome is not built.\n')
                 OK = False
@@ -8516,7 +8513,7 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
         if 'dicots_04' in selected_database_list:
             check_sentence = f'check-data-load.py --db={toa_config_dict["TOA_DB"]} --group=dicots_04'
             command = f'{path_sentence}; {check_sentence} && echo RC=0 || echo RC=1'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
             if stdout[len(stdout) - 1] != 'RC=0':
                 log.write('*** ERROR: Dicots PLAZA 4.0 load in TOA database is wrong.\n')
                 OK = False
@@ -8527,7 +8524,7 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
     if OK:
         if 'monocots_04' in selected_database_list:
             command = f'[ -d {toa_config_dict["MONOCOTS_04_BLASTPLUS_DB_DIR"]} ] && echo RC=0 || echo RC=1'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
             if stdout[len(stdout) - 1] != 'RC=0':
                 log.write('*** ERROR: Monocots PLAZA 4.0 proteome is not built.\n')
                 OK = False
@@ -8539,7 +8536,7 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
         if 'monocots_04' in selected_database_list:
             check_sentence = f'check-data-load.py --db={toa_config_dict["TOA_DB"]} --group=monocots_04'
             command = f'{path_sentence}; {check_sentence} && echo RC=0 || echo RC=1'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
             if stdout[len(stdout) - 1] != 'RC=0':
                 log.write('*** ERROR: Monocots PLAZA 4.0 load in TOA database is wrong.\n')
                 OK = False
@@ -8550,7 +8547,7 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
     if OK:
         if 'refseq_plant' in selected_database_list:
             command = f'[ -d {toa_config_dict["REFSEQ_PLANT_BLASTPLUS_DB_DIR"]} ] && echo RC=0 || echo RC=1'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
             if stdout[len(stdout) - 1] != 'RC=0':
                 log.write('*** ERROR: NCBI RefSeq Plant proteome is not built.\n')
                 OK = False
@@ -8561,7 +8558,7 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
     if OK:
         if 'nt' in selected_database_list and pipeline_type == xlib.get_toa_process_pipeline_nucleotide_code():
             command = f'[ -d {toa_config_dict["NT_BLASTPLUS_DB_DIR"]} ] && echo RC=0 || echo RC=1'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
             if stdout[len(stdout) - 1] != 'RC=0':
                 log.write('*** ERROR: NCBI BLAST database NT for BLAST+ is not built.\n')
                 OK = False
@@ -8573,7 +8570,7 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
         if 'nr' in selected_database_list and pipeline_type == xlib.get_toa_process_pipeline_aminoacid_code():
             if pipeline_option_dict['pipeline parameters']['alignment_tool'] == 'BLAST+':
                 command = f'[ -d {toa_config_dict["NR_BLASTPLUS_DB_DIR"]} ] && echo RC=0 || echo RC=1'
-                (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+                (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
                 if stdout[len(stdout) - 1] != 'RC=0':
                     log.write('*** ERROR: NCBI BLAST database NR for BLAST+ is not built.\n')
                     OK = False
@@ -8581,7 +8578,7 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
                     log.write('... NCBI BLAST database NR for BLAST+ is OK ...\n')
             elif pipeline_option_dict['pipeline parameters']['alignment_tool'] == 'DIAMOND':
                 command = f'[ -d {toa_config_dict["NR_DIAMOND_DB_DIR"]} ] && echo RC=0 || echo RC=1'
-                (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+                (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
                 if stdout[len(stdout) - 1] != 'RC=0':
                     log.write('*** ERROR: NCBI BLAST database NR for DIAMOND is not built.\n')
                     OK = False
@@ -8593,7 +8590,7 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
         if 'gymno_01' in selected_database_list or 'dicots_04' in selected_database_list or 'monocots_04' in selected_database_list:
             check_sentence = f'check-data-load.py --db={toa_config_dict["TOA_DB"]} --group=gene'.format()
             command = f'{path_sentence}; {check_sentence} && echo RC=0 || echo RC=1'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
             if stdout[len(stdout) - 1] != 'RC=0':
                 log.write('*** ERROR: NCBI Gene load in TOA database is wrong.\n')
                 OK = False
@@ -8605,7 +8602,7 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
         if 'gymno_01' in selected_database_list or 'dicots_04' in selected_database_list or 'monocots_04' in selected_database_list:
             check_sentence = f'check-data-load.py --db={toa_config_dict["TOA_DB"]} --group=interpro'
             command = f'{path_sentence}; {check_sentence} && echo RC=0 || echo RC=1'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
             if stdout[len(stdout) - 1] != 'RC=0':
                 log.write('*** ERROR: InterPro load in TOA database is wrong.\n')
                 OK = False
@@ -8617,7 +8614,7 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
         if 'gymno_01' in selected_database_list or 'dicots_04' in selected_database_list or 'monocots_04' in selected_database_list:
             check_sentence = f'check-data-load.py --db={toa_config_dict["TOA_DB"]} --group=go'
             command = f'{path_sentence}; {check_sentence} && echo RC=0 || echo RC=1'
-            (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+            (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
             if stdout[len(stdout) - 1] != 'RC=0':
                 log.write('*** ERROR: Gene Ontology data load in TOA database is wrong.\n')
                 OK = False
@@ -8642,7 +8639,7 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
             current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_toa_result_pipeline_dir(), xlib.get_toa_process_pipeline_aminoacid_code())
 
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -8688,7 +8685,7 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(script)} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(script)}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -8733,7 +8730,7 @@ def run_pipeline_process(cluster_name, pipeline_type, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(starter)} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(starter)}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -10603,9 +10600,6 @@ def run_annotation_merger_process(cluster_name, log, function=None):
     # initialize the control variable
     OK = True
 
-    # get the dictionary of TOA configuration
-    toa_config_dict = get_toa_config_dict()
-
     # warn that the log window does not have to be closed
     if not isinstance(log, xlib.DevStdOut):
         log.write('This process might take several minutes. Do not close this window, please wait!\n')
@@ -10676,7 +10670,7 @@ def run_annotation_merger_process(cluster_name, log, function=None):
     # check the TOA is installed
     if OK:
         command = f'[ -d {xlib.get_cluster_app_dir()}/{xlib.get_toa_name()} ] && echo RC=0 || echo RC=1'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] != 'RC=0':
             log.write(f'*** ERROR: {xlib.get_toa_name()} is not installed.\n')
             OK = False
@@ -10693,7 +10687,7 @@ def run_annotation_merger_process(cluster_name, log, function=None):
 
         # create current run directory
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -10729,7 +10723,7 @@ def run_annotation_merger_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(script)} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(script)}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -10764,7 +10758,7 @@ def run_annotation_merger_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(starter)} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(starter)}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -10801,9 +10795,6 @@ def check_annotation_merger_config_file(strict):
 
     # intitialize variable used when value is not found
     not_found = '***NOTFOUND***'.upper()
-
-    # get the dictionary of TOA configuration
-    toa_config_dict = get_toa_config_dict()
 
     # get the option dictionary
     try:
@@ -11021,11 +11012,12 @@ def build_annotation_merger_script(cluster_name, current_run_dir):
                 script_file_id.write( 'function end\n')
                 script_file_id.write( '{\n')
                 script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
-                script_file_id.write( '    FORMATTED_END_DATETIME=`date "+%Y-%m-%d %H:%M:%S"`\n')
+                script_file_id.write( '    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
                 script_file_id.write( '    calculate_duration\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '    echo "Script ended OK at $FORMATTED_END_DATETIME with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
+                script_file_id.write( '    echo "Script ended OK at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
                 script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    send_mail ok\n')
                 script_file_id.write( '    touch $SCRIPT_STATUS_OK\n')
                 script_file_id.write( '    exit 0\n')
                 script_file_id.write( '}\n')
@@ -11033,14 +11025,50 @@ def build_annotation_merger_script(cluster_name, current_run_dir):
                 script_file_id.write( 'function manage_error\n')
                 script_file_id.write( '{\n')
                 script_file_id.write( '    END_DATETIME=`date --utc +%s`\n')
-                script_file_id.write( '    FORMATTED_END_DATETIME=`date "+%Y-%m-%d %H:%M:%S"`\n')
+                script_file_id.write( '    FORMATTED_END_DATETIME=`date --date="@$END_DATETIME" "+%Y-%m-%d %H:%M:%S"`\n')
                 script_file_id.write( '    calculate_duration\n')
                 script_file_id.write( '    echo "$SEP"\n')
                 script_file_id.write( '    echo "ERROR: $1 returned error $2"\n')
-                script_file_id.write( '    echo "Script ended WRONG at $FORMATTED_END_DATETIME with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
+                script_file_id.write( '    echo "Script ended WRONG at $FORMATTED_END_DATETIME+00:00 with a run duration of $DURATION s ($FORMATTED_DURATION)."\n')
                 script_file_id.write( '    echo "$SEP"\n')
+                script_file_id.write( '    send_mail wrong\n')
                 script_file_id.write( '    touch $SCRIPT_STATUS_WRONG\n')
                 script_file_id.write( '    exit 3\n')
+                script_file_id.write( '}\n')
+                script_file_id.write( '#-------------------------------------------------------------------------------\n')
+                process_name = f'TOA - {xlib.get_toa_process_merge_annotations_name()}'
+                mail_message_ok = xlib.get_mail_message_ok(process_name, cluster_name)
+                mail_message_wrong = xlib.get_mail_message_wrong(process_name, cluster_name)
+                script_file_id.write( 'function send_mail\n')
+                script_file_id.write( '{\n')
+                script_file_id.write(f'    SUBJECT="{xlib.get_project_name()}: {process_name}"\n')
+                script_file_id.write( '    if [ "$1" == "ok" ]; then\n')
+                script_file_id.write(f'        MESSAGE="{mail_message_ok}"\n')
+                script_file_id.write( '    elif [ "$1" == "wrong" ]; then\n')
+                script_file_id.write(f'        MESSAGE="{mail_message_wrong}"\n')
+                script_file_id.write( '    else\n')
+                script_file_id.write( '         MESSAGE=""\n')
+                script_file_id.write( '    fi\n')
+                script_file_id.write( '    DESTINATION_FILE=mail-destination.json\n')
+                script_file_id.write( '    echo "{" > $DESTINATION_FILE\n')
+                script_file_id.write(f'    echo "    \\\"ToAddresses\\\":  [\\\"{xconfiguration.get_contact_data()}\\\"]," >> $DESTINATION_FILE\n')
+                script_file_id.write( '    echo "    \\\"CcAddresses\\\":  []," >> $DESTINATION_FILE\n')
+                script_file_id.write( '    echo "    \\\"BccAddresses\\\":  []" >> $DESTINATION_FILE\n')
+                script_file_id.write( '    echo "}" >> $DESTINATION_FILE\n')
+                script_file_id.write( '    MESSAGE_FILE=mail-message.json\n')
+                script_file_id.write( '    echo "{" > $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "    \\\"Subject\\\": {" >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "        \\\"Data\\\":  \\\"$SUBJECT\\\"," >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "        \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "    }," >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "    \\\"Body\\\": {" >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "        \\\"Html\\\": {" >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "            \\\"Data\\\":  \\\"$MESSAGE\\\"," >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "            \\\"Charset\\\":  \\\"UTF-8\\\"" >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "        }" >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "    }" >> $MESSAGE_FILE\n')
+                script_file_id.write( '    echo "}" >> $MESSAGE_FILE\n')
+                script_file_id.write(f'    aws ses send-email --from {xconfiguration.get_contact_data()} --destination file://$DESTINATION_FILE --message file://$MESSAGE_FILE\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function calculate_duration\n')

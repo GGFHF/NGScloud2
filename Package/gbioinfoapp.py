@@ -223,7 +223,7 @@ class FormInstallBioinfoApp(tkinter.Frame):
             self.app_name = xlib.get_vsearch_name()
 
         # get the version and download URL of the BioInfo application
-        (self.bioinfoapp_version, self.bioinfoapp__url, self.bioinfoapp_channel) = xconfiguration.get_bioinfo_app_data(self.app_name)
+        (self.bioinfoapp_version, self.bioinfoapp__url, self.bioinfoapp_channels) = xconfiguration.get_bioinfo_app_data(self.app_name)
 
         # assign the text of the "head"
         self.head = f'{self.app_name} - Install software'
@@ -439,7 +439,7 @@ class FormInstallBioinfoApp(tkinter.Frame):
             elif self.app_code in [xlib.get_ddradseqtools_code(), xlib.get_ngshelper_code(), xlib.get_raddesigner_code(), xlib.get_toa_code(), xlib.get_transrate_code()]:
                 message = f'{self.app_name} software is going to be installed in the cluster {self.wrapper_cluster_name.get()}. The previous version will be lost, if it exists.\n\nAre you sure to continue?'
             else:
-                message = f'The {self.app_name} (channel {self.bioinfoapp_channel}) is going to be installed in the cluster {self.wrapper_cluster_name.get()}. The previous version will be lost, if it exists.\n\nAre you sure to continue?'
+                message = f'The {self.app_name} (channel {self.bioinfoapp_channels}) is going to be installed in the cluster {self.wrapper_cluster_name.get()}. The previous version will be lost, if it exists.\n\nAre you sure to continue?'
             OK = tkinter.messagebox.askyesno(f'{xlib.get_project_name()} - {self.head}', message)
 
         # install the software
@@ -452,56 +452,56 @@ class FormInstallBioinfoApp(tkinter.Frame):
 
             # install the BCFTools software
             if self.app_code == xlib.get_bcftools_code():
-                package_list = [(xlib.get_bcftools_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_bcftools_anaconda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the BEDTools software
             elif self.app_code == xlib.get_bedtools_code():
-                package_list = [(xlib.get_bedtools_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_bedtools_anaconda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the BLAST+ software
             elif self.app_code == xlib.get_blastplus_code():
-                package_list = [(xlib.get_blastplus_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_blastplus_anaconda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the Bowtie2 software
             elif self.app_code == xlib.get_bowtie2_code():
-                package_list = [(xlib.get_bowtie2_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_samtools_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_tabix_anaconda_code(), 'last', self.bioinfoapp_channel)]
+                package_list = [(xlib.get_bowtie2_anaconda_code(), version, self.bioinfoapp_channels), (xlib.get_samtools_anaconda_code(), version, self.bioinfoapp_channels), (xlib.get_tabix_anaconda_code(), 'last', self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the BUSCO software
             elif self.app_code == xlib.get_busco_code():
-                package_list = [(xlib.get_busco_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_busco_anaconda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the CD-HIT software
             elif self.app_code == xlib.get_cd_hit_code():
-                package_list = [(xlib.get_cd_hit_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_cd_hit_anaconda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the Cufflinks software
             elif self.app_code == xlib.get_cufflinks_code():
-                package_list = [(xlib.get_cufflinks_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_cufflinks_anaconda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the cutadapt software
             elif self.app_code == xlib.get_cutadapt_code():
-                package_list = [(xlib.get_cutadapt_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_cutadapt_anaconda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
@@ -514,77 +514,77 @@ class FormInstallBioinfoApp(tkinter.Frame):
 
             # install the DETONATE software
             elif self.app_code == xlib.get_detonate_code():
-                package_list = [(xlib.get_detonate_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_bowtie2_anaconda_code(), 'last', self.bioinfoapp_channel)]
+                package_list = [(xlib.get_detonate_anaconda_code(), version, self.bioinfoapp_channels), (xlib.get_bowtie2_anaconda_code(), 'last', self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the DIAMOND software
             elif self.app_code == xlib.get_diamond_code():
-                package_list = [(xlib.get_diamond_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_diamond_anaconda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the EMBOSS software
             elif self.app_code == xlib.get_emboss_code():
-                package_list = [(xlib.get_emboss_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_emboss_anaconda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the Entrez Direct software
             elif self.app_code == xlib.get_entrez_direct_code():
-                package_list = [(xlib.get_entrez_direct_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_entrez_direct_anaconda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the eXpress software
             elif self.app_code == xlib.get_express_code():
-                package_list = [(xlib.get_express_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_express_anaconda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the FastQC software
             elif self.app_code == xlib.get_fastqc_code():
-                package_list = [(xlib.get_fastqc_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_fastqc_anaconda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the GMAP-GSNAP software
             elif self.app_code == xlib.get_gmap_gsnap_code():
-                package_list = [(xlib.get_gmap_gsnap_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_samtools_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_tabix_anaconda_code(), 'last', self.bioinfoapp_channel)]
+                package_list = [(xlib.get_gmap_gsnap_anaconda_code(), version, self.bioinfoapp_channels), (xlib.get_samtools_anaconda_code(), version, self.bioinfoapp_channels), (xlib.get_tabix_anaconda_code(), 'last', self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the HISAT2 software
             elif self.app_code == xlib.get_hisat2_code():
-                package_list = [(xlib.get_hisat2_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_samtools_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_tabix_anaconda_code(), 'last', self.bioinfoapp_channel)]
+                package_list = [(xlib.get_hisat2_anaconda_code(), version, self.bioinfoapp_channels), (xlib.get_samtools_anaconda_code(), version, self.bioinfoapp_channels), (xlib.get_tabix_anaconda_code(), 'last', self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the HTSeq software
             elif self.app_code == xlib.get_htseq_code():
-                package_list = [(xlib.get_htseq_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_htseq_anaconda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the ipyrad software
             elif self.app_code == xlib.get_ipyrad_code():
-                package_list = [(xlib.get_ipyrad_conda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_ipyrad_conda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the kallisto software
             elif self.app_code == xlib.get_kallisto_code():
-                package_list = [(xlib.get_kallisto_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_kallisto_anaconda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
@@ -603,7 +603,7 @@ class FormInstallBioinfoApp(tkinter.Frame):
 
             # install the QUAST software
             elif self.app_code == xlib.get_quast_code():
-                package_list = [(xlib.get_quast_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_quast_anaconda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
@@ -622,49 +622,49 @@ class FormInstallBioinfoApp(tkinter.Frame):
 
             # install the rnaQUAST software
             elif self.app_code == xlib.get_rnaquast_code():
-                package_list = [(xlib.get_rnaquast_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_rnaquast_anaconda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the RSEM software
             elif self.app_code == xlib.get_rsem_code():
-                package_list = [(xlib.get_rsem_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_rsem_anaconda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the SAMtools software
             if self.app_code == xlib.get_samtools_code():
-                package_list = [(xlib.get_samtools_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_tabix_anaconda_code(), 'last', self.bioinfoapp_channel)]
+                package_list = [(xlib.get_samtools_anaconda_code(), version, self.bioinfoapp_channels), (xlib.get_tabix_anaconda_code(), 'last', self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the SOAPdenovo2 software
             elif self.app_code == xlib.get_soapdenovo2_code():
-                package_list = [(xlib.get_soapdenovo2_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_soapdenovo2_anaconda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the SOAPdenovo-Trans software
             elif self.app_code == xlib.get_soapdenovotrans_code():
-                package_list = [(xlib.get_soapdenovotrans_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_soapdenovotrans_anaconda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the STAR software
             elif self.app_code == xlib.get_star_code():
-                package_list = [(xlib.get_star_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_samtools_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_tabix_anaconda_code(), 'last', self.bioinfoapp_channel)]
+                package_list = [(xlib.get_star_anaconda_code(), version, self.bioinfoapp_channels), (xlib.get_samtools_anaconda_code(), version, self.bioinfoapp_channels), (xlib.get_tabix_anaconda_code(), 'last', self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the starcode software
             elif self.app_code == xlib.get_starcode_code():
-                package_list = [(xlib.get_starcode_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_starcode_anaconda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
@@ -677,21 +677,21 @@ class FormInstallBioinfoApp(tkinter.Frame):
 
             # install the TopHat software
             elif self.app_code == xlib.get_tophat_code():
-                package_list = [(xlib.get_tophat_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_samtools_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_tabix_anaconda_code(), 'last', self.bioinfoapp_channel)]
+                package_list = [(xlib.get_tophat_anaconda_code(), version, self.bioinfoapp_channels), (xlib.get_samtools_anaconda_code(), version, self.bioinfoapp_channels), (xlib.get_tabix_anaconda_code(), 'last', self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the Trans-ABySS software
             elif self.app_code == xlib.get_transabyss_code():
-                package_list = [(xlib.get_transabyss_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_transabyss_anaconda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the TransDecoder software
             elif self.app_code == xlib.get_transdecoder_code():
-                package_list = [(xlib.get_transdecoder_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_transdecoder_anaconda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
@@ -701,42 +701,42 @@ class FormInstallBioinfoApp(tkinter.Frame):
                 dialog_log = gdialogs.DialogLog(self, self.head, xtransrate.install_transrate.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xtransrate.install_transrate, args=(self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
-                # -- package_list = [(xlib.get_transrate_anaconda_code(), version, self.bioinfoapp_channel)]
+                # -- package_list = [(xlib.get_transrate_anaconda_code(), version, self.bioinfoapp_channels)]
                 # -- dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 # -- threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 # -- threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the Trimmomatic software
             elif self.app_code == xlib.get_trimmomatic_code():
-                package_list = [(xlib.get_trimmomatic_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_trimmomatic_anaconda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the Trinity software
             elif self.app_code == xlib.get_trinity_code():
-                package_list = [(xlib.get_trinity_anaconda_code(), version, self.bioinfoapp_channel), (xlib.get_bowtie2_anaconda_code() ,'last', self.bioinfoapp_channel)]
+                package_list = [(xlib.get_trinity_anaconda_code(), version, self.bioinfoapp_channels), (xlib.get_bowtie2_anaconda_code() ,'last', self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the VCFtools software
             elif self.app_code == xlib.get_vcftools_code():
-                package_list = [(xlib.get_vcftools_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_vcftools_anaconda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the VCFtools Perl libraries software
             elif self.app_code == xlib.get_vcftools_perl_libraries_code():
-                package_list = [(xlib.get_vcftools_perl_libraries_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_vcftools_perl_libraries_anaconda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
 
             # install the vsearch software
             elif self.app_code == xlib.get_vsearch_code():
-                package_list = [(xlib.get_vsearch_anaconda_code(), version, self.bioinfoapp_channel)]
+                package_list = [(xlib.get_vsearch_anaconda_code(), version, self.bioinfoapp_channels)]
                 dialog_log = gdialogs.DialogLog(self, self.head, xbioinfoapp.install_anaconda_package_list.__name__)
                 threading.Thread(target=self.wait_window, args=(dialog_log,)).start()
                 threading.Thread(target=xbioinfoapp.install_anaconda_package_list, args=(self.app_code, self.app_name, package_list, self.wrapper_cluster_name.get(), dialog_log, lambda: dialog_log.enable_button_close())).start()
@@ -4872,6 +4872,10 @@ class FormRecreateExpressConfigFile(tkinter.Frame):
         self.ssh_client = None
         self.cluster_name_ant = None
 
+        # initialize the selected alignment dataset list
+        self.selected_alignment_dataset_list = []
+        self.alignment_dataset_id_list = []
+
         # create the wrappers to track changes in inputs
         self.wrapper_cluster_name = tkinter.StringVar()
         self.wrapper_cluster_name.trace('w', self.check_inputs)
@@ -4881,8 +4885,8 @@ class FormRecreateExpressConfigFile(tkinter.Frame):
         self.wrapper_assembly_dataset.trace('w', self.check_inputs)
         self.wrapper_assembly_type = tkinter.StringVar()
         self.wrapper_assembly_type.trace('w', self.check_inputs)
-        self.wrapper_alignment_dataset = tkinter.StringVar()
-        self.wrapper_alignment_dataset.trace('w', self.check_inputs)
+        self.wrapper_alignment_datasets = tkinter.StringVar()
+        self.wrapper_alignment_datasets.trace('w', self.check_inputs)
 
         # build the graphical user interface
         self.build_gui()
@@ -4903,6 +4907,10 @@ class FormRecreateExpressConfigFile(tkinter.Frame):
 
         # assign the text to the label of the current process name
         self.main.label_process['text'] = self.head
+
+        # create "image_select_dirs"
+        image_select_dirs = PIL.Image.open('./image_select_dirs.png')
+        imagetk_select_dirs = PIL.ImageTk.PhotoImage(image_select_dirs)
 
         # create "label_cluster_name" and register it with the grid geometry manager
         self.label_cluster_name = tkinter.Label(self, text='Cluster name')
@@ -4936,13 +4944,18 @@ class FormRecreateExpressConfigFile(tkinter.Frame):
         self.combobox_assembly_type = tkinter.ttk.Combobox(self, width=20, height=4, state='readonly', textvariable=self.wrapper_assembly_type)
         self.combobox_assembly_type.grid(row=3, column=1, padx=(5,5), pady=(45,5), sticky='w')
 
-        # create "label_alignment_dataset" and register it with the grid geometry manager
-        self.label_alignment_dataset = tkinter.Label(self, text='Alignment dataset')
-        self.label_alignment_dataset.grid(row=4, column=0, padx=(15,5), pady=(45,5), sticky='e')
+        # create "label_alignment_datasets" and register it with the grid geometry manager
+        self.label_alignment_datasets = tkinter.Label(self, text='Alignment datasets')
+        self.label_alignment_datasets.grid(row=4, column=0, padx=(15,5), pady=(45,5), sticky='e')
 
-        # create "combobox_alignment_dataset" and register it with the grid geometry manager
-        self.combobox_alignment_dataset = tkinter.ttk.Combobox(self, width=45, height=4, state='readonly', textvariable=self.wrapper_alignment_dataset)
-        self.combobox_alignment_dataset.grid(row=4, column=1, padx=(5,5), pady=(45,5), sticky='w')
+        # create "entry_alignment_datasets" and register it with the grid geometry manager
+        self.entry_alignment_datasets = tkinter.Entry(self, textvariable=self.wrapper_alignment_datasets, width=45, state='disabled', validatecommand=self.check_inputs)
+        self.entry_alignment_datasets.grid(row=4, column=1, padx=(5,5), pady=(45,5), sticky='w')
+
+        # create "button_select_alignment_datasets" and register it with the grid geometry manager
+        self.button_select_alignment_datasets = tkinter.ttk.Button(self, image=imagetk_select_dirs, command=self.select_alignment_datasets, state='disabled')
+        self.button_select_alignment_datasets.image = imagetk_select_dirs
+        self.button_select_alignment_datasets.grid(row=4, column=2, padx=(5,0), pady=(45,5), sticky='w')
 
         # create "label_fit" and register it with the grid geometry manager
         self.label_fit = tkinter.Label(self, text=' '*50)
@@ -4961,7 +4974,6 @@ class FormRecreateExpressConfigFile(tkinter.Frame):
         self.combobox_experiment_id.bind('<<ComboboxSelected>>', self.combobox_experiment_id_selected_item)
         self.combobox_assembly_dataset.bind('<<ComboboxSelected>>', self.combobox_assembly_dataset_selected_item)
         self.combobox_assembly_type.bind('<<ComboboxSelected>>', self.combobox_assembly_type_selected_item)
-        self.combobox_alignment_dataset.bind('<<ComboboxSelected>>', self.combobox_alignment_dataset_selected_item)
         self.root.bind('<Return>', self.execute)
 
     #---------------
@@ -4980,9 +4992,7 @@ class FormRecreateExpressConfigFile(tkinter.Frame):
         self.combobox_assembly_type['values'] = []
         self.wrapper_assembly_type.set('')
         self.combobox_assembly_type['state'] = 'disabled'
-        self.combobox_alignment_dataset['values'] = []
-        self.wrapper_alignment_dataset.set('')
-        self.alignment_dataset_id = None
+        self.wrapper_alignment_datasets.set('')
 
         # populate data in comboboxes
         self.populate_combobox_cluster_name()
@@ -5063,23 +5073,6 @@ class FormRecreateExpressConfigFile(tkinter.Frame):
 
     #---------------
 
-    def populate_combobox_alignment_dataset(self):
-        '''
-        Populate data in "combobox_alignment_dataset".
-        '''
-
-        # clear the value selected in the combobox
-        self.wrapper_alignment_dataset.set('')
-
-        # get the list of the alignment dataset names
-        app_list = [xlib.get_bowtie2_code()]
-        (_, _, alignment_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
-
-        # load the alignment dataset names in the combobox
-        self.combobox_alignment_dataset['values'] = sorted(alignment_dataset_name_list)
-
-    #---------------
-
     def combobox_cluster_name_selected_item(self, event=None):
         '''
         Process the event when an item of "combobox_cluster_name" has been selected
@@ -5115,10 +5108,6 @@ class FormRecreateExpressConfigFile(tkinter.Frame):
         self.combobox_assembly_dataset['values'] = []
         self.wrapper_assembly_dataset.set('')
 
-        # clear data in "combobox_alignment_dataset"
-        self.combobox_alignment_dataset['values'] = []
-        self.wrapper_alignment_dataset.set('')
-
         # set cursor to show normal status
         self.root.config(cursor='')
         self.root.update()
@@ -5137,8 +5126,13 @@ class FormRecreateExpressConfigFile(tkinter.Frame):
         # load data in "combobox_assembly_dataset"
         self.populate_combobox_assembly_dataset()
 
-        # load data in "combobox_alignment_dataset"
-        self.populate_combobox_alignment_dataset()
+        # initialize the data of alignment datasets
+        self.wrapper_alignment_datasets.set('')
+        self.selected_alignment_dataset_list = []
+        self.alignment_dataset_id_list = []
+
+        # enable "button_select_alignment_datasets"
+        self.button_select_alignment_datasets['state'] = 'enable'
 
         # set cursor to show normal status
         self.root.config(cursor='')
@@ -5175,13 +5169,56 @@ class FormRecreateExpressConfigFile(tkinter.Frame):
 
     #---------------
 
-    def combobox_alignment_dataset_selected_item(self, event=None):
+    def select_alignment_datasets(self):
         '''
-        Process the event when an item of "combobox_alignment_dataset" has been selected
+        Select the alignment dataset identifications and update "entry_alignment_datasets".
         '''
 
-        # get the alignment dataset identification
-        (_, _, self.alignment_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), self.wrapper_alignment_dataset.get(), status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+        # get the list of the alignment dataset names
+        app_list = xexpress.get_alignment_software_code_list()
+        (OK, _, alignment_dataset_name_list) = xresult.get_result_dataset_name_list(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), 'uncompressed', app_list, passed_connection=True, ssh_client=self.ssh_client)
+
+        # get the directory dictionary of directories in the volume
+        if OK:
+            alignment_dataset_dict = {}
+            for alignment_dataset_name in alignment_dataset_name_list:
+                key = alignment_dataset_name
+                option_value = 'YES' if alignment_dataset_name in self.selected_alignment_dataset_list else 'NO'
+                alignment_dataset_dict[key] = {'option_id': alignment_dataset_name, 'option_value': option_value, 'comment': 'YES or NO', 'value_type': 'uppercase_string_list', 'admitted_option_value_list': ['YES', 'NO']}
+
+        # build the data dictionary
+        if OK:
+            data_dict = {}
+            data_dict['option_id']= {'text': 'Alignment dataset', 'width': 22, 'alignment': 'left'}
+            data_dict['option_value'] = {'text': 'Is selected?', 'width': 12, 'alignment': 'left'}
+            data_dict['comment'] = {'text': 'Admitted values', 'width': 17, 'alignment': 'left'}
+
+        # create the dialog Table to show the nodes running
+        if OK:
+            title_text = 'Select alignment datasets'
+            window_height = 600
+            window_width = 420
+            auxliary_window_height = 60
+            auxliary_window_width = 760
+            dialog_table = gdialogs.DialogOptionUpdate(self, title_text, window_height, window_width, auxliary_window_height, auxliary_window_width, data_dict, alignment_dataset_dict, sorted(alignment_dataset_dict.keys()))
+            self.wait_window(dialog_table)
+
+        # recreate the selected alignment dataset list and alignment dataset identification list
+        self.selected_alignment_dataset_list = []
+        self.alignment_dataset_id_list = []
+        for key in alignment_dataset_dict.keys():
+            if alignment_dataset_dict[key]['option_value'] == 'YES':
+                self.selected_alignment_dataset_list.append(key)
+                (_, _, alignment_dataset_id) = xresult.get_result_dataset_id(self.wrapper_cluster_name.get(), self.wrapper_experiment_id.get(), key, status='uncompressed', passed_connection=True, ssh_client=self.ssh_client)
+                self.alignment_dataset_id_list.append(alignment_dataset_id)
+
+        # sort the selected alignment dataset list and alignment dataset identification list
+        if self.selected_alignment_dataset_list != []:
+            self.selected_alignment_dataset_list.sort()
+            self.alignment_dataset_id_list.sort()
+
+        # update "entry_alignment_datasets"
+        self.wrapper_alignment_datasets.set(str(self.selected_alignment_dataset_list).strip('[]').replace('\'',''))
 
     #---------------
 
@@ -5194,7 +5231,7 @@ class FormRecreateExpressConfigFile(tkinter.Frame):
         OK = True
 
         # check if "button_execute" has to be enabled or disabled
-        if self.wrapper_cluster_name.get() != '' and self.wrapper_experiment_id.get() != ''  and self.wrapper_assembly_dataset.get() != '' and self.wrapper_assembly_type != '' and self.wrapper_alignment_dataset.get() != '':
+        if self.wrapper_cluster_name.get() != '' and self.wrapper_experiment_id.get() != ''  and self.wrapper_assembly_dataset.get() != '' and self.wrapper_assembly_type != '' and self.alignment_dataset_id_list != []:
             self.button_execute['state'] = 'enable'
         else:
             self.button_execute['state'] = 'disabled'
@@ -5226,7 +5263,7 @@ class FormRecreateExpressConfigFile(tkinter.Frame):
 
         # recreate the Express config file
         if OK:
-            (OK, error_list) = xexpress.create_express_config_file(self.wrapper_experiment_id.get(), self.assembly_dataset_id, self.wrapper_assembly_type.get(), self.alignment_dataset_id)
+            (OK, error_list) = xexpress.create_express_config_file(self.wrapper_experiment_id.get(), self.assembly_dataset_id, self.wrapper_assembly_type.get(), self.alignment_dataset_id_list)
             if not OK:
                 message = ''
                 for error in error_list:

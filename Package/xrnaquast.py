@@ -74,6 +74,14 @@ def create_rnaquast_config_file(experiment_id='exp001', reference_dataset_id='At
             file_id.write( '# The experiment_id, reference_dataset_id, reference_file_name, read_dataset_id and assembly_dataset_id names are fixed in the identification section.\n')
             file_id.write( '#\n')
             file_id.write( '# You can consult the parameters of rnaQUAST and their meaning in "http://cab.spbu.ru/software/rnaquast/".\n')
+            file_id.write( '#\n')
+            file_id.write( '# In section "rnaQUAST parameters", the key "other_parameters" allows you to input additional parameters in the format:\n')
+            file_id.write( '#\n')
+            file_id.write( '#    other_parameters = --parameter-1[=value-1][; --parameter-2[=value-2][; ...; --parameter-n[=value-n]]]\n')
+            file_id.write( '#\n')
+            file_id.write( '# parameter-i is a parameter name of QUAST and value-i a valid value of parameter-i, e.g.\n')
+            file_id.write( '#\n')
+            file_id.write( '#    other_parameters = --strand_specific; --min_alignment=50\n')
             file_id.write( '\n')
             file_id.write( '# This section has the information identifies the experiment.\n')
             file_id.write( '[identification]\n')
@@ -93,6 +101,7 @@ def create_rnaquast_config_file(experiment_id='exp001', reference_dataset_id='At
             file_id.write( '{0:<50} {1}\n'.format('busco_mode = TRAN', f'# Busco mode: {get_busco_mode_code_list_text()}'))
             file_id.write( '\n')
             file_id.write( '# This section has the global information of all libraries.\n')
+            file_id.write( '{0:<50} {1}\n'.format( 'other_parameters = NONE', '# additional parameters to the previous ones or NONE'))
             file_id.write( '[library]\n')
             file_id.write( '{0:<50} {1}\n'.format('format = FASTQ', f'# format: {get_format_code_list_text()}'))
             file_id.write( '{0:<50} {1}\n'.format(f'read_type = {read_type}', f'# read type: {get_read_type_code_list_text()}'))
@@ -199,16 +208,6 @@ def run_rnaquast_process(cluster_name, log, function=None):
         else:
             log.write(f'*** ERROR: The verification of {xlib.get_rnaquast_name()} installation could not be performed.\n')
 
-    # check BLAST+ is installed
-    if OK:
-        (OK, error_list, is_installed) = xbioinfoapp.is_installed_anaconda_package(xlib.get_blastplus_anaconda_code(), cluster_name, True, ssh_client)
-        if OK:
-            if not is_installed:
-                log.write(f'*** ERROR: {xlib.get_blastplus_name()} is not installed.\n')
-                OK = False
-        else:
-            log.write(f'*** ERROR: The verification of {xlib.get_blastplus_name()} installation could not be performed.\n')
-
     # warn that the requirements are OK 
     if OK:
         log.write('Process requirements are OK.\n')
@@ -219,7 +218,7 @@ def run_rnaquast_process(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(experiment_id, xlib.get_rnaquast_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -252,7 +251,7 @@ def run_rnaquast_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_rnaquast_process_script())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_rnaquast_process_script())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -285,7 +284,7 @@ def run_rnaquast_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_rnaquast_process_starter())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_rnaquast_process_starter())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, _, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -446,6 +445,16 @@ def check_rnaquast_config_file(strict):
                 error_list.append(f'*** ERROR: the key "busco_mode" has to be {get_busco_mode_code_list_text()}.')
                 OK = False
 
+            # check section "rnaQUAST parameters" - key "other_parameters"
+            not_allowed_parameters_list = ['threads', 'transcripts', 'reference', 'single_reads', 'left_reads', 'right_reads', 'busco_lineage', 'output_dir']
+            other_parameters = rnaquast_option_dict.get('rnaQUAST parameters', {}).get('other_parameters', not_found)
+            if other_parameters == not_found:
+                error_list.append('*** ERROR: the key "other_parameters" is not found in the section "rnaQUAST parameters".')
+                OK = False
+            elif other_parameters.upper() != 'NONE':
+                (OK, error_list2) = xlib.check_parameter_list(other_parameters, "other_parameters", not_allowed_parameters_list)
+                error_list = error_list + error_list2
+
         # check section "library"
         if 'library' not in sections_list:
             error_list.append('*** ERROR: the section "library" is not found.')
@@ -530,8 +539,9 @@ def build_rnaquast_process_script(cluster_name, current_run_dir):
     assembly_type = rnaquast_option_dict['identification']['assembly_type']
     threads = rnaquast_option_dict['rnaQUAST parameters']['threads']
     lineage_data_url = rnaquast_option_dict['rnaQUAST parameters']['lineage_data_url']
-    busco_mode = rnaquast_option_dict['rnaQUAST parameters']['busco_mode'].lower()
+    # -- busco_mode = rnaquast_option_dict['rnaQUAST parameters']['busco_mode'].lower()
     read_type = rnaquast_option_dict['library']['read_type']
+    other_parameters = rnaquast_option_dict['rnaQUAST parameters']['other_parameters']
 
     # get the file and name from the lineage data url
     lineage_data_file = lineage_data_url.split("/")[-1]
@@ -595,10 +605,9 @@ def build_rnaquast_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write(f'MINICONDA3_BIN_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-            script_file_id.write(f'RNAQUASTPATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/envs/{xlib.get_rnaquast_anaconda_code()}/bin\n')
-            script_file_id.write( 'export PATH=$RNAQUAST_PATH$PATH\n')
+            script_file_id.write(f'export PATH=$MINICONDA3_BIN_PATH:$PATH\n')
+            script_file_id.write(f'RNAQUAST_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/envs/{xlib.get_rnaquast_anaconda_code()}/bin\n')
             script_file_id.write(f'export AUGUSTUS_CONFIG_PATH={xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/envs/{xlib.get_rnaquast_anaconda_code()}/config\n')
-            script_file_id.write(f'source {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin/activate {xlib.get_rnaquast_anaconda_code()}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write(f'STATUS_DIR={xlib.get_status_dir(current_run_dir)}\n')
             script_file_id.write(f'SCRIPT_STATUS_OK={xlib.get_status_ok(current_run_dir)}\n')
@@ -606,6 +615,8 @@ def build_rnaquast_process_script(cluster_name, current_run_dir):
             script_file_id.write( 'mkdir --parents $STATUS_DIR\n')
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_OK ]; then rm $SCRIPT_STATUS_OK; fi\n')
             script_file_id.write( 'if [ -f $SCRIPT_STATUS_WRONG ]; then rm $SCRIPT_STATUS_WRONG; fi\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write(f'CURRENT_DIR={current_run_dir}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function init\n')
             script_file_id.write( '{\n')
@@ -620,14 +631,24 @@ def build_rnaquast_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
+            script_file_id.write( 'function patch_rnaquast_installation\n')
+            script_file_id.write( '{\n')
+            script_file_id.write( '    cd $RNAQUAST_PATH\n')
+            script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write( '    echo "Patching rnaQUAST installation ..."\n')
+            script_file_id.write( '    if [ ! -f run_BUSCO.py ]; then\n')
+            script_file_id.write( '        ln -s BUSCO.py run_BUSCO.py\n')
+            script_file_id.write( '    fi\n')
+            script_file_id.write( '    echo "Installation is patched."\n')
+            script_file_id.write( '}\n')
+            script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function download_lineage_data\n')
             script_file_id.write( '{\n')
-            script_file_id.write(f'    cd {current_run_dir}\n'.format(''.format()))
+            script_file_id.write( '    cd $CURRENT_DIR\n')
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write( '    echo "Downloading lineage data ..."\n')
-            # --- script_file_id.write(f'    wget --quiet --output-document ./{lineage_data_file} {lineage_data_url}\n')
             download_script = f'import requests; r = requests.get(\'{lineage_data_url}\') ; open(\'{lineage_data_file}\' , \'wb\').write(r.content)'
-            script_file_id.write(f'    $MINICONDA3_BIN_PATH/python3 -c "{download_script}"\n')
+            script_file_id.write(f'    python3 -c "{download_script}"\n')
             script_file_id.write( '    RC=$?\n')
             script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error download_script $RC; fi\n')
             script_file_id.write(f'    tar -xzvf ./{lineage_data_file}\n')
@@ -642,27 +663,25 @@ def build_rnaquast_process_script(cluster_name, current_run_dir):
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function concatenate_files\n')
                 script_file_id.write( '{\n')
-                script_file_id.write(f'    mkdir --parents {current_run_dir}\n')
-                script_file_id.write(f'    cd {current_run_dir}\n')
+                script_file_id.write( '    cd $CURRENT_DIR\n')
                 script_file_id.write( '    echo "$SEP"\n')
                 script_file_id.write( '    echo "Concatenating the files of the library ..."\n')
-                concatenated_library_1 = f'{current_run_dir}/concatenated_library_1'
-                script_file_id.write(f'    cat {" ".join(file_name_1_list)} > {concatenated_library_1}\n')
+                script_file_id.write(f'    cat {" ".join(file_name_1_list)} > concatenated_library_1.txt\n')
                 if read_type == 'PE':
-                    concatenated_library_2 = f'{current_run_dir}/concatenated_library_2'
-                    script_file_id.write(f'    cat {" ".join(file_name_2_list)} > {concatenated_library_2}\n')
+                    script_file_id.write(f'    cat {" ".join(file_name_2_list)} > concatenated_library_2.txt\n')
                 script_file_id.write( '    echo "Files are concatenated."\n')
                 script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function run_rnaquast_process\n')
             script_file_id.write( '{\n')
-            script_file_id.write(f'    cd {current_run_dir}\n')
+            script_file_id.write(f'    source activate {xlib.get_rnaquast_anaconda_code()}\n')
+            script_file_id.write( '    cd $CURRENT_DIR\n')
             script_file_id.write( '    echo "$SEP"\n')
+            script_file_id.write( '    echo "Assessing the transcriptome quality ..."\n')
             script_file_id.write( '    /usr/bin/time \\\n')
-            script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
+            script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
             script_file_id.write( '        rnaQUAST.py \\\n')
             script_file_id.write(f'            --threads {threads} \\\n')
-            script_file_id.write(f'            --output_dir {current_run_dir} \\\n')
             script_file_id.write(f'            --transcripts {transcriptome_file} \\\n')
             if reference_dataset_id.upper() != 'NONE':
                 script_file_id.write(f'            --reference {reference_file} \\\n')
@@ -670,17 +689,34 @@ def build_rnaquast_process_script(cluster_name, current_run_dir):
                 if file_counter == 1:
                     script_file_id.write(f'            --single_reads {experiment_read_dataset_dir}/{read_file_1} \\\n')
                 else:
-                    script_file_id.write(f'            --single_reads {concatenated_library_1} \\\n')
+                    script_file_id.write(f'            --single_reads concatenated_library_1.txt \\\n')
             elif read_type.upper() == 'PE':
                 if file_counter == 1:
                     script_file_id.write(f'            --left_reads {experiment_read_dataset_dir}/{read_file_1} \\\n')
                     script_file_id.write(f'            --right_reads {experiment_read_dataset_dir}/{read_file_2} \\\n')
                 else:
-                    script_file_id.write(f'            --left_reads {concatenated_library_1} \\\n')
-                    script_file_id.write(f'            --right_reads {concatenated_library_2} \\\n')
-            script_file_id.write(f'            --busco_lineage ./{lineage_data}\n')
+                    script_file_id.write(f'            --left_reads concatenated_library_1.txt \\\n')
+                    script_file_id.write(f'            --right_reads concatenated_library_2.txt \\\n')
+            script_file_id.write(f'            --busco_lineage ./{lineage_data} \\\n')
+            if other_parameters.upper() != 'NONE':
+                parameter_list = [x.strip() for x in other_parameters.split(';')]
+                for j in range(len(parameter_list)):
+                    if parameter_list[j].find('=') > 0:
+                        pattern = r'^--(.+)=(.+)$'
+                        mo = re.search(pattern, parameter_list[j])
+                        parameter_name = mo.group(1).strip()
+                        parameter_value = mo.group(2).strip()
+                        script_file_id.write(f'            --{parameter_name} {parameter_value} \\\n')
+                    else:
+                        pattern = r'^--(.+)$'
+                        mo = re.search(pattern, parameter_list[j])
+                        parameter_name = mo.group(1).strip()
+                        script_file_id.write(f'            --{parameter_name} \\\n')
+            script_file_id.write(f'            --output_dir $CURRENT_DIR\n')
             script_file_id.write( '    RC=$?\n')
             script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error rnaQUAST.py $RC; fi\n')
+            script_file_id.write( '    echo "The assessment is done."\n')
+            script_file_id.write( '    conda deactivate\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function end\n')
@@ -755,6 +791,7 @@ def build_rnaquast_process_script(cluster_name, current_run_dir):
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
+            script_file_id.write( 'patch_rnaquast_installation\n')
             script_file_id.write( 'download_lineage_data\n')
             if file_counter > 1:
                 script_file_id.write( 'concatenate_files\n')

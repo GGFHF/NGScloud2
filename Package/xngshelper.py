@@ -61,7 +61,7 @@ def is_installed_ngshelper(cluster_name, passed_connection, ssh_client):
     # check the NGShelper directory is created
     if OK:
         command = f'[ -d {xlib.get_cluster_app_dir()}/{xlib.get_ngshelper_name()} ] && echo RC=0 || echo RC=1'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] == 'RC=0':
             OK = True
             is_installed = True
@@ -133,7 +133,7 @@ def install_ngshelper(cluster_name, log, function=None):
     # check the app directory is created
     if OK:
         command = f'[ -d {xlib.get_cluster_app_dir()} ] && echo RC=0 || echo RC=1'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] != 'RC=0':
             log.write('*** ERROR: There is not any volume mounted in the directory.\n')
             log.write(f'You have to link a volume in the mounting point {xlib.get_cluster_app_dir()} for the cluster {cluster_name}.\n')
@@ -159,8 +159,9 @@ def install_ngshelper(cluster_name, log, function=None):
         if OK:
             if not is_installed:
                 log.write(f'{xlib.get_blastplus_name()} is not installed.\n')
-                (bioinfoapp_version, bioinfoapp__url, bioinfoapp_channel) = xconfiguration.get_bioinfo_app_data(xlib.get_blastplus_anaconda_code())
-                package_list.append([xlib.get_blastplus_anaconda_code(), 'last', bioinfoapp_channel])
+                (_, _, bioinfoapp_channels) = xconfiguration.get_bioinfo_app_data(xlib.get_blastplus_name())
+                print(f'bioinfoapp_channels: {bioinfoapp_channels}')
+                package_list.append([xlib.get_blastplus_anaconda_code(), 'last', bioinfoapp_channels])
         else:
             log.write('*** ERROR: The verification can not run.\n')
 
@@ -174,7 +175,7 @@ def install_ngshelper(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(xlib.get_toa_result_installation_dir(), xlib.get_ngshelper_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -207,7 +208,7 @@ def install_ngshelper(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_ngshelper_installation_script())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_ngshelper_installation_script())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -240,7 +241,7 @@ def install_ngshelper(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_ngshelper_installation_starter())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_ngshelper_installation_starter())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -283,7 +284,7 @@ def build_ngshelper_installation_script(package_list, cluster_name, current_run_
     error_list = []
 
     # get the version and download URL of NGShelper
-    (ngshelper_version, ngshelper_url, ngshelper_channel) = xconfiguration.get_bioinfo_app_data(xlib.get_ngshelper_name())
+    (_, ngshelper_url, _) = xconfiguration.get_bioinfo_app_data(xlib.get_ngshelper_name())
 
     # write the NGShelper installation script
     try:
@@ -388,51 +389,6 @@ def build_ngshelper_installation_script(package_list, cluster_name, current_run_
             script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error rm $RC; fi\n')
             script_file_id.write( '    echo "The file is removed."\n')
             script_file_id.write( '}\n')
-            if len(package_list) > 0:
-                script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( 'function add_channel_defaults\n')
-                script_file_id.write( '{\n')
-                script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '    echo "Adding channel defaults ..."\n')
-                script_file_id.write(f'    cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-                script_file_id.write( '    ./conda config --add channels defaults\n')
-                script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error conda $RC; fi\n')
-                script_file_id.write( '    echo "The channel is added."\n')
-                script_file_id.write( '}\n')
-                script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( 'function add_channel_conda_forge\n')
-                script_file_id.write( '{\n')
-                script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '    echo "Adding channel conda-forge ..."\n')
-                script_file_id.write(f'    cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-                script_file_id.write( '    ./conda config --add channels conda-forge\n')
-                script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error conda $RC; fi\n')
-                script_file_id.write( '    echo "The channel is added."\n')
-                script_file_id.write( '}\n')
-                script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( 'function add_channel_r\n')
-                script_file_id.write( '{\n')
-                script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '    echo "Adding channel r ..."\n')
-                script_file_id.write(f'    cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-                script_file_id.write( '    ./conda config --add channels r\n')
-                script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error conda $RC; fi\n')
-                script_file_id.write( '    echo "The channel is added."\n')
-                script_file_id.write( '}\n')
-                script_file_id.write( '#-------------------------------------------------------------------------------\n')
-                script_file_id.write( 'function add_channel_bioconda\n')
-                script_file_id.write( '{\n')
-                script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '    echo "Adding channel bioconda ..."\n')
-                script_file_id.write(f'    cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-                script_file_id.write( '    ./conda config --add channels bioconda\n')
-                script_file_id.write( '    RC=$?\n')
-                script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error conda $RC; fi\n')
-                script_file_id.write( '    echo "The channel is added."\n')
-                script_file_id.write( '}\n')
             for package in package_list:
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write(f'function install_anaconda_package_{package[0]}\n')
@@ -440,7 +396,11 @@ def build_ngshelper_installation_script(package_list, cluster_name, current_run_
                 script_file_id.write( '    echo "$SEP"\n')
                 script_file_id.write(f'    echo "Installing {xlib.get_anaconda_name()} package {package[0]} ..."\n')
                 script_file_id.write(f'    cd {xlib.get_cluster_app_dir()}/{xlib.get_miniconda3_name()}/bin\n')
-                script_file_id.write(f'    ./conda create --yes --quiet --channel {package[2]} --name {package[0]} {package[0]}\n')
+                channel_list = package[2].split(';')
+                channel_param_list_text = ''
+                for channel in channel_list:
+                    channel_param_list_text = f'{channel_param_list_text} --channel {channel}'
+                script_file_id.write(f'    ./conda create --yes --quiet {channel_param_list_text} --name {package[0]} {package[0]}\n')
                 script_file_id.write( '    RC=$?\n')
                 script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error conda $RC; fi\n')
                 script_file_id.write( '    echo "The package is installed."\n')
@@ -524,11 +484,6 @@ def build_ngshelper_installation_script(package_list, cluster_name, current_run_
             script_file_id.write( 'rename_ngshelper_directory\n')
             script_file_id.write( 'set_execution_permissions\n')
             script_file_id.write( 'remove_ngshelper_installation_file\n')
-            if len(package_list) > 0:
-                script_file_id.write( 'add_channel_defaults\n')
-                script_file_id.write( 'add_channel_conda_forge\n')
-                script_file_id.write( 'add_channel_r\n')
-                script_file_id.write( 'add_channel_bioconda\n')
             for package in package_list:
                 script_file_id.write(f'install_anaconda_package_{package[0]}\n')
             script_file_id.write( 'end\n')
@@ -671,9 +626,9 @@ def check_vcf_sample_file(strict):
                 # extract the data
                 try:
                     mo = record_pattern.match(record)
-                    sample_id = mo.group(1).strip()
-                    species_id = mo.group(2).strip()
-                    mother_id = mo.group(3).strip()
+                    # -- sample_id = mo.group(1).strip()
+                    # -- species_id = mo.group(2).strip()
+                    # -- mother_id = mo.group(3).strip()
                 except Exception as e:
                     error_list.append(f'*** EXCEPTION: "{e}".')
                     record = record.replace('\n', '')
@@ -786,8 +741,8 @@ def create_transcript_filter_config_file(experiment_id='exp001', rsem_eval_datas
             file_id.write( '[transcript-filter parameters]\n')
             file_id.write( '{0:<50} {1}\n'.format( 'minlen = 200', '# transcript with length values less than this value will be filtered'))
             file_id.write( '{0:<50} {1}\n'.format( 'maxlen = 10000', '# transcript with length values greater than this value will be filtered'))
-            file_id.write( '{0:<50} {1}\n'.format( 'fpkm = 1.0', '# transcript with FPKM values less than this value will be filtered'))
-            file_id.write( '{0:<50} {1}\n'.format( 'tpm = 1.0', '# transcript with TPM values less than this value will be filtered'))
+            file_id.write( '{0:<50} {1}\n'.format( 'minfpkm = 1.0', '# transcript with FPKM values less than this value will be filtered'))
+            file_id.write( '{0:<50} {1}\n'.format( 'mintpm = 1.0', '# transcript with TPM values less than this value will be filtered'))
     except Exception as e:
         error_list.append(f'*** EXCEPTION: "{e}".')
         error_list.append(f'*** ERROR: The file {get_transcript_filter_config_file()} can not be recreated')
@@ -870,7 +825,7 @@ def run_transcript_filter_process(cluster_name, log, function=None):
     # check the NGShelper is installed
     if OK:
         command = f'[ -d {xlib.get_cluster_app_dir()}/{xlib.get_ngshelper_name()} ] && echo RC=0 || echo RC=1'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] != 'RC=0':
             log.write(f'*** ERROR: {xlib.get_ngshelper_name()} is not installed.\n')
             OK = False
@@ -895,7 +850,7 @@ def run_transcript_filter_process(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(experiment_id, xlib.get_transcript_filter_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -930,7 +885,7 @@ def run_transcript_filter_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_transcript_filter_process_script())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_transcript_filter_process_script())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -964,7 +919,7 @@ def run_transcript_filter_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_transcript_filter_process_starter())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_transcript_filter_process_starter())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -1087,22 +1042,22 @@ def check_transcript_filter_config_file(strict):
                 error_list.append(f'*** ERROR: The value maxlen value ({maxlen}) is less than the minlen value ({minlen}).')
                 OK = False
 
-            # check section "transcript-filter parameters" - key "fpkm"
-            fpkm = transcript_filter_option_dict.get('transcript-filter parameters', {}).get('fpkm', not_found)
-            if fpkm == not_found:
-                error_list.append('*** ERROR: the key "fpkm" is not found in the section "transcript-filter parameters".')
+            # check section "transcript-filter parameters" - key "minfpkm"
+            minfpkm = transcript_filter_option_dict.get('transcript-filter parameters', {}).get('minfpkm', not_found)
+            if minfpkm == not_found:
+                error_list.append('*** ERROR: the key "minfpkm" is not found in the section "transcript-filter parameters".')
                 OK = False
-            elif not xlib.check_float(fpkm, minimum=0.):
-                error_list.append('*** ERROR: the key "fpkm" has to be a float number greater than or equal to 0.0.')
+            elif not xlib.check_float(minfpkm, minimum=0.):
+                error_list.append('*** ERROR: the key "minfpkm" has to be a float number greater than or equal to 0.0.')
                 OK = False
 
-            # check section "transcript-filter parameters" - key "tpm"
-            tpm = transcript_filter_option_dict.get('transcript-filter parameters', {}).get('tpm', not_found)
-            if tpm == not_found:
-                error_list.append('*** ERROR: the key "tpm" is not found in the section "transcript-filter parameters".')
+            # check section "transcript-filter parameters" - key "mintpm"
+            mintpm = transcript_filter_option_dict.get('transcript-filter parameters', {}).get('mintpm', not_found)
+            if mintpm == not_found:
+                error_list.append('*** ERROR: the key "mintpm" is not found in the section "transcript-filter parameters".')
                 OK = False
-            elif not xlib.check_float(tpm, minimum=0.):
-                error_list.append('*** ERROR: the key "tpm" has to be a float number greater than or equal to 0.0.')
+            elif not xlib.check_float(mintpm, minimum=0.):
+                error_list.append('*** ERROR: the key "mintpm" has to be a float number greater than or equal to 0.0.')
                 OK = False
 
     # warn that the results config file is not valid if there are any errors
@@ -1131,8 +1086,8 @@ def build_transcript_filter_process_script(cluster_name, current_run_dir, sftp_c
     rsem_eval_dataset_id = transcript_filter_option_dict['identification']['rsem_eval_dataset_id']
     minlen = transcript_filter_option_dict['transcript-filter parameters']['minlen']
     maxlen = transcript_filter_option_dict['transcript-filter parameters']['maxlen']
-    fpkm = transcript_filter_option_dict['transcript-filter parameters']['fpkm']
-    tpm = transcript_filter_option_dict['transcript-filter parameters']['tpm']
+    minfpkm = transcript_filter_option_dict['transcript-filter parameters']['minfpkm']
+    mintpm = transcript_filter_option_dict['transcript-filter parameters']['mintpm']
 
     # get the log file name and build local and cluster paths
     local_log_file = f'{xlib.get_temp_dir()}/{xlib.get_cluster_log_file()}'
@@ -1185,7 +1140,7 @@ def build_transcript_filter_process_script(cluster_name, current_run_dir, sftp_c
 
     # set the score file path
     if OK:
-        score_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, rsem_eval_dataset_id)}/{rsem_eval_dataset_id}.genes.results'
+        score_file = f'{xlib.get_cluster_experiment_result_dataset_dir(experiment_id, rsem_eval_dataset_id)}/transcriptome.genes.results'
 
     # set the output file path
     if OK:
@@ -1233,9 +1188,9 @@ def build_transcript_filter_process_script(cluster_name, current_run_dir, sftp_c
                 script_file_id.write( '{\n')
                 script_file_id.write(f'    cd {current_run_dir}\n')
                 script_file_id.write( '    echo "$SEP"\n')
-                script_file_id.write( '    echo "Filtering the transcripts ..."\n')
+                script_file_id.write( '    echo "Filtering transcripts ..."\n')
                 script_file_id.write( '    /usr/bin/time \\\n')
-                script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
+                script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
                 script_file_id.write( '        transcript-filter.py \\\n')
                 script_file_id.write( '            --assembler=ngscloud \\\n')
                 script_file_id.write(f'            --transcriptome={transcriptome_file} \\\n')
@@ -1243,11 +1198,13 @@ def build_transcript_filter_process_script(cluster_name, current_run_dir, sftp_c
                 script_file_id.write(f'            --output={output_file} \\\n')
                 script_file_id.write(f'            --minlen={minlen} \\\n')
                 script_file_id.write(f'            --maxlen={maxlen} \\\n')
-                script_file_id.write(f'            --FPKM={fpkm} \\\n')
-                script_file_id.write(f'            --TPM={tpm} \\\n')
-                script_file_id.write( '            --verbose=n\n')
+                script_file_id.write(f'            --minFPKM={minfpkm} \\\n')
+                script_file_id.write(f'            --minTPM={mintpm} \\\n')
+                script_file_id.write( '            --verbose=N \\\n')
+                script_file_id.write( '            --trace=N\n')
                 script_file_id.write( '    RC=$?\n')
                 script_file_id.write( '    if [ $RC -ne 0 ]; then manage_error transcript-filter.py $RC; fi\n')
+                script_file_id.write( '    echo "Transcripts are filtered."\n')
                 script_file_id.write( '}\n')
                 script_file_id.write( '#-------------------------------------------------------------------------------\n')
                 script_file_id.write( 'function end\n')
@@ -1551,7 +1508,7 @@ def run_transcriptome_blastx_process(cluster_name, log, function=None):
     # check the NGShelper is installed
     if OK:
         command = f'[ -d {xlib.get_cluster_app_dir()}/{xlib.get_ngshelper_name()} ] && echo RC=0 || echo RC=1'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if stdout[len(stdout) - 1] != 'RC=0':
             log.write(f'*** ERROR: {xlib.get_ngshelper_name()} is not installed.\n')
             OK = False
@@ -1566,7 +1523,7 @@ def run_transcriptome_blastx_process(cluster_name, log, function=None):
         log.write('Determining the run directory in the cluster ...\n')
         current_run_dir = xlib.get_cluster_current_run_dir(experiment_id, xlib.get_transcriptome_blastx_code())
         command = f'mkdir --parents {current_run_dir}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write(f'The directory path is {current_run_dir}.\n')
         else:
@@ -1601,7 +1558,7 @@ def run_transcriptome_blastx_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_transcriptome_blastx_process_script())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_transcriptome_blastx_process_script())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -1635,7 +1592,7 @@ def run_transcriptome_blastx_process(cluster_name, log, function=None):
         log.write(f'{xlib.get_separator()}\n')
         log.write(f'Setting on the run permision of {current_run_dir}/{os.path.basename(get_transcriptome_blastx_process_starter())} ...\n')
         command = f'chmod u+x {current_run_dir}/{os.path.basename(get_transcriptome_blastx_process_starter())}'
-        (OK, stdout, stderr) = xssh.execute_cluster_command(ssh_client, command)
+        (OK, stdout, _) = xssh.execute_cluster_command(ssh_client, command)
         if OK:
             log.write('The run permision is set.\n')
         else:
@@ -1910,7 +1867,7 @@ def build_transcriptome_blastx_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "$SEP"\n')
             script_file_id.write( '    echo "Running the transcriptome blastx process ..."\n')
             script_file_id.write( '    /usr/bin/time \\\n')
-            script_file_id.write(f'        --format="{xlib.get_time_output_format()}" \\\n')
+            script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
             script_file_id.write( '        transcriptome-blastx.py \\\n')
             script_file_id.write( '            --machine_type=ngscloud \\\n')
             script_file_id.write(f'            --node_number={node_number} \\\n')

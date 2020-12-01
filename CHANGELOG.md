@@ -1,4 +1,14 @@
-CURRENT VERSION: 2.10
+CURRENT VERSION: 2.11
+
+********************************************************************************
+
+Changes in v2.11 (December 2020)
+
+* Multi-library management is improved in the eXpress process.
+
+* Improvement in software installation.
+
+* Optimization of several code fragments.
 
 ********************************************************************************
 
