@@ -12,11 +12,15 @@ so it can run in EC2. NScloud2 also has technical improvements as the usage of s
 
 Refer to the NGScloud2-manual.pdf in the "Package" folder for installation instructions, a description of
 the software and examples of use (https://github.com/GGFHF/NGScloud2/blob/master/Package/NGScloud2-manual.pdf).
-Also, you can see the paper:
+Also, you can see the following papers:
 
 Mora-Márquez F, Vázquez-Poletti JL, López de Heredia U (2018).
-RNA-seq analysis of non-model species using cloud computing. *Bioinformatics, 34*(19), 3405–3407.
+RNA-seq analysis of non-model species using cloud computing. *Bioinformatics 34*(19), 3405–3407.
 DOI: https://doi.org/10.1093/bioinformatics/bty363
+
+Mora-Márquez F, Vázquez-Poletti JL, López de Heredia U (2020).
+NGScloud2: optimized bioinformatic analysis using Amazon Web Services. *bioRxiv* 2020.11.30.400010.
+DOI: https://doi.org/10.1101/2020.11.30.400010
 
 This software has been developed by:
 

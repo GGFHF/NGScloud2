@@ -1,4 +1,14 @@
-CURRENT VERSION: 2.11
+CURRENT VERSION: 2.12
+
+********************************************************************************
+
+Changes in v2.12 (December 2020)
+
+* Update of channels in bioinfo software installation.
+
+* Update of parameters in rnaQUAST and htseq-count processes.
+
+* Optimization of several code fragments.
 
 ********************************************************************************
 

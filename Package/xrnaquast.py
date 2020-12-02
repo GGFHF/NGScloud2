@@ -97,7 +97,8 @@ def create_rnaquast_config_file(experiment_id='exp001', reference_dataset_id='At
             file_id.write( '# This section has the information to set the rnaQUAST parameters\n')
             file_id.write( '[rnaQUAST parameters]\n')
             file_id.write( '{0:<50} {1}\n'.format('threads = 4', '# number of threads for use'))
-            file_id.write( '{0:<50} {1}\n'.format('lineage_data_url = http://busco.ezlab.org/v2/datasets/embryophyta_odb9.tar.gz', '# the url of lineage data file that will be used'))
+            # -- file_id.write( '{0:<50} {1}\n'.format('lineage_data_url = http://busco.ezlab.org/v2/datasets/embryophyta_odb9.tar.gz', '# the url of lineage data file that will be used'))
+            file_id.write( '{0:<50} {1}\n'.format('lineage_data_url = https://busco-data.ezlab.org/v4/data/lineages/viridiplantae_odb10.2020-09-10.tar.gz', '# the url of lineage data file that will be used'))
             file_id.write( '{0:<50} {1}\n'.format('busco_mode = TRAN', f'# Busco mode: {get_busco_mode_code_list_text()}'))
             file_id.write( '\n')
             file_id.write( '# This section has the global information of all libraries.\n')
@@ -631,17 +632,6 @@ def build_rnaquast_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    echo "HOST ADDRESS: $HOST_ADDRESS"\n')
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
-            script_file_id.write( 'function patch_rnaquast_installation\n')
-            script_file_id.write( '{\n')
-            script_file_id.write( '    cd $RNAQUAST_PATH\n')
-            script_file_id.write( '    echo "$SEP"\n')
-            script_file_id.write( '    echo "Patching rnaQUAST installation ..."\n')
-            script_file_id.write( '    if [ ! -f run_BUSCO.py ]; then\n')
-            script_file_id.write( '        ln -s BUSCO.py run_BUSCO.py\n')
-            script_file_id.write( '    fi\n')
-            script_file_id.write( '    echo "Installation is patched."\n')
-            script_file_id.write( '}\n')
-            script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'function download_lineage_data\n')
             script_file_id.write( '{\n')
             script_file_id.write( '    cd $CURRENT_DIR\n')
@@ -697,7 +687,7 @@ def build_rnaquast_process_script(cluster_name, current_run_dir):
                 else:
                     script_file_id.write(f'            --left_reads concatenated_library_1.txt \\\n')
                     script_file_id.write(f'            --right_reads concatenated_library_2.txt \\\n')
-            script_file_id.write(f'            --busco_lineage ./{lineage_data} \\\n')
+            script_file_id.write(f'            --busco $CURRENT_DIR/{lineage_data} \\\n')
             if other_parameters.upper() != 'NONE':
                 parameter_list = [x.strip() for x in other_parameters.split(';')]
                 for j in range(len(parameter_list)):
@@ -791,7 +781,6 @@ def build_rnaquast_process_script(cluster_name, current_run_dir):
             script_file_id.write( '}\n')
             script_file_id.write( '#-------------------------------------------------------------------------------\n')
             script_file_id.write( 'init\n')
-            script_file_id.write( 'patch_rnaquast_installation\n')
             script_file_id.write( 'download_lineage_data\n')
             if file_counter > 1:
                 script_file_id.write( 'concatenate_files\n')

@@ -581,7 +581,7 @@ def build_htseq_count_process_script(cluster_name, current_run_dir):
             script_file_id.write( '    /usr/bin/time \\\n')
             script_file_id.write(f'        --format="{xlib.get_time_output_format(separator=False)}" \\\n')
             script_file_id.write( '        htseq-count \\\n')
-            # -- script_file_id.write(f'            --nprocesses={nprocesses} \\\n')
+            script_file_id.write(f'            --nprocesses={nprocesses} \\\n')
             script_file_id.write( '            --format=bam \\\n')
             script_file_id.write(f'            --stranded={stranded.lower()} \\\n')
             script_file_id.write(f'            --minaqual={minaqual} \\\n')
