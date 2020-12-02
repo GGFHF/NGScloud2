@@ -15,7 +15,7 @@ the software and examples of use (https://github.com/GGFHF/NGScloud2/blob/master
 Also, you can see the following papers:
 
 Mora-Márquez F, Vázquez-Poletti JL, López de Heredia U (2018).
-RNA-seq analysis of non-model species using cloud computing. *Bioinformatics 34*(19), 3405–3407.
+NGScloud: RNA-seq analysis of non-model species using cloud computing. *Bioinformatics 34*(19), 3405–3407.
 DOI: https://doi.org/10.1093/bioinformatics/bty363
 
 Mora-Márquez F, Vázquez-Poletti JL, López de Heredia U (2020).
