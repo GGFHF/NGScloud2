@@ -61,7 +61,7 @@ def get_project_version():
     Get the project name.
     '''
 
-    return '2.12'
+    return '2.13'
 
 #-------------------------------------------------------------------------------
     
@@ -2641,6 +2641,15 @@ def get_alignment_tool_code_list_text():
     '''
 
     return str(get_alignment_tool_code_list()).strip('[]').replace('\'', '').replace(',', ' or')
+
+#-------------------------------------------------------------------------------
+
+def get_docker_ngscloud2_dir():
+    '''
+    Get the directory where NGScloud2 is installed in a Docker machine.
+    '''
+
+    return '/Docker/NGScloud2'
 
 #-------------------------------------------------------------------------------
 
